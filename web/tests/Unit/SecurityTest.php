@@ -20,12 +20,12 @@ class SecurityTest extends ActionTestCase
 
         $this->assertArrayHasKey('error', $callHostingSubscriptionStoreResponse);
         $this->assertArrayHasKey('message', $callHostingSubscriptionStoreResponse);
-        $this->assertArrayHasKey('data', $callHostingSubscriptionStoreResponse);
-        $this->assertArrayHasKey('domain', $callHostingSubscriptionStoreResponse['data']);
+        $this->assertArrayHasKey('errors', $callHostingSubscriptionStoreResponse);
+        $this->assertArrayHasKey('domain', $callHostingSubscriptionStoreResponse['errors']);
         $this->assertSame('The selected customer id is invalid.', $callHostingSubscriptionStoreResponse['message']);
 
-        $this->assertSame('The selected hosting plan id is invalid.', $callHostingSubscriptionStoreResponse['data']['hosting_plan_id'][0]);
-        $this->assertSame('The domain field format is invalid.', $callHostingSubscriptionStoreResponse['data']['domain'][0]);
+        $this->assertSame('The selected hosting plan id is invalid.', $callHostingSubscriptionStoreResponse['errors']['hosting_plan_id'][0]);
+        $this->assertSame('The domain field format is invalid.', $callHostingSubscriptionStoreResponse['errors']['domain'][0]);
 
 
         // Create a customer
