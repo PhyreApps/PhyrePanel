@@ -16,5 +16,8 @@
         "tailwindcss": "^3.4.3",
         "tippy.js": "^6.3.7",
         "vite": "^4.0.0"
+    },
+    "dependencies": {
+        "@xterm/xterm": "^5.5.0"
     }
 }
