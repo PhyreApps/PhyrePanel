@@ -1,4 +1,2 @@
 web/storage/installed
 /docker/e2e-tests/node_modules/
-compilators/
-web/thirdparty/

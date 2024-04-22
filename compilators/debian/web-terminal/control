@@ -1,0 +1,9 @@
+Source: phyre-web-terminal
+Package: phyre-web-terminal
+Priority: optional
+Version: 1.0.0
+Section: admin
+Maintainer: PhyrePanel <info@phyrepanel.com>
+Homepage: https://www.phyrepanel.com
+Architecture: amd64
+Description: Phyre Web Terminal

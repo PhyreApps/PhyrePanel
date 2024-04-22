@@ -1,0 +1,16 @@
+[Unit]
+Description=Phyre Web Terminal
+Documentation=https://phyrepanel.com/docs/
+After=network.target
+
+[Service]
+User=root
+Group=phyre-users
+Environment=NODE_ENV=production
+Environment=PHYRE=/usr/local/phyre
+ExecStart=/usr/local/phyre/web-terminal/server.js
+ExecStop=/bin/kill -s TERM $MAINPID
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
