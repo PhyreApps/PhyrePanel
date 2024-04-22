@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 FROM ubuntu:22.04
-LABEL maintainer="CloudVisionApps1"
+LABEL maintainer="PhyreAppsDevelopers"
 
 # Install initial dependencies
 RUN apt-get update \

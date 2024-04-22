@@ -36,7 +36,7 @@ jobs:
       with:
         source-directory: './compilators/debian/web-terminal/dist'
         target-directory: './debian/web-terminal/dist'
-        destination-github-username: 'CloudVisionApps'
+        destination-github-username: 'PhyreApps'
         destination-repository-name: 'PhyrePanelWebTerminalDist'
         user-email: bobicloudvision@gmail.com
         target-branch: main

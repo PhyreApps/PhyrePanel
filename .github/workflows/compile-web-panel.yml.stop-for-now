@@ -60,7 +60,7 @@ jobs:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
           source-directory: './dist'
-          destination-github-username: 'CloudVisionApps'
+          destination-github-username: 'PhyreApps'
           destination-repository-name: 'PhyrePanelWebDist'
           user-email: bobicloudvision@gmail.com
           target-branch: main
