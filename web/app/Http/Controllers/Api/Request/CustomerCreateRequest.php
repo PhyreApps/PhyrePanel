@@ -12,7 +12,7 @@ class CustomerCreateRequest extends AuthorizedApiRequest
     public function rules()
     {
         return [
-            'name' => 'required',
+            'name' => 'required|max:255',
             'email' => 'required|email|unique:customers,email',
         ];
     }
