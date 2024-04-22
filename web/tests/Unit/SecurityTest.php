@@ -80,7 +80,8 @@ class SecurityTest extends ActionTestCase
         $userHomeDir = '/home/' . $hostingSubscription['system_username'];
         $this->assertDirectoryExists($userHomeDir);
         $getUserHomeDirPermission = substr(sprintf('%o', fileperms($userHomeDir)), -4);
-        $this->assertSame('0775', $getUserHomeDirPermission);
+        $this->assertSame('0711', $getUserHomeDirPermission);
+        // 0711 - is the correct permission for /home/$user directory, because it is a home directory and it should be accessible only by the user and root.
 
         // Check domain dir permissions
         $domainDir = '/home/' . $hostingSubscription['system_username'] . '/public_html';
@@ -117,7 +118,10 @@ class SecurityTest extends ActionTestCase
         $this->assertTrue(str_contains($output, 'public_html'));
         $this->assertTrue(str_contains($output, $hostingSubscription['system_username']));
 
-        
+        // Try to open /home/$user directory with another linux user
+        $output = shell_exec("sudo -H -u ".$secondHostingSubscription['system_username']." bash -c 'ls -la /home/".$hostingSubscription['system_username']."'");
+        $this->assertSame($output, null);
+
 
     }
 }

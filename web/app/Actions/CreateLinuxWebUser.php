@@ -30,16 +30,16 @@ class CreateLinuxWebUser
         $password = $this->password;
 
         $command = 'adduser --disabled-password --gecos "" "'.$username.'"';
-        $output .= ShellApi::exec($command);
-
-//        $command = 'groupadd '.$username;
-//        $output .= ShellApi::exec($command);
+        $output .= shell_exec($command);
 
         $command = 'usermod -a -G www-data '.$username;
-        $output .= ShellApi::exec($command);
+        $output .= shell_exec($command);
 
         $command = 'echo '.$username.':'.$password.' | chpasswd -e';
-        $output .= ShellApi::exec($command);
+        $output .= shell_exec($command);
+
+        $command = 'chmod 711 /home/'.$username;
+        $output .= shell_exec($command);
 
         return $output;
     }

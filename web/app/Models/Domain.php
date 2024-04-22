@@ -108,13 +108,13 @@ class Domain extends Model
         }
 
         if (!is_dir($this->domain_root)) {
-            mkdir($this->domain_root, 0755, true);
+            mkdir($this->domain_root, 0711, true);
         }
         if (!is_dir($this->domain_public)) {
             mkdir($this->domain_public, 0755, true);
         }
         if (!is_dir($this->home_root)) {
-            mkdir($this->home_root, 0755, true);
+            mkdir($this->home_root, 0711, true);
         }
 
         if ($this->is_installed_default_app_template == null) {
@@ -174,8 +174,8 @@ class Domain extends Model
         shell_exec('chown -R '.$findHostingSubscription->system_username.':'.$webUserGroup.' '.$this->domain_root);
         shell_exec('chown -R '.$findHostingSubscription->system_username.':'.$webUserGroup.' '.$this->domain_public);
 
-        shell_exec('chmod -R 775 '.$this->home_root);
-        shell_exec('chmod -R 775 '.$this->domain_root);
+        shell_exec('chmod -R 0711 '.$this->home_root);
+        shell_exec('chmod -R 0711 '.$this->domain_root);
         shell_exec('chmod -R 775 '.$this->domain_public);
 
         $appType = 'php';
