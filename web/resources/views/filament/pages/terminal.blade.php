@@ -1,11 +1,9 @@
 <x-filament-panels::page>
 
     <div>
-        <link rel="stylesheet" href="node_modules/@xterm/xterm/css/xterm.css" />
-        <script src="node_modules/@xterm/xterm/lib/xterm.js"></script>
-
 
         <div id="js-web-terminal"></div>
+
         <script>
 
             const terminal = new Terminal();
