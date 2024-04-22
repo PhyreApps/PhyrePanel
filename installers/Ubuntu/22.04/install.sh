@@ -39,15 +39,15 @@ done
 # Start MySQL
 service mysql start
 
-wget https://raw.githubusercontent.com/CloudVisionApps/PhyrePanel/main/installers/Ubuntu/22.04/greeting.sh
+wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/main/installers/Ubuntu/22.04/greeting.sh
 mv greeting.sh /etc/profile.d/phyre-greeting.sh
 
 # Install PHYRE PHP
-wget https://github.com/CloudVisionApps/PhyrePanelPHPDist/raw/main/debian/php/dist/phyre-php-8.2.0.deb
+wget https://github.com/PhyreApps/PhyrePanelPHPDist/raw/main/debian/php/dist/phyre-php-8.2.0.deb
 dpkg -i phyre-php-8.2.0.deb
 
 # Install PHYRE NGINX
-wget https://github.com/CloudVisionApps/PhyrePanelNginxDist/raw/main/debian/nginx/dist/phyre-nginx-1.24.0.deb
+wget https://github.com/PhyreApps/PhyrePanelNginxDist/raw/main/debian/nginx/dist/phyre-nginx-1.24.0.deb
 dpkg -i phyre-nginx-1.24.0.deb
 
 service phyre start
@@ -56,7 +56,7 @@ PHYRE_PHP=/usr/local/phyre/php/bin/php
 
 ln -s $PHYRE_PHP /usr/bin/phyre-php
 
-wget https://github.com/CloudVisionApps/PhyrePanelWebDist/raw/main/phyre-web-panel.zip
+wget https://github.com/PhyreApps/PhyrePanelWebCompiledVersions/raw/main/phyre-web-panel.zip
 unzip -qq -o phyre-web-panel.zip -d /usr/local/phyre/web
 rm -rf phyre-web-panel.zip
 

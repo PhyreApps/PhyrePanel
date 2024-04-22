@@ -38,7 +38,7 @@ class ModelPhyreServerCreatedListener
         $ssh = new SSH2($ip);
         if ($ssh->login($username, $password)) {
 
-            $ssh->exec('wget https://raw.githubusercontent.com/CloudVisionApps/PhyrePanel/main/installers/install.sh');
+            $ssh->exec('wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/main/installers/install.sh');
             $ssh->exec('chmod +x install.sh');
             $ssh->exec('./install.sh  >phyre-install.log 2>&1 </dev/null &');
 

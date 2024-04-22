@@ -6,7 +6,7 @@ apt-get update && apt-get install ca-certificates
 apt install -y git
 cd /
 mkdir -p $MAIN_DIR
-git clone https://github.com/CloudVisionApps/PhyrePanel.git $MAIN_DIR
+git clone https://github.com/PhyreApps/PhyrePanel.git $MAIN_DIR
 
 HELPERS_DIR=$MAIN_DIR"/shell/helpers/ubuntu"
 . $HELPERS_DIR"/common.sh"
@@ -141,11 +141,11 @@ systemctl restart apache2
 #done
 
 # Install PHYRE PHP
-wget https://github.com/CloudVisionApps/PhyrePanelPHPDist/raw/main/debian/php/dist/phyre-php-8.2.0.deb
+wget https://github.com/PhyreApps/PhyrePanelPHPDist/raw/main/debian/php/dist/phyre-php-8.2.0.deb
 sudo dpkg -i phyre-php-8.2.0.deb
 
 # Install PHYRE NGINX
-wget https://github.com/CloudVisionApps/PhyrePanelNginxDist/raw/main/debian/nginx/dist/phyre-nginx-1.24.0.deb
+wget https://github.com/PhyreApps/PhyrePanelNginxDist/raw/main/debian/nginx/dist/phyre-nginx-1.24.0.deb
 sudo dpkg -i phyre-nginx-1.24.0.deb
 
 # sudo ufw allow proto tcp from any to any port 80,443

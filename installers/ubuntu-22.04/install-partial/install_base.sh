@@ -41,15 +41,15 @@ done
 # Start MySQL
 service mysql start
 
-wget https://raw.githubusercontent.com/CloudVisionApps/PhyrePanel/main/installers/ubuntu-22.04/greeting.sh
+wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/main/installers/ubuntu-22.04/greeting.sh
 mv greeting.sh /etc/profile.d/phyre-greeting.sh
 
 # Install PHYRE PHP
-wget https://github.com/CloudVisionApps/PhyrePanelPHP/raw/main/compilators/debian/php/dist/phyre-php-8.2.0-ubuntu-22.04.deb
+wget https://github.com/PhyreApps/PhyrePanelPHP/raw/main/compilators/debian/php/dist/phyre-php-8.2.0-ubuntu-22.04.deb
 dpkg -i phyre-php-8.2.0-ubuntu-22.04.deb
 
 # Install PHYRE NGINX
-wget https://github.com/CloudVisionApps/PhyrePanelNGINX/raw/main/compilators/debian/nginx/dist/phyre-nginx-1.24.0-ubuntu-22.04.deb
+wget https://github.com/PhyreApps/PhyrePanelNGINX/raw/main/compilators/debian/nginx/dist/phyre-nginx-1.24.0-ubuntu-22.04.deb
 dpkg -i phyre-nginx-1.24.0-ubuntu-22.04.deb
 
 service phyre start

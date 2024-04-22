@@ -5,7 +5,7 @@ apt-get update && apt-get install -y wget
 #
 #apt-get install libsodium-dev -y
 #
-#wget https://raw.githubusercontent.com/CloudVisionApps/PhyrePanel/main/installers/install.sh && chmod +x install.sh && ./install.sh
+#wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/main/installers/install.sh && chmod +x install.sh && ./install.sh
 #
 #ls -la
 

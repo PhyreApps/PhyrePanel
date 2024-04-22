@@ -45,11 +45,11 @@ RUN mkdir -p $INSTALL_DIR
 WORKDIR $INSTALL_DIR
 
 # Install PHYRE PHP
-RUN wget https://github.com/CloudVisionApps/PhyrePanelPHPDist/raw/main/debian/php/dist/phyre-php-8.2.0.deb \
+RUN wget https://github.com/PhyreApps/PhyrePanelPHPDist/raw/main/debian/php/dist/phyre-php-8.2.0.deb \
     && dpkg -i phyre-php-8.2.0.deb
 
 # Install PHYRE NGINX
-RUN wget https://github.com/CloudVisionApps/PhyrePanelNginxDist/raw/main/debian/nginx/dist/phyre-nginx-1.24.0.deb \
+RUN wget https://github.com/PhyreApps/PhyrePanelNginxDist/raw/main/debian/nginx/dist/phyre-nginx-1.24.0.deb \
     && dpkg -i phyre-nginx-1.24.0.deb
 
 # Start PHYRE service

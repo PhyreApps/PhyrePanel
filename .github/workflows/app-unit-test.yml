@@ -90,14 +90,14 @@ jobs:
           mkdir -p ../dist
           mv ./phyre-web-panel-build.zip ../dist/phyre-web-panel.zip
 
-      - name: Pushes to Phyre Panel Dist Repo
+      - name: Pushes to PhyrePanelWebCompiledVersions
         uses: cpina/github-action-push-to-another-repository@main
         env:
           SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
           source-directory: './dist'
-          destination-github-username: 'CloudVisionApps'
-          destination-repository-name: 'PhyrePanelWebDist'
+          destination-github-username: 'PhyreApps'
+          destination-repository-name: 'PhyrePanelWebCompiledVersions'
           user-email: bobicloudvision@gmail.com
           target-branch: main

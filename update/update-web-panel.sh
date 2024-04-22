@@ -1,7 +1,7 @@
 rm -rf /usr/local/phyre/update/web-panel-latest
 rm -rf /usr/local/phyre/update/phyre-web-panel.zip
 
-wget https://github.com/CloudVisionApps/PhyrePanelWebDist/raw/main/phyre-web-panel.zip
+wget https://github.com/PhyreApps/PhyrePanelWebCompiledVersions/raw/main/phyre-web-panel.zip
 ls -la
 unzip -o phyre-web-panel.zip -d /usr/local/phyre/update/web-panel-latest
 

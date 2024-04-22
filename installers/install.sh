@@ -39,7 +39,7 @@ DISTRO_NAME=${DISTRO_NAME//\"/} # Remove quotes from name string
 # Lowercase the distro name
 DISTRO_NAME=$(echo $DISTRO_NAME | tr '[:upper:]' '[:lower:]')
 
-INSTALLER_URL="https://raw.githubusercontent.com/CloudVisionApps/PhyrePanel/main/installers/${DISTRO_NAME}-${DISTRO_VERSION}/install.sh"
+INSTALLER_URL="https://raw.githubusercontent.com/PhyreApps/PhyrePanel/main/installers/${DISTRO_NAME}-${DISTRO_VERSION}/install.sh"
 
 INSTALLER_CONTENT=$(wget ${INSTALLER_URL} 2>&1)
 if [[ "$INSTALLER_CONTENT" =~ 404\ Not\ Found ]]; then

@@ -8,7 +8,7 @@ apt-get update && apt-get install -y wget dos2unix
 #
 #apt-get install libsodium-dev -y
 #
-#wget https://raw.githubusercontent.com/CloudVisionApps/PhyrePanel/main/installers/install.sh && chmod +x install.sh && ./install.sh
+#wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/main/installers/install.sh && chmod +x install.sh && ./install.sh
 #
 #ls -la
 
@@ -61,15 +61,15 @@ done
 # Start MySQL
 service mysql start
 
-wget https://raw.githubusercontent.com/CloudVisionApps/PhyrePanel/main/installers/Ubuntu/22.04/greeting.sh
+wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/main/installers/Ubuntu/22.04/greeting.sh
 mv greeting.sh /etc/profile.d/phyre-greeting.sh
 
 # Install PHYRE PHP
-wget https://github.com/CloudVisionApps/PhyrePanelPHPDist/raw/main/debian/php/dist/phyre-php-8.2.0.deb
+wget https://github.com/PhyreApps/PhyrePanelPHPDist/raw/main/debian/php/dist/phyre-php-8.2.0.deb
 dpkg -i phyre-php-8.2.0.deb
 
 # Install PHYRE NGINX
-wget https://github.com/CloudVisionApps/PhyrePanelNginxDist/raw/main/debian/nginx/dist/phyre-nginx-1.24.0.deb
+wget https://github.com/PhyreApps/PhyrePanelNginxDist/raw/main/debian/nginx/dist/phyre-nginx-1.24.0.deb
 dpkg -i phyre-nginx-1.24.0.deb
 
 service phyre start

@@ -141,7 +141,7 @@ class PhyreServer extends Model
 //            dd($output);
 
             $output = '';
-            $output .= $ssh->exec('wget https://raw.githubusercontent.com/CloudVisionApps/PhyrePanel/main/update/update-web-panel.sh -O /usr/local/phyre/update/update-web-panel.sh');
+            $output .= $ssh->exec('wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/main/update/update-web-panel.sh -O /usr/local/phyre/update/update-web-panel.sh');
             $output .= $ssh->exec('chmod +x /usr/local/phyre/update/update-web-panel.sh');
             $output .= $ssh->exec('/usr/local/phyre/update/update-web-panel.sh');
 
