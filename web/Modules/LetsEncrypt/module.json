@@ -1,0 +1,12 @@
+{
+    "name": "LetsEncrypt",
+    "alias": "letsencrypt",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\LetsEncrypt\\App\\Providers\\LetsEncryptServiceProvider",
+        "Modules\\LetsEncrypt\\Providers\\Filament\\AdminPanelProvider"
+    ],
+    "files": []
+}

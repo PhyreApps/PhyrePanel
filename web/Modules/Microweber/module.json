@@ -1,0 +1,12 @@
+{
+    "name": "Microweber",
+    "alias": "microweber",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Microweber\\App\\Providers\\MicroweberServiceProvider",
+        "Modules\\Microweber\\Providers\\Filament\\AdminPanelProvider"
+    ],
+    "files": []
+}

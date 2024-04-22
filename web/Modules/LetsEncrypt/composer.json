@@ -1,0 +1,31 @@
+{
+    "name": "nwidart/letsencrypt",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\LetsEncrypt\\": "",
+            "Modules\\LetsEncrypt\\App\\": "app/",
+            "Modules\\LetsEncrypt\\Database\\Factories\\": "database/factories/",
+            "Modules\\LetsEncrypt\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\LetsEncrypt\\Tests\\": "tests/"
+        }
+    }
+}

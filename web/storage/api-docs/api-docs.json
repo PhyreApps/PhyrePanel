@@ -1,0 +1,72 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "PhyrePanel - API Documentation",
+        "contact": {
+            "email": "info@phyrepanel.com"
+        },
+        "version": "0.1"
+    },
+    "paths": {
+        "/api/customers": {
+            "get": {
+                "operationId": "6f01ddd63e2a72fee24eb31157a1c799",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            },
+            "post": {
+                "operationId": "cef1c1e98a7505ddd8d797aba6787da4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "phone"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "Name of the customer",
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "description": "Email of the customer",
+                                        "type": "string",
+                                        "example": "jhon@gmail.com"
+                                    },
+                                    "phone": {
+                                        "description": "Phone of the customer",
+                                        "type": "string",
+                                        "example": "1234567890"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/health": {
+            "get": {
+                "operationId": "c873d7f3d9f52c19cd7a1b4bebfe02df",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        }
+    }
+}

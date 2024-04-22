@@ -1,0 +1,103 @@
+name: Phyre Panel - Unit Test & Build
+on: [push]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  phyre-panel-unit-test:
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, ubuntu-20.04]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+
+      - name: Install Base
+        run: |
+          ls -la
+          sudo mkdir /phyre-panel
+          
+          sudo cp installers/${{ matrix.os }}/install-partial/install_base.sh /phyre-panel/install_base.sh
+          sudo chmod +x /phyre-panel/install_base.sh
+          sudo /phyre-panel/install_base.sh
+          
+          sudo cp installers/${{ matrix.os }}/install-partial/install_web.sh /phyre-panel/install_web.sh
+          sudo chmod +x /phyre-panel/install_web.sh
+
+      - name: Run Unit Test
+        run: |
+          
+          sudo cp -r web /usr/local/phyre/web/
+          cd /usr/local/phyre/web/
+          ls -la
+          
+          sudo wget https://getcomposer.org/download/latest-stable/composer.phar
+          sudo COMPOSER_ALLOW_SUPERUSER=1 phyre-php composer.phar install
+          
+          sudo /phyre-panel/install_web.sh
+          sudo phyre-php artisan test
+
+  compile-phyre-web-panel:
+    runs-on: ubuntu-22.04
+    needs: phyre-panel-unit-test
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository }}
+      - name: Npm install
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+
+      - name: Install Composer Dependencies
+        working-directory: ./web
+        run: |
+          composer install
+          composer dump-autoload
+
+      - name: Install NODE Dependencies
+        working-directory: ./web
+        run: |
+          npm install
+          npm run build
+
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v3.x
+
+      - name: Zip the files
+        working-directory: ./web
+        run: |
+          rm -rf .git
+          rm -rf .github
+          rm -rf .nmp
+          rm -rf node_modules
+          rm -rf .phpunit.cache
+          rm -rf vendor/composer/tmp-*.zip
+          find . \( -name ".git" -o -name ".gitignore" -o -name ".gitmodules" -o -name ".gitattributes"  \) -exec rm -rf -- {} +
+          zip -r phyre-web-panel-build.zip `ls -A`
+          mkdir -p ../dist
+          mv ./phyre-web-panel-build.zip ../dist/phyre-web-panel.zip
+
+      - name: Pushes to Phyre Panel Dist Repo
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source-directory: './dist'
+          destination-github-username: 'CloudVisionApps'
+          destination-repository-name: 'PhyrePanelWebDist'
+          user-email: bobicloudvision@gmail.com
+          target-branch: main

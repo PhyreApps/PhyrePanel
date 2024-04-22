@@ -1,0 +1,35 @@
+{
+    "name": "phyre/microweber",
+    "description": "",
+    "authors": [
+        {
+            "name": "Bozhidar Slaveykov",
+            "email": "selfworksbg@gmail.com"
+        }
+    ],
+    "require": {
+        "microweber-packages/composer-client": "^1.9",
+        "microweber-packages/shared-server-scripts": "dev-main"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Microweber\\": "",
+            "Modules\\Microweber\\App\\": "app/",
+            "Modules\\Microweber\\Database\\Factories\\": "database/factories/",
+            "Modules\\Microweber\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Microweber\\Tests\\": "tests/"
+        }
+    }
+}

@@ -1,0 +1,66 @@
+name: Compile Phyre Web Panel
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compile-phyre-web-panel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository }}
+      - name: Npm install
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+
+      - name: Install Composer Dependencies
+        working-directory: ./web
+        run: |
+          composer install
+          composer dump-autoload
+
+      - name: Install NODE Dependencies
+        working-directory: ./web
+        run: |
+          npm install
+          npm run build
+
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v3.x
+
+      - name: Zip the files
+        working-directory: ./web
+        run: |
+          rm -rf .git
+          rm -rf .github
+          rm -rf .nmp
+          rm -rf node_modules
+          rm -rf .phpunit.cache
+          rm -rf vendor/composer/tmp-*.zip
+          find . \( -name ".git" -o -name ".gitignore" -o -name ".gitmodules" -o -name ".gitattributes"  \) -exec rm -rf -- {} +
+          zip -r phyre-web-panel-build.zip `ls -A`
+          mkdir -p ../dist
+          mv ./phyre-web-panel-build.zip ../dist/phyre-web-panel.zip
+
+      - name: Pushes to Phyre Panel Dist Repo
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source-directory: './dist'
+          destination-github-username: 'CloudVisionApps'
+          destination-repository-name: 'PhyrePanelWebDist'
+          user-email: bobicloudvision@gmail.com
+          target-branch: main

@@ -1,0 +1,11 @@
+server {
+
+    server_name %SERVER_NAME% www.%SERVER_NAME%;
+
+    root        %SERVER_ROOT%;
+    charset     utf-8;
+
+    location / {
+
+    }
+}

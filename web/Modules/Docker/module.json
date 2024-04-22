@@ -1,0 +1,11 @@
+{
+    "name": "Docker",
+    "alias": "docker",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Docker\\App\\Providers\\DockerServiceProvider"
+    ],
+    "files": []
+}
