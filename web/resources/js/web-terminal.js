@@ -45,7 +45,7 @@ if (terminalElement !== null) {
 
     fitAddon.fit();
 
-    const socket = new WebSocket(`ws://49.13.166.115:3311`);
+    const socket = new WebSocket(`ws://${window.location.host}/_shell/`);
     socket.addEventListener('open', (_) => {
         terminal.onData((data) => socket.send(data));
         socket.addEventListener('message', (evt) => terminal.write(evt.data));
