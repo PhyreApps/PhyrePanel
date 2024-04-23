@@ -18,7 +18,7 @@ class DovecotInstaller
 
         $commands = [];
         $commands[] = 'echo "Installing dovecot..."';
-        $commands[] = 'apt-get install -y dovecot-core dovecot-imapd dovecot-pop3d dovecot-lmtpd';
+        $commands[] = 'apt-get install -y telnet dovecot-core dovecot-imapd dovecot-pop3d dovecot-lmtpd';
 
         $shellFileContent = '';
         foreach ($commands as $command) {
