@@ -110,7 +110,7 @@ class HostingSubscription extends Model
         $createLinuxWebUser = new CreateLinuxWebUser();
         $createLinuxWebUser->setUsername($systemUsername);
         $createLinuxWebUser->setPassword($systemPassword);
-        $createLinuxWebUserOutput = $createLinuxWebUser->handle();
+        $createLinuxWebUserOutput = $createLinuxWebUser->handle(); 
 
         if (strpos($createLinuxWebUserOutput, 'Creating home directory') !== false) {
 

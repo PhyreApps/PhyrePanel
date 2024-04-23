@@ -29,16 +29,16 @@ class CreateLinuxWebUser
         $username = $this->username;
         $password = $this->password;
 
-        $command = 'adduser --disabled-password --gecos "" "'.$username.'"';
+        $command = 'sudo adduser --disabled-password --gecos "" "'.$username.'"';
         $output .= shell_exec($command);
 
-        $command = 'usermod -a -G www-data '.$username;
+        $command = 'sudo usermod -a -G www-data '.$username;
         $output .= shell_exec($command);
 
-        $command = 'echo '.$username.':'.$password.' | chpasswd -e';
+        $command = 'sudo echo '.$username.':'.$password.' | chpasswd -e';
         $output .= shell_exec($command);
 
-        $command = 'chmod 711 /home/'.$username;
+        $command = 'sudo chmod 711 /home/'.$username;
         $output .= shell_exec($command);
 
         return $output;
