@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Filament\Enums\ServerApplicationType;
+use App\Installers\Server\Applications\DovecotInstaller;
 use App\Installers\Server\Applications\NodeJsInstaller;
 use App\Installers\Server\Applications\PHPInstaller;
 use App\Installers\Server\Applications\PythonInstaller;
@@ -245,6 +246,21 @@ class Installer extends Page
                         }),
 
                     Wizard\Step::make('Step 3')
+                        ->description('Configure your email server')
+                        ->schema([
+
+
+
+                        ])->afterValidation(function () {
+
+                            $dovecotInstaller = new DovecotInstaller();
+                            $dovecotInstaller->setLogFilePath(storage_path($this->install_log_file_path));
+                            $dovecotInstaller->install();
+
+                            dd(storage_path($this->install_log_file_path));
+                        }),
+
+                    Wizard\Step::make('Step 4')
                         ->description('Finish installation')
                         ->schema([
 
