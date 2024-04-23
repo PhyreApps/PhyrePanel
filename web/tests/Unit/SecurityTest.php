@@ -109,18 +109,18 @@ class SecurityTest extends ActionTestCase
         $this->assertTrue($callHostingSubscriptionStoreResponse['status'] == 'ok');
         $secondHostingSubscription = $callHostingSubscriptionStoreResponse['data']['hostingSubscription'];
 
-//        // Try to open /home directory with linux user
-//        $output = shell_exec("sudo -H -u ".$hostingSubscription['system_username']." bash -c 'ls -la /home'");
-//        $this->assertSame($output, null);
-//
-//        // Try to open /home/$user with linux user
-//        $output = shell_exec("sudo -H -u ".$hostingSubscription['system_username']." bash -c 'ls -la /home/".$hostingSubscription['system_username']."'");
-//        $this->assertTrue(str_contains($output, 'public_html'));
-//        $this->assertTrue(str_contains($output, $hostingSubscription['system_username']));
-//
-//        // Try to open /home/$user directory with another linux user
-//        $output = shell_exec("sudo -H -u ".$secondHostingSubscription['system_username']." bash -c 'ls -la /home/".$hostingSubscription['system_username']."'");
-//        $this->assertSame($output, null);
+        // Try to open /home directory with linux user
+        $output = shell_exec("sudo -H -u ".$hostingSubscription['system_username']." bash -c 'ls -la /home'");
+        $this->assertSame($output, null);
+
+        // Try to open /home/$user with linux user
+        $output = shell_exec("sudo -H -u ".$hostingSubscription['system_username']." bash -c 'ls -la /home/".$hostingSubscription['system_username']."'");
+        $this->assertTrue(str_contains($output, 'public_html'));
+        $this->assertTrue(str_contains($output, $hostingSubscription['system_username']));
+
+        // Try to open /home/$user directory with another linux user
+        $output = shell_exec("sudo -H -u ".$secondHostingSubscription['system_username']." bash -c 'ls -la /home/".$hostingSubscription['system_username']."'");
+        $this->assertSame($output, null);
 
 
     }
