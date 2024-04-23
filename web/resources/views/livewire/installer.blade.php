@@ -7,7 +7,7 @@
         </span>--}}
     </div>
 
-    <div class="w-[50rem] mt-8">
+    <div class="w-[70rem] mt-8">
         {{$this->form}}
     </div>
 

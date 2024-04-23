@@ -16,6 +16,7 @@ use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -63,6 +64,8 @@ class Installer extends Page
     public $server_ruby_versions = [
         '3.4'
     ];
+
+    public $enable_email_server = true;
 
     public function form(Form $form): Form
     {
@@ -249,6 +252,9 @@ class Installer extends Page
                         ->description('Configure your email server')
                         ->schema([
 
+                            Toggle::make('enable_email_server')
+                                ->label('Enable Email Server')
+                                ->default(true),
 
 
                         ])->afterValidation(function () {
