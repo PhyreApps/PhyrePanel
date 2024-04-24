@@ -32,6 +32,7 @@ class MasterDomain
 
     public function configureVirtualHost()
     {
+        return; // TODO
         $apacheVirtualHostBuilder = new \App\VirtualHosts\ApacheVirtualHostBuilder();
         $apacheVirtualHostBuilder->setDomain($this->domain);
         $apacheVirtualHostBuilder->setDomainPublic($this->domainPublic);
