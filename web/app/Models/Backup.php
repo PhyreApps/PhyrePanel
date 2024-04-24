@@ -20,6 +20,16 @@ class Backup extends Model
         'disk',
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->status = 'pending';
+        });
+
+    }
+
     protected function backupRelated() : Attribute
     {
         $relatedWith = $this->backup_type;
@@ -33,6 +43,19 @@ class Backup extends Model
         return Attribute::make(
             get: fn () => $relatedWith
         );
+    }
+
+    public function checkBackup()
+    {
+        if ($this->status == 'running') {
+            $backupDoneFile = $this->path.'/backup.done';
+            if (file_exists($backupDoneFile)) {
+                $this->status = 'completed';
+                $this->completed = true;
+                $this->completed_at = now();
+                $this->save();
+            }
+        }
     }
 
     public function startBackup()
@@ -80,6 +103,8 @@ class Backup extends Model
                 $shellFileContent .= 'touch ' . $backupPath. '/backup.done' . PHP_EOL;
                 $shellFileContent .= 'rm -rf ' . $backupTempScript;
 
+                $this->path = $backupPath;
+                $this->filepath = $backupFilePath;
                 $this->status = 'running';
                 $this->queued = true;
                 $this->queued_at = now();

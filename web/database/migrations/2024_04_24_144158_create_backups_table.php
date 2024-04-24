@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('backup_type')->nullable();
             $table->string('status')->nullable();
             $table->string('path')->nullable();
+            $table->string('filepath')->nullable();
             $table->string('size')->nullable();
             $table->string('disk')->nullable();
             $table->longText('settings')->nullable();

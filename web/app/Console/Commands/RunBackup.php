@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use App\Models\Backup;
 use App\Models\HostingSubscription;
 use Illuminate\Console\Command;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class RunBackup extends Command
 {
@@ -33,10 +35,20 @@ class RunBackup extends Command
             $backup->delete();
         }
 
-        $getBackups = Backup::where('backup_type', 'hosting_subscription')->get();
-        if ($getBackups->count() > 0) {
-            foreach ($getBackups as $backup) {
-                $status = $backup->startBackup();
+        // Check for pending backups
+        $getPendingBackups = Backup::where('status', 'pending')
+            ->get();
+        if ($getPendingBackups->count() > 0) {
+            foreach ($getPendingBackups as $pendingBackup) {
+                $pendingBackup->startBackup();
+            }
+        }
+
+        // Check for running backups
+        $getRunningBackups = Backup::where('status', 'running')->get();
+        if ($getRunningBackups->count() > 0) {
+            foreach ($getRunningBackups as $runningBackup) {
+                $runningBackup->checkBackup();
             }
         }
 

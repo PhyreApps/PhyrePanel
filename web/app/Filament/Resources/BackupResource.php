@@ -65,13 +65,21 @@ class BackupResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('backup_type'),
                 Tables\Columns\TextColumn::make('backupRelated'),
-                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\BadgeColumn::make('status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'pending' => 'gray',
+                        'running' => 'primary',
+                        'completed' => 'success',
+                        'failed' => 'danger',
+                        default => 'gray',
+                    }),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->defaultSort('id', 'desc')
             ->bulkActions([
