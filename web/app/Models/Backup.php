@@ -26,8 +26,21 @@ class Backup extends Model
 
         static::creating(function ($model) {
             $model->status = 'pending';
+            $model->checkCronJob();
         });
 
+    }
+
+    private function checkCronJob()
+    {
+        $findCronJob = CronJob::where('command', 'phyre-php artisan phyre:run-backup')->first();
+        if (! $findCronJob) {
+            $cronJob = new CronJob();
+            $cronJob->schedule = '*/5 * * * *';
+            $cronJob->command = 'phyre-php artisan phyre:run-backup';
+            $cronJob->user = 'root';
+            $cronJob->save();
+        }
     }
 
     protected function backupRelated() : Attribute

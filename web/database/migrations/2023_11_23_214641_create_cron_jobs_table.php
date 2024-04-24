@@ -15,12 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('hosting_account_id')->nullable();
             $table->string('command');
-            $table->string('frequency');
-            $table->string('minute');
-            $table->string('hour');
-            $table->string('day_of_month');
-            $table->string('month');
-            $table->string('day_of_week');
+            $table->string('schedule');
+            $table->string('user');
             $table->timestamps();
         });
     }
