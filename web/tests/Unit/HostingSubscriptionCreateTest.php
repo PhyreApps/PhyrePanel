@@ -4,6 +4,8 @@ namespace tests\Unit;
 
 use App\Http\Middleware\ApiKeyMiddleware;
 use App\Installers\Server\Applications\PHPInstaller;
+use App\Models\Database;
+use App\Models\DatabaseUser;
 use App\Models\Domain;
 use App\SupportedApplicationTypes;
 use Illuminate\Support\Str;
@@ -193,6 +195,20 @@ class HostingSubscriptionCreateTest extends ActionTestCase
         $indexPageContent = shell_exec('curl -s http://'.$hostingSubscriptionDomain);
 
         $this->assertTrue(Str::contains($indexPageContent,'Phyre Panel - PHP App'));
+
+
+        // Check hosting subscription local database creation
+        $newDatabase = new Database();
+        $newDatabase->hosting_subscription_id = $hostingSubscriptionData['id'];
+        $newDatabase->is_remote_database_server = 0;
+        $newDatabase->database_name = 'phyre_unit_test_db_'.$randId;
+        $newDatabase->save();
+
+        $newDatabaseUser = new DatabaseUser();
+        $newDatabaseUser->database_id = $newDatabase->id;
+        $newDatabaseUser->username = 'phyre_unit_test_user_'.$randId;
+        $newDatabaseUser->password = 'phyre_unit_test_password_'.$randId;
+        $newDatabaseUser->save();
     }
 
 }
