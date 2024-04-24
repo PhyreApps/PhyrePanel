@@ -124,7 +124,6 @@ class HostingSubscription extends Model
         return [];
 
     }
-
     private static function _generateUsername($string)
     {
         $removedMultispace = preg_replace('/\s+/', ' ', $string);

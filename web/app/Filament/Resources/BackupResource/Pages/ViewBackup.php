@@ -4,9 +4,9 @@ namespace App\Filament\Resources\BackupResource\Pages;
 
 use App\Filament\Resources\BackupResource;
 use Filament\Actions;
-use Filament\Resources\Pages\EditRecord;
+use Filament\Resources\Pages\ViewRecord;
 
-class EditBackup extends EditRecord
+class ViewBackup extends ViewRecord
 {
     protected static string $resource = BackupResource::class;
 

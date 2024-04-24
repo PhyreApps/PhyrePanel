@@ -35,13 +35,15 @@ class AdminPanelProvider extends PanelProvider
         $defaultColor = Color::Yellow;
         $brandLogo = asset('images/phyre-logo.svg');
 
-        $isAppInstalled = file_exists(storage_path('installed'));
-        if ($isAppInstalled) {
-            if (setting('general.brand_logo_url')) {
-                $brandLogo = setting('general.brand_logo_url');
-            }
-            if (setting('general.brand_primary_color')) {
-                $defaultColor = Color::hex(setting('general.brand_primary_color'));
+        if (!app()->runningInConsole()) {
+            $isAppInstalled = file_exists(storage_path('installed'));
+            if ($isAppInstalled) {
+                if (setting('general.brand_logo_url')) {
+                    $brandLogo = setting('general.brand_logo_url');
+                }
+                if (setting('general.brand_primary_color')) {
+                    $defaultColor = Color::hex(setting('general.brand_primary_color'));
+                }
             }
         }
 
