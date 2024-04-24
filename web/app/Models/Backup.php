@@ -33,11 +33,12 @@ class Backup extends Model
 
     private function checkCronJob()
     {
-        $findCronJob = CronJob::where('command', 'phyre-php artisan phyre:run-backup')->first();
+        $cronJobCommand = 'phyre-php /usr/local/phyre/web/artisan phyre:run-backup';
+        $findCronJob = CronJob::where('command', $cronJobCommand)->first();
         if (! $findCronJob) {
             $cronJob = new CronJob();
             $cronJob->schedule = '*/5 * * * *';
-            $cronJob->command = 'phyre-php artisan phyre:run-backup';
+            $cronJob->command = $cronJobCommand;
             $cronJob->user = 'root';
             $cronJob->save();
         }
