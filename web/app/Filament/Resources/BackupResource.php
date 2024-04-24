@@ -74,6 +74,11 @@ class BackupResource extends Resource
                         'failed' => 'danger',
                         default => 'gray',
                     }),
+
+                Tables\Columns\TextColumn::make('completed_at')
+                    ->state(function (Backup $backup) {
+                        return $backup->completed_at ? $backup->completed_at : 'N/A';
+                    }),
             ])
             ->filters([
                 //
