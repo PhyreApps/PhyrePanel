@@ -2,7 +2,6 @@
 INSTALL_DIR="/phyre/install"
 
 apt-get update && apt-get install ca-certificates
-apt-get upgrade -y
 
 mkdir -p $INSTALL_DIR
 

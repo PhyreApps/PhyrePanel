@@ -5,6 +5,13 @@
 
 PHYRE PANEL is a powerful Linux multi-platform hosting control panel designed to simplify the process of managing web hosting servers. Whether you're a seasoned sysadmin or just starting out, PHYRE PANEL provides an intuitive interface and robust features to streamline your hosting management tasks.
 
+## Installation
+To install PhyrePanel, you need to run this commands:
+```
+wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/main/installers/install.sh && chmod +x install.sh && ./install.sh
+```
+The admin panel can be opened on port: yourserver.com:8443
+
 ## Server Application Types Supported
 
 PHYRE PANEL supports a variety of server application types, including:
