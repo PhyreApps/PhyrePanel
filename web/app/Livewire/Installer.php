@@ -263,7 +263,7 @@ class Installer extends Page
                             $dovecotInstaller->setLogFilePath(storage_path($this->install_log_file_path));
                             $dovecotInstaller->install();
 
-                            dd(storage_path($this->install_log_file_path));
+                        //    dd(storage_path($this->install_log_file_path));
                         }),
 
                     Wizard\Step::make('Step 4')

@@ -19,7 +19,7 @@ class DovecotInstaller
         $commands[] = 'echo "Installing dovecot..."';
 
         // postfix - internet site
-        $commands[] = 'apt-get install -y telnet postfix dovecot-core dovecot-imapd dovecot-pop3d dovecot-lmtpd';
+        $commands[] = 'apt-get install -y telnet exim4 dovecot-core dovecot-imapd dovecot-pop3d dovecot-lmtpd';
 
 
 
