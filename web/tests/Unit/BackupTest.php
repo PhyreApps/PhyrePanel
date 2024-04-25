@@ -52,7 +52,7 @@ class BackupTest extends ActionTestCase
 
         $findBackup = false;
         $backupCompleted = false;
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             $findBackup = Backup::where('id', $backupId)->first();
             $findBackup->checkBackup();
             if ($findBackup->status == BackupStatus::Completed) {

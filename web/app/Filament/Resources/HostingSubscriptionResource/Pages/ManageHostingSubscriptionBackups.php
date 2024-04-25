@@ -2,10 +2,12 @@
 
 namespace app\Filament\Resources\HostingSubscriptionResource\Pages;
 
-
+use App\Filament\Enums\HostingSubscriptionBackupType;
 use App\Filament\Resources\Blog\PostResource;
 use App\Filament\Resources\HostingSubscriptionResource;
+use App\Models\Backup;
 use App\Models\DatabaseUser;
+use App\Models\HostingSubscriptionBackup;
 use App\Models\RemoteDatabaseServer;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -16,6 +18,7 @@ use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
+use JaOcero\RadioDeck\Forms\Components\RadioDeck;
 
 class ManageHostingSubscriptionBackups extends ManageRelatedRecords
 {
@@ -50,6 +53,15 @@ class ManageHostingSubscriptionBackups extends ManageRelatedRecords
         return $form
             ->schema([
 
+                RadioDeck::make('backup_type')
+                    ->live()
+                  //  ->default('full')
+                    ->options(HostingSubscriptionBackupType::class)
+                    ->icons(HostingSubscriptionBackupType::class)
+                    ->descriptions(HostingSubscriptionBackupType::class)
+                    ->required()
+                    ->color('primary')
+                    ->columnSpanFull(),
 
 
             ])
@@ -72,7 +84,23 @@ class ManageHostingSubscriptionBackups extends ManageRelatedRecords
             ->recordTitleAttribute('id')
             ->columns([
 
+                Tables\Columns\TextColumn::make('backup_type')
+                    ->state(function (HostingSubscriptionBackup $backup) {
+                        return ucfirst($backup->backup_type);
+                    }),
 
+                Tables\Columns\BadgeColumn::make('status')
+                    ->badge(),
+
+                Tables\Columns\TextColumn::make('completed_at')
+                    ->state(function (HostingSubscriptionBackup $backup) {
+                        return $backup->completed_at ? $backup->completed_at : 'N/A';
+                    }),
+
+                Tables\Columns\TextColumn::make('size')
+                    ->state(function (HostingSubscriptionBackup $backup) {
+                        return $backup->size ? $backup->size : 'N/A';
+                    }),
 
             ])
             ->filters([
