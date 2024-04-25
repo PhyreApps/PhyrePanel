@@ -144,7 +144,7 @@ class Backup extends Model
             $backupTempScript = '/tmp/backup-script-'.$this->id.'.sh';
             $shellFileContent = '';
             $shellFileContent .= 'echo "Backup up Phyre Panel files"'. PHP_EOL;
-            $shellFileContent .= 'mysqldump -u '.env('MYSQl_ROOT_USERNAME').' -p '.env('MYSQL_ROOT_PASSWORD').' '.env('DB_DATABASE').' > '.$databaseBackupPath . PHP_EOL;
+            $shellFileContent .= 'mysqldump -u '.env('MYSQl_ROOT_USERNAME').' -p'.env('MYSQL_ROOT_PASSWORD').' '.env('DB_DATABASE').' > '.$databaseBackupPath . PHP_EOL;
             $shellFileContent .= 'cd '.$backupTempPath .' && tar -czvf '.$backupFilePath.' ./* '. PHP_EOL;
 
             $shellFileContent .= 'rm -rf '.$backupTempPath.PHP_EOL;
