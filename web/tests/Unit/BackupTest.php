@@ -15,6 +15,10 @@ class BackupTest extends ActionTestCase
 {
     public function testBackup()
     {
+        $backup = new Backup();
+        $checkCronJob = $backup->checkCronJob();
+        $this->assertTrue($checkCronJob);
+
         $customer = new Customer();
         $customer->name = 'UnitBackupTest' . time();
         $customer->email = 'UnitBackupTest' . time() . '@unit-test.com';
@@ -74,6 +78,7 @@ class BackupTest extends ActionTestCase
         $this->assertTrue(is_dir($findBackup->path . '/unit-test/' . $hostingSubscription->system_username . '/public_html'));
         $this->assertTrue(is_dir($findBackup->path . '/unit-test/' . $hostingSubscription->system_username . '/public_html/cgi-bin'));
         $this->assertTrue(is_file($findBackup->path . '/unit-test/' . $hostingSubscription->system_username . '/public_html/index.php'));
+
 
     }
 

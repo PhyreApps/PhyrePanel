@@ -53,7 +53,7 @@ class Backup extends Model
         });
     }
 
-    private function checkCronJob()
+    public function checkCronJob()
     {
         $cronJobCommand = 'phyre-php /usr/local/phyre/web/artisan phyre:run-backup';
         $findCronJob = CronJob::where('command', $cronJobCommand)->first();
@@ -63,7 +63,9 @@ class Backup extends Model
             $cronJob->command = $cronJobCommand;
             $cronJob->user = 'root';
             $cronJob->save();
+            return false;
         }
+        return true;
     }
 
     protected function backupRelated() : Attribute
@@ -144,7 +146,7 @@ class Backup extends Model
             $findHostingSubscription = HostingSubscription::where('id', $this->hosting_subscription_id)->first();
             if ($findHostingSubscription) {
 
-                $backupFileName = Str::slug($findHostingSubscription->domain .'-'. date('Ymd-His')) . '.tar.gz';
+                $backupFileName = Str::slug($findHostingSubscription->system_username .'-'. date('Ymd-His')) . '.tar.gz';
                 $backupFilePath = $backupPath.'/'.$backupFileName;
 
                 $backupLogFileName = 'backup.log';
