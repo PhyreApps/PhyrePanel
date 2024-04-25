@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('filepath')->nullable();
             $table->string('size')->nullable();
             $table->string('disk')->nullable();
+            $table->string('process_id')->nullable();
             $table->longText('settings')->nullable();
-
 
             $table->tinyInteger('queued')->nullable();
             $table->timestamp('queued_at')->nullable();
