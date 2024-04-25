@@ -6,6 +6,7 @@ namespace Database\Seeders;
 use App\Models\Backup;
 use App\Models\Customer;
 use App\Models\HostingPlan;
+use App\Models\HostingSubscriptionBackup;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,6 +17,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $backup = new Backup();
+        $backup->checkCronJob();
+
+        $backup = new HostingSubscriptionBackup();
         $backup->checkCronJob();
 
         $findCustomer = Customer::where('email', 'jhondoe@gmail.com')->first();
