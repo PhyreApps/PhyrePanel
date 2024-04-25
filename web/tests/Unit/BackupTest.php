@@ -65,8 +65,15 @@ class BackupTest extends ActionTestCase
 
         $getFilesize = filesize($findBackup->filepath);
         $this->assertGreaterThan(0, $getFilesize);
-
         $this->assertSame(Helpers::checkPathSize($findBackup->path), $findBackup->size);
+
+        Helpers::extractTar($findBackup->filepath, $findBackup->path . '/unit-test');
+
+        $this->assertTrue(is_dir($findBackup->path . '/unit-test'));
+        $this->assertTrue(is_dir($findBackup->path . '/unit-test/' . $hostingSubscription->system_username));
+        $this->assertTrue(is_dir($findBackup->path . '/unit-test/' . $hostingSubscription->system_username . '/public_html'));
+        $this->assertTrue(is_dir($findBackup->path . '/unit-test/' . $hostingSubscription->system_username . '/public_html/cgi-bin'));
+        $this->assertTrue(is_file($findBackup->path . '/unit-test/' . $hostingSubscription->system_username . '/public_html/index.php'));
 
     }
 

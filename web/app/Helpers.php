@@ -4,6 +4,14 @@ namespace App;
 
 class Helpers
 {
+    public static function extractTar($tarFile, $extractPath)
+    {
+        shell_exec('mkdir -p ' . $extractPath);
+
+        $exec = shell_exec('tar -xvf ' . $tarFile . ' -C ' . $extractPath);
+
+        return $exec;
+    }
 
     public static function checkPathSize($path)
     {
