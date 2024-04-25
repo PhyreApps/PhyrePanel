@@ -29,6 +29,11 @@ class Backup extends Model
             $model->checkCronJob();
         });
 
+        static::deleting(function ($model) {
+           if (is_dir($model->path)) {
+               shell_exec('rm -rf ' . $model->path);
+           }
+        });
     }
 
     private function checkCronJob()
@@ -99,7 +104,7 @@ class Backup extends Model
             $findHostingSubscription = HostingSubscription::where('id', $this->hosting_subscription_id)->first();
             if ($findHostingSubscription) {
 
-                $backupFileName = Str::slug($findHostingSubscription->domain .'-'. date('Y-m-d-H-i-s')) . '.zip';
+                $backupFileName = Str::slug($findHostingSubscription->domain .'-'. date('Y-m-d-H-i-s')) . '.tar.gz';
                 $backupFilePath = $backupPath.'/'.$backupFileName;
 
                 $backupLogFileName = 'backup.log';
@@ -111,7 +116,7 @@ class Backup extends Model
                 $shellFileContent .= 'echo "Backup filename: '.$backupFileName. PHP_EOL;
                 $shellFileContent .= 'cp -r /home/'.$findHostingSubscription->system_username.' '.$backupTempPath.PHP_EOL;
 
-                $shellFileContent .= 'cd '.$backupTempPath .' && zip -r '.$backupFilePath.' ./* '. PHP_EOL;
+                $shellFileContent .= 'cd '.$backupTempPath .' && tar -czvf '.$backupFilePath.' ./* '. PHP_EOL;
 
                 $shellFileContent .= 'rm -rf '.$backupTempPath.PHP_EOL;
                 $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;
