@@ -66,7 +66,11 @@ class BackupResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('backup_type'),
+
+                Tables\Columns\TextColumn::make('backup_type')
+                    ->state(function (Backup $backup) {
+                        return ucfirst($backup->backup_type);
+                    }),
 
                 Tables\Columns\BadgeColumn::make('status')
                     ->badge(),
