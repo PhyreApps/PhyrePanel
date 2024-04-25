@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('backups', function (Blueprint $table) {
+        Schema::create('hosting_subscription_backups', function (Blueprint $table) {
             $table->id();
 
+            $table->bigInteger('hosting_subscription_id')->nullable();
             $table->string('backup_type')->nullable();
             $table->string('status')->nullable();
             $table->string('path')->nullable();
@@ -47,6 +48,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('backups');
+        Schema::dropIfExists('hosting_subscription_backups');
     }
 };
