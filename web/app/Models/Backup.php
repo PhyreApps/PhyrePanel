@@ -6,6 +6,7 @@ use App\Filament\Enums\BackupStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Number;
 use Illuminate\Support\Str;
 
 class Backup extends Model
@@ -81,7 +82,7 @@ class Backup extends Model
 
             $backupDoneFile = $this->path.'/backup.done';
             if (file_exists($backupDoneFile)) {
-                $this->size = filesize($this->filepath);
+                $this->size = Number::fileSize(filesize($this->filepath));
                 $this->status = 'completed';
                 $this->completed = true;
                 $this->completed_at = now();
@@ -94,6 +95,18 @@ class Backup extends Model
 
             $checkProcess = shell_exec('ps -p ' . $this->process_id . ' | grep ' . $this->process_id);
             if (Str::contains($checkProcess, $this->process_id)) {
+
+                // Check path size
+                $pathSize = shell_exec('du -sh ' . $this->path);
+                $pathSize = trim($pathSize);
+                $pathSize = explode("\t", $pathSize);
+
+                if (isset($pathSize[0])) {
+                    $pathSize = $pathSize[0];
+                    $this->size = $pathSize;
+                    $this->save();
+                }
+
                 return [
                     'status' => 'processing',
                     'message' => 'Backup is still processing'

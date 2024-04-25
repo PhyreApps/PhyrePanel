@@ -79,7 +79,7 @@ class BackupResource extends Resource
 
                 Tables\Columns\TextColumn::make('size')
                     ->state(function (Backup $backup) {
-                        return $backup->size ? Number::fileSize($backup->size) : 'N/A';
+                        return $backup->size ? $backup->size : 'N/A';
                     }),
             ])
             ->filters([
