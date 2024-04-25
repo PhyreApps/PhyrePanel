@@ -92,8 +92,8 @@ class DomainIsCreatedListener
 
         $install->setLanguage($installationLanguage);
 
-        //  $install->setStandaloneInstallation();
-        $install->setSymlinkInstallation();
+        $install->setStandaloneInstallation();
+        //$install->setSymlinkInstallation();
 
         if ($databasesAreCreated) {
             $install->setDatabaseDriver('mysql');
