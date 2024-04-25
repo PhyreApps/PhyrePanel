@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Backup;
 use App\Models\HostingSubscription;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -29,6 +30,29 @@ class RunBackup extends Command
      */
     public function handle()
     {
+
+        // Find Hosting Subscriptions
+        $findHostingSubscriptions = HostingSubscription::all();
+        if ($findHostingSubscriptions->count() > 0) {
+            foreach ($findHostingSubscriptions as $hostingSubscription) {
+
+                $findBackup = Backup::where('hosting_subscription_id', $hostingSubscription->id)
+                    ->where('backup_type', 'hosting_subscription')
+                    ->where('created_at', '>=', Carbon::now()->subHours(24))
+                    ->first();
+                if (! $findBackup) {
+                    $backup = new Backup();
+                    $backup->hosting_subscription_id = $hostingSubscription->id;
+                    $backup->backup_type = 'hosting_subscription';
+                    $backup->status = 'pending';
+                    $backup->save();
+                } else {
+                    $this->info('Backup already exists for ' . $hostingSubscription->domain);
+                    $this->info('Created before: ' . $findBackup->created_at->diffForHumans());
+                }
+            }
+        }
+
         // Delete backups older than 7 days
         $findBackupsForDeleting = Backup::where('created_at', '<', now()->subDays(7))->get();
         foreach ($findBackupsForDeleting as $backup) {
