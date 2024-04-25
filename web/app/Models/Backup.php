@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Filament\Enums\BackupStatus;
+use App\Helpers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -39,6 +40,10 @@ class Backup extends Model
         static::creating(function ($model) {
             $model->status = 'pending';
             $model->checkCronJob();
+        });
+
+        static::created(function ($model) {
+            $model->startBackup();
         });
 
         static::deleting(function ($model) {
@@ -82,7 +87,7 @@ class Backup extends Model
 
             $backupDoneFile = $this->path.'/backup.done';
             if (file_exists($backupDoneFile)) {
-                $this->size = $this->checkPathSize($this->path);
+                $this->size = Helpers::checkPathSize($this->path);
                 $this->status = 'completed';
                 $this->completed = true;
                 $this->completed_at = now();
@@ -96,7 +101,7 @@ class Backup extends Model
             $checkProcess = shell_exec('ps -p ' . $this->process_id . ' | grep ' . $this->process_id);
             if (Str::contains($checkProcess, $this->process_id)) {
 
-                $this->size = $this->checkPathSize($this->path);
+                $this->size = Helpers::checkPathSize($this->path);
                 $this->save();
 
                 return [
@@ -196,20 +201,5 @@ class Backup extends Model
             }
         }
 
-    }
-
-    private function checkPathSize($path)
-    {
-        // Check path size
-        $pathSize = shell_exec('du -sh ' . $this->path);
-        $pathSize = trim($pathSize);
-        $pathSize = explode("\t", $pathSize);
-
-        if (isset($pathSize[0])) {
-            $pathSize = $pathSize[0];
-            return $pathSize;
-        }
-
-        return 0;
     }
 }
