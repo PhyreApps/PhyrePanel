@@ -135,7 +135,7 @@ class HostingSubscription extends Model
             $lowercased = substr($lowercased, 0, 4);
         }
 
-        $username = $lowercased.rand(111, 999).Str::random(3);
+        $username = $lowercased.rand(1111, 9999).Str::random(4);
         $username = strtolower($username);
 
         return $username;

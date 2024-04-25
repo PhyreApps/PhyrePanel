@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Enums\BackupType;
 use App\Filament\Resources\BackupResource\Pages;
+use app\Filament\Resources\BackupResource\Widgets\BackupStats;
 use App\Models\Backup;
 use App\Models\HostingSubscription;
 use Filament\Forms\Components\Select;
@@ -97,6 +98,12 @@ class BackupResource extends Resource
     {
         return [
             //
+        ];
+    }
+    public static function getWidgets(): array
+    {
+        return [
+            BackupStats::class,
         ];
     }
 

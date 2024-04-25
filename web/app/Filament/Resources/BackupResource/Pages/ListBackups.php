@@ -29,6 +29,11 @@ class ListBackups extends ListRecords
         ];
     }
 
+    protected function getHeaderWidgets(): array
+    {
+        return BackupResource::getWidgets();
+    }
+
     public function getTabs(): array
     {
         return [

@@ -78,7 +78,7 @@ class PHPInstaller
 //        $commands[] = 'sudo a2enmod proxy_fcgi';
 //        $commands[] = 'sudo a2enmod setenvif';
 
-        $commands[] = 'ufw allow in "Apache Full"';
+       // $commands[] = 'ufw allow in "Apache Full"';
         $commands[] = 'systemctl restart apache2';
 
         $shellFileContent = '';
