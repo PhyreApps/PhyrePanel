@@ -171,6 +171,7 @@ class HostingSubscriptionResource extends Resource
          //   Pages\ViewHos::class,
             Pages\EditHostingSubscription::class,
             Pages\ManageHostingSubscriptionDatabases::class,
+            Pages\ManageHostingSubscriptionBackups::class,
         ]);
     }
 
@@ -188,8 +189,8 @@ class HostingSubscriptionResource extends Resource
             'index' => Pages\ListHostingSubscriptions::route('/'),
             'create' => Pages\CreateHostingSubscription::route('/create'),
             'edit' => Pages\EditHostingSubscription::route('/{record}/edit'),
-
             'databases' => Pages\ManageHostingSubscriptionDatabases::route('/{record}/databases'),
+            'backups' => Pages\ManageHostingSubscriptionBackups::route('/{record}/backups'),
         ];
     }
 }
