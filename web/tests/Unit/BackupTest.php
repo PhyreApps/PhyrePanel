@@ -13,7 +13,7 @@ use Tests\Feature\Api\ActionTestCase;
 
 class BackupTest extends ActionTestCase
 {
-    public function testBackup()
+    public function testSystemBackup()
     {
         $backup = new Backup();
         $checkCronJob = $backup->checkCronJob();
@@ -45,7 +45,7 @@ class BackupTest extends ActionTestCase
         $hostingSubscription->save();
 
         $backup = new Backup();
-        $backup->backup_type = 'full';
+        $backup->backup_type = 'system';
         $backup->save();
 
         $backupId = $backup->id;
