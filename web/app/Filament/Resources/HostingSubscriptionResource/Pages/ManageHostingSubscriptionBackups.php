@@ -26,7 +26,7 @@ class ManageHostingSubscriptionBackups extends ManageRelatedRecords
 
     protected static string $relationship = 'backups';
 
-    protected static ?string $navigationIcon = 'heroicon-o-circle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-inbox-stack';
 
     public function getTitle(): string | Htmlable
     {
