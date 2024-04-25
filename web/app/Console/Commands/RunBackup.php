@@ -36,28 +36,6 @@ class RunBackup extends Command
             $backup->delete();
         }
 
-//        // Find Hosting Subscriptions
-//        $findHostingSubscriptions = HostingSubscription::all();
-//        if ($findHostingSubscriptions->count() > 0) {
-//            foreach ($findHostingSubscriptions as $hostingSubscription) {
-//
-//                $findBackup = Backup::where('hosting_subscription_id', $hostingSubscription->id)
-//                    ->where('backup_type', 'hosting_subscription')
-//                    ->where('created_at', '>=', Carbon::now()->subHours(24))
-//                    ->first();
-//                if (! $findBackup) {
-//                    $backup = new Backup();
-//                    $backup->hosting_subscription_id = $hostingSubscription->id;
-//                    $backup->backup_type = 'hosting_subscription';
-//                    $backup->status = 'pending';
-//                    $backup->save();
-//                } else {
-//                    $this->error('Backup already exists for ' . $hostingSubscription->domain);
-//                    $this->error('Created before: ' . $findBackup->created_at->diffForHumans());
-//                }
-//            }
-//        }
-
         $findBackupsToday = Backup::where('created_at', '>=', Carbon::now()->subHours(24))
             ->first();
 

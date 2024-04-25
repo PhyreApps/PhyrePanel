@@ -10,14 +10,14 @@ use Illuminate\Console\Command;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RunHostingSubscriptionBackup extends Command
+class RunHostingSubscriptionsBackup extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'phyre:run-hosting-subscription-backup';
+    protected $signature = 'phyre:run-hosting-subscriptions-backup';
 
     /**
      * The console command description.
@@ -43,13 +43,13 @@ class RunHostingSubscriptionBackup extends Command
             foreach ($findHostingSubscriptions as $hostingSubscription) {
 
                 $findBackup = HostingSubscriptionBackup::where('hosting_subscription_id', $hostingSubscription->id)
-                    ->where('backup_type', 'hosting_subscription')
+                    ->where('backup_type', 'full')
                     ->where('created_at', '>=', Carbon::now()->subHours(24))
                     ->first();
                 if (! $findBackup) {
                     $backup = new HostingSubscriptionBackup();
                     $backup->hosting_subscription_id = $hostingSubscription->id;
-                    $backup->backup_type = 'hosting_subscription';
+                    $backup->backup_type = 'full';
                     $backup->save();
                 } else {
                     $this->error('Backup already exists for ' . $hostingSubscription->domain);
