@@ -21,7 +21,6 @@ class Backup extends Model
     const STATUS_CANCELLED = 'cancelled';
 
     protected $fillable = [
-        'hosting_subscription_id',
         'backup_type',
         'status',
         'path',
@@ -66,21 +65,6 @@ class Backup extends Model
             return false;
         }
         return true;
-    }
-
-    protected function backupRelated() : Attribute
-    {
-        $relatedWith = $this->backup_type;
-        if ($this->backup_type === 'hosting_subscription') {
-            $findHostingSubscription = HostingSubscription::where('id', $this->hosting_subscription_id)->first();
-            if ($findHostingSubscription) {
-                $relatedWith = $findHostingSubscription->domain;
-            }
-        }
-
-        return Attribute::make(
-            get: fn () => $relatedWith
-        );
     }
 
     public function checkBackup()
@@ -144,67 +128,6 @@ class Backup extends Model
         $backupTempPath = $backupPath.'/temp';
         if (! is_dir($backupTempPath)) {
             mkdir($backupTempPath);
-        }
-
-        if ($this->backup_type == 'hosting_subscription') {
-            $findHostingSubscription = HostingSubscription::where('id', $this->hosting_subscription_id)->first();
-            if ($findHostingSubscription) {
-
-                $backupFileName = Str::slug($findHostingSubscription->system_username .'-'. date('Ymd-His')) . '.tar.gz';
-                $backupFilePath = $backupPath.'/'.$backupFileName;
-
-                $backupLogFileName = 'backup.log';
-                $backupLogFilePath = $backupPath.'/'.$backupLogFileName;
-
-                $backupTempScript = '/tmp/backup-script-'.$this->id.'.sh';
-                $shellFileContent = '';
-                $shellFileContent .= 'echo "Backup up domain: '.$findHostingSubscription->domain . PHP_EOL;
-                $shellFileContent .= 'echo "Backup filename: '.$backupFileName. PHP_EOL;
-                $shellFileContent .= 'cp -r /home/'.$findHostingSubscription->system_username.' '.$backupTempPath.PHP_EOL;
-
-                $shellFileContent .= 'cd '.$backupTempPath .' && tar -czvf '.$backupFilePath.' ./* '. PHP_EOL;
-
-                $shellFileContent .= 'rm -rf '.$backupTempPath.PHP_EOL;
-                $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;
-                $shellFileContent .= 'touch ' . $backupPath. '/backup.done' . PHP_EOL;
-                $shellFileContent .= 'rm -rf ' . $backupTempScript;
-
-                file_put_contents($backupTempScript, $shellFileContent);
-
-                $processId = shell_exec('bash '.$backupTempScript.' >> ' . $backupLogFilePath . ' & echo $!');
-                $processId = intval($processId);
-
-                if ($processId > 0 && is_numeric($processId)) {
-
-                    $this->path = $backupPath;
-                    $this->filepath = $backupFilePath;
-                    $this->status = 'processing';
-                    $this->queued = true;
-                    $this->queued_at = now();
-                    $this->process_id = $processId;
-                    $this->save();
-
-                    return [
-                        'status' => 'processing',
-                        'message' => 'Backup started'
-                    ];
-                } else {
-                    $this->status = 'failed';
-                    $this->save();
-                    return [
-                        'status' => 'failed',
-                        'message' => 'Backup failed to start'
-                    ];
-                }
-
-            } else {
-                $this->status = 'failed';
-                $this->save();
-                return [
-                    'status' => 'failed',
-                    'message' => 'Hosting subscription not found'
-                ];
-            }
         }
 
         if ($this->backup_type == 'system') {
