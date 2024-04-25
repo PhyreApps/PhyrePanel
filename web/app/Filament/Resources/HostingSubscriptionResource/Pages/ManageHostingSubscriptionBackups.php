@@ -80,6 +80,15 @@ class ManageHostingSubscriptionBackups extends ManageRelatedRecords
     public function table(Table $table): Table
     {
 
+        $findHostingSubscription = HostingSubscriptionBackup::where('hosting_subscription_id', $this->record->id)
+                            ->where('status', 'processing')
+                            ->get();
+        if ($findHostingSubscription->count() > 0) {
+            foreach ($findHostingSubscription as $backup) {
+                $backup->checkBackup();
+            }
+        }
+
         return $table
             ->recordTitleAttribute('id')
             ->columns([
