@@ -30,6 +30,12 @@ class RunBackup extends Command
      */
     public function handle()
     {
+        // Delete backups older than 7 days
+        $findBackupsForDeleting = Backup::where('created_at', '<', now()->subDays(7))->get();
+        foreach ($findBackupsForDeleting as $backup) {
+            $backup->delete();
+        }
+
         // Find Hosting Subscriptions
         $findHostingSubscriptions = HostingSubscription::all();
         if ($findHostingSubscriptions->count() > 0) {
@@ -50,12 +56,6 @@ class RunBackup extends Command
                     $this->info('Created before: ' . $findBackup->created_at->diffForHumans());
                 }
             }
-        }
-
-        // Delete backups older than 7 days
-        $findBackupsForDeleting = Backup::where('created_at', '<', now()->subDays(7))->get();
-        foreach ($findBackupsForDeleting as $backup) {
-            $backup->delete();
         }
 
         // Check for pending backups

@@ -115,7 +115,7 @@ class Backup extends Model
             $findHostingSubscription = HostingSubscription::where('id', $this->hosting_subscription_id)->first();
             if ($findHostingSubscription) {
 
-                $backupFileName = Str::slug($findHostingSubscription->domain .'-'. date('Y-m-d-H-i-s')) . '.tar.gz';
+                $backupFileName = Str::slug($findHostingSubscription->domain .'-'. date('Ymd-His')) . '.tar.gz';
                 $backupFilePath = $backupPath.'/'.$backupFileName;
 
                 $backupLogFileName = 'backup.log';
@@ -134,20 +134,33 @@ class Backup extends Model
                 $shellFileContent .= 'touch ' . $backupPath. '/backup.done' . PHP_EOL;
                 $shellFileContent .= 'rm -rf ' . $backupTempScript;
 
-                $this->path = $backupPath;
-                $this->filepath = $backupFilePath;
-                $this->status = 'processing';
-                $this->queued = true;
-                $this->queued_at = now();
-                $this->save();
-
                 file_put_contents($backupTempScript, $shellFileContent);
-                shell_exec('bash '.$backupTempScript.' >> ' . $backupLogFilePath . ' &');
 
-                return [
-                    'status' => 'processing',
-                    'message' => 'Backup started'
-                ];
+                $pid = shell_exec('bash '.$backupTempScript.' >> ' . $backupLogFilePath . ' & echo $!');
+                $pid = intval($pid);
+                
+                if ($pid > 0 && is_numeric($pid)) {
+
+                    $this->path = $backupPath;
+                    $this->filepath = $backupFilePath;
+                    $this->status = 'processing';
+                    $this->queued = true;
+                    $this->queued_at = now();
+                    $this->process_id = $pid;
+                    $this->save();
+
+                    return [
+                        'status' => 'processing',
+                        'message' => 'Backup started'
+                    ];
+                } else {
+                    $this->status = 'failed';
+                    $this->save();
+                    return [
+                        'status' => 'failed',
+                        'message' => 'Backup failed to start'
+                    ];
+                }
 
             } else {
                 $this->status = 'failed';
