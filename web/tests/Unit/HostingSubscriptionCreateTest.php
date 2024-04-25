@@ -8,6 +8,7 @@ use App\Models\Database;
 use App\Models\DatabaseUser;
 use App\Models\Domain;
 use App\SupportedApplicationTypes;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\TestCase;
 use Tests\Feature\Api\ActionTestCase;
@@ -207,7 +208,7 @@ class HostingSubscriptionCreateTest extends ActionTestCase
         $newDatabaseUser = new DatabaseUser();
         $newDatabaseUser->database_id = $newDatabase->id;
         $newDatabaseUser->username = 'pput'.$randId;
-        $newDatabaseUser->password = 'pppass'.$randId;
+        $newDatabaseUser->password = Str::password(15);
         $newDatabaseUser->save();
     }
 
