@@ -134,7 +134,10 @@ class Backup extends Model
         if (! is_dir($storagePath)) {
             mkdir($storagePath);
         }
-        $backupPath = $storagePath.'/'.$this->id;
+        $backupPath = $storagePath.'/'.$this->backup_type.'/'.$this->id;
+        if (!is_dir(dirname($backupPath))) {
+            mkdir(dirname($backupPath));
+        }
         if (! is_dir($backupPath)) {
             mkdir($backupPath);
         }
@@ -142,6 +145,7 @@ class Backup extends Model
         if (! is_dir($backupTempPath)) {
             mkdir($backupTempPath);
         }
+
         if ($this->backup_type == 'hosting_subscription') {
             $findHostingSubscription = HostingSubscription::where('id', $this->hosting_subscription_id)->first();
             if ($findHostingSubscription) {
@@ -203,5 +207,56 @@ class Backup extends Model
             }
         }
 
+        if ($this->backup_type == 'system') {
+
+            // Export Phyre Panel database
+            $databaseBackupPath = $backupTempPath.'/database.sql';
+
+            // Export Phyre Panel files
+            $backupFilePath = $backupPath.'/phyre-panel-'.date('Ymd-His').'.tar.gz';
+
+            $backupLogFileName = 'backup.log';
+            $backupLogFilePath = $backupPath.'/'.$backupLogFileName;
+
+            $backupTempScript = '/tmp/backup-script-'.$this->id.'.sh';
+            $shellFileContent = '';
+            $shellFileContent .= 'echo "Backup up Phyre Panel files"'. PHP_EOL;
+            $shellFileContent .= 'mysqldump -u '.env('MYSQl_ROOT_USERNAME').' -p '.env('MYSQL_ROOT_PASSWORD').' '.env('DB_DATABASE').' > '.$databaseBackupPath . PHP_EOL;
+            $shellFileContent .= 'cd '.$backupTempPath .' && tar -czvf '.$backupFilePath.' ./* '. PHP_EOL;
+
+            $shellFileContent .= 'rm -rf '.$backupTempPath.PHP_EOL;
+            $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;
+            $shellFileContent .= 'touch ' . $backupPath. '/backup.done' . PHP_EOL;
+            $shellFileContent .= 'rm -rf ' . $backupTempScript;
+
+            file_put_contents($backupTempScript, $shellFileContent);
+
+            $processId = shell_exec('bash '.$backupTempScript.' >> ' . $backupLogFilePath . ' & echo $!');
+            $processId = intval($processId);
+
+            if ($processId > 0 && is_numeric($processId)) {
+
+                $this->path = $backupPath;
+                $this->filepath = $backupFilePath;
+                $this->status = 'processing';
+                $this->queued = true;
+                $this->queued_at = now();
+                $this->process_id = $processId;
+                $this->save();
+
+                return [
+                    'status' => 'processing',
+                    'message' => 'System backup started'
+                ];
+            } else {
+                $this->status = 'failed';
+                $this->save();
+                return [
+                    'status' => 'failed',
+                    'message' => 'System backup failed to start'
+                ];
+            }
+
+        }
     }
 }

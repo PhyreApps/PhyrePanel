@@ -66,8 +66,8 @@ class BackupResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('process_id'),
-                Tables\Columns\TextColumn::make('backup_type'),
+//                Tables\Columns\TextColumn::make('process_id'),
+//                Tables\Columns\TextColumn::make('backup_type'),
                 Tables\Columns\TextColumn::make('backupRelated'),
                 Tables\Columns\BadgeColumn::make('status')
                     ->badge(),
