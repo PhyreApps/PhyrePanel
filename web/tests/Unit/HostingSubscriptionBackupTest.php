@@ -17,6 +17,8 @@ class HostingSubscriptionBackupTest extends ActionTestCase
 {
     public function testFullBackup()
     {
+        $this->_createHostingSubscription();
+
         Artisan::call('phyre:run-hosting-subscriptions-backup');
 
         $findLastBackup = HostingSubscriptionBackup::orderBy('id', 'asc')->first();
@@ -44,6 +46,42 @@ class HostingSubscriptionBackupTest extends ActionTestCase
         $checkCronJob = $backup->checkCronJob();
         $this->assertTrue($checkCronJob);
 
+        $this->_createHostingSubscription();
+
+        $backup = new HostingSubscriptionBackup();
+        $backup->backup_type = 'full';
+        $backup->save();
+
+        $backupId = $backup->id;
+
+        $findBackup = false;
+        $backupCompleted = false;
+        for ($i = 0; $i < 100; $i++) {
+            $findBackup = HostingSubscriptionBackup::where('id', $backupId)->first();
+            $status = $findBackup->checkBackup();
+            dump($status);
+            if ($findBackup->status == BackupStatus::Completed) {
+                $backupCompleted = true;
+                break;
+            }
+            sleep(1);
+        }
+
+        $this->assertTrue($backupCompleted);
+        $this->assertNotEmpty($findBackup->filepath);
+        $this->assertTrue(file_exists($findBackup->filepath));
+
+        $getFilesize = filesize($findBackup->filepath);
+        $this->assertGreaterThan(0, $getFilesize);
+        $this->assertSame(Helpers::checkPathSize($findBackup->path), $findBackup->size);
+
+        Helpers::extractTar($findBackup->filepath, $findBackup->path . '/unit-test');
+
+
+    }
+
+    private function _createHostingSubscription()
+    {
         $customer = new Customer();
         $customer->name = 'UnitBackupTest' . time();
         $customer->email = 'UnitBackupTest' . time() . '@unit-test.com';
@@ -68,36 +106,5 @@ class HostingSubscriptionBackupTest extends ActionTestCase
         $hostingSubscription->hosting_plan_id = $hostingPlan->id;
         $hostingSubscription->domain = 'unit-backup-test' . time() . '.com';
         $hostingSubscription->save();
-
-        $backup = new HostingSubscriptionBackup();
-        $backup->backup_type = 'full';
-        $backup->save();
-
-        $backupId = $backup->id;
-
-        $findBackup = false;
-        $backupCompleted = false;
-        for ($i = 0; $i < 100; $i++) {
-            $findBackup = HostingSubscriptionBackup::where('id', $backupId)->first();
-            $findBackup->checkBackup();
-            if ($findBackup->status == BackupStatus::Completed) {
-                $backupCompleted = true;
-                break;
-            }
-            sleep(1);
-        }
-
-        $this->assertTrue($backupCompleted);
-        $this->assertNotEmpty($findBackup->filepath);
-        $this->assertTrue(file_exists($findBackup->filepath));
-
-        $getFilesize = filesize($findBackup->filepath);
-        $this->assertGreaterThan(0, $getFilesize);
-        $this->assertSame(Helpers::checkPathSize($findBackup->path), $findBackup->size);
-
-        Helpers::extractTar($findBackup->filepath, $findBackup->path . '/unit-test');
-
-
     }
-
 }
