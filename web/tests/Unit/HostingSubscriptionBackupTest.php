@@ -4,18 +4,18 @@ namespace tests\Unit;
 
 use App\Filament\Enums\BackupStatus;
 use App\Helpers;
-use App\Models\Backup;
 use App\Models\Customer;
 use App\Models\HostingPlan;
 use App\Models\HostingSubscription;
+use App\Models\HostingSubscriptionBackup;
 use Faker\Factory;
 use Tests\Feature\Api\ActionTestCase;
 
-class BackupTest extends ActionTestCase
+class HostingSubscriptionBackupTest extends ActionTestCase
 {
     public function testBackup()
     {
-        $backup = new Backup();
+        $backup = new HostingSubscriptionBackup();
         $checkCronJob = $backup->checkCronJob();
         $this->assertTrue($checkCronJob);
 
@@ -44,8 +44,9 @@ class BackupTest extends ActionTestCase
         $hostingSubscription->domain = 'unit-backup-test' . time() . '.com';
         $hostingSubscription->save();
 
-        $backup = new Backup();
+        $backup = new HostingSubscriptionBackup();
         $backup->backup_type = 'full';
+        $backup->hosting_subscription_id = $hostingSubscription->id;
         $backup->save();
 
         $backupId = $backup->id;
@@ -53,7 +54,7 @@ class BackupTest extends ActionTestCase
         $findBackup = false;
         $backupCompleted = false;
         for ($i = 0; $i < 50; $i++) {
-            $findBackup = Backup::where('id', $backupId)->first();
+            $findBackup = HostingSubscriptionBackup::where('id', $backupId)->first();
             $findBackup->checkBackup();
             if ($findBackup->status == BackupStatus::Completed) {
                 $backupCompleted = true;
@@ -71,6 +72,12 @@ class BackupTest extends ActionTestCase
         $this->assertSame(Helpers::checkPathSize($findBackup->path), $findBackup->size);
 
         Helpers::extractTar($findBackup->filepath, $findBackup->path . '/unit-test');
+
+        $this->assertTrue(is_dir($findBackup->path . '/unit-test'));
+        $this->assertTrue(is_dir($findBackup->path . '/unit-test/' . $hostingSubscription->system_username));
+        $this->assertTrue(is_dir($findBackup->path . '/unit-test/' . $hostingSubscription->system_username . '/public_html'));
+        $this->assertTrue(is_dir($findBackup->path . '/unit-test/' . $hostingSubscription->system_username . '/public_html/cgi-bin'));
+        $this->assertTrue(is_file($findBackup->path . '/unit-test/' . $hostingSubscription->system_username . '/public_html/index.php'));
 
 
     }
