@@ -160,17 +160,17 @@ class Backup extends Model
 
                 file_put_contents($backupTempScript, $shellFileContent);
 
-                $pid = shell_exec('bash '.$backupTempScript.' >> ' . $backupLogFilePath . ' & echo $!');
-                $pid = intval($pid);
+                $processId = shell_exec('bash '.$backupTempScript.' >> ' . $backupLogFilePath . ' & echo $!');
+                $processId = intval($processId);
 
-                if ($pid > 0 && is_numeric($pid)) {
+                if ($processId > 0 && is_numeric($processId)) {
 
                     $this->path = $backupPath;
                     $this->filepath = $backupFilePath;
                     $this->status = 'processing';
                     $this->queued = true;
                     $this->queued_at = now();
-                    $this->process_id = $pid;
+                    $this->process_id = $processId;
                     $this->save();
 
                     return [
