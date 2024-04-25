@@ -64,6 +64,7 @@ class Backup extends Model
         if ($this->status == 'running') {
             $backupDoneFile = $this->path.'/backup.done';
             if (file_exists($backupDoneFile)) {
+                $this->size = filesize($this->filepath);
                 $this->status = 'completed';
                 $this->completed = true;
                 $this->completed_at = now();

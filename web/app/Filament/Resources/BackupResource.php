@@ -12,6 +12,7 @@ use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Number;
 use JaOcero\RadioDeck\Forms\Components\RadioDeck;
 
 use Illuminate\Database\Migrations\Migration;
@@ -78,6 +79,11 @@ class BackupResource extends Resource
                 Tables\Columns\TextColumn::make('completed_at')
                     ->state(function (Backup $backup) {
                         return $backup->completed_at ? $backup->completed_at : 'N/A';
+                    }),
+
+                Tables\Columns\TextColumn::make('size')
+                    ->state(function (Backup $backup) {
+                        return $backup->size ? Number::fileSize($backup->size) : 'N/A';
                     }),
             ])
             ->filters([
