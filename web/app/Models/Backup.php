@@ -130,7 +130,7 @@ class Backup extends Model
             mkdir($backupTempPath);
         }
 
-        if ($this->backup_type == 'system') {
+        if ($this->backup_type == 'full') {
 
             // Export Phyre Panel database
             $databaseBackupPath = $backupTempPath.'/database.sql';
