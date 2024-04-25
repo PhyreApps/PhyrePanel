@@ -82,7 +82,7 @@ class Backup extends Model
 
             $backupDoneFile = $this->path.'/backup.done';
             if (file_exists($backupDoneFile)) {
-                $this->size = Number::fileSize(filesize($this->filepath));
+                $this->size = $this->checkPathSize($this->path);
                 $this->status = 'completed';
                 $this->completed = true;
                 $this->completed_at = now();
@@ -96,16 +96,8 @@ class Backup extends Model
             $checkProcess = shell_exec('ps -p ' . $this->process_id . ' | grep ' . $this->process_id);
             if (Str::contains($checkProcess, $this->process_id)) {
 
-                // Check path size
-                $pathSize = shell_exec('du -sh ' . $this->path);
-                $pathSize = trim($pathSize);
-                $pathSize = explode("\t", $pathSize);
-
-                if (isset($pathSize[0])) {
-                    $pathSize = $pathSize[0];
-                    $this->size = $pathSize;
-                    $this->save();
-                }
+                $this->size = $this->checkPathSize($this->path);
+                $this->save();
 
                 return [
                     'status' => 'processing',
@@ -204,5 +196,20 @@ class Backup extends Model
             }
         }
 
+    }
+
+    private function checkPathSize($path)
+    {
+        // Check path size
+        $pathSize = shell_exec('du -sh ' . $this->path);
+        $pathSize = trim($pathSize);
+        $pathSize = explode("\t", $pathSize);
+
+        if (isset($pathSize[0])) {
+            $pathSize = $pathSize[0];
+            return $pathSize;
+        }
+
+        return 0;
     }
 }
