@@ -77,7 +77,8 @@ class Backup extends Model
 
     public function checkBackup()
     {
-        if ($this->status == 'processing') {
+        if ($this->status == BackupStatus::Processing) {
+
             $backupDoneFile = $this->path.'/backup.done';
             if (file_exists($backupDoneFile)) {
                 $this->size = filesize($this->filepath);
@@ -85,14 +86,32 @@ class Backup extends Model
                 $this->completed = true;
                 $this->completed_at = now();
                 $this->save();
+                return [
+                    'status' => 'completed',
+                    'message' => 'Backup completed'
+                ];
+            }
+
+            $checkProcess = shell_exec('ps -p ' . $this->process_id . ' | grep ' . $this->process_id);
+            if (Str::contains($checkProcess, $this->process_id)) {
+                return [
+                    'status' => 'processing',
+                    'message' => 'Backup is still processing'
+                ];
+            } else {
+                $this->status = 'failed';
+                $this->save();
+                return [
+                    'status' => 'failed',
+                    'message' => 'Backup failed'
+                ];
             }
         }
     }
 
     public function startBackup()
     {
-
-        if ($this->status == 'processing') {
+        if ($this->status == BackupStatus::Processing) {
             return [
                 'status' => 'processing',
                 'message' => 'Backup is already processing'
@@ -138,7 +157,7 @@ class Backup extends Model
 
                 $pid = shell_exec('bash '.$backupTempScript.' >> ' . $backupLogFilePath . ' & echo $!');
                 $pid = intval($pid);
-                
+
                 if ($pid > 0 && is_numeric($pid)) {
 
                     $this->path = $backupPath;

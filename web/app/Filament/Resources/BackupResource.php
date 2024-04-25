@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Enums\BackupStatus;
 use App\Filament\Enums\BackupType;
 use App\Filament\Resources\BackupResource\Pages;
 use app\Filament\Resources\BackupResource\Widgets\BackupStats;
@@ -65,6 +66,7 @@ class BackupResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('process_id'),
                 Tables\Columns\TextColumn::make('backup_type'),
                 Tables\Columns\TextColumn::make('backupRelated'),
                 Tables\Columns\BadgeColumn::make('status')

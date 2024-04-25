@@ -52,8 +52,8 @@ class RunBackup extends Command
                     $backup->status = 'pending';
                     $backup->save();
                 } else {
-                    $this->info('Backup already exists for ' . $hostingSubscription->domain);
-                    $this->info('Created before: ' . $findBackup->created_at->diffForHumans());
+                    $this->error('Backup already exists for ' . $hostingSubscription->domain);
+                    $this->error('Created before: ' . $findBackup->created_at->diffForHumans());
                 }
             }
         }
@@ -64,6 +64,7 @@ class RunBackup extends Command
         if ($getPendingBackups->count() > 0) {
             foreach ($getPendingBackups as $pendingBackup) {
                 $pendingBackup->startBackup();
+                $this->info('Backup started.. ');
             }
         }
 
@@ -72,6 +73,7 @@ class RunBackup extends Command
         if ($getRunningBackups->count() > 0) {
             foreach ($getRunningBackups as $runningBackup) {
                 $runningBackup->checkBackup();
+                $this->info('Checking backup status...');
             }
         }
 
