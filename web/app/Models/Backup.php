@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Filament\Enums\BackupStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -11,6 +12,12 @@ class Backup extends Model
 {
     use HasFactory;
 
+    const STATUS_PENDING = 'pending';
+    const STATUS_PROCESSING = 'processing';
+    const STATUS_COMPLETED = 'completed';
+    const STATUS_FAILED = 'failed';
+    const STATUS_CANCELLED = 'cancelled';
+
     protected $fillable = [
         'hosting_subscription_id',
         'backup_type',
@@ -18,6 +25,10 @@ class Backup extends Model
         'path',
         'size',
         'disk',
+    ];
+
+    protected $casts = [
+        'status' => BackupStatus::class,
     ];
 
     public static function boot()
@@ -66,7 +77,7 @@ class Backup extends Model
 
     public function checkBackup()
     {
-        if ($this->status == 'running') {
+        if ($this->status == 'processing') {
             $backupDoneFile = $this->path.'/backup.done';
             if (file_exists($backupDoneFile)) {
                 $this->size = filesize($this->filepath);
@@ -81,10 +92,10 @@ class Backup extends Model
     public function startBackup()
     {
 
-        if ($this->status == 'running') {
+        if ($this->status == 'processing') {
             return [
-                'status' => 'running',
-                'message' => 'Backup already running'
+                'status' => 'processing',
+                'message' => 'Backup is already processing'
             ];
         }
 
@@ -125,7 +136,7 @@ class Backup extends Model
 
                 $this->path = $backupPath;
                 $this->filepath = $backupFilePath;
-                $this->status = 'running';
+                $this->status = 'processing';
                 $this->queued = true;
                 $this->queued_at = now();
                 $this->save();
@@ -134,7 +145,7 @@ class Backup extends Model
                 shell_exec('bash '.$backupTempScript.' >> ' . $backupLogFilePath . ' &');
 
                 return [
-                    'status' => 'running',
+                    'status' => 'processing',
                     'message' => 'Backup started'
                 ];
 

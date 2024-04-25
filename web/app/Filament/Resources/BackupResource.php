@@ -67,14 +67,7 @@ class BackupResource extends Resource
                 Tables\Columns\TextColumn::make('backup_type'),
                 Tables\Columns\TextColumn::make('backupRelated'),
                 Tables\Columns\BadgeColumn::make('status')
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'pending' => 'gray',
-                        'running' => 'primary',
-                        'completed' => 'success',
-                        'failed' => 'danger',
-                        default => 'gray',
-                    }),
+                    ->badge(),
 
                 Tables\Columns\TextColumn::make('completed_at')
                     ->state(function (Backup $backup) {

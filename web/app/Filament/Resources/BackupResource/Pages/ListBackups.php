@@ -34,6 +34,7 @@ class ListBackups extends ListRecords
         return [
             null => Tab::make('All'),
             'completed' => Tab::make()->query(fn ($query) => $query->where('status', 'completed')),
+            'processing' => Tab::make()->query(fn ($query) => $query->where('status', 'processing')),
         ];
     }
 }

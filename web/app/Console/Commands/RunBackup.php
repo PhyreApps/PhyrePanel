@@ -30,7 +30,6 @@ class RunBackup extends Command
      */
     public function handle()
     {
-
         // Find Hosting Subscriptions
         $findHostingSubscriptions = HostingSubscription::all();
         if ($findHostingSubscriptions->count() > 0) {
@@ -68,8 +67,8 @@ class RunBackup extends Command
             }
         }
 
-        // Check for running backups
-        $getRunningBackups = Backup::where('status', 'running')->get();
+        // Check for processing backups
+        $getRunningBackups = Backup::where('status', 'processing')->get();
         if ($getRunningBackups->count() > 0) {
             foreach ($getRunningBackups as $runningBackup) {
                 $runningBackup->checkBackup();
