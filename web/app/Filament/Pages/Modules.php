@@ -100,6 +100,11 @@ class Modules extends Page
 
         $this->installLogPulling = false;
 
+        $moduleInfo = ModulesManager::getModuleInfo($module);
+        if (isset($moduleInfo['adminUrl'])) {
+            return $this->redirect($moduleInfo['adminUrl']);
+        }
+
 
     }
 }

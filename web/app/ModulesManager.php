@@ -70,6 +70,11 @@ class ModulesManager
 
     public static function saveInstalledModule($module)
     {
+        $findModule = Module::where('name', $module)->first();
+        if ($findModule) {
+            return;
+        }
+
         $newModule = new Module();
         $newModule->name = $module;
         $newModule->namespace = 'Modules\\' . $module;
