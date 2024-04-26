@@ -158,7 +158,7 @@ class HostingSubscriptionBackupTest extends ActionTestCase
         $unitTestDbConnection = 'db-unit-' . $database->id;
         config(['database.connections.' . $unitTestDbConnection => [
             'driver' => 'mysql',
-            'host' => 'localhost',
+            'host' => '127.0.0.1',
             'port' => '3306',
             'database' => $database->database_name_prefix . $database->database_name,
             'username' => $databaseUser->username_prefix . $databaseUser->username,
