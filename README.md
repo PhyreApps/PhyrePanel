@@ -48,8 +48,7 @@ For support and assistance with PHYRE PANEL, please visit our [documentation](ht
 
 ## License
 
-PHYRE PANEL is released under the [MIT License](https://opensource.org/licenses/MIT). See the [LICENSE](LICENSE) file for details.
-
+PHYRE PANEL is licensed under the [GNU General Public License (GPL) version 3](https://www.gnu.org/licenses/gpl-3.0.en.html). See the [LICENSE](LICENSE) file for details.
 ## Connect with Us
 
 Stay up to date with the latest news and updates from PHYRE PANEL:
