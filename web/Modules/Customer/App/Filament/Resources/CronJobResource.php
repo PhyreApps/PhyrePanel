@@ -66,6 +66,9 @@ class CronJobResource extends Resource
                 Tables\Columns\TextColumn::make('user')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('hostingSubscription.domain')
+                    ->searchable()
+                    ->sortable(),
             ])
             ->filters([
                 //

@@ -12,6 +12,7 @@ class CronJob extends Model
         'schedule',
         'command',
         'user',
+        'hosting_subscription_id'
     ];
 
     protected static function booted(): void
@@ -35,6 +36,12 @@ class CronJob extends Model
         parent::boot();
 
         static::creating(function ($model) {
+            if ($model->hosting_subscription_id) {
+                $hostingSubscription = HostingSubscription::where('id', $model->hosting_subscription_id)->first();
+                if ($hostingSubscription) {
+                    $model->user = $hostingSubscription->system_username;
+                }
+            }
             $allCronJobs = [];
             $oldCronJobs = self::where('user', $model->user)->get();
             foreach ($oldCronJobs as $oldCronJob) {
@@ -100,5 +107,6 @@ class CronJob extends Model
 
         return false;
     }
+
 
 }
