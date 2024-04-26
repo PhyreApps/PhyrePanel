@@ -89,7 +89,22 @@ class HostingSubscriptionBackupTest extends ActionTestCase
         Helpers::extractTar($findBackup->filepath, $findBackup->path . '/unit-test');
 //
 //        dd($chs);
-//        dd($findBackup->path);
+        $findDatabase = Database::where('id', $chs['databaseId'])->first();
+
+        $extractedDatabase = $findBackup->path . '/unit-test/' . $findDatabase->database_name_prefix . $findDatabase->database_name . '.sql';
+        $this->assertTrue(file_exists($extractedDatabase));
+        $extractedDatabaseContent = file_get_contents($extractedDatabase);
+        $this->assertNotEmpty($extractedDatabaseContent);
+
+        foreach ($chs['databaseTableData'] as $tableName => $tableData) {
+            $this->assertStringContainsString('CREATE TABLE `' . $tableName . '`', $extractedDatabaseContent);
+            foreach ($tableData as $data) {
+                $this->assertStringContainsString('INSERT INTO `' . $tableName . '`', $extractedDatabaseContent);
+                $this->assertStringContainsString($data['name'], $extractedDatabaseContent);
+                $this->assertStringContainsString($data['email'], $extractedDatabaseContent);
+                $this->assertStringContainsString($data['phone'], $extractedDatabaseContent);
+            }
+        }
 
     }
 
