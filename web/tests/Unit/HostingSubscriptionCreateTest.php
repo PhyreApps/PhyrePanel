@@ -208,7 +208,7 @@ class HostingSubscriptionCreateTest extends ActionTestCase
         $newDatabaseUser = new DatabaseUser();
         $newDatabaseUser->database_id = $newDatabase->id;
         $newDatabaseUser->username = 'pput'.$randId;
-        $newDatabaseUser->password = Str::password(15);
+        $newDatabaseUser->password = Str::password(24);
         $newDatabaseUser->save();
     }
 

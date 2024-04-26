@@ -58,7 +58,7 @@ class DomainIsCreatedListener
 
         try {
 
-            $databaseUserPassword = Str::random(8);
+            $databaseUserPassword = Str::password(24);
             $databaseName = $databaseUsername = 'mw'.time();
 
             $hss = new HostingSubscriptionService($findDomain->hosting_subscription_id);
