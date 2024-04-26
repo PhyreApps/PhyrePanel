@@ -46,8 +46,8 @@ class HostingSubscriptionBackup extends Model
         });
 
         static::deleting(function ($model) {
-            if (is_dir($model->path)) {
-                shell_exec('rm -rf ' . $model->path);
+            if (is_file($model->filepath)) {
+                shell_exec('rm -rf ' . $model->filepath);
             }
         });
     }
@@ -82,13 +82,14 @@ class HostingSubscriptionBackup extends Model
 
         if ($this->status == BackupStatus::Processing) {
 
-            $backupDoneFile = $this->path.'/backup.done';
+            $backupDoneFile = $this->path.'/backup-'.$this->id.'.done';
             if (file_exists($backupDoneFile)) {
                 $this->size = Helpers::checkPathSize($this->path);
                 $this->status = 'completed';
                 $this->completed = true;
                 $this->completed_at = now();
                 $this->save();
+                shell_exec('rm -rf ' . $backupDoneFile);
                 return [
                     'status' => 'completed',
                     'message' => 'Backup completed'
@@ -158,7 +159,8 @@ class HostingSubscriptionBackup extends Model
             $backupLogFileName = 'backup.log';
             $backupLogFilePath = $backupPath.'/'.$backupLogFileName;
 
-            $backupTargetPath = $findMainDomain->domain_root . '/backups/'.$backupFileName;
+            $backupTargetPath = $findMainDomain->domain_root . '/backups';
+            $backupTargetFilePath = $backupTargetPath.'/'.$backupFileName;
 
             $backupTempScript = '/tmp/backup-script-'.$this->id.'.sh';
             $shellFileContent = '';
@@ -170,11 +172,11 @@ class HostingSubscriptionBackup extends Model
 
             $shellFileContent .= 'rm -rf '.$backupTempPath.PHP_EOL;
             $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;
-            $shellFileContent .= 'touch ' . $backupPath. '/backup.done' . PHP_EOL;
+            $shellFileContent .= 'touch ' . $backupTargetPath. '/backup-'.$this->id.'.done' . PHP_EOL;
             $shellFileContent .= 'rm -rf ' . $backupTempScript . PHP_EOL;
 
-            $shellFileContent .= 'mkdir -p '. $findMainDomain->domain_root . '/backups'.PHP_EOL;
-            $shellFileContent .= 'mv '.$backupFilePath.' '. $backupTargetPath.PHP_EOL;
+            $shellFileContent .= 'mkdir -p '. $backupTargetPath.PHP_EOL;
+            $shellFileContent .= 'mv '.$backupFilePath.' '. $backupTargetFilePath.PHP_EOL;
 
             file_put_contents($backupTempScript, $shellFileContent);
 
