@@ -100,21 +100,31 @@ class Modules extends Page
         try {
             $postInstall = app()->make('Modules\\' . $module . '\\PostInstall');
             if (method_exists($postInstall, 'run')) {
-                
-                $postInstall->setLogFile($this->installLogFilePath);
+
+                if ($postInstall->isSupportLog()) {
+                    $postInstall->setLogFile($this->installLogFilePath);
+                }
+
                 $postInstall->run();
 
-                $this->dispatch('open-modal', id: 'install-module-modal', props: ['module' => $module]);
+                if ($postInstall->isSupportLog()) {
+                    $this->dispatch('open-modal', id: 'install-module-modal', props: ['module' => $module]);
+                    return;
+                }
+
             }
         } catch(\Exception $e) {
-            $newModule = new Module();
-            $newModule->name = $module;
-            $newModule->namespace = 'Modules\\' . $module;
-            $newModule->installed = 1;
-            $newModule->save();
-
-            $this->installLogPulling = false;
+           // dd($e->getMessage());
         }
+
+        $newModule = new Module();
+        $newModule->name = $module;
+        $newModule->namespace = 'Modules\\' . $module;
+        $newModule->installed = 1;
+        $newModule->save();
+
+        $this->installLogPulling = false;
+
 
     }
 }
