@@ -7,6 +7,7 @@ use App\UniversalDatabaseExecutor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
 
 class Database extends Model
 {
@@ -20,6 +21,17 @@ class Database extends Model
         'database_name_prefix',
         'description',
     ];
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope('customer', function (Builder $query) {
+            if (auth()->check()) {
+                $query->whereHas('hostingSubscription', function ($query) {
+                    $query->where('customer_id', auth()->user()->id);
+                });
+            }
+        });
+    }
 
     public static function boot()
     {
