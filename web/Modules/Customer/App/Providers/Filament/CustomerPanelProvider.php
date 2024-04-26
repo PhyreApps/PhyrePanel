@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Customer\Providers\Filament;
+namespace Modules\Customer\App\Providers\Filament;
 
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -53,12 +53,12 @@ class CustomerPanelProvider extends PanelProvider
             ->colors([
                 'primary'=>$defaultColor,
             ])
-            ->discoverResources(in: module_path($this->module, 'Filament/Admin/Resources'), for: "$moduleNamespace\\Filament\\Admin\\Resources")
-            ->discoverPages(in: module_path($this->module, 'Filament/Admin/Pages'), for: "$moduleNamespace\\Filament\\Admin\\Pages")
+            ->discoverResources(in: module_path($this->module, 'App/Filament/Resources'), for: "$moduleNamespace\\App\\Filament\\Resources")
+            ->discoverPages(in: module_path($this->module, 'App/Filament/Pages'), for: "$moduleNamespace\\App\Filament\\Pages")
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: module_path($this->module, 'Filament/Admin/Widgets'), for: "$moduleNamespace\\Filament\\Admin\\Widgets")
+            ->discoverWidgets(in: module_path($this->module, 'App/Filament/Widgets'), for: "$moduleNamespace\\App\Filament\\Widgets")
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
