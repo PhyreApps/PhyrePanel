@@ -118,8 +118,7 @@ class HostingSubscriptionBackup extends Model
 
     public function startBackup()
     {
-        $findHostingSubscription = HostingSubscription::select(['id'])
-            ->where('id', $this->hosting_subscription_id)
+        $findHostingSubscription = HostingSubscription::where('id', $this->hosting_subscription_id)
             ->first();
         if (! $findHostingSubscription) {
             $this->delete();
@@ -135,7 +134,17 @@ class HostingSubscriptionBackup extends Model
                 'message' => 'Backup is already processing'
             ];
         }
-
+        $findMainDomain = Domain::where('hosting_subscription_id', $findHostingSubscription->id)
+            ->where('is_main', 1)
+            ->first();
+        if (! $findMainDomain) {
+            $this->delete();
+            return [
+                'status' => 'failed',
+                'message' => 'Main domain not found'
+            ];
+        }
+        
         $storagePath = storage_path('backups');
         if (! is_dir($storagePath)) {
             mkdir($storagePath);
@@ -151,6 +160,7 @@ class HostingSubscriptionBackup extends Model
         if (! is_dir($backupTempPath)) {
             mkdir($backupTempPath);
         }
+        dd($backupPath, $backupTempPath);
 
         if ($this->backup_type == 'full') {
 
@@ -188,6 +198,7 @@ class HostingSubscriptionBackup extends Model
                 $this->process_id = $processId;
                 $this->save();
 
+                dd($this);
                 return [
                     'status' => 'processing',
                     'message' => 'Backup started'
