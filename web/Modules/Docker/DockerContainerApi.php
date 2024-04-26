@@ -59,33 +59,28 @@ class DockerContainerApi
     {
         $commandId = rand(10000, 99999);
 
-        $shellFileContent = 'docker run --name ' . $this->name . ' ';
+        $dockerComposeFileContent = view('docker::actions.docker-compose-yml', [
+            'name' => $this->name,
+            'image' => $this->image,
+            'port' => $this->port,
+            'externalPort' => $this->externalPort,
+            'environmentVariables' => $this->environmentVariables,
+            'volumeMapping' => $this->volumeMapping,
+        ])->render();
 
-        if (!empty($this->port)) {
-            $shellFileContent .= ' -p ' . $this->externalPort . ':' . $this->port . ' ';
+        $dockerContaienrPath = storage_path('docker/'.$this->name);
+        if (!is_dir($dockerContaienrPath)) {
+            shell_exec('mkdir -p ' . $dockerContaienrPath);
         }
-        $shellFileContent .= '-d ' . $this->image . ' ';
 
-//        if (!empty($this->environmentVariables)) {
-//            foreach ($this->environmentVariables as $key => $value) {
-//                $shellFileContent .= ' -e ' . $key . '=' . $value . ' ';
-//            }
-//        }
-//
-//        if (!empty($this->volumeMapping)) {
-//            foreach ($this->volumeMapping as $key => $value) {
-//                $shellFileContent .= ' -v ' . $key . ':' . $value . ' ';
-//            }
-//        }
+        $dockerComposeFile = $dockerContaienrPath . '/docker-compose.yml';
+        file_put_contents($dockerComposeFile, $dockerComposeFileContent);
 
-        $shellFileContent .= PHP_EOL . 'rm -f /tmp/docker-run-container-'.$commandId.'.sh';
-
-        file_put_contents('/tmp/docker-run-container-'.$commandId.'.sh', $shellFileContent);
-        $output = shell_exec('bash /tmp/docker-run-container-'.$commandId.'.sh');
+        $output = shell_exec("cd $dockerContaienrPath && docker-compose up -d");
 
         // Get docker container id from output
         $dockerContainerId = trim($output);
-        $output = shell_exec('docker ps --format json --filter id='.$dockerContainerId);
+        $output = shell_exec('docker ps --format json --filter name='.$this->name);
         $output = json_decode($output, true);
 
         return $output;

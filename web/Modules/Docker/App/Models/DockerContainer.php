@@ -59,10 +59,20 @@ class DockerContainer extends Model
 
             $model->port = trim($model->port);
             $model->external_port = trim($model->external_port);
+            $envCleaned = [];
+            if (!empty($model->environment_variables)) {
+                foreach ($model->environment_variables as $envKey=>$envValue) {
+                    $envKey = trim($envKey);
+                    $envKey = str_replace("\t", ' ', $envKey);
+                    $envValue = trim($envValue);
+                    $envValue = str_replace("\t", ' ', $envValue);
+                    $envCleaned[$envKey] = $envValue;
+                }
+            }
 
             $dockerContainerApi = new DockerContainerApi();
             $dockerContainerApi->setImage($model->image);
-            $dockerContainerApi->setEnvironmentVariables($model->environment_variables);
+            $dockerContainerApi->setEnvironmentVariables($envCleaned);
             $dockerContainerApi->setVolumeMapping($model->volume_mapping);
 //            $dockerContainerApi->setMemoryLimit($model->memory_limit);
 //            $dockerContainerApi->setUnlimitedMemory($model->unlimited_memory);
