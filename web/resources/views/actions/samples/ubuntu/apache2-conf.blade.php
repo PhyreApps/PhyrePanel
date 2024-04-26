@@ -37,6 +37,12 @@
 
     @endif
 
+    @if (!empty($proxyPass))
+
+    ProxyPass / {{$proxyPass}}
+
+    @endif
+
     <Directory {{$domainPublic}}>
 
         Options Indexes FollowSymLinks MultiViews @if($appType == 'php') Includes ExecCGI @endif

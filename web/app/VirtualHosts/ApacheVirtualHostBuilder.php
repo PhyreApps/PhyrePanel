@@ -35,6 +35,8 @@ class ApacheVirtualHostBuilder
 
     public $serverAdmin = null;
 
+    public $proxyPass = null;
+
     public function setPort($port)
     {
         $this->port = $port;
@@ -124,6 +126,11 @@ class ApacheVirtualHostBuilder
         $this->serverAdmin = $email;
     }
 
+    public function setProxyPass($proxyPass)
+    {
+        $this->proxyPass = $proxyPass;
+    }
+
     public function buildConfig()
     {
         $settings = [
@@ -145,6 +152,7 @@ class ApacheVirtualHostBuilder
             'passengerAppRoot' => $this->passengerAppRoot,
             'passengerAppType' => $this->passengerAppType,
             'passengerStartupFile' => $this->passengerStartupFile,
+            'proxyPass' => $this->proxyPass,
         ];
 
         $apacheVirtualHostConfigs = app()->virtualHostManager->getConfigs($this->additionalServices);

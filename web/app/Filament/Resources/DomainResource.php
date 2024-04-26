@@ -18,6 +18,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use JaOcero\RadioDeck\Forms\Components\RadioDeck;
+use Modules\Docker\App\Models\DockerContainer;
 
 class DomainResource extends Resource
 {
@@ -33,8 +34,17 @@ class DomainResource extends Resource
     {
         $hostingSubscriptions = [];
         $getHostingSubscriptions = \App\Models\HostingSubscription::all();
-        foreach ($getHostingSubscriptions as $hostingSubscription) {
-            $hostingSubscriptions[$hostingSubscription->id] = $hostingSubscription->domain . ' - '.$hostingSubscription->customer->name;
+        if (!$getHostingSubscriptions) {
+            foreach ($getHostingSubscriptions as $hostingSubscription) {
+                $hostingSubscriptions[$hostingSubscription->id] = $hostingSubscription->domain . ' - ' . $hostingSubscription->customer->name;
+            }
+        }
+        $dockerContainers = [];
+        $getDockerContainers = DockerContainer::all();
+        if ($getDockerContainers) {
+            foreach ($getDockerContainers as $dockerContainer) {
+                $dockerContainers[$dockerContainer->id] = $dockerContainer->name;
+            }
         }
 
         return $form
@@ -125,6 +135,16 @@ class DomainResource extends Resource
                                     ->options(SupportedApplicationTypes::getRubyVersions())
                                     ->columns(6)
                                     ->required(),
+
+                                Select::make('server_application_settings.docker_container_id')
+                                    ->hidden(function (Get $get) {
+                                        return $get('server_application_type') !== 'apache_docker';
+                                    })
+                                    ->label('Docker Contaier')
+                                    ->options($dockerContainers)
+                                    ->columns(5)
+                                    ->required(),
+
                             ]),
                         Tabs\Tab::make('Git')
                             ->schema([
