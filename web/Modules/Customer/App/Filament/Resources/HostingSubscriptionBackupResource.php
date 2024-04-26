@@ -2,7 +2,9 @@
 
 namespace Modules\Customer\App\Filament\Resources;
 
+use App\Filament\Enums\HostingSubscriptionBackupType;
 use App\Models\HostingSubscriptionBackup;
+use JaOcero\RadioDeck\Forms\Components\RadioDeck;
 use Modules\Customer\App\Filament\Resources\HostingSubscriptionBackupResource\Pages;
 use Modules\Customer\App\Filament\Resources\HostingSubscriptionBackupResource\RelationManagers;
 use Filament\Forms;
@@ -19,14 +21,36 @@ class HostingSubscriptionBackupResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $label = 'Backups';
+    protected static ?string $label = 'Backup';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                //
-            ]);
+
+                Forms\Components\Select::make('hosting_subscription_id')
+                    ->label('Hosting Subscription')
+                    ->options(
+                        \App\Models\HostingSubscription::all()->pluck('domain', 'id')
+                    )
+                    ->live()
+                    ->disabled(function ($record) {
+                        return $record;
+                    })
+                    ->columnSpanFull()
+                    ->required(),
+
+                RadioDeck::make('backup_type')
+                    ->live()
+                    //  ->default('full')
+                    ->options(HostingSubscriptionBackupType::class)
+                    ->icons(HostingSubscriptionBackupType::class)
+                    ->descriptions(HostingSubscriptionBackupType::class)
+                    ->required()
+                    ->color('primary')
+                    ->columnSpanFull(),
+
+            ])->columns(1);
     }
 
     public static function table(Table $table): Table
