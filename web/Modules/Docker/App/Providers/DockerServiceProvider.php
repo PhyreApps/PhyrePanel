@@ -2,12 +2,17 @@
 
 namespace Modules\Docker\App\Providers;
 
+use App\Events\DomainIsCreated;
+use App\Events\ModuleIsInstalled;
 use BladeUI\Icons\Factory;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Modules\Docker\App\Console\DockerContainers;
 use Modules\Docker\App\Console\DockerRunImage;
 use Modules\Docker\App\Console\DockerSearchImages;
+use Modules\Docker\App\Listeners\ModuleIsInstalledListener;
+use Modules\LetsEncrypt\Listeners\DomainIsCreatedListener;
 
 class DockerServiceProvider extends ServiceProvider
 {
@@ -26,6 +31,8 @@ class DockerServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/migrations'));
+
+        Event::listen(ModuleIsInstalled::class,ModuleIsInstalledListener::class);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Events\ModuleIsInstalled;
 use App\Models\Module;
 
 class ModulesManager
@@ -74,5 +75,7 @@ class ModulesManager
         $newModule->namespace = 'Modules\\' . $module;
         $newModule->installed = 1;
         $newModule->save();
+
+        event(new ModuleIsInstalled($newModule));
     }
 }
