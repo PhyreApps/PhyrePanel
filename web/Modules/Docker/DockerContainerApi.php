@@ -6,12 +6,19 @@ use function AlibabaCloud\Client\json;
 
 class DockerContainerApi
 {
+    public $name = '';
     public $image = '';
     public $environmentVariables = [];
     public $volumeMapping = [];
 
     public $port = '';
     public $externalPort = '';
+
+    public function setName($name)
+    {
+        $name = trim($name);
+        $this->name = $name;
+    }
 
     public function setImage($image)
     {
@@ -30,11 +37,13 @@ class DockerContainerApi
 
     public function setPort($port)
     {
+        $port = trim($port);
         $this->port = $port;
     }
 
     public function setExternalPort($externalPort)
     {
+        $externalPort = trim($externalPort);
         $this->externalPort = $externalPort;
     }
 
@@ -49,32 +58,29 @@ class DockerContainerApi
     public function run()
     {
         $commandId = rand(10000, 99999);
-        $commands = [];
-        $commands[] = 'docker run -d ' . $this->image;
+
+        $shellFileContent = 'docker run --name ' . $this->name . ' ';
 
         if (!empty($this->port)) {
-            $commands[] = '-p ' . $this->port . ':' . $this->externalPort;
+            $shellFileContent .= ' -p ' . $this->externalPort . ':' . $this->port . ' ';
         }
+        $shellFileContent .= '-d ' . $this->image . ' ';
 
-        if (!empty($this->environmentVariables)) {
-            foreach ($this->environmentVariables as $key => $value) {
-                $commands[] = '-e ' . $key . '=' . $value;
-            }
-        }
+//        if (!empty($this->environmentVariables)) {
+//            foreach ($this->environmentVariables as $key => $value) {
+//                $commands[] = '-e ' . $key . '=' . $value;
+//            }
+//        }
+//
+//        if (!empty($this->volumeMapping)) {
+//            foreach ($this->volumeMapping as $key => $value) {
+//                $commands[] = '-v ' . $key . ':' . $value;
+//            }
+//        }
 
-        if (!empty($this->volumeMapping)) {
-            foreach ($this->volumeMapping as $key => $value) {
-                $commands[] = '-v ' . $key . ':' . $value;
-            }
-        }
+        $shellFileContent .= PHP_EOL . 'rm -f /tmp/docker-run-container-'.$commandId.'.sh';
 
-        $shellFileContent = '';
-
-        foreach ($commands as $command) {
-            $shellFileContent .= $command . PHP_EOL;
-        }
-
-        $shellFileContent .= 'rm -f /tmp/docker-run-container-'.$commandId.'.sh';
+       // dd($shellFileContent);
 
         file_put_contents('/tmp/docker-run-container-'.$commandId.'.sh', $shellFileContent);
         $output = shell_exec('bash /tmp/docker-run-container-'.$commandId.'.sh');

@@ -46,6 +46,15 @@ class DockerContainerResource extends Resource
             }
         }
         $defaultPort = '';
+        $defaultExternalPort = 8010;
+
+        // Get available ports from linux server
+        $getAvailablePortShellFile = module_path('Docker', 'shell-scripts/get-available-port.sh');
+        $availablePort = shell_exec("sh $getAvailablePortShellFile");
+        if (is_numeric($availablePort)) {
+            $defaultExternalPort = $availablePort;
+        }
+
         if (isset($dockerImageInspect['Config']['ExposedPorts'])) {
             foreach ($dockerImageInspect['Config']['ExposedPorts'] as $port => $value) {
                 $port = str_replace('/tcp', '', $port);
@@ -78,12 +87,14 @@ class DockerContainerResource extends Resource
 
                 Forms\Components\TextInput::make('port')
                     ->label('Port')
+                   // ->disabled()
                     ->default($defaultPort)
                     ->columnSpan(1),
 
                 Forms\Components\TextInput::make('external_port')
                     ->label('External Port')
-                    ->default($defaultPort)
+                  //  ->disabled()
+                    ->default($defaultExternalPort)
                     ->columnSpan(1),
 
 

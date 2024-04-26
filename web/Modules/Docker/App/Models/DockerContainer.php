@@ -4,6 +4,7 @@ namespace Modules\Docker\App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use Modules\Docker\DockerApi;
 use Modules\Docker\DockerContainerApi;
 
@@ -32,6 +33,7 @@ class DockerContainer extends Model
         'memory_limit',
         'unlimited_memory',
         'automatic_start',
+        'port',
         'external_port',
         'volume_mapping',
         'environment_variables',
@@ -49,6 +51,12 @@ class DockerContainer extends Model
 
         static::creating(function ($model) {
 
+            $nextId = 1;
+            $getLastContainer = DockerContainer::latest()->first();
+            if ($getLastContainer) {
+                $nextId = $getLastContainer->id + 1;
+            }
+
             $dockerContainerApi = new DockerContainerApi();
             $dockerContainerApi->setImage($model->image);
             $dockerContainerApi->setEnvironmentVariables($model->environment_variables);
@@ -57,7 +65,9 @@ class DockerContainer extends Model
 //            $dockerContainerApi->setUnlimitedMemory($model->unlimited_memory);
 //            $dockerContainerApi->setAutomaticStart($model->automatic_start);
             $dockerContainerApi->setPort($model->port);
+            $dockerContainerApi->setName(Str::slug($model->name.'-phyre-'.$nextId));
             $dockerContainerApi->setExternalPort($model->external_port);
+
             $createContainer = $dockerContainerApi->run();
             if (!isset($createContainer['ID'])) {
                 return false;
