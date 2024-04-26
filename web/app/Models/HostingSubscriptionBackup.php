@@ -69,6 +69,17 @@ class HostingSubscriptionBackup extends Model
 
     public function checkBackup()
     {
+        $findHostingSubscription = HostingSubscription::select(['id'])
+            ->where('id', $this->hosting_subscription_id)
+            ->first();
+        if (! $findHostingSubscription) {
+            $this->delete();
+            return [
+                'status' => 'failed',
+                'message' => 'Hosting subscription not found'
+            ];
+        }
+
         if ($this->status == BackupStatus::Processing) {
 
             $backupDoneFile = $this->path.'/backup.done';
@@ -107,6 +118,17 @@ class HostingSubscriptionBackup extends Model
 
     public function startBackup()
     {
+        $findHostingSubscription = HostingSubscription::select(['id'])
+            ->where('id', $this->hosting_subscription_id)
+            ->first();
+        if (! $findHostingSubscription) {
+            $this->delete();
+            return [
+                'status' => 'failed',
+                'message' => 'Hosting subscription not found'
+            ];
+        }
+
         if ($this->status == BackupStatus::Processing) {
             return [
                 'status' => 'processing',
@@ -132,64 +154,53 @@ class HostingSubscriptionBackup extends Model
 
         if ($this->backup_type == 'full') {
 
-            $findHostingSubscription = HostingSubscription::where('id', $this->hosting_subscription_id)->first();
-            if ($findHostingSubscription) {
+            $backupFileName = Str::slug($findHostingSubscription->system_username .'-'. date('Ymd-His')) . '.tar.gz';
+            $backupFilePath = $backupPath.'/'.$backupFileName;
 
-                $backupFileName = Str::slug($findHostingSubscription->system_username .'-'. date('Ymd-His')) . '.tar.gz';
-                $backupFilePath = $backupPath.'/'.$backupFileName;
+            $backupLogFileName = 'backup.log';
+            $backupLogFilePath = $backupPath.'/'.$backupLogFileName;
 
-                $backupLogFileName = 'backup.log';
-                $backupLogFilePath = $backupPath.'/'.$backupLogFileName;
+            $backupTempScript = '/tmp/backup-script-'.$this->id.'.sh';
+            $shellFileContent = '';
+            $shellFileContent .= 'echo "Backup up domain: '.$findHostingSubscription->domain . PHP_EOL;
+            $shellFileContent .= 'echo "Backup filename: '.$backupFileName. PHP_EOL;
+            $shellFileContent .= 'cp -r /home/'.$findHostingSubscription->system_username.' '.$backupTempPath.PHP_EOL;
 
-                $backupTempScript = '/tmp/backup-script-'.$this->id.'.sh';
-                $shellFileContent = '';
-                $shellFileContent .= 'echo "Backup up domain: '.$findHostingSubscription->domain . PHP_EOL;
-                $shellFileContent .= 'echo "Backup filename: '.$backupFileName. PHP_EOL;
-                $shellFileContent .= 'cp -r /home/'.$findHostingSubscription->system_username.' '.$backupTempPath.PHP_EOL;
+            $shellFileContent .= 'cd '.$backupTempPath .' && tar -czvf '.$backupFilePath.' ./* '. PHP_EOL;
 
-                $shellFileContent .= 'cd '.$backupTempPath .' && tar -czvf '.$backupFilePath.' ./* '. PHP_EOL;
+            $shellFileContent .= 'rm -rf '.$backupTempPath.PHP_EOL;
+            $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;
+            $shellFileContent .= 'touch ' . $backupPath. '/backup.done' . PHP_EOL;
+            $shellFileContent .= 'rm -rf ' . $backupTempScript;
 
-                $shellFileContent .= 'rm -rf '.$backupTempPath.PHP_EOL;
-                $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;
-                $shellFileContent .= 'touch ' . $backupPath. '/backup.done' . PHP_EOL;
-                $shellFileContent .= 'rm -rf ' . $backupTempScript;
+            file_put_contents($backupTempScript, $shellFileContent);
 
-                file_put_contents($backupTempScript, $shellFileContent);
+            $processId = shell_exec('bash '.$backupTempScript.' >> ' . $backupLogFilePath . ' & echo $!');
+            $processId = intval($processId);
 
-                $processId = shell_exec('bash '.$backupTempScript.' >> ' . $backupLogFilePath . ' & echo $!');
-                $processId = intval($processId);
+            if ($processId > 0 && is_numeric($processId)) {
 
-                if ($processId > 0 && is_numeric($processId)) {
+                $this->path = $backupPath;
+                $this->filepath = $backupFilePath;
+                $this->status = 'processing';
+                $this->queued = true;
+                $this->queued_at = now();
+                $this->process_id = $processId;
+                $this->save();
 
-                    $this->path = $backupPath;
-                    $this->filepath = $backupFilePath;
-                    $this->status = 'processing';
-                    $this->queued = true;
-                    $this->queued_at = now();
-                    $this->process_id = $processId;
-                    $this->save();
-
-                    return [
-                        'status' => 'processing',
-                        'message' => 'Backup started'
-                    ];
-                } else {
-                    $this->status = 'failed';
-                    $this->save();
-                    return [
-                        'status' => 'failed',
-                        'message' => 'Backup failed to start'
-                    ];
-                }
-
+                return [
+                    'status' => 'processing',
+                    'message' => 'Backup started'
+                ];
             } else {
                 $this->status = 'failed';
                 $this->save();
                 return [
                     'status' => 'failed',
-                    'message' => 'Hosting subscription not found'
+                    'message' => 'Backup failed to start'
                 ];
             }
+
         }
     }
 }
