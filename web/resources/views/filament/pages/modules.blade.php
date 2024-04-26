@@ -38,14 +38,17 @@
 
             <div class="grid grid-cols-3 gap-6 mb-6">
         @foreach($modules as $module)
-            <div class="sm:flex gap-2 px-6 py-6 rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10">
+            <div class="sm:flex gap-3 px-6 py-6 rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10">
                 <div class="mb-2">
-                    <div class="w-12">
+                    <div class="flex flex-col items-center w-16">
                         <x-filament::icon :icon="$module['logoIcon']"
                                           class="w-12 h-12 text-primary-500"/>
+                        @if ($module['installed'])
+                            <x-filament::badge class="bg-green-500 text-white mt-2">Installed</x-filament::badge>
+                        @endif
                     </div>
                 </div>
-                <div class="flex justify-between w-full">
+                <div class="flex justify-between items-center w-full">
                     <div class="flex flex-col">
                         <p>
                             {{$module['name']}}
@@ -71,7 +74,11 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24">
                                             <path fill="currentColor" d="M11 2v5H8l4 4l4-4h-3V2h7a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm8 14H5v4h14zm-2 1v2h-2v-2z"></path>
                                         </svg>
+                                        @if ($module['installed'])
+                                            Reinstall
+                                        @else
                                         Install
+                                        @endif
                                     </div>
                                 </x-filament::dropdown.list.item>
                             </x-filament::dropdown.list>

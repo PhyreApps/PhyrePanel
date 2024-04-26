@@ -25,7 +25,6 @@ class Modules extends Page
 
     protected function getViewData(): array
     {
-
         $scanModules = scandir(base_path('Modules'));
         $scanModules = array_diff($scanModules, ['.', '..']);
 
@@ -47,13 +46,20 @@ class Modules extends Page
             if (isset($moduleJson['category'])) {
                 $category = $moduleJson['category'];
             }
+            $url = '';
+            $installed = 0;
+            $findModule = Module::where('name', $module)->first();
+            if ($findModule) {
+                $installed = 1;
+            }
             $modules[$category][] = [
                 'name' => $module,
                 'description' => 'A drag and drop website builder and a powerful next-generation CMS.',
-                'url' => url('admin/' . $module),
+                'url' => $url,
                 'iconUrl' => url('images/modules/' . $module . '.png'),
                 'logoIcon' => $logoIcon,
                 'category' => 'Content Management',
+                'installed'=>$installed,
             ];
         }
 
