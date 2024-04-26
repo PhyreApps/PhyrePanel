@@ -1,5 +1,6 @@
 {
     "LetsEncrypt": true,
     "Microweber": true,
-    "Docker": true
+    "Docker": true,
+    "Customer": true
 }
