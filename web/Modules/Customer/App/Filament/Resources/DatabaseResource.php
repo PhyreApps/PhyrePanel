@@ -138,6 +138,10 @@ class DatabaseResource extends Resource
                     ->label('Database Server')
                     ->sortable(),
 
+                Tables\Columns\TextColumn::make('hostingSubscription.domain')
+                    ->searchable()
+                    ->sortable(),
+
             ])
             ->filters([
                 //
