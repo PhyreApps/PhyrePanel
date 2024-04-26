@@ -84,12 +84,15 @@ class HostingSubscriptionBackup extends Model
 
             $backupDoneFile = $this->path.'/backup-'.$this->id.'.done';
             if (file_exists($backupDoneFile)) {
+
                 $this->size = Helpers::checkPathSize($this->path);
                 $this->status = 'completed';
                 $this->completed = true;
                 $this->completed_at = now();
                 $this->save();
+
                 shell_exec('rm -rf ' . $backupDoneFile);
+
                 return [
                     'status' => 'completed',
                     'message' => 'Backup completed'
@@ -164,6 +167,7 @@ class HostingSubscriptionBackup extends Model
 
             $backupTempScript = '/tmp/backup-script-'.$this->id.'.sh';
             $shellFileContent = '';
+            $shellFileContent .= 'mkdir -p '. $backupTargetPath.PHP_EOL;
             $shellFileContent .= 'echo "Backup up domain: '.$findHostingSubscription->domain . PHP_EOL;
             $shellFileContent .= 'echo "Backup filename: '.$backupFileName. PHP_EOL;
             $shellFileContent .= 'cp -r /home/'.$findHostingSubscription->system_username.' '.$backupTempPath.PHP_EOL;
@@ -175,7 +179,6 @@ class HostingSubscriptionBackup extends Model
             $shellFileContent .= 'touch ' . $backupTargetPath. '/backup-'.$this->id.'.done' . PHP_EOL;
             $shellFileContent .= 'rm -rf ' . $backupTempScript . PHP_EOL;
 
-            $shellFileContent .= 'mkdir -p '. $backupTargetPath.PHP_EOL;
             $shellFileContent .= 'mv '.$backupFilePath.' '. $backupTargetFilePath.PHP_EOL;
 
             file_put_contents($backupTempScript, $shellFileContent);

@@ -17,19 +17,21 @@ class HostingSubscriptionBackupTest extends ActionTestCase
 {
     public function testFullBackup()
     {
-        $this->_createHostingSubscription();
+        $chs = $this->_createHostingSubscription();
 
         Artisan::call('phyre:run-hosting-subscriptions-backup');
 
-        $findLastBackup = HostingSubscriptionBackup::orderBy('id', 'asc')->first();
+        $findLastBackup = HostingSubscriptionBackup::where('hosting_subscription_id', $chs['hostingSubscriptionId'])
+            ->first();
+
         $this->assertNotEmpty($findLastBackup);
         $this->assertNotEmpty($findLastBackup->id);
         $this->assertNotEmpty($findLastBackup->created_at);
         $this->assertSame($findLastBackup->backup_type, 'full');
 
         $backupFinished = false;
-        for ($i = 0; $i < 100; $i++) {
-            $findLastBackup = HostingSubscriptionBackup::orderBy('id', 'desc')->first();
+        for ($i = 0; $i < 50; $i++) {
+            $findLastBackup = HostingSubscriptionBackup::where('id', $findLastBackup->id)->first();
             $findLastBackup->checkBackup();
             if ($findLastBackup->status == BackupStatus::Completed) {
                 $backupFinished = true;
@@ -37,6 +39,7 @@ class HostingSubscriptionBackupTest extends ActionTestCase
             }
             sleep(1);
         }
+
         $this->assertTrue($backupFinished);
         $this->assertSame($findLastBackup->status, BackupStatus::Completed);
         $this->assertNotEmpty($findLastBackup->filepath);
@@ -46,23 +49,25 @@ class HostingSubscriptionBackupTest extends ActionTestCase
         $checkCronJob = $backup->checkCronJob();
         $this->assertTrue($checkCronJob);
 
-        $this->_createHostingSubscription();
+        $chs = $this->_createHostingSubscription();
 
         $backup = new HostingSubscriptionBackup();
         $backup->backup_type = 'full';
+        $backup->hosting_subscription_id = $chs['hostingSubscriptionId'];
         $backup->save();
 
         $backupId = $backup->id;
 
         $findBackup = false;
         $backupCompleted = false;
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $findBackup = HostingSubscriptionBackup::where('id', $backupId)->first();
-            $status = $findBackup->checkBackup();
-            dump($status);
-            if ($findBackup->status == BackupStatus::Completed) {
-                $backupCompleted = true;
-                break;
+            if ($findBackup) {
+                $status = $findBackup->checkBackup();
+                if ($findBackup->status == BackupStatus::Completed) {
+                    $backupCompleted = true;
+                    break;
+                }
             }
             sleep(1);
         }
@@ -106,5 +111,11 @@ class HostingSubscriptionBackupTest extends ActionTestCase
         $hostingSubscription->hosting_plan_id = $hostingPlan->id;
         $hostingSubscription->domain = 'unit-backup-test' . time() . '.com';
         $hostingSubscription->save();
+
+        return [
+            'customerId' => $customer->id,
+            'hostingPlanId' => $hostingPlan->id,
+            'hostingSubscriptionId' => $hostingSubscription->id,
+        ];
     }
 }
