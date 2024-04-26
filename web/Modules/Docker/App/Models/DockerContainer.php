@@ -57,6 +57,9 @@ class DockerContainer extends Model
                 $nextId = $getLastContainer->id + 1;
             }
 
+            $model->port = trim($model->port);
+            $model->external_port = trim($model->external_port);
+
             $dockerContainerApi = new DockerContainerApi();
             $dockerContainerApi->setImage($model->image);
             $dockerContainerApi->setEnvironmentVariables($model->environment_variables);

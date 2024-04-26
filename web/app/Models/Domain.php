@@ -279,7 +279,7 @@ class Domain extends Model
                 $findDockerContainer = DockerContainer::where('id', $this->server_application_settings['docker_container_id'])
                     ->first();
                 if ($findDockerContainer) {
-                    $apacheVirtualHostBuilder->setProxyPass('http://127.0.0.1:'.$findDockerContainer->external_port);
+                    $apacheVirtualHostBuilder->setProxyPass('http://127.0.0.1:'.$findDockerContainer->external_port.'/');
                     $apacheVirtualHostBuilder->setAppType('docker');
                     $apacheVirtualHostBuilder->setAppVersion($appVersion);
                 }
