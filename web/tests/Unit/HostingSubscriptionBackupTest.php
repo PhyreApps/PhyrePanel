@@ -6,11 +6,17 @@ use App\Filament\Enums\BackupStatus;
 use App\Helpers;
 use App\Models\Backup;
 use App\Models\Customer;
+use App\Models\Database;
+use App\Models\DatabaseUser;
 use App\Models\HostingPlan;
 use App\Models\HostingSubscription;
 use App\Models\HostingSubscriptionBackup;
 use Faker\Factory;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use Tests\Feature\Api\ActionTestCase;
 
 class HostingSubscriptionBackupTest extends ActionTestCase
@@ -111,6 +117,65 @@ class HostingSubscriptionBackupTest extends ActionTestCase
         $hostingSubscription->hosting_plan_id = $hostingPlan->id;
         $hostingSubscription->domain = 'unit-backup-test' . time() . '.com';
         $hostingSubscription->save();
+
+
+        /**
+         *  Create Database and Database User
+         *  with random data for testing the backup
+         */
+        $database = new Database();
+        $database->hosting_subscription_id = $hostingSubscription->id;
+        $database->database_name = 'ubt' . time();
+        $database->save();
+
+        $this->assertNotEmpty($database->id);
+
+        $databaseUser = new DatabaseUser();
+        $databaseUser->database_id = $database->id;
+        $databaseUser->username = 'ubt' . time();
+        $databaseUser->password = Str::password(24);
+        $databaseUser->save();
+
+        $this->assertNotEmpty($databaseUser->id);
+
+        $unitTestDbConnection = 'db-unit-' . $database->id;
+        Config::set('database.connections.' . $unitTestDbConnection, [
+            'driver' => 'mysql',
+            'host' => 'localhost',
+            'port' => '3306',
+            'database' => $database->database_name_prefix . $database->database_name,
+            'username' => $databaseUser->username_prefix . $databaseUser->username,
+            'password' => $databaseUser->password,
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
+        ]);
+
+        Schema::connection($unitTestDbConnection)
+            ->create('random_table', function ($table) {
+            $table->increments('id');
+            $table->string('name')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->timestamps();
+        });
+
+        $this->assertTrue(Schema::connection($unitTestDbConnection)
+            ->hasTable('random_table'));
+
+        for ($i = 0; $i < 200; $i++) {
+            DB::connection($unitTestDbConnection)
+                ->table('random_table')
+                ->insert([
+                    'name' => 'UnitBackupTest' . time() . $i,
+                    'email' => 'UnitBackupTest' . time() . $i . '@unit-test.com',
+                    'phone' => time(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+        }
 
         return [
             'customerId' => $customer->id,
