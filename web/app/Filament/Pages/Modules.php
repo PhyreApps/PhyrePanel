@@ -97,18 +97,24 @@ class Modules extends Page
 
         file_put_contents($this->installLogFilePath, 'Installing ' . $module . '...' . PHP_EOL);
 
-        $postInstall = app()->make('Modules\\' . $module . '\\PostInstall');
-        if (method_exists($postInstall, 'run')) {
-            $postInstall->setLogFile($this->installLogFilePath);
-            $postInstall->run();
-        } else {
+        try {
+            $postInstall = app()->make('Modules\\' . $module . '\\PostInstall');
+            if (method_exists($postInstall, 'run')) {
+                
+                $postInstall->setLogFile($this->installLogFilePath);
+                $postInstall->run();
+
+                $this->dispatch('open-modal', id: 'install-module-modal', props: ['module' => $module]);
+            }
+        } catch(\Exception $e) {
             $newModule = new Module();
             $newModule->name = $module;
             $newModule->namespace = 'Modules\\' . $module;
             $newModule->installed = 1;
             $newModule->save();
+
+            $this->installLogPulling = false;
         }
 
-        $this->dispatch('open-modal', id: 'install-module-modal', props: ['module' => $module]);
     }
 }

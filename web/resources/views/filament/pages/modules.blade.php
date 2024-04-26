@@ -43,16 +43,18 @@
                     <div class="flex flex-col items-center w-16">
                         <x-filament::icon :icon="$module['logoIcon']"
                                           class="w-12 h-12 text-primary-500"/>
-                        @if ($module['installed'])
-                            <x-filament::badge class="bg-green-500 text-white mt-2">Installed</x-filament::badge>
-                        @endif
                     </div>
                 </div>
                 <div class="flex justify-between items-center w-full">
                     <div class="flex flex-col">
-                        <p>
+                        <div class="flex gap-2 items-center">
                             {{$module['name']}}
-                        </p>
+                            @if ($module['installed'])
+                                <svg xmlns="http://www.w3.org/2000/svg" class="-mt-1 text-primary-500" width="1em" height="1em" viewBox="0 0 24 24">
+                                    <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m5 12l5 5L20 7"></path>
+                                </svg>
+                            @endif
+                        </div>
 
                         <p class="text-xs mt-1">
                             {{$module['category']}}
