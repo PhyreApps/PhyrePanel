@@ -49,10 +49,6 @@ We welcome contributions from the community to help improve PHYRE PANEL. If you 
 
 For support and assistance with PHYRE PANEL, please visit our [documentation](https://phyrepanel.com/docs) or reach out to our [support team](mailto:support@phyrepanel.com).
 
-## License
-
-PHYRE PANEL is licensed under the [GNU General Public License (GPL) version 3](https://www.gnu.org/licenses/gpl-3.0.en.html). See the [LICENSE](LICENSE) file for details.
-
 ## Features
 
 - **User-Friendly Interface:** PHYRE PANEL offers a clean and intuitive user interface, making it easy for users to manage their hosting environment.
@@ -76,3 +72,7 @@ PHYRE PANEL is licensed under the [GNU General Public License (GPL) version 3](h
 - **Logs and Analytics:** View and analyze server logs and statistics to monitor your server's performance and troubleshoot any issues that may arise.
 - **API Integration:** Integrate PHYRE PANEL with other applications and services using the provided APIs and tools, allowing you to extend its functionality and automate tasks.
 - **One-Click Installs:** Install popular web applications such as WordPress, Joomla, and Drupal with just one click, using the one-click installers provided by PHYRE PANEL.
+
+## License
+
+PHYRE PANEL is licensed under the [GNU General Public License (GPL) version 3](https://www.gnu.org/licenses/gpl-3.0.en.html). See the [LICENSE](LICENSE) file for details.
