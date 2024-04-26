@@ -156,7 +156,7 @@ class HostingSubscriptionBackupTest extends ActionTestCase
         $this->assertNotEmpty($databaseUser->id);
 
         $unitTestDbConnection = 'db-unit-' . $database->id;
-        Config::set('database.connections.' . $unitTestDbConnection, [
+        config(['database.connections.' . $unitTestDbConnection => [
             'driver' => 'mysql',
             'host' => 'localhost',
             'port' => '3306',
@@ -168,7 +168,7 @@ class HostingSubscriptionBackupTest extends ActionTestCase
             'prefix' => '',
             'strict' => false,
             'engine' => null,
-        ]);
+        ]]);
 
         Schema::connection($unitTestDbConnection)
             ->create('random_table', function ($table) {
