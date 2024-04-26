@@ -144,23 +144,11 @@ class HostingSubscriptionBackup extends Model
                 'message' => 'Main domain not found'
             ];
         }
-        
+
         $storagePath = storage_path('backups');
-        if (! is_dir($storagePath)) {
-            mkdir($storagePath);
-        }
-        $backupPath = $storagePath.'/'.$this->backup_type.'/'.$this->id;
-        if (!is_dir(dirname($backupPath))) {
-            mkdir(dirname($backupPath));
-        }
-        if (! is_dir($backupPath)) {
-            mkdir($backupPath);
-        }
+        $backupPath = $storagePath.'/hosting_subscriptions/'.$this->backup_type.'/'.$this->id;
         $backupTempPath = $backupPath.'/temp';
-        if (! is_dir($backupTempPath)) {
-            mkdir($backupTempPath);
-        }
-        dd($backupPath, $backupTempPath);
+        shell_exec('mkdir -p ' . $backupTempPath);
 
         if ($this->backup_type == 'full') {
 
@@ -169,6 +157,8 @@ class HostingSubscriptionBackup extends Model
 
             $backupLogFileName = 'backup.log';
             $backupLogFilePath = $backupPath.'/'.$backupLogFileName;
+
+            $backupTargetPath = $findMainDomain->domain_root . '/backups/'.$backupFileName;
 
             $backupTempScript = '/tmp/backup-script-'.$this->id.'.sh';
             $shellFileContent = '';
@@ -181,7 +171,10 @@ class HostingSubscriptionBackup extends Model
             $shellFileContent .= 'rm -rf '.$backupTempPath.PHP_EOL;
             $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;
             $shellFileContent .= 'touch ' . $backupPath. '/backup.done' . PHP_EOL;
-            $shellFileContent .= 'rm -rf ' . $backupTempScript;
+            $shellFileContent .= 'rm -rf ' . $backupTempScript . PHP_EOL;
+
+            $shellFileContent .= 'mkdir -p '. $findMainDomain->domain_root . '/backups'.PHP_EOL;
+            $shellFileContent .= 'mv '.$backupFilePath.' '. $backupTargetPath.PHP_EOL;
 
             file_put_contents($backupTempScript, $shellFileContent);
 
@@ -190,15 +183,14 @@ class HostingSubscriptionBackup extends Model
 
             if ($processId > 0 && is_numeric($processId)) {
 
-                $this->path = $backupPath;
-                $this->filepath = $backupFilePath;
+                $this->path = $findMainDomain->domain_root . '/backups';
+                $this->filepath = $backupTargetPath;
                 $this->status = 'processing';
                 $this->queued = true;
                 $this->queued_at = now();
                 $this->process_id = $processId;
                 $this->save();
 
-                dd($this);
                 return [
                     'status' => 'processing',
                     'message' => 'Backup started'
