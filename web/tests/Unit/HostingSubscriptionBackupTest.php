@@ -87,7 +87,9 @@ class HostingSubscriptionBackupTest extends ActionTestCase
         $this->assertSame(Helpers::checkPathSize($findBackup->path), $findBackup->size);
 
         Helpers::extractTar($findBackup->filepath, $findBackup->path . '/unit-test');
-
+//
+//        dd($chs);
+//        dd($findBackup->path);
 
     }
 
@@ -162,25 +164,50 @@ class HostingSubscriptionBackupTest extends ActionTestCase
             $table->timestamps();
         });
 
+        Schema::connection($unitTestDbConnection)
+            ->create('second_random_table', function ($table) {
+                $table->increments('id');
+                $table->string('name')->nullable();
+                $table->string('email')->nullable();
+                $table->string('phone')->nullable();
+                $table->timestamps();
+            });
+
         $this->assertTrue(Schema::connection($unitTestDbConnection)
             ->hasTable('random_table'));
 
+        $this->assertTrue(Schema::connection($unitTestDbConnection)
+            ->hasTable('second_random_table'));
+
+        $databaseTableData = [];
         for ($i = 0; $i < 200; $i++) {
+            $databaseData = [
+                'name' => 'UnitBackupTest' . time() . $i,
+                'email' => 'UnitBackupTest' . time() . $i . '@unit-test.com',
+                'phone' => time(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+            $databaseTableData['random_table'][] = $databaseData;
+            $databaseTableData['second_random_table'][] = $databaseData;
+
             DB::connection($unitTestDbConnection)
                 ->table('random_table')
-                ->insert([
-                    'name' => 'UnitBackupTest' . time() . $i,
-                    'email' => 'UnitBackupTest' . time() . $i . '@unit-test.com',
-                    'phone' => time(),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+                ->insert($databaseData);
+
+            DB::connection($unitTestDbConnection)
+                ->table('second_random_table')
+                ->insert($databaseData);
         }
 
         return [
             'customerId' => $customer->id,
             'hostingPlanId' => $hostingPlan->id,
             'hostingSubscriptionId' => $hostingSubscription->id,
+            'databaseId' => $database->id,
+            'databaseUserId' => $databaseUser->id,
+            'databaseConnection' => $unitTestDbConnection,
+            'databaseTableData' => $databaseTableData
         ];
     }
 }
