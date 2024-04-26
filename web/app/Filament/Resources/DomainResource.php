@@ -34,7 +34,7 @@ class DomainResource extends Resource
     {
         $hostingSubscriptions = [];
         $getHostingSubscriptions = \App\Models\HostingSubscription::all();
-        if (!$getHostingSubscriptions) {
+        if ($getHostingSubscriptions) {
             foreach ($getHostingSubscriptions as $hostingSubscription) {
                 $hostingSubscriptions[$hostingSubscription->id] = $hostingSubscription->domain . ' - ' . $hostingSubscription->customer->name;
             }
