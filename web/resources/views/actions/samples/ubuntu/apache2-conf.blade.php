@@ -39,6 +39,9 @@
 
     @if (!empty($proxyPass))
 
+    ProxyPreserveHost On
+    ProxyRequests Off
+    ProxyVia On
     ProxyPass / {{$proxyPass}}
     ProxyPassReverse / {{$proxyPass}}
 

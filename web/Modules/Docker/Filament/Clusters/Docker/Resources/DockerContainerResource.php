@@ -65,6 +65,9 @@ class DockerContainerResource extends Resource
                 $defaultPort = $port;
             }
         }
+        if ($defaultPort == 80) {
+            $defaultPort = 83;
+        }
 
         return $form
             ->schema([

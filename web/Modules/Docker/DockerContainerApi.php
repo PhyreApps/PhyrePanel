@@ -59,7 +59,7 @@ class DockerContainerApi
     {
         $commandId = rand(10000, 99999);
 
-        $shellFileContent = 'docker run --name ' . $this->name . ' ';
+        $shellFileContent = 'docker run -it --network=host --name ' . $this->name . ' ';
 
         if (!empty($this->port)) {
             $shellFileContent .= ' -p ' . $this->externalPort . ':' . $this->port . ' ';
