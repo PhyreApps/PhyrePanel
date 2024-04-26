@@ -13,7 +13,7 @@ class MicroweberHostingSubscriptionCreateTest extends ActionTestCase
     {
         ini_set('memory_limit', '-1');
         ini_set('max_execution_time', 0);
-        
+
         Artisan::call('phyre:install-module Microweber');
 
         $random = rand(1000, 9999);

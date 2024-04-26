@@ -16,7 +16,8 @@
 
                 <div class="mb-2">
                     <div class="w-12">
-                        <img src="{{$module['iconUrl']}}" />
+                        <x-filament::icon :icon="$module['logoIcon']"
+                                          class="w-12 h-12 text-primary-500"/>
                     </div>
                 </div>
 

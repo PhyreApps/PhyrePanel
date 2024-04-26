@@ -83,9 +83,9 @@ class AdminPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
 
-            ->discoverClusters(in: module_path('Microweber', 'Filament/Clusters'), for: 'Modules\\Microweber\\Filament\\Clusters')
-            ->discoverClusters(in: module_path('LetsEncrypt', 'Filament/Clusters'), for: 'Modules\\LetsEncrypt\\Filament\\Clusters')
-            ->discoverClusters(in: module_path('Docker', 'Filament/Clusters'), for: 'Modules\\Docker\\Filament\\Clusters')
+//            ->discoverClusters(in: module_path('Microweber', 'Filament/Clusters'), for: 'Modules\\Microweber\\Filament\\Clusters')
+//            ->discoverClusters(in: module_path('LetsEncrypt', 'Filament/Clusters'), for: 'Modules\\LetsEncrypt\\Filament\\Clusters')
+//            ->discoverClusters(in: module_path('Docker', 'Filament/Clusters'), for: 'Modules\\Docker\\Filament\\Clusters')
 
             ->pages([
                 Pages\Dashboard::class,

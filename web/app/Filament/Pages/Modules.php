@@ -18,6 +18,43 @@ class Modules extends Page
 
     protected function getViewData(): array
     {
+
+        $scanModules = scandir(base_path('Modules'));
+        $scanModules = array_diff($scanModules, ['.', '..']);
+
+        $modules = [];
+        foreach ($scanModules as $key => $module) {
+            if (!is_dir(base_path('Modules/' . $module))) {
+                unset($modules[$key]);
+            }
+            $moduleJson = file_get_contents(base_path('Modules/' . $module . '/module.json'));
+            $moduleJson = json_decode($moduleJson, true);
+            if (isset($moduleJson['hidden']) && $moduleJson['hidden'] == true) {
+                continue;
+            }
+            $category = 'All';
+            $logoIcon = 'heroicon-o-puzzle-piece';
+            if (isset($moduleJson['logoIcon'])) {
+                $logoIcon = $moduleJson['logoIcon'];
+            }
+            if (isset($moduleJson['category'])) {
+                $category = $moduleJson['category'];
+            }
+            $modules[$category][] = [
+                'name' => $module,
+                'description' => 'A drag and drop website builder and a powerful next-generation CMS.',
+                'url' => url('admin/' . $module),
+                'iconUrl' => url('images/modules/' . $module . '.png'),
+                'logoIcon' => $logoIcon,
+                'category' => 'Content Management',
+            ];
+        }
+
+        return [
+            'categories' => $modules,
+        ];
+
+
         return [
             'categories' => [
                 'Security' => [

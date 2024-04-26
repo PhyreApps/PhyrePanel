@@ -4,6 +4,7 @@
     "description": "",
     "keywords": [],
     "priority": 0,
+    "hidden": true,
     "providers": [
         "Modules\\Customer\\App\\Providers\\CustomerServiceProvider"
     ],

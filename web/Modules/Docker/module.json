@@ -4,6 +4,8 @@
     "description": "",
     "keywords": [],
     "priority": 0,
+    "logoIcon": "docker-logo",
+    "category": "DevOps",
     "providers": [
         "Modules\\Docker\\App\\Providers\\DockerServiceProvider"
     ],

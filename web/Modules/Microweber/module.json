@@ -4,6 +4,8 @@
     "description": "",
     "keywords": [],
     "priority": 0,
+    "logoIcon": "mw-mw_logo_small_white",
+    "category": "CMS",
     "providers": [
         "Modules\\Microweber\\App\\Providers\\MicroweberServiceProvider",
         "Modules\\Microweber\\Providers\\Filament\\AdminPanelProvider"
