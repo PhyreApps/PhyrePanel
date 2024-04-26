@@ -16,6 +16,9 @@ class Modules extends Page
 
     protected static ?int $navigationSort = 1;
 
+    public $installLogPulling = false;
+    public $installLog = '';
+
     protected function getViewData(): array
     {
 
@@ -54,44 +57,18 @@ class Modules extends Page
             'categories' => $modules,
         ];
 
+    }
 
-        return [
-            'categories' => [
-                'Security' => [
-                    [
-                        'name' => 'Lets Encrypt',
-                        'description' => 'Automatically secure your website with a free SSL certificate from Lets Encrypt.',
-                        'url' => url('admin/letsencrypt'),
-                        'iconUrl' => url('images/modules/letsencrypt.png'),
-                        'category' => 'Security',
-                    ],
-                ],
-                'Content Management' => [
-                    [
-                        'name' => 'Microweber',
-                        'description' => 'A drag and drop website builder and a powerful next-generation CMS.',
-                        'url' => url('admin/microweber'),
-                        'iconUrl' => url('images/modules/microweber.png'),
-                        'category' => 'Content Management',
-                    ],
-                    [
-                        'name' => 'WordPress',
-                        'description' => 'WordPress is a free and open-source content management system written in PHP and paired with a MySQL or MariaDB database.',
-                        'url' => url('admin/wordpress'),
-                        'iconUrl' => url('images/modules/wordpress.svg'),
-                        'category' => 'Content Management',
-                    ],
-                ],
-                'E-Commerce' => [
-                    [
-                        'name' => 'OpenCart',
-                        'description' => 'A free shopping cart system. OpenCart is an open source PHP-based online e-commerce solution.',
-                        'url' => url('admin/opencart'),
-                        'iconUrl' => url('images/modules/opencart.png'),
-                        'category' => 'E-Commerce',
-                    ],
-                ],
-            ],
-        ];
+    public function getInstallLog()
+    {
+        $this->installLog = time();
+    }
+
+    public function openInstallModal($module)
+    {
+
+        $this->installLogPulling = true;
+
+        $this->dispatch('open-modal', id: 'install-module-modal', props: ['module' => $module]);
     }
 }
