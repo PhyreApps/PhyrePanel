@@ -140,7 +140,7 @@ class DomainResource extends Resource
                                     ->hidden(function (Get $get) {
                                         return $get('server_application_type') !== 'apache_docker';
                                     })
-                                    ->label('Docker Contaier')
+                                    ->label('Docker Container')
                                     ->options($dockerContainers)
                                     ->columns(5)
                                     ->required(),

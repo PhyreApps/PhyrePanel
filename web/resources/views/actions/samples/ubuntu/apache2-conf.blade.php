@@ -40,6 +40,7 @@
     @if (!empty($proxyPass))
 
     ProxyPass / {{$proxyPass}}
+    ProxyPassReverse / {{$proxyPass}}
 
     @endif
 

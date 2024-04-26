@@ -288,7 +288,6 @@ class Domain extends Model
 
         $apacheBaseConfig = $apacheVirtualHostBuilder->buildConfig();
 
-        dd($apacheBaseConfig);
         if (!empty($apacheBaseConfig)) {
             file_put_contents('/etc/apache2/sites-available/'.$this->domain.'.conf', $apacheBaseConfig);
 
