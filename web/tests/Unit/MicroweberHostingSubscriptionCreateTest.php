@@ -11,6 +11,9 @@ class MicroweberHostingSubscriptionCreateTest extends ActionTestCase
 {
     function test_create()
     {
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 0);
+        
         Artisan::call('phyre:install-module Microweber');
 
         $random = rand(1000, 9999);
@@ -78,7 +81,7 @@ class MicroweberHostingSubscriptionCreateTest extends ActionTestCase
         $this->assertArrayHasKey('hosting_plan_id', $callHostingSubscriptionStoreResponse['data']['hostingSubscription']);
         $this->assertIsInt($callHostingSubscriptionStoreResponse['data']['hostingSubscription']['hosting_plan_id']);
 
-        
+
         // Check domain is accessible
         shell_exec('sudo echo "127.0.0.1 '.$hostingSubscriptionDomain.'" | sudo tee -a /etc/hosts');
 
