@@ -16,7 +16,7 @@ services:
 
     @foreach($environmentVariables as $key => $value)
 
-      {{$key}}: {{$value}}
+      {{$key}}: "{{$value}}"
 
     @endforeach
     @endif
