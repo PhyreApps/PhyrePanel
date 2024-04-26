@@ -154,61 +154,86 @@ class HostingSubscriptionBackup extends Model
         $backupTempPath = $backupPath.'/temp';
         shell_exec('mkdir -p ' . $backupTempPath);
 
+
+        $backupFileName = Str::slug($findHostingSubscription->system_username .'-'. date('Ymd-His')) . '.tar.gz';
+        $backupFilePath = $backupPath.'/'.$backupFileName;
+
+        $backupLogFileName = 'backup.log';
+        $backupLogFilePath = $backupPath.'/'.$backupLogFileName;
+
+        $backupTargetPath = $findMainDomain->domain_root . '/backups';
+        $backupTargetFilePath = $backupTargetPath.'/'.$backupFileName;
+
+        $backupTempScript = '/tmp/backup-script-'.$this->id.'.sh';
+        $shellFileContent = '';
+        $shellFileContent .= 'mkdir -p '. $backupTargetPath.PHP_EOL;
+        $shellFileContent .= 'echo "Backup up domain: '.$findHostingSubscription->domain . PHP_EOL;
+        $shellFileContent .= 'echo "Backup filename: '.$backupFileName. PHP_EOL;
+
         if ($this->backup_type == 'full') {
-
-            $backupFileName = Str::slug($findHostingSubscription->system_username .'-'. date('Ymd-His')) . '.tar.gz';
-            $backupFilePath = $backupPath.'/'.$backupFileName;
-
-            $backupLogFileName = 'backup.log';
-            $backupLogFilePath = $backupPath.'/'.$backupLogFileName;
-
-            $backupTargetPath = $findMainDomain->domain_root . '/backups';
-            $backupTargetFilePath = $backupTargetPath.'/'.$backupFileName;
-
-            $backupTempScript = '/tmp/backup-script-'.$this->id.'.sh';
-            $shellFileContent = '';
-            $shellFileContent .= 'mkdir -p '. $backupTargetPath.PHP_EOL;
-            $shellFileContent .= 'echo "Backup up domain: '.$findHostingSubscription->domain . PHP_EOL;
-            $shellFileContent .= 'echo "Backup filename: '.$backupFileName. PHP_EOL;
-            $shellFileContent .= 'cp -r /home/'.$findHostingSubscription->system_username.' '.$backupTempPath.PHP_EOL;
-
-            $shellFileContent .= 'cd '.$backupTempPath .' && tar -czvf '.$backupFilePath.' ./* '. PHP_EOL;
-
-            $shellFileContent .= 'rm -rf '.$backupTempPath.PHP_EOL;
-            $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;
-            $shellFileContent .= 'touch ' . $backupTargetPath. '/backup-'.$this->id.'.done' . PHP_EOL;
-            $shellFileContent .= 'rm -rf ' . $backupTempScript . PHP_EOL;
-
-            $shellFileContent .= 'mv '.$backupFilePath.' '. $backupTargetFilePath.PHP_EOL;
-
-            file_put_contents($backupTempScript, $shellFileContent);
-
-            $processId = shell_exec('bash '.$backupTempScript.' >> ' . $backupLogFilePath . ' & echo $!');
-            $processId = intval($processId);
-
-            if ($processId > 0 && is_numeric($processId)) {
-
-                $this->path = $findMainDomain->domain_root . '/backups';
-                $this->filepath = $backupTargetFilePath;
-                $this->status = 'processing';
-                $this->queued = true;
-                $this->queued_at = now();
-                $this->process_id = $processId;
-                $this->save();
-
-                return [
-                    'status' => 'processing',
-                    'message' => 'Backup started'
-                ];
-            } else {
-                $this->status = 'failed';
-                $this->save();
-                return [
-                    'status' => 'failed',
-                    'message' => 'Backup failed to start'
-                ];
-            }
-
+            $shellFileContent .= 'cp -r /home/' . $findHostingSubscription->system_username . ' ' . $backupTempPath . PHP_EOL;
         }
+
+        if ($this->backup_type == 'full' || $this->backup_type == 'database') {
+            $getDatabases = Database::where('hosting_subscription_id', $findHostingSubscription->id)
+                ->where('is_remote_database_server', 0)
+                ->get();
+            if ($getDatabases->count() > 0) {
+                foreach ($getDatabases as $database) {
+                    $findDatabaseUser = DatabaseUser::where('database_id', $database->id)
+                        ->first();
+                    if (!$findDatabaseUser) {
+                        continue;
+                    }
+                    $databaseName = $database->database_name_prefix . '_' . $database->database_name;
+                    $databaseUser = $findDatabaseUser->username_prefix . $findDatabaseUser->username;
+                    $databaseUserPassword = $findDatabaseUser->password;
+
+                    $shellFileContent .= 'echo "Backup up database: ' . $databaseName . PHP_EOL;
+                    $shellFileContent .= 'echo "Backup up database user: ' . $databaseUser . PHP_EOL;
+                    $databaseBackupPath = $backupTempPath . '/' . $databaseName . '.sql';
+                    $shellFileContent .= 'mysqldump -u ' . $databaseUser . ' -p' . $databaseUserPassword . ' ' . $databaseName . ' > ' . $databaseBackupPath . PHP_EOL;
+
+                }
+            }
+        }
+
+        $shellFileContent .= 'cd '.$backupTempPath .' && tar -czvf '.$backupFilePath.' ./* '. PHP_EOL;
+
+        $shellFileContent .= 'rm -rf '.$backupTempPath.PHP_EOL;
+        $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;
+        $shellFileContent .= 'touch ' . $backupTargetPath. '/backup-'.$this->id.'.done' . PHP_EOL;
+        $shellFileContent .= 'rm -rf ' . $backupTempScript . PHP_EOL;
+
+        $shellFileContent .= 'mv '.$backupFilePath.' '. $backupTargetFilePath.PHP_EOL;
+
+        file_put_contents($backupTempScript, $shellFileContent);
+
+        $processId = shell_exec('bash '.$backupTempScript.' >> ' . $backupLogFilePath . ' & echo $!');
+        $processId = intval($processId);
+
+        if ($processId > 0 && is_numeric($processId)) {
+
+            $this->path = $findMainDomain->domain_root . '/backups';
+            $this->filepath = $backupTargetFilePath;
+            $this->status = 'processing';
+            $this->queued = true;
+            $this->queued_at = now();
+            $this->process_id = $processId;
+            $this->save();
+
+            return [
+                'status' => 'processing',
+                'message' => 'Backup started'
+            ];
+        } else {
+            $this->status = 'failed';
+            $this->save();
+            return [
+                'status' => 'failed',
+                'message' => 'Backup failed to start'
+            ];
+        }
+
     }
 }
