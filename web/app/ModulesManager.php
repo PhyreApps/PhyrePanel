@@ -1,0 +1,72 @@
+<?php
+
+namespace App;
+
+use App\Models\Module;
+
+class ModulesManager
+{
+    public static function getModules()
+    {
+        $scanModules = scandir(base_path('Modules'));
+        $scanModules = array_diff($scanModules, ['.', '..']);
+
+        $modules = [];
+        foreach ($scanModules as $key => $module) {
+
+            $moduleInfo = self::getModuleInfo($module);
+            if (empty($moduleInfo)) {
+                continue;
+            }
+
+            $modules[] = $moduleInfo;
+
+        }
+
+        return $modules;
+    }
+
+    public static function getModuleInfo($module)
+    {
+        if (!is_dir(base_path('Modules/' . $module))) {
+            unset($modules[$key]);
+        }
+        $moduleJson = file_get_contents(base_path('Modules/' . $module . '/module.json'));
+        $moduleJson = json_decode($moduleJson, true);
+        if (isset($moduleJson['hidden']) && $moduleJson['hidden'] == true) {
+            return [];
+        }
+        $category = 'All';
+        $logoIcon = 'heroicon-o-puzzle-piece';
+        if (isset($moduleJson['logoIcon'])) {
+            $logoIcon = $moduleJson['logoIcon'];
+        }
+        if (isset($moduleJson['category'])) {
+            $category = $moduleJson['category'];
+        }
+        $url = '';
+        $installed = 0;
+        $findModule = Module::where('name', $module)->first();
+        if ($findModule) {
+            $installed = 1;
+        }
+        return [
+            'name' => $module,
+            'description' => 'A drag and drop website builder and a powerful next-generation CMS.',
+            'url' => $url,
+            'iconUrl' => url('images/modules/' . $module . '.png'),
+            'logoIcon' => $logoIcon,
+            'category' => $category,
+            'installed'=>$installed,
+        ];
+    }
+
+    public static function saveInstalledModule($module)
+    {
+        $newModule = new Module();
+        $newModule->name = $module;
+        $newModule->namespace = 'Modules\\' . $module;
+        $newModule->installed = 1;
+        $newModule->save();
+    }
+}
