@@ -6,6 +6,7 @@ use App\Actions\ApacheWebsiteDelete;
 use App\Events\DomainIsCreated;
 use App\Events\ModelDomainDeleting;
 use App\ShellApi;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Domain extends Model
@@ -29,6 +30,17 @@ class Domain extends Model
     protected $casts = [
         'server_application_settings' => 'array',
     ];
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope('customer', function (Builder $query) {
+            if (auth()->check() && auth()->guard()->name == 'web_customer') {
+                $query->whereHas('hostingSubscription', function ($query) {
+                    $query->where('customer_id', auth()->user()->id);
+                });
+            }
+        });
+    }
 
     public static function boot()
     {
