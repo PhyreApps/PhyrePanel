@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Models\HostingPlan;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
+use Modules\Microweber\Filament\Clusters\Microweber\Pages\Version;
 use Tests\Feature\Api\ActionTestCase;
 
 class MicroweberHostingSubscriptionCreateTest extends ActionTestCase
@@ -15,6 +16,9 @@ class MicroweberHostingSubscriptionCreateTest extends ActionTestCase
         ini_set('max_execution_time', 0);
 
         Artisan::call('phyre:install-module Microweber');
+
+        $version = new Version();
+        $version->checkForUpdates();
 
         $random = rand(1000, 9999);
         $callHostingPlanStoreResponse = $this->callApiAuthorizedRouteAction('api.hosting-plans.store',[

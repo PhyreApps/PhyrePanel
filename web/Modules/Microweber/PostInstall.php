@@ -10,9 +10,6 @@ class PostInstall extends ModulePostInstall
     public $supportLog = false;
     public function run()
     {
-        $version = new Version();
-        $version->checkForUpdates();
-
         return true;
     }
 }
