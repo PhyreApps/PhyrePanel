@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('cron_jobs', function (Blueprint $table) {
             $table->id();
-            $table->string('hosting_account_id')->nullable();
+            $table->string('hosting_subscription_id')->nullable();
             $table->string('command');
             $table->string('schedule');
             $table->string('user');

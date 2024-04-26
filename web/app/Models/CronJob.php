@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -12,6 +13,22 @@ class CronJob extends Model
         'command',
         'user',
     ];
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope('customer', function (Builder $query) {
+            if (auth()->check() && auth()->guard()->name == 'web_customer') {
+                $query->whereHas('hostingSubscription', function ($query) {
+                    $query->where('customer_id', auth()->user()->id);
+                });
+            }
+        });
+    }
+
+    public function hostingSubscription()
+    {
+        return $this->belongsTo(HostingSubscription::class);
+    }
 
     public static function boot()
     {
