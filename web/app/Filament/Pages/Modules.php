@@ -71,7 +71,7 @@ class Modules extends Page
             $this->installLog = str_replace("\n", "<br>", $this->installLog);
         }
 
-        if (Str::contains($this->installLog, 'Installed')) {
+        if (Str::contains($this->installLog, 'Done')) {
             $this->installLogPulling = false;
             $newModule = new Module();
             $newModule->name = $module;
@@ -87,7 +87,7 @@ class Modules extends Page
         $this->installLogPulling = true;
         $this->installLogFilePath = storage_path('logs/' . $module . '-install.log');
 
-        file_put_contents($this->installLogFilePath, 'Installing ' . $module . '...');
+        file_put_contents($this->installLogFilePath, 'Installing ' . $module . '...' . PHP_EOL);
 
         $postInstall = app()->make('Modules\\' . $module . '\\PostInstall');
         if (method_exists($postInstall, 'run')) {
