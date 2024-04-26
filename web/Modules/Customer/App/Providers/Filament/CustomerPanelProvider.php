@@ -17,6 +17,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Modules\Customer\App\Http\Middleware\CustomerAuthenticate;
 
 class CustomerPanelProvider extends PanelProvider
 {
@@ -44,7 +45,7 @@ class CustomerPanelProvider extends PanelProvider
         return $panel
             ->id('customer::admin')
             ->path('customer')
-
+            ->login()
             ->font('Albert Sans')
             ->sidebarWidth('15rem')
             //  ->brandLogo(fn () => view('filament.admin.logo'))
@@ -74,6 +75,7 @@ class CustomerPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+            ->authGuard('web_customer')
             ->authMiddleware([
                 Authenticate::class,
             ]);

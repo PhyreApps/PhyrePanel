@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use STS\FilamentImpersonate\Tables\Actions\Impersonate;
 
 class CustomerResource extends Resource
 {
@@ -113,12 +114,14 @@ class CustomerResource extends Resource
                     ->label('Customer Name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('username')
-                    ->searchable()
-                    ->sortable(),
+//                Tables\Columns\TextColumn::make('username')
+//                    ->searchable()
+//                    ->sortable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable()
                     ->sortable(),
+
+
 
             ])
             ->defaultSort('id', 'desc')
@@ -126,6 +129,11 @@ class CustomerResource extends Resource
                 //
             ])
             ->actions([
+
+                Impersonate::make('impersonate')
+                    ->guard('web_customer')
+                    ->redirectTo(route('filament.customer::admin.pages.dashboard')),
+
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])

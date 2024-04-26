@@ -4,9 +4,9 @@ namespace App\Models;
 
 use App\ApiSDK\PhyreApiSDK;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Customer extends Model
+class Customer extends Authenticatable
 {
     use HasFactory;
 
@@ -69,4 +69,10 @@ class Customer extends Model
     {
         return $this->hasMany(HostingSubscription::class);
     }
+
+    public function canBeImpersonated()
+    {
+        return true;
+    }
+
 }

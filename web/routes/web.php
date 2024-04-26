@@ -14,6 +14,10 @@ use phpseclib3\Net\SSH2;
 |
 */
 
+Route::get('/login', function () {
+    return redirect(route('filament.admin.auth.login'));
+})->name('login');
+
 
 if (!file_exists(storage_path('installed'))) {
     Route::get('/', \App\Livewire\Installer::class);
