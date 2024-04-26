@@ -78,6 +78,8 @@ class Modules extends Page
             $newModule->namespace = 'Modules\\' . $module;
             $newModule->installed = 1;
             $newModule->save();
+
+            $this->dispatch('close-modal', id: 'install-module-modal');
         }
     }
 
