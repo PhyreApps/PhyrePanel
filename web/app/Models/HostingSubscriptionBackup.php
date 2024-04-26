@@ -167,8 +167,8 @@ class HostingSubscriptionBackup extends Model
         $backupTempScript = '/tmp/backup-script-'.$this->id.'.sh';
         $shellFileContent = '';
         $shellFileContent .= 'mkdir -p '. $backupTargetPath.PHP_EOL;
-        $shellFileContent .= 'echo "Backup up domain: '.$findHostingSubscription->domain . PHP_EOL;
-        $shellFileContent .= 'echo "Backup filename: '.$backupFileName. PHP_EOL;
+        $shellFileContent .= 'echo "Backup up domain: '.$findHostingSubscription->domain .'"'. PHP_EOL;
+        $shellFileContent .= 'echo "Backup filename: '.$backupFileName.'"' . PHP_EOL;
 
         if ($this->backup_type == 'full') {
             $shellFileContent .= 'cp -r /home/' . $findHostingSubscription->system_username . ' ' . $backupTempPath . PHP_EOL;
@@ -193,8 +193,8 @@ class HostingSubscriptionBackup extends Model
 //                    $databaseUser = $findDatabaseUser->username_prefix . $findDatabaseUser->username;
 //                    $databaseUserPassword = $findDatabaseUser->password;
 
-                    $shellFileContent .= 'echo "Backup up database: ' . $databaseName . PHP_EOL;
-               //     $shellFileContent .= 'echo "Backup up database user: ' . $databaseUser . PHP_EOL;
+                    $shellFileContent .= 'echo "Backup up database: ' . $databaseName .'" '. PHP_EOL;
+               //     $shellFileContent .= 'echo "Backup up database user: ' . $databaseUser .'" '. PHP_EOL;
                     $databaseBackupPath = $backupTempPath . '/' . $databaseName . '.sql';
                     $shellFileContent .= 'mysqldump -u "'.env('MYSQl_ROOT_USERNAME').'" -p"'.env('MYSQL_ROOT_PASSWORD').'" "'.$databaseName.'" > '.$databaseBackupPath . PHP_EOL;
 
@@ -207,8 +207,8 @@ class HostingSubscriptionBackup extends Model
         $shellFileContent .= 'rm -rf '.$backupTempPath.PHP_EOL;
         $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;
         $shellFileContent .= 'touch ' . $backupTargetPath. '/backup-'.$this->id.'.done' . PHP_EOL;
-        $shellFileContent .= 'rm -rf ' . $backupTempScript . PHP_EOL;
         $shellFileContent .= 'mv '.$backupFilePath.' '. $backupTargetFilePath.PHP_EOL;
+        $shellFileContent .= 'rm -rf ' . $backupTempScript . PHP_EOL;
 
         file_put_contents($backupTempScript, $shellFileContent);
 
