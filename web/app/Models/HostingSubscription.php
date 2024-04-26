@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Actions\CreateLinuxWebUser;
 use App\Actions\GetLinuxUser;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -25,6 +26,16 @@ class HostingSubscription extends Model
         'expiry_date',
         'renewal_date',
     ];
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope('customer', function (Builder $query) {
+            if (auth()->check() && auth()->guard()->name == 'web_customer') {
+                $query->where('customer_id', auth()->user()->id);
+            }
+        });
+    }
+
 
     public static function boot()
     {
