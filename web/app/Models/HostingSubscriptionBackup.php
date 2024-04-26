@@ -176,23 +176,27 @@ class HostingSubscriptionBackup extends Model
 
         if ($this->backup_type == 'full' || $this->backup_type == 'database') {
             $getDatabases = Database::where('hosting_subscription_id', $findHostingSubscription->id)
-                ->where('is_remote_database_server', 0)
+                ->where(function ($query) {
+                    $query->where('is_remote_database_server', '0')
+                        ->orWhereNull('is_remote_database_server');
+                })
                 ->get();
+
             if ($getDatabases->count() > 0) {
                 foreach ($getDatabases as $database) {
-                    $findDatabaseUser = DatabaseUser::where('database_id', $database->id)
-                        ->first();
-                    if (!$findDatabaseUser) {
-                        continue;
-                    }
-                    $databaseName = $database->database_name_prefix . '_' . $database->database_name;
-                    $databaseUser = $findDatabaseUser->username_prefix . $findDatabaseUser->username;
-                    $databaseUserPassword = $findDatabaseUser->password;
+//                    $findDatabaseUser = DatabaseUser::where('database_id', $database->id)
+//                        ->first();
+//                    if (!$findDatabaseUser) {
+//                        continue;
+//                    }
+                    $databaseName = $database->database_name_prefix . $database->database_name;
+//                    $databaseUser = $findDatabaseUser->username_prefix . $findDatabaseUser->username;
+//                    $databaseUserPassword = $findDatabaseUser->password;
 
                     $shellFileContent .= 'echo "Backup up database: ' . $databaseName . PHP_EOL;
-                    $shellFileContent .= 'echo "Backup up database user: ' . $databaseUser . PHP_EOL;
+               //     $shellFileContent .= 'echo "Backup up database user: ' . $databaseUser . PHP_EOL;
                     $databaseBackupPath = $backupTempPath . '/' . $databaseName . '.sql';
-                    $shellFileContent .= 'mysqldump -u ' . $databaseUser . ' -p' . $databaseUserPassword . ' ' . $databaseName . ' > ' . $databaseBackupPath . PHP_EOL;
+                    $shellFileContent .= 'mysqldump -u "'.env('MYSQl_ROOT_USERNAME').'" -p"'.env('MYSQL_ROOT_PASSWORD').'" "'.$databaseName.'" > '.$databaseBackupPath . PHP_EOL;
 
                 }
             }
@@ -204,7 +208,6 @@ class HostingSubscriptionBackup extends Model
         $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;
         $shellFileContent .= 'touch ' . $backupTargetPath. '/backup-'.$this->id.'.done' . PHP_EOL;
         $shellFileContent .= 'rm -rf ' . $backupTempScript . PHP_EOL;
-
         $shellFileContent .= 'mv '.$backupFilePath.' '. $backupTargetFilePath.PHP_EOL;
 
         file_put_contents($backupTempScript, $shellFileContent);
