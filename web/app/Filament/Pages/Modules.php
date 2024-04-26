@@ -51,6 +51,11 @@ class Modules extends Page
 
             ModulesManager::saveInstalledModule($this->installModule);
 
+            $moduleInfo = ModulesManager::getModuleInfo($this->installModule);
+            if (isset($moduleInfo['adminUrl'])) {
+                return $this->redirect($moduleInfo['adminUrl']);
+            }
+
             $this->dispatch('close-modal', id: 'install-module-modal');
         }
     }

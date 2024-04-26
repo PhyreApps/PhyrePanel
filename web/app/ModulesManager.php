@@ -44,6 +44,11 @@ class ModulesManager
         if (isset($moduleJson['category'])) {
             $category = $moduleJson['category'];
         }
+        $adminUrl = '';
+        if (isset($moduleJson['adminUrl'])) {
+            $adminUrl = $moduleJson['adminUrl'];
+        }
+
         $url = '';
         $installed = 0;
         $findModule = Module::where('name', $module)->first();
@@ -54,6 +59,7 @@ class ModulesManager
             'name' => $module,
             'description' => 'A drag and drop website builder and a powerful next-generation CMS.',
             'url' => $url,
+            'adminUrl' => $adminUrl,
             'iconUrl' => url('images/modules/' . $module . '.png'),
             'logoIcon' => $logoIcon,
             'category' => $category,
