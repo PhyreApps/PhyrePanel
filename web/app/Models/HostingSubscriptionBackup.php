@@ -189,7 +189,7 @@ class HostingSubscriptionBackup extends Model
             if ($processId > 0 && is_numeric($processId)) {
 
                 $this->path = $findMainDomain->domain_root . '/backups';
-                $this->filepath = $backupTargetPath;
+                $this->filepath = $backupTargetFilePath;
                 $this->status = 'processing';
                 $this->queued = true;
                 $this->queued_at = now();

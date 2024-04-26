@@ -73,7 +73,13 @@ class ManageHostingSubscriptionBackups extends ManageRelatedRecords
         return $infolist
             ->columns(1)
             ->schema([
-                TextEntry::make('id')->label('id'),
+                //TextEntry::make('id')->label('id'),
+                TextEntry::make('backup_type')->label('Backup Type'),
+                TextEntry::make('status')->label('Status'),
+                TextEntry::make('completed_at')->label('Completed At'),
+                TextEntry::make('size')->label('Size'),
+                TextEntry::make('path')->label('Path'),
+                TextEntry::make('filepath')->label('File Path'),
             ]);
     }
 
@@ -120,8 +126,8 @@ class ManageHostingSubscriptionBackups extends ManageRelatedRecords
 //
             ])
             ->actions([
-               // Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
+             //   Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->groupedBulkActions([
