@@ -6,7 +6,7 @@
     "priority": 0,
     "logoIcon": "lets_encrypt-logo",
     "category": "Security",
-    "adminUrl": "admin/lets-encrypt/lets-encrypt-certificates",
+    "adminUrl": "/admin/lets-encrypt/lets-encrypt-certificates",
     "providers": [
         "Modules\\LetsEncrypt\\App\\Providers\\LetsEncryptServiceProvider",
         "Modules\\LetsEncrypt\\Providers\\Filament\\AdminPanelProvider"
