@@ -2,7 +2,9 @@
 
 namespace App\Filament\Pages;
 
+use App\Models\Module;
 use Filament\Pages\Page;
+use Illuminate\Support\Str;
 
 class Modules extends Page
 {
@@ -18,6 +20,8 @@ class Modules extends Page
 
     public $installLogPulling = false;
     public $installLog = '';
+    public $installModule = '';
+    public $installLogFilePath = '';
 
     protected function getViewData(): array
     {
@@ -61,13 +65,41 @@ class Modules extends Page
 
     public function getInstallLog()
     {
-        $this->installLog = time();
+        $this->installLog = '';
+        if (file_exists($this->installLogFilePath)) {
+            $this->installLog = file_get_contents($this->installLogFilePath);
+            $this->installLog = str_replace("\n", "<br>", $this->installLog);
+        }
+
+        if (Str::contains($this->installLog, 'Installed')) {
+            $this->installLogPulling = false;
+            $newModule = new Module();
+            $newModule->name = $module;
+            $newModule->namespace = 'Modules\\' . $module;
+            $newModule->installed = 1;
+            $newModule->save();
+        }
     }
 
     public function openInstallModal($module)
     {
-
+        $this->installModule = $module;
         $this->installLogPulling = true;
+        $this->installLogFilePath = storage_path('logs/' . $module . '-install.log');
+
+        file_put_contents($this->installLogFilePath, 'Installing ' . $module . '...');
+
+        $postInstall = app()->make('Modules\\' . $module . '\\PostInstall');
+        if (method_exists($postInstall, 'run')) {
+            $postInstall->setLogFile($this->installLogFilePath);
+            $postInstall->run();
+        } else {
+            $newModule = new Module();
+            $newModule->name = $module;
+            $newModule->namespace = 'Modules\\' . $module;
+            $newModule->installed = 1;
+            $newModule->save();
+        }
 
         $this->dispatch('open-modal', id: 'install-module-modal', props: ['module' => $module]);
     }

@@ -2,9 +2,10 @@
 
 namespace Modules\Microweber;
 
+use App\ModulePostInstall;
 use Modules\Microweber\Filament\Clusters\Microweber\Pages\Version;
 
-class PostInstall
+class PostInstall extends ModulePostInstall
 {
     public function run()
     {
