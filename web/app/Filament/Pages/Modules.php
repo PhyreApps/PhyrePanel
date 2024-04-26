@@ -74,8 +74,8 @@ class Modules extends Page
         if (Str::contains($this->installLog, 'Done')) {
             $this->installLogPulling = false;
             $newModule = new Module();
-            $newModule->name = $module;
-            $newModule->namespace = 'Modules\\' . $module;
+            $newModule->name = $this->installModule;
+            $newModule->namespace = 'Modules\\' . $this->installModule;
             $newModule->installed = 1;
             $newModule->save();
 
