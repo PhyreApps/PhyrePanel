@@ -59,7 +59,7 @@ class DockerContainerApi
     {
         $commandId = rand(10000, 99999);
 
-        $shellFileContent = 'docker run -it --network=host --name ' . $this->name . ' ';
+        $shellFileContent = 'docker run --name ' . $this->name . ' ';
 
         if (!empty($this->port)) {
             $shellFileContent .= ' -p ' . $this->externalPort . ':' . $this->port . ' ';
@@ -79,8 +79,6 @@ class DockerContainerApi
 //        }
 
         $shellFileContent .= PHP_EOL . 'rm -f /tmp/docker-run-container-'.$commandId.'.sh';
-
-       // dd($shellFileContent);
 
         file_put_contents('/tmp/docker-run-container-'.$commandId.'.sh', $shellFileContent);
         $output = shell_exec('bash /tmp/docker-run-container-'.$commandId.'.sh');
