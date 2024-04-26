@@ -89,6 +89,14 @@ class Modules extends Page
         }
     }
 
+    public function openUnistallModal($module)
+    {
+        $findModule = Module::where('name', $module)->first();
+        if ($findModule) {
+            $findModule->delete();
+        }
+    }
+
     public function openInstallModal($module)
     {
         $this->installModule = $module;
