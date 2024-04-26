@@ -68,13 +68,13 @@ class DockerContainerApi
 
 //        if (!empty($this->environmentVariables)) {
 //            foreach ($this->environmentVariables as $key => $value) {
-//                $commands[] = '-e ' . $key . '=' . $value;
+//                $shellFileContent .= ' -e ' . $key . '=' . $value . ' ';
 //            }
 //        }
 //
 //        if (!empty($this->volumeMapping)) {
 //            foreach ($this->volumeMapping as $key => $value) {
-//                $commands[] = '-v ' . $key . ':' . $value;
+//                $shellFileContent .= ' -v ' . $key . ':' . $value . ' ';
 //            }
 //        }
 
