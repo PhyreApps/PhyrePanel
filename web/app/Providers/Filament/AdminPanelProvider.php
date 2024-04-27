@@ -47,6 +47,7 @@ class AdminPanelProvider extends PanelProvider
           //  ->brandLogo(fn () => view('filament.admin.logo'))
             ->navigationGroups([
                 'Hosting Services' => NavigationGroup::make()->label('Hosting Services'),
+                'Docker' => NavigationGroup::make()->label('Docker'),
                 'Server Management' => NavigationGroup::make()->label('Server Management'),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')

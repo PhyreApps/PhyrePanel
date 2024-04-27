@@ -26,13 +26,17 @@ class DockerCatalog extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    // protected static ?string $navigationGroup = 'Docker';
+    protected static ?string $navigationGroup = 'Docker';
 
-    protected static ?string $cluster = DockerCluster::class;
+    protected static ?string $navigationLabel = 'Catalog';
 
-    protected static ?string $navigationIcon = 'heroicon-o-cog';
+    protected static ?string $slug = 'docker/catalog';
 
-    protected static ?int $navigationSort = 1;
+  //  protected static ?string $cluster = DockerCluster::class;
+
+    protected static ?string $navigationIcon = 'docker-catalog';
+
+    protected static ?int $navigationSort = 2;
 
     protected static string $view = 'docker::filament.pages.docker-catalog';
 

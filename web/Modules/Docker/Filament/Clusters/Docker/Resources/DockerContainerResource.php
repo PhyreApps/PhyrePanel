@@ -20,13 +20,19 @@ use Modules\Docker\Filament\Clusters\DockerCluster;
 
 class DockerContainerResource extends Resource
 {
+    protected static ?string $navigationGroup = 'Docker';
+
+    protected static ?string $navigationLabel = 'Containers';
+
+    protected static ?string $slug = 'docker/containers';
+
     protected static ?string $model = DockerContainer::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'docker-logo';
 
-    protected static ?string $cluster = DockerCluster::class;
+//    protected static ?string $cluster = DockerCluster::class;
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {

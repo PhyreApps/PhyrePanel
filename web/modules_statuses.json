@@ -2,5 +2,7 @@
     "LetsEncrypt": true,
     "Microweber": true,
     "Docker": true,
-    "Customer": true
+    "Customer": true,
+    "Model": true,
+    "DockerTemplate": true
 }

@@ -13,9 +13,13 @@ class Settings extends BaseSettings
 {
     protected static ?string $navigationGroup = 'Docker';
 
-    protected static ?string $cluster = DockerCluster::class;
+    protected static ?string $navigationLabel = 'Settings';
+
+   // protected static ?string $cluster = DockerCluster::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-cog';
+
+    protected static ?string $slug = 'docker/settings';
 
     protected static ?int $navigationSort = 3;
 
