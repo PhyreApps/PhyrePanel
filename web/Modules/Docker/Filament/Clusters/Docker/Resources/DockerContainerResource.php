@@ -185,7 +185,13 @@ class DockerContainerResource extends Resource
     {
         return $table
             ->columns([
-
+                Tables\Columns\TextColumn::make('id'),
+                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('state')->badge(),
+                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('image'),
+                Tables\Columns\TextColumn::make('port'),
+                Tables\Columns\TextColumn::make('external_port'),
             ])
             ->filters([
                 //
