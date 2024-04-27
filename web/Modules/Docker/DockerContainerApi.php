@@ -14,6 +14,8 @@ class DockerContainerApi
     public $port = '';
     public $externalPort = '';
 
+    public $dockerCompose = '';
+
     public function setName($name)
     {
         $name = trim($name);
@@ -47,6 +49,11 @@ class DockerContainerApi
         $this->externalPort = $externalPort;
     }
 
+    public function setDockerCompose($dockerCompose)
+    {
+        $this->dockerCompose = $dockerCompose;
+    }
+
     public function recreate($containerId)
     {
         shell_exec('docker stop ' . $containerId);
@@ -59,14 +66,18 @@ class DockerContainerApi
     {
         $commandId = rand(10000, 99999);
 
-        $dockerComposeFileContent = view('docker::actions.docker-compose-yml', [
-            'name' => $this->name,
-            'image' => $this->image,
-            'port' => $this->port,
-            'externalPort' => $this->externalPort,
-            'environmentVariables' => $this->environmentVariables,
-            'volumeMapping' => $this->volumeMapping,
-        ])->render();
+        if (!empty($this->dockerCompose)) {
+            $dockerComposeFileContent = $this->dockerCompose;
+        } else {
+            $dockerComposeFileContent = view('docker::actions.docker-compose-yml', [
+                'name' => $this->name,
+                'image' => $this->image,
+                'port' => $this->port,
+                'externalPort' => $this->externalPort,
+                'environmentVariables' => $this->environmentVariables,
+                'volumeMapping' => $this->volumeMapping,
+            ])->render();
+        }
 
         $dockerContaienrPath = storage_path('docker/'.$this->name);
         if (!is_dir($dockerContaienrPath)) {

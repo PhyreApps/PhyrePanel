@@ -144,12 +144,18 @@ class DockerContainerResource extends Resource
 
                 Forms\Components\TextInput::make('port')
                     ->label('Port')
+                    ->hidden(function (Forms\Get $get) {
+                        return $get('build_type') != 'image';
+                    })
                    // ->disabled()
                     ->default($defaultPort)
                     ->columnSpan(1),
 
                 Forms\Components\TextInput::make('external_port')
                     ->label('External Port')
+                    ->hidden(function (Forms\Get $get) {
+                        return $get('build_type') != 'image';
+                    })
                   //  ->disabled()
                     ->default($defaultExternalPort)
                     ->columnSpan(1),

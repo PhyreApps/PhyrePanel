@@ -37,6 +37,9 @@ class DockerContainer extends Model
         'external_port',
         'volume_mapping',
         'environment_variables',
+        'build_type',
+        'docker_template_id',
+        'docker_compose'
     ];
 
     protected $casts = [
@@ -81,6 +84,10 @@ class DockerContainer extends Model
             $dockerContainerApi->setName(Str::slug($model->name.'-phyre-'.$nextId));
             $dockerContainerApi->setExternalPort($model->external_port);
 
+            if ($model->build_type == 'template') {
+                $dockerContainerApi->setDockerCompose($model->docker_compose);
+            }
+            
             $createContainer = $dockerContainerApi->run();
             if (!isset($createContainer['ID'])) {
                 return false;
