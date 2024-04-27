@@ -12,7 +12,11 @@ class DockerTemplate extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'name',
+        'description',
+        'docker_compose',
+    ];
 
 
 }

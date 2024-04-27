@@ -13,6 +13,7 @@ use Modules\Docker\App\Models\DockerTemplate;
 use Modules\Docker\Filament\Clusters\Docker\Resources\DockerTemplateResource\Pages\CreateDockerTemplate;
 use Modules\Docker\Filament\Clusters\Docker\Resources\DockerTemplateResource\Pages\EditDockerTemplate;
 use Modules\Docker\Filament\Clusters\Docker\Resources\DockerTemplateResource\Pages\ListDockerTemplates;
+use Riodwanto\FilamentAceEditor\AceEditor;
 
 class DockerTemplateResource extends Resource
 {
@@ -34,7 +35,28 @@ class DockerTemplateResource extends Resource
     {
         return $form
             ->schema([
-                //
+
+                Forms\Components\TextInput::make('name')
+                    ->label('Name')
+                    ->required()
+                    ->placeholder('Enter the name of the template'),
+
+                Forms\Components\TextInput::make('description')
+                    ->label('Description')
+                    ->placeholder('Enter the description of the template'),
+
+
+//                Forms\Components\Textarea::make('docker_compose')
+//                    ->label('Docker compose')
+//                    ->required()
+//                    ->columnSpanFull()
+//                    ->placeholder('Enter the Dockerfile content'),
+
+                AceEditor::make('docker_compose')
+                    ->mode('php')
+                    ->theme('github')
+                    ->darkTheme('dracula'),
+
             ]);
     }
 
@@ -42,7 +64,8 @@ class DockerTemplateResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('description'),
             ])
             ->filters([
                 //
