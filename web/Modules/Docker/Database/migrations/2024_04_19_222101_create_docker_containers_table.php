@@ -29,6 +29,10 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('status')->nullable();
 
+            $table->string('build_type')->nullable();
+            $table->integer('docker_template_id')->nullable();
+            $table->longText('docker_compose')->nullable();
+
             $table->string('memory_limit')->nullable();
             $table->tinyInteger('unlimited_memory')->nullable();
             $table->tinyInteger('automatic_start')->nullable();
