@@ -94,8 +94,11 @@ class DockerContainerResource extends Resource
                 Forms\Components\Select::make('build_type')
                     ->label('Build container from')
                     ->live()
-                    ->default($buildType)
-                    ->options(['template'=>'Docker Template', 'image'=>'Docker Image'])
+                    ->default('image')
+                    ->options([
+                      //  'template'=>'Docker Template',
+                        'image'=>'Docker Image'
+                    ])
                     ->columnSpanFull(),
 
                 Forms\Components\Select::make('docker_template_id')

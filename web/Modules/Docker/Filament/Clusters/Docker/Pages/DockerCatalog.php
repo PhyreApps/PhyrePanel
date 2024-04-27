@@ -71,7 +71,7 @@ class DockerCatalog extends Page implements HasForms
             $this->pullLogPulling = false;
             $this->dispatch('close-modal', id: 'pull-docker-image');
 
-            return $this->redirect(route('filament.admin.docker.resources.docker-containers.create') . '?dockerImage=' . $this->pullImageName);
+            return $this->redirect('/admin/docker/containers/create?dockerImage=' . $this->pullImageName);
         }
     }
 

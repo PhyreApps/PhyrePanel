@@ -36,33 +36,33 @@ class ViewDockerContainer extends ViewRecord
         return $infolist
             ->schema([
 
-                ViewEntry::make('status')
-                    ->columnSpanFull()
-                    ->view('docker::filament.infolists.docker-container.actions')
-                    ->registerActions([
-                            Actions\Action::make('stop')
-                                ->label('Stop')
-                                ->color('primary'),
-
-                            Actions\Action::make('start')
-                                ->label('Start')
-                                ->color('primary'),
-
-                            Actions\Action::make('restart')
-                                ->label('Restart')
-                                ->color('success'),
-
-
-                            Actions\Action::make('recreate')
-                                ->label('Recreate')
-                                ->action('recreate')
-                                ->color('info'),
-
-
-                            Actions\Action::make('delete')
-                                ->label('Delete')
-                                ->color('danger'),
-                    ]),
+//                ViewEntry::make('status')
+//                    ->columnSpanFull()
+//                    ->view('docker::filament.infolists.docker-container.actions')
+//                    ->registerActions([
+//                            Actions\Action::make('stop')
+//                                ->label('Stop')
+//                                ->color('primary'),
+//
+//                            Actions\Action::make('start')
+//                                ->label('Start')
+//                                ->color('primary'),
+//
+//                            Actions\Action::make('restart')
+//                                ->label('Restart')
+//                                ->color('success'),
+//
+//
+//                            Actions\Action::make('recreate')
+//                                ->label('Recreate')
+//                                ->action('recreate')
+//                                ->color('info'),
+//
+//
+//                            Actions\Action::make('delete')
+//                                ->label('Delete')
+//                                ->color('danger'),
+//                    ]),
 
                 ViewEntry::make('containerLogs')
                     ->columnSpanFull()

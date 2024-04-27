@@ -67,7 +67,7 @@
                             <x-filament::button id="docker-container-details-{{ $dockerContainer['id'] }}"
 
                                                 tag="a"
-                                                href="{{route('filament.admin.docker.resources.docker-containers.view', $dockerContainer['id'])}}"
+                                                href="{{url('admin/docker/containers/'. $dockerContainer['id'])}}"
 
                                                 size="md" outlined>
                                 <div class="flex gap-2 items-center">
@@ -79,7 +79,7 @@
                             </x-filament::button>
                             <x-filament::button id="docker-container-logs-{{ $dockerContainer['id'] }}"
                                                 tag="a"
-                                                href="{{route('filament.admin.docker.resources.docker-containers.view', $dockerContainer['id'])}}"
+                                                href="{{url('admin/docker/containers/'. $dockerContainer['id'])}}"
                                                 size="md" outlined>
                                 <div class="flex gap-2 items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6" viewBox="0 0 15 15">
@@ -91,7 +91,7 @@
                             <x-filament::button id="docker-container-settings-{{ $dockerContainer['id'] }}"
 
                                                 tag="a"
-                                                href="{{route('filament.admin.docker.resources.docker-containers.edit', $dockerContainer['id'])}}"
+                                                href="{{url('admin/docker/containers/'. $dockerContainer['id'])}}"
 
                                                 size="md" outlined>
                                 <div class="flex gap-2 items-center">

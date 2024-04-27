@@ -87,8 +87,9 @@ class DockerContainer extends Model
             if ($model->build_type == 'template') {
                 $dockerContainerApi->setDockerCompose($model->docker_compose);
             }
-            
+
             $createContainer = $dockerContainerApi->run();
+
             if (!isset($createContainer['ID'])) {
                 return false;
             }
