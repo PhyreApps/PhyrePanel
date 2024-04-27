@@ -10,6 +10,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use STS\FilamentImpersonate\Tables\Actions\Impersonate;
 
 class CustomerResource extends Resource
@@ -21,6 +23,8 @@ class CustomerResource extends Resource
     protected static ?string $navigationGroup = 'Hosting Services';
 
     protected static ?int $navigationSort = 1;
+
+    protected static ?string $label = 'Customers';
 
     public static function form(Form $form): Form
     {
@@ -159,5 +163,26 @@ class CustomerResource extends Resource
             //            'create' => Pages\CreateCustomer::route('/create'),
             //            'edit' => Pages\EditCustomer::route('/{record}/edit'),
         ];
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['email', 'name'];
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        /** @var Customer $record */
+
+        return [
+            'Email' => $record->email,
+            'Name' => $record->name,
+        ];
+    }
+
+    /** @return Builder<Customer> */
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery();
     }
 }

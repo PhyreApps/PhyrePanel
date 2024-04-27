@@ -73,6 +73,7 @@ class DockerContainerApi
             shell_exec('mkdir -p ' . $dockerContaienrPath);
         }
 
+        dd($dockerComposeFileContent);
         $dockerComposeFile = $dockerContaienrPath . '/docker-compose.yml';
         file_put_contents($dockerComposeFile, $dockerComposeFileContent);
 

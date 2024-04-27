@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Enums\ServerApplicationType;
 use App\Filament\Resources\DomainResource\Pages;
+use App\Models\Customer;
 use App\Models\Domain;
 use App\SupportedApplicationTypes;
 use Filament\Actions\ViewAction;
@@ -17,6 +18,8 @@ use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use JaOcero\RadioDeck\Forms\Components\RadioDeck;
 use Modules\Docker\App\Models\DockerContainer;
 
@@ -27,6 +30,8 @@ class DomainResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-globe-europe-africa';
 
     protected static ?string $navigationGroup = 'Hosting Services';
+
+    protected static ?string $label = 'Domains';
 
     protected static ?int $navigationSort = 3;
 
@@ -344,5 +349,26 @@ class DomainResource extends Resource
             'edit' => Pages\EditDomain::route('/{record}/edit'),
 //            'view' => Pages\ViewDomain::route('/{record}'),
         ];
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['domain', 'hostingSubscription.customer.name'];
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        /** @var Domain $record */
+
+        return [
+            'Domain' => $record->domain,
+            'Customer' => optional($record->hostingSubscription)->customer->name,
+        ];
+    }
+
+    /** @return Builder<Domain> */
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery();
     }
 }

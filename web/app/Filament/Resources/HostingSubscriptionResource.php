@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\HostingSubscriptionResource\Pages;
+use App\Models\Domain;
 use App\Models\HostingSubscription;
 use App\Models\PhyreServer;
 use Filament\Forms;
@@ -13,6 +14,8 @@ use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
 
 class HostingSubscriptionResource extends Resource
@@ -192,5 +195,26 @@ class HostingSubscriptionResource extends Resource
             'databases' => Pages\ManageHostingSubscriptionDatabases::route('/{record}/databases'),
             'backups' => Pages\ManageHostingSubscriptionBackups::route('/{record}/backups'),
         ];
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['domain', 'customer.name'];
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        /** @var HostingSubscription $record */
+
+        return [
+            'HostingSubscription' => $record->domain,
+            'Customer' => optional($record->customer)->name,
+        ];
+    }
+
+    /** @return Builder<HostingSubscription> */
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery();
     }
 }
