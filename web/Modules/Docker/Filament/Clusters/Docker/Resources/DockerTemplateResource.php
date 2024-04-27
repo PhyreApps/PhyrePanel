@@ -2,8 +2,6 @@
 
 namespace Modules\Docker\Filament\Clusters\Docker\Resources;
 
-use Modules\Customer\App\Filament\Resources\DockerTemplateResource\Pages;
-use Modules\Customer\App\Filament\Resources\DockerTemplateResource\RelationManagers;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,6 +10,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Modules\Docker\App\Models\DockerTemplate;
+use Modules\Docker\Filament\Clusters\Docker\Resources\DockerTemplateResource\Pages\CreateDockerTemplate;
+use Modules\Docker\Filament\Clusters\Docker\Resources\DockerTemplateResource\Pages\EditDockerTemplate;
+use Modules\Docker\Filament\Clusters\Docker\Resources\DockerTemplateResource\Pages\ListDockerTemplates;
 
 class DockerTemplateResource extends Resource
 {
@@ -25,7 +26,9 @@ class DockerTemplateResource extends Resource
 
     protected static ?string $model = DockerTemplate::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'docker-templates';
+
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {
@@ -64,9 +67,9 @@ class DockerTemplateResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDockerTemplates::route('/'),
-            'create' => Pages\CreateDockerTemplate::route('/create'),
-            'edit' => Pages\EditDockerTemplate::route('/{record}/edit'),
+            'index' => ListDockerTemplates::route('/'),
+            'create' => CreateDockerTemplate::route('/create'),
+            'edit' => EditDockerTemplate::route('/{record}/edit'),
         ];
     }
 }
