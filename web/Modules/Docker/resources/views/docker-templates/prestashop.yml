@@ -1,0 +1,31 @@
+services:
+
+  prestashop:
+    image: prestashop/prestashop:latest
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      DB_HOST: db
+      DB_USER: exampleuser
+      DB_PASSWORD: examplepass
+      DB_NAME: exampledb
+      ADMIN_MAIL: exampledb@email.com
+      ADMIN_PASSWD: examplepass
+    volumes:
+      - prestashop:/var/www/html
+
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+      - db:/var/lib/mysql
+
+volumes:
+  prestashop:
+  db:

@@ -33,6 +33,14 @@ class DockerTemplateResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $dockerTemplate = request()->get('docker_template', null);
+
+        try {
+            $dockerTemplateContent = file_get_contents(module_path('Docker', 'resources/views/docker-templates/' . $dockerTemplate . '.yml'));
+        } catch (\Exception $e) {
+            $dockerTemplateContent = '';
+        }
+
         return $form
             ->schema([
 
@@ -45,6 +53,28 @@ class DockerTemplateResource extends Resource
                     ->label('Description')
                     ->placeholder('Enter the description of the template'),
 
+                Forms\Components\Select::make('docker_template')
+                        ->label('Docker Template')
+                        ->columnSpanFull()
+                        ->live()
+                        ->default($dockerTemplate)
+                        ->options([
+                            'microweber' => 'Microweber',
+                            'wordpress' => 'Wordpress',
+                     //       'opencart' => 'Opencart',
+                            'prestashop' => 'Prestashop',
+                       //     'magento' => 'Magento',
+                            'drupal' => 'Drupal',
+                            'joomla' => 'Joomla',
+                            'redis' => 'Redis',
+                            'mysql' => 'Mysql',
+                            'postgres' => 'Postgres',
+                            'mongo' => 'Mongo',
+                    ])->afterStateUpdated(function (Forms\Get $get, Forms\Set $set, ?string $old, ?string $state) {
+
+                        return redirect('/admin/docker/templates/create?docker_template=' . $state);
+                        //$set('docker_compose', $state);
+                    }),
 
 //                Forms\Components\Textarea::make('docker_compose')
 //                    ->label('Docker compose')
@@ -53,8 +83,10 @@ class DockerTemplateResource extends Resource
 //                    ->placeholder('Enter the Dockerfile content'),
 
                 AceEditor::make('docker_compose')
-                    ->mode('php')
+                    ->mode('yml')
                     ->theme('github')
+                    ->default($dockerTemplateContent)
+                    ->columnSpanFull()
                     ->darkTheme('dracula'),
 
             ]);

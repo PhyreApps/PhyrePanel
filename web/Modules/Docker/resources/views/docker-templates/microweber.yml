@@ -1,0 +1,31 @@
+version: '3.1'
+
+services:
+
+  microweber:
+    image: microweber
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      DB_HOST: db
+      DB_USER: exampleuser
+      DB_PASSWORD: examplepass
+      DB_NAME: exampledb
+    volumes:
+      - microweber:/var/www/html
+
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+      - db:/var/lib/mysql
+
+volumes:
+  microweber:
+  db:

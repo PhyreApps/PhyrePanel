@@ -1,0 +1,15 @@
+services:
+
+  mysql-db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+      - db:/var/lib/mysql
+
+volumes:
+  db:
