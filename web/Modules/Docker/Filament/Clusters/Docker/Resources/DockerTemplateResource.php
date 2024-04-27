@@ -46,16 +46,21 @@ class DockerTemplateResource extends Resource
 
                 Forms\Components\TextInput::make('name')
                     ->label('Name')
+                    ->unique('docker_templates', 'name')
+                    ->default(ucfirst($dockerTemplate))
                     ->required()
                     ->placeholder('Enter the name of the template'),
 
-                Forms\Components\TextInput::make('description')
-                    ->label('Description')
-                    ->placeholder('Enter the description of the template'),
+//                Forms\Components\TextInput::make('description')
+//                    ->label('Description')
+//                    ->placeholder('Enter the description of the template'),
 
                 Forms\Components\Select::make('docker_template')
                         ->label('Docker Template')
                         ->columnSpanFull()
+                        ->hidden(function($record) {
+                            return $record;
+                        })
                         ->live()
                         ->default($dockerTemplate)
                         ->options([
@@ -97,7 +102,7 @@ class DockerTemplateResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('description'),
+              //  Tables\Columns\TextColumn::make('description'),
             ])
             ->filters([
                 //
