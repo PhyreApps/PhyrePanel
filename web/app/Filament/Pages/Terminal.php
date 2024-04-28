@@ -16,4 +16,15 @@ class Terminal extends Page
 
     protected static ?int $navigationSort = 1;
 
+    protected function getViewData(): array
+    {
+        $sessionId = session()->getId();
+
+        shell_exec('node /usr/local/phyre/web/nodejs/terminal/server.js >> /usr/local/phyre/web/storage/logs/terminal/server-terminal.log &');
+
+        return [
+            'title' => 'Terminal',
+            'sessionId' => $sessionId,
+        ];
+    }
 }

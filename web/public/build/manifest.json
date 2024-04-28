@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-60df93ff.css",
+    "file": "assets/app-4e206fd3.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
@@ -8,5 +8,17 @@
     "file": "assets/app-f9f1eaaf.js",
     "isEntry": true,
     "src": "resources/js/app.js"
+  },
+  "resources/js/web-terminal.css": {
+    "file": "assets/web-terminal-c039bc4a.css",
+    "src": "resources/js/web-terminal.css"
+  },
+  "resources/js/web-terminal.js": {
+    "css": [
+      "assets/web-terminal-c039bc4a.css"
+    ],
+    "file": "assets/web-terminal-6085c523.js",
+    "isEntry": true,
+    "src": "resources/js/web-terminal.js"
   }
 }

@@ -4,5 +4,6 @@
     "Docker": true,
     "Customer": true,
     "Model": true,
-    "DockerTemplate": true
+    "DockerTemplate": true,
+    "Terminal": true
 }

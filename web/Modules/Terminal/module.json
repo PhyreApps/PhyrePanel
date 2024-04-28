@@ -1,0 +1,11 @@
+{
+    "name": "Terminal",
+    "alias": "terminal",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Terminal\\App\\Providers\\TerminalServiceProvider"
+    ],
+    "files": []
+}

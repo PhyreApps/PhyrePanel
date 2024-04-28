@@ -2,6 +2,11 @@
 
     <div>
 
+        <script>
+            window.terminal = {};
+            window.terminal.sessionId = '{{ $sessionId }}';
+        </script>
+
         @vite('resources/js/web-terminal.js')
 
         <div id="js-web-terminal"></div>

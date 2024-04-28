@@ -1,0 +1,17 @@
+{
+    "name": "phyre-terminal",
+    "private": true,
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "dependencies": {
+        "node-pty": "^1.0.0",
+        "ws": "^8.16.0"
+    },
+    "devDependencies": {
+        "@types/ws": "^8.5.10",
+        "@types/node": "^20.12.5"
+    }
+}
