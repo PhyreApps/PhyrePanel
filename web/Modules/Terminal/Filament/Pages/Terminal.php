@@ -31,7 +31,7 @@ class Terminal extends Page
         if ($runNewTerminal) {
             $exec = shell_exec('node /usr/local/phyre/web/Modules/Terminal/nodejs/terminal/server.js >> /usr/local/phyre/web/storage/logs/terminal/server-terminal.log &');
         }
-        
+
         return [
             'title' => 'Terminal',
             'sessionId' => $sessionId,

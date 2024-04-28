@@ -10,7 +10,7 @@ if (terminalElement !== null) {
     const terminal = new Terminal({
         allowTransparency: true,
         theme: {
-            background: '#09090b',
+            background: 'rgba(22,22,23,0)',
             foreground: '#cccccc',
             selectionBackground: '#399ef440',
             black: '#666666',
@@ -44,6 +44,7 @@ if (terminalElement !== null) {
     terminal.open(terminalElement);
 
     fitAddon.fit();
+
 
     const socket = new WebSocket(`ws://${window.location.host}/_shell/?sessionId=${window.terminal.sessionId}`);
     socket.addEventListener('open', (_) => {

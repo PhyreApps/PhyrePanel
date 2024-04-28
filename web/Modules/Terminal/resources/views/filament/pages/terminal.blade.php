@@ -9,7 +9,9 @@
 
         @vite('resources/js/web-terminal.js')
 
-        <div id="js-web-terminal"></div>
+        <div class="bg-black/5 dark:bg-white/5 rounded p-4">
+         <div id="js-web-terminal"></div>
+        </div>
 
     </div>
 
