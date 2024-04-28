@@ -67,26 +67,43 @@ wss.on('connection', (ws, req) => {
 
     const remoteIP = req.headers['x-real-ip'] || req.socket.remoteAddress;
 
-    console.log(req.url);
-
     // Check if session is valid
-    // const sessionID = req.headers.cookie.split(`${sessionName}=`)[1].split(';')[0];
-    // console.log(`New connection from ${remoteIP} (${sessionID})`);
-    //
-    // const file = readFileSync(`${process.env.PHYRE}/data/sessions/sess_${sessionID}`);
-    // if (!file) {
-    //     console.error(`Invalid session ID ${sessionID}, refusing connection`);
-    //     ws.close(1000, 'Your session has expired.');
-    //     return;
-    // }
-    // const session = file.toString();
-    //
-    // // Get username
-    // const login = session.split('user|s:')[1].split('"')[1];
-    // const impersonating = session.split('look|s:')[1].split('"')[1];
+    let sessionID = null;
+    try {
+        sessionID = req.url.split('?sessionId=')[1];
+    } catch (e) {
+        console.error(`Invalid session ID, refusing connection`);
+        ws.close(1000, 'Your session has expired.');
+        return false;
+    }
+
+    console.log(`New connection from ${remoteIP} (${sessionID})`);
+
+    const file = readFileSync(`/usr/local/phyre/web/storage/app/terminal/sessions/${sessionID}`);
+    if (!file) {
+        console.error(`Invalid session ID ${sessionID}, refusing connection`);
+        ws.close(1000, 'Your session has expired.');
+        return;
+    }
+    const fileContent = file.toString();
+    const sessionContent = JSON.parse(fileContent);
+    if (sessionContent.sessionId !== sessionID) {
+        console.error(`Invalid session ID ${sessionID}, refusing connection`);
+        ws.close(1000, 'Your session has expired.');
+        return;
+    }
+    if (!sessionContent.user) {
+        console.error(`Invalid session ID ${sessionID}, refusing connection`);
+        ws.close(1000, 'Your session has expired.');
+        return;
+    }
+
+    // Get username
+   //  const login = session.split('user|s:')[1].split('"')[1];
+   //  const impersonating = session.split('look|s:')[1].split('"')[1];
    // const username = impersonating.length > 0 ? impersonating : login;
 
-    const username = 'root';
+    const username = sessionContent.user;
 
     // Get user info
     const passwd = readFileSync('/etc/passwd').toString();
