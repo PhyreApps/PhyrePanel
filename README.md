@@ -17,11 +17,11 @@ The admin panel can be opened on port: yourserver.com:8443
 
 ### Master branch
 ![Unit Tests](https://github.com/PhyreApps/PhyrePanel/actions/workflows/app-unit-test.yml/badge.svg)
-[![codecov](https://codecov.io/gh/PhyreApps/PhyrePanel/branch/main/graph/badge.svg?token=aLAgaSMcbZ)](https://codecov.io/gh/PhyreApps/PhyrePanel)
+[![codecov](https://codecov.io/gh/PhyreApps/PhyrePanel/graph/badge.svg?token=BO0RTPLS4W)](https://codecov.io/gh/PhyreApps/PhyrePanel)
 
 ### Dev branch
 ![Unit Tests](https://github.com/PhyreApps/PhyrePanel/actions/workflows/app-unit-test.yml/badge.svg?branch=dev)
-[![codecov](https://codecov.io/gh/PhyreApps/PhyrePanel/branch/dev/graph/badge.svg?token=aLAgaSMcbZ)](https://codecov.io/gh/PhyreApps/PhyrePanel)
+[![codecov](https://codecov.io/gh/PhyreApps/PhyrePanel/graph/badge.svg?token=BO0RTPLS4W)](https://codecov.io/gh/PhyreApps/PhyrePanel)
 
 All development is done on the `dev` branch. The `master` branch is used for stable releases.
 

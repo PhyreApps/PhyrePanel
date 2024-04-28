@@ -1,0 +1,4 @@
+[xdebug]
+zend_extension=/usr/local/phyre/php/zend-xdebug/xdebug.so
+xdebug.mode=develop,debug,coverage
+xdebug.start_with_request = yes
