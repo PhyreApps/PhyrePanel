@@ -52,6 +52,8 @@ jobs:
           sudo ./configure --enable-xdebug
           sudo make
           sudo make test
+          
+          sudo mkdir -p /usr/local/phyre/php/zend-xdebug
           sudo cp modules/xdebug.so /usr/local/phyre/php/zend-xdebug/xdebug.so
 
           sudo chmod 777 /usr/local/phyre/php/zend-xdebug/xdebug.so
