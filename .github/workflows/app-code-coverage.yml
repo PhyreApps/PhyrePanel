@@ -39,9 +39,11 @@ jobs:
           ls -la
           
           sudo wget https://getcomposer.org/download/latest-stable/composer.phar
-          phyre-php composer.phar install
+          sudo COMPOSER_ALLOW_SUPERUSER=1 phyre-php composer.phar install
           
           sudo /phyre-panel/install_web.sh
+          
+          sudo chmod -R 777 vendor
           composer test:coverage
 
       - name: Code Cov
