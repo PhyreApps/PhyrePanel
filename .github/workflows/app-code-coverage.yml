@@ -57,8 +57,9 @@ jobs:
           sudo cp modules/xdebug.so /usr/local/phyre/php/zend-xdebug/xdebug.so
 
           sudo chmod 777 /usr/local/phyre/php/zend-xdebug/xdebug.so
-          sudo echo "zend_extension=/usr/local/phyre/php/zend-xdebug/xdebug.so" >> xdebug-php.ini
-          sudo cp xdebug-php.ini /usr/local/phyre/php/bin/php.ini
+          
+          sudo bash -c "echo 'zend_extension=/usr/local/phyre/php/zend-xdebug/xdebug.so' >> /usr/local/phyre/php/bin/php.ini"
+         
           sudo chmod 777 /usr/local/phyre/php/bin/php.ini
           phyre-php -v
           /usr/local/phyre/php/bin/php -v
