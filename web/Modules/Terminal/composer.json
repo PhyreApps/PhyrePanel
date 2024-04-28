@@ -1,10 +1,10 @@
 {
-    "name": "nwidart/terminal",
+    "name": "phyre/terminal",
     "description": "",
     "authors": [
         {
-            "name": "Nicolas Widart",
-            "email": "n.widart@gmail.com"
+            "name": "Bozhidar Slaveykov",
+            "email": "selfworksbg@gmail.com"
         }
     ],
     "extra": {

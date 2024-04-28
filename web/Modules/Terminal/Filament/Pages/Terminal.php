@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Filament\Pages;
+namespace Modules\Terminal\Filament\Pages;
 
 use Filament\Pages\Page;
 
@@ -8,7 +8,7 @@ class Terminal extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-command-line';
 
-    protected static string $view = 'filament.pages.terminal';
+    protected static string $view = 'terminal::filament.pages.terminal';
 
     protected static ?string $navigationGroup = 'Server Management';
 
