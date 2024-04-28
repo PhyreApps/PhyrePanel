@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Request;
 
-class CustomerCreateRequest extends AuthorizedApiRequest
+class CustomerCreateRequest extends ApiRequest
 {
     /**
      * Get the validation rules that apply to the request.

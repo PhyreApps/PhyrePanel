@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Request;
 
-class HostingSubscriptionCreateRequest extends AuthorizedApiRequest
+class HostingSubscriptionCreateRequest extends ApiRequest
 {
     /**
      * Get the validation rules that apply to the request.
