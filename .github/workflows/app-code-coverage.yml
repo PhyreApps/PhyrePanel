@@ -52,10 +52,11 @@ jobs:
           sudo ./configure --enable-xdebug
           sudo make
           sudo make test
-          sudo cp modules/xdebug.so /usr/local/phyre/php/zend-xdebug
+          sudo cp modules/xdebug.so /usr/local/phyre/php/zend-xdebug/xdebug.so
 
-          chmod 777 /usr/local/phyre/php/zend-xdebug/xdebug.so
-          echo "zend_extension=/usr/local/phyre/php/zend-xdebug/xdebug.so" >> /usr/local/phyre/php/bin/php.ini
+          sudo chmod 777 /usr/local/phyre/php/zend-xdebug/xdebug.so
+          sudo echo "zend_extension=/usr/local/phyre/php/zend-xdebug/xdebug.so" >> /usr/local/phyre/php/bin/php.ini
+          sudo chmod 777 /usr/local/phyre/php/bin/php.ini
           phyre-php -v
           /usr/local/phyre/php/bin/php -v
           
