@@ -73,7 +73,7 @@
         ],
         "test:coverage": [
             "Composer\\Config::disableProcessTimeout",
-            "phyre-php -d xdebug.mode=coverage artisan test --coverage -c \"phpunit-coverage.xml\""
+            "sudo phyre-php -d xdebug.mode=coverage artisan test --coverage -c \"phpunit-coverage.xml\""
         ]
     },
     "extra": {

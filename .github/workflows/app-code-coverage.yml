@@ -51,7 +51,6 @@ jobs:
           sudo /usr/local/phyre/php/bin/phpize
           sudo ./configure --enable-xdebug --with-php-config=/usr/local/phyre/php/bin/php-config
           sudo make
-          sudo make test
           
           sudo mkdir -p /usr/local/phyre/php/zend-xdebug
           sudo cp modules/xdebug.so /usr/local/phyre/php/zend-xdebug/xdebug.so
@@ -62,7 +61,6 @@ jobs:
          
           sudo chmod 777 /usr/local/phyre/php/bin/php.ini
           phyre-php -v
-          /usr/local/phyre/php/bin/php -v
           
           cd /usr/local/phyre/web/
           sudo chmod -R 777 vendor
