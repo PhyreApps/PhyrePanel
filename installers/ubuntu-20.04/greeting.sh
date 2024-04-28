@@ -1,3 +1,5 @@
+#!/bin/bash
+
 CURRENT_IP=$(curl -s ipinfo.io/ip)
 
 echo " \

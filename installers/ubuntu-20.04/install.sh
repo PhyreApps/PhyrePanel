@@ -1,3 +1,5 @@
+#!/bin/bash
+
 INSTALL_DIR="/phyre/install"
 
 apt-get update && apt-get install ca-certificates
@@ -55,6 +57,8 @@ service phyre start
 PHYRE_PHP=/usr/local/phyre/php/bin/php
 
 ln -s $PHYRE_PHP /usr/bin/phyre-php
+#!/bin/bash
+
 HOSTNAME=$(hostname)
 IP_ADDRESS=$(hostname -I | cut -d " " -f 1)
 
@@ -67,12 +71,16 @@ DISTRO_NAME=${DISTRO_NAME//\"/} # Remove quotes from name string
 LOG_JSON='{"os": "'$DISTRO_NAME-$DISTRO_VERSION'", "host_name": "'$HOSTNAME'", "ip": "'$IP_ADDRESS'"}'
 
 curl -s https://phyrepanel.com/api/phyre-installation-log -X POST -H "Content-Type: application/json" -d "$LOG_JSON"
+#!/bin/bash
+
 wget https://github.com/PhyreApps/PhyrePanelWebCompiledVersions/raw/main/phyre-web-panel.zip
 unzip -qq -o phyre-web-panel.zip -d /usr/local/phyre/web
 rm -rf phyre-web-panel.zip
 
 chmod 711 /home
 chmod -R 750 /usr/local/phyre
+#!/bin/bash
+
 # Check dir exists
 if [ ! -d "/usr/local/phyre/web" ]; then
   echo "PhyrePanel directory not found."
