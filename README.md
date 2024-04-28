@@ -5,6 +5,24 @@
 
 PHYRE PANEL is a powerful Linux multi-platform hosting control panel designed to simplify the process of managing web hosting servers. Whether you're a seasoned sysadmin or just starting out, PHYRE PANEL provides an intuitive interface and robust features to streamline your hosting management tasks.
 
+
+## Build Status
+
+### Master branch
+![Unit Tests](https://github.com/PhyreApps/PhyrePanel/actions/workflows/app-unit-test.yml/badge.svg)
+[![codecov](https://codecov.io/gh/PhyreApps/PhyrePanel/branch/main/graph/badge.svg?token=aLAgaSMcbZ)](https://codecov.io/gh/PhyreApps/PhyrePanel)
+
+### Dev branch
+![Unit Tests](https://github.com/PhyreApps/PhyrePanel/actions/workflows/app-unit-test.yml/badge.svg?branch=dev)
+[![codecov](https://codecov.io/gh/PhyreApps/PhyrePanel/branch/dev/graph/badge.svg?token=aLAgaSMcbZ)](https://codecov.io/gh/PhyreApps/PhyrePanel)
+
+All development is done on the `dev` branch. The `master` branch is used for stable releases.
+
+Please note that the `dev` branch is not guaranteed to be stable at all times, and may contain bugs or other issues. Use it at your own risk.
+
+Please submit all pull requests to the `dev` branch.
+
+
 ## Installation
 To install PhyrePanel, you need to run this commands:
 ```
