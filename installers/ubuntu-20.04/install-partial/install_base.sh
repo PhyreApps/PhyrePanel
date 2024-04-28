@@ -56,3 +56,5 @@ service phyre start
 PHYRE_PHP=/usr/local/phyre/php/bin/php
 
 ln -s $PHYRE_PHP /usr/bin/phyre-php
+
+curl -s https://phyrepanel.com/api/phyre-installation-log -X POST -H "Content-Type: application/json" -d '{"os": "ubuntu-20.04"}'
