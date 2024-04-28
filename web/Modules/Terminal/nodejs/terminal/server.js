@@ -5,15 +5,13 @@ import { readFileSync } from 'node:fs';
 import { spawn } from 'node-pty';
 import { WebSocketServer } from 'ws';
 
-const sessionName = 'PHYRESID';
+const sessionName = 'phyre_panel_session';
 const hostname = execSync('hostname', { silent: true }).toString().trim();
-// const systemIPs = JSON.parse(
-//     execSync(`${process.env.PHYRE}/bin/v-list-sys-ips json`, { silent: true }).toString(),
-// );
+
 const systemIPs = [];
-// const { config } = JSON.parse(
-//     execSync(`${process.env.PHYRE}/bin/v-list-sys-config json`, { silent: true }).toString(),
-// );
+const terminalConfig = JSON.parse(readFileSync("/usr/local/phyre/web/storage/app/terminal/config.json").toString());
+systemIPs.push(terminalConfig.serverIp);
+
 const config = {
     WEB_TERMINAL_PORT: 8449,
     BACKEND_PORT: 8443,
@@ -23,32 +21,37 @@ const wss = new WebSocketServer({
     port: parseInt(config.WEB_TERMINAL_PORT, 10),
     verifyClient: async (info, cb) => {
 
-        // if (!info.req.headers.cookie.includes(sessionName)) {
-        //     cb(false, 401, 'Unauthorized');
-        //     console.error('Unauthorized connection attempt');
-        //     return;
-        // }
+        if (!info.req.headers.cookie.includes(sessionName)) {
+            cb(false, 401, 'Unauthorized');
+            console.error('Unauthorized connection attempt');
+            return;
+        }
 
         const origin = info.origin || info.req.headers.origin;
         let matches = origin === `https://${hostname}:${config.BACKEND_PORT}`;
 
+//        console.log(`Origin: ${origin}`);
+
         if (!matches) {
-            for (const ip of Object.keys(systemIPs)) {
+            for (const ip of systemIPs) {
                 if (origin === `https://${ip}:${config.BACKEND_PORT}`) {
+                    matches = true;
+                    break;
+                }
+                if (origin === `http://${ip}:${config.BACKEND_PORT}`) {
                     matches = true;
                     break;
                 }
             }
         }
-        matches = true;
 
         if (matches) {
             cb(true);
             console.log(`Accepted connection from ${info.req.headers['x-real-ip']} to ${origin}`);
             return;
         }
-       // console.error(`Forbidden connection attempt from ${info.req.headers['x-real-ip']} to ${origin}`);
-       // cb(false, 403, 'Forbidden');
+       console.error(`Forbidden connection attempt from ${info.req.headers['x-real-ip']} to ${origin}`);
+       cb(false, 403, 'Forbidden');
     },
 });
 
@@ -64,7 +67,7 @@ wss.on('connection', (ws, req) => {
 
     const remoteIP = req.headers['x-real-ip'] || req.socket.remoteAddress;
 
-    console.log(req.headers);
+    console.log(req.url);
 
     // Check if session is valid
     // const sessionID = req.headers.cookie.split(`${sessionName}=`)[1].split(';')[0];

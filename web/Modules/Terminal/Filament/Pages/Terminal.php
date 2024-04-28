@@ -19,7 +19,37 @@ class Terminal extends Page
 
     protected function getViewData(): array
     {
-        $sessionId = session()->getId();
+        // Get server ip
+        $serverIp = shell_exec("hostname -I | awk '{print $1}'");
+        $serverIp = trim($serverIp);
+
+        $sessionId = md5(session()->getId());
+
+        $appTerminalConfigFile = storage_path('app/terminal/config.json');
+        if (!is_dir($appTerminalConfigFile)) {
+            shell_exec('mkdir -p ' . dirname($appTerminalConfigFile));
+        }
+
+        file_put_contents($appTerminalConfigFile, json_encode([
+            'serverIp' => $serverIp,
+        ], JSON_PRETTY_PRINT));
+
+        $appTerminalSessionsPath = storage_path('app/terminal/sessions');
+        if (!is_dir($appTerminalSessionsPath)) {
+            shell_exec('mkdir -p ' . $appTerminalSessionsPath);
+        }
+        if (is_dir($appTerminalSessionsPath)) {
+            shell_exec('rm -rf ' . $appTerminalSessionsPath.'/*');
+        }
+
+        $sessionStorageFile = $appTerminalSessionsPath . '/' . $sessionId;
+        if (!is_file($sessionStorageFile)) {
+            file_put_contents($sessionStorageFile, json_encode([
+                'sessionId' => $sessionId,
+                'commands' => [],
+                'user' => 'root',
+            ], JSON_PRETTY_PRINT));
+        }
 
         $runNewTerminal = true;
         $checkPort = shell_exec('netstat -tuln | grep 8449');
@@ -29,7 +59,7 @@ class Terminal extends Page
             }
         }
         if ($runNewTerminal) {
-            $exec = shell_exec('node /usr/local/phyre/web/Modules/Terminal/nodejs/terminal/server.js >> /usr/local/phyre/web/storage/logs/terminal/server-terminal.log &');
+         //   $exec = shell_exec('node /usr/local/phyre/web/Modules/Terminal/nodejs/terminal/server.js >> /usr/local/phyre/web/storage/logs/terminal/server-terminal.log &');
         }
 
         return [
