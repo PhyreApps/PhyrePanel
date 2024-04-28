@@ -3,6 +3,7 @@
 namespace Modules\Terminal\Filament\Pages;
 
 use Filament\Pages\Page;
+use Illuminate\Support\Str;
 
 class Terminal extends Page
 {
@@ -20,8 +21,17 @@ class Terminal extends Page
     {
         $sessionId = session()->getId();
 
-        shell_exec('node /usr/local/phyre/web/nodejs/terminal/server.js >> /usr/local/phyre/web/storage/logs/terminal/server-terminal.log &');
-
+        $runNewTerminal = true;
+        $checkPort = shell_exec('netstat -tuln | grep 8449');
+        if (!empty($checkPort)) {
+            if (Str::contains($checkPort, 'LISTEN')) {
+                $runNewTerminal = false;
+            }
+        }
+        if ($runNewTerminal) {
+            $exec = shell_exec('node /usr/local/phyre/web/Modules/Terminal/nodejs/terminal/server.js >> /usr/local/phyre/web/storage/logs/terminal/server-terminal.log &');
+        }
+        
         return [
             'title' => 'Terminal',
             'sessionId' => $sessionId,

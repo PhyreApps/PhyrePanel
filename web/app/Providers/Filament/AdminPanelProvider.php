@@ -102,16 +102,16 @@ class AdminPanelProvider extends PanelProvider
                 $findModules = Module::where('installed', 1)->get();
                 if ($findModules->count() > 0) {
                     foreach ($findModules as $module) {
-                        $modulePath = module_path($module->name, 'Filament/Clusters');
-                        if (is_dir($modulePath)) {
-                            $panel->discoverClusters(in: $modulePath, for: 'Modules\\' . $module->name . '\\Filament\\Clusters');
+                        $modulePathClusters = module_path($module->name, 'Filament/Clusters');
+                        if (is_dir($modulePathClusters)) {
+                            $panel->discoverClusters(in: $modulePathClusters, for: 'Modules\\' . $module->name . '\\Filament\\Clusters');
+                        }
+                        $modulePathPages = module_path($module->name, 'Filament/Pages');
+                        if (is_dir($modulePathPages)) {
+                            $panel->discoverPages(in: $modulePathPages, for: 'Modules\\' . $module->name . '\\Filament\\Pages');
                         }
                     }
                 }
-                //            ->discoverClusters(in: module_path('Microweber', 'Filament/Clusters'), for: 'Modules\\Microweber\\Filament\\Clusters')
-//            ->discoverClusters(in: module_path('LetsEncrypt', 'Filament/Clusters'), for: 'Modules\\LetsEncrypt\\Filament\\Clusters')
-//            ->discoverClusters(in: module_path('Docker', 'Filament/Clusters'), for: 'Modules\\Docker\\Filament\\Clusters')
-
             }
         }
 

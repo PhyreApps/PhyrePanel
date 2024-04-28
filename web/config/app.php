@@ -170,7 +170,9 @@ return [
         App\Providers\Filament\AdminPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        \Modules\Customer\App\Providers\CustomerServiceProvider::class
+        \Modules\Customer\App\Providers\CustomerServiceProvider::class,
+        \Modules\Docker\App\Providers\DockerServiceProvider::class,
+        \Modules\Terminal\App\Providers\TerminalServiceProvider::class,
 
     ])->toArray(),
 
