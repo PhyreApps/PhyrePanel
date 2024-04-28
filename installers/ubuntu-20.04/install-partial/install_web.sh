@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Check dir exists
 if [ ! -d "/usr/local/phyre/web" ]; then
   echo "PhyrePanel directory not found."

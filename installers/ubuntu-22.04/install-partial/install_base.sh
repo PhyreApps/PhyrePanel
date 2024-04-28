@@ -1,4 +1,3 @@
-#!/bin/bash
 INSTALL_DIR="/phyre/install"
 
 apt-get update && apt-get install ca-certificates
