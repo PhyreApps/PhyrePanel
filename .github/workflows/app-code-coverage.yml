@@ -39,10 +39,10 @@ jobs:
           ls -la
           
           sudo wget https://getcomposer.org/download/latest-stable/composer.phar
-          sudo COMPOSER_ALLOW_SUPERUSER=1 phyre-php composer.phar install
+          phyre-php composer.phar install
           
           sudo /phyre-panel/install_web.sh
-          sudo composer test:coverage
+          composer test:coverage
 
       - name: Code Cov
         uses: codecov/codecov-action@v2
