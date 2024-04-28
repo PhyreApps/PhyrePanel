@@ -1,0 +1,53 @@
+name: Phyre Panel - Code Coverage
+on: [push]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  phyre-panel-code-coverage:
+    strategy:
+      matrix:
+        os: [ubuntu-22.04]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+
+      - name: Install Base
+        run: |
+          ls -la
+          sudo mkdir /phyre-panel
+          
+          sudo cp installers/${{ matrix.os }}/install-partial/install_base.sh /phyre-panel/install_base.sh
+          sudo chmod +x /phyre-panel/install_base.sh
+          sudo /phyre-panel/install_base.sh
+          
+          sudo cp installers/${{ matrix.os }}/install-partial/install_web.sh /phyre-panel/install_web.sh
+          sudo chmod +x /phyre-panel/install_web.sh
+
+      - name: Run Code Coverage
+        run: |
+          
+          sudo cp -r web /usr/local/phyre/web/
+          cd /usr/local/phyre/web/
+          ls -la
+          
+          sudo wget https://getcomposer.org/download/latest-stable/composer.phar
+          sudo COMPOSER_ALLOW_SUPERUSER=1 phyre-php composer.phar install
+          
+          sudo /phyre-panel/install_web.sh
+          sudo composer test:coverage
+
+      - name: Code Cov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./web/clover.xml
+          fail_ci_if_error: true # optional (default = false)
+          verbose: true # optional (default = false)
