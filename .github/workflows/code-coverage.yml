@@ -1,7 +1,9 @@
-name: Code Coverage
+name: Phyre Panel - Code Coverage
 
-on:
-  workflow_dispatch:
+on: [push]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
