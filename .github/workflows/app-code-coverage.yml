@@ -54,9 +54,7 @@ jobs:
           sudo make test
           sudo cp modules/xdebug.so /usr/local/phyre/php/zend-xdebug
 
-          sudo echo "zend_extension=/usr/local/phyre/php/zend-xdebug/xdebug.so" >> /usr/local/phyre/php/bin/php.ini
-          sudo chmod 777 /usr/local/phyre/php/bin/php.ini
-          
+          echo "zend_extension=/usr/local/phyre/php/zend-xdebug/xdebug.so" >> /usr/local/phyre/php/bin/php.ini
           
           cd /usr/local/phyre/web/
           sudo chmod -R 777 vendor
