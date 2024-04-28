@@ -298,6 +298,11 @@ class Installer extends Page
         if (is_file(storage_path($this->install_log_file_path))) {
             $this->install_log = file_get_contents(storage_path($this->install_log_file_path));
             $this->install_log = nl2br($this->install_log);
+
+            if (strpos($this->install_log, 'DONE!') !== false) {
+                return redirect('/admin/login');
+            }
+
         } else {
             $this->install_log = 'Waiting for installation log...';
         }
