@@ -49,7 +49,7 @@ jobs:
           sudo tar -xvzf xdebug-3.3.2.tgz
           cd xdebug-3.3.2
           sudo /usr/local/phyre/php/bin/phpize
-          sudo ./configure --enable-xdebug
+          sudo ./configure --enable-xdebug --with-php-config=/usr/local/phyre/php/bin/php-config
           sudo make
           sudo make test
           
