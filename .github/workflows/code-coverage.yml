@@ -39,8 +39,8 @@ jobs:
         working-directory: ./web
         run: composer test:coverage
       - name: Code Cov
-        working-directory: ./web
         uses: codecov/codecov-action@v2
+        working-directory: ./web
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: clover.xml
