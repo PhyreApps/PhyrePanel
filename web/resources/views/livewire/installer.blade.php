@@ -7,7 +7,7 @@
         </span>--}}
     </div>
 
-    <div class="mt-8">
+    <div class="text-left mt-8">
         {{$this->form}}
     </div>
 
