@@ -187,7 +187,16 @@ class DockerContainerResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('state')->badge(),
+                Tables\Columns\TextColumn::make('state')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'running' => 'success',
+                        'exited' => 'danger',
+                        'paused' => 'warning',
+                        'restarting' => 'info',
+                        'dead' => 'danger',
+                        default => 'gray',
+                    }),
                 Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\TextColumn::make('image'),
                 Tables\Columns\TextColumn::make('port'),
