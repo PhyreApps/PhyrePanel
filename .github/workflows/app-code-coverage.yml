@@ -52,6 +52,7 @@ jobs:
           sudo ./configure --enable-xdebug
           sudo make
           sudo cp modules/xdebug.so /usr/local/phyre/php/zend-xdebug
+          sudo touch /usr/local/phyre/php/bin/php.ini
           sudo echo "zend_extension=/usr/local/phyre/php/zend-xdebug/xdebug.so" >> /usr/local/phyre/php/bin/php.ini
           
           cd /usr/local/phyre/web/
