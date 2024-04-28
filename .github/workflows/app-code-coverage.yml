@@ -43,15 +43,18 @@ jobs:
           
           sudo /phyre-panel/install_web.sh
           
+          sudo mkdir -p /usr/local/phyre/php-xdebug
+          cd /usr/local/phyre/php-xdebug
           sudo wget http://xdebug.org/files/xdebug-3.3.2.tgz
           sudo tar -xvzf xdebug-3.3.2.tgz
           cd xdebug-3.3.2
           sudo phpize
-          sudo ./configure
+          sudo ./configure --enable-xdebug
           sudo make
-          sudo cp modules/xdebug.so /usr/local/phyre/php/20170718
-          sudo echo "zend_extension=/usr/local/phyre/php/20170718/xdebug.so" >> /usr/local/phyre/php/bin/php.ini
+          sudo cp modules/xdebug.so /usr/local/phyre/php/zend-xdebug
+          sudo echo "zend_extension=/usr/local/phyre/php/zend-xdebug/xdebug.so" >> /usr/local/phyre/php/bin/php.ini
           
+          cd /usr/local/phyre/web/
           sudo chmod -R 777 vendor
           composer test:coverage
 
