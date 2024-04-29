@@ -37,7 +37,10 @@ class RunBackup extends Command
         }
 
         $findBackupsToday = Backup::where('created_at', '>=', Carbon::now()->subHours(24))
-            ->where('status', 'completed')
+            ->where(function ($query) {
+                $query->where('status', 'completed')
+                    ->orWhere('status', 'processing');
+            })
             ->first();
 
         if (! $findBackupsToday) {
