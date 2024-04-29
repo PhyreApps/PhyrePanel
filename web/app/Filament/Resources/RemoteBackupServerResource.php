@@ -21,10 +21,46 @@ class RemoteBackupServerResource extends Resource
 
     protected static ?string $navigationGroup = 'Server Clustering';
 
+    protected static ?string $navigationLabel = 'Backup Servers';
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
+                Forms\Components\TextInput::make('name')
+                    ->label('Name')
+                    ->required(),
+
+                Forms\Components\Select::make('type')
+                    ->label('Type')
+                    ->options([
+                        'ftp' => 'FTP',
+                        'sftp' => 'SFTP',
+                    ])
+                    ->default('ftp')
+                    ->required(),
+
+                Forms\Components\TextInput::make('hostname')
+                    ->label('Hostname')
+                    ->required(),
+
+                Forms\Components\TextInput::make('port')
+                    ->label('Port')
+                    ->default('21')
+                    ->required(),
+
+                Forms\Components\TextInput::make('username')
+                    ->label('Username')
+                    ->required(),
+
+                Forms\Components\TextInput::make('password')
+                    ->label('Password')
+                    ->required(),
+
+                Forms\Components\TextInput::make('path')
+                    ->label('Path')
+                    ->default('/')
+                    ->required(),
 
             ]);
     }
