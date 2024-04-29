@@ -37,6 +37,7 @@ class RunBackup extends Command
         }
 
         $findBackupsToday = Backup::where('created_at', '>=', Carbon::now()->subHours(24))
+            ->where('status', 'completed')
             ->first();
 
         if (! $findBackupsToday) {
@@ -52,9 +53,13 @@ class RunBackup extends Command
             ->get();
 
         if ($getPendingBackups->count() > 0) {
-            foreach ($getPendingBackups as $pendingBackup) {
-                $pendingBackup->startBackup();
-                $this->info('Backup started.. ');
+            if ($getPendingBackups->count() > 1) {
+                $this->info('Multiple backups are pending..');
+            } else {
+                foreach ($getPendingBackups as $pendingBackup) {
+                    $pendingBackup->startBackup();
+                    $this->info('Backup started.. ');
+                }
             }
         }
 

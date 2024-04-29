@@ -4,9 +4,11 @@ namespace App\Models;
 
 use App\Filament\Enums\BackupStatus;
 use App\Helpers;
+use Dotenv\Dotenv;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Env;
 use Illuminate\Support\Number;
 use Illuminate\Support\Str;
 
@@ -73,11 +75,53 @@ class Backup extends Model
 
             $backupDoneFile = $this->path.'/backup.done';
             if (file_exists($backupDoneFile)) {
+
+                $tempValidatePath = $this->path.'/temp-validate';
+                if (! is_dir($tempValidatePath)) {
+                    mkdir($tempValidatePath);
+                }
+                shell_exec('tar -xzf '.$this->filepath.' -C '.$tempValidatePath);
+                $validateDatabaseFile = $tempValidatePath.'/database.sql';
+                $validateEnvFile = $tempValidatePath.'/env.json';
+
+                $errorsBag = [];
+                if (! file_exists($validateDatabaseFile)) {
+                    $errorsBag[] = 'Database file not found';
+                }
+                if (! file_exists($validateEnvFile)) {
+                    $errorsBag[] = 'Env file not found';
+                }
+                $getEnv = Dotenv::createArrayBacked(base_path())->load();
+                $getEnvFromBackup = json_decode(file_get_contents($validateEnvFile), true);
+                if (empty($getEnvFromBackup)) {
+                    $errorsBag[] = 'Env file is empty';
+                } else {
+                    foreach ($getEnv as $key => $value) {
+                        if (! isset($getEnvFromBackup[$key])) {
+                            $errorsBag[] = 'Env key '.$key.' not found';
+                        }
+                        if ($getEnvFromBackup[$key] != $value) {
+                            $errorsBag[] = 'Env key '.$key.' value mismatch';
+                        }
+                    }
+                }
+
+                if (count($errorsBag) > 0) {
+                    $this->status = 'failed';
+                    $this->save();
+                    return [
+                        'status' => 'failed',
+                        'message' => 'Backup failed',
+                        'errors' => $errorsBag
+                    ];
+                }
+
                 $this->size = Helpers::checkPathSize($this->path);
                 $this->status = 'completed';
                 $this->completed = true;
                 $this->completed_at = now();
                 $this->save();
+
                 return [
                     'status' => 'completed',
                     'message' => 'Backup completed'
@@ -143,9 +187,17 @@ class Backup extends Model
 
             $backupTempScript = '/tmp/backup-script-'.$this->id.'.sh';
             $shellFileContent = '';
-            $shellFileContent .= 'echo "Backup up Phyre Panel files"'. PHP_EOL;
+            $shellFileContent .= 'echo "Backup Phyre Panel files"'. PHP_EOL;
+
+            // Export Phyre Panel database
             $shellFileContent .= 'mysqldump -u "'.env('MYSQl_ROOT_USERNAME').'" -p"'.env('MYSQL_ROOT_PASSWORD').'" "'.env('DB_DATABASE').'" > '.$databaseBackupPath . PHP_EOL;
-            $shellFileContent .= 'cd '.$backupTempPath .' && tar -czvf '.$backupFilePath.' ./* '. PHP_EOL;
+
+
+            // Export Phyre Panel ENV
+            $getEnv = Dotenv::createArrayBacked(base_path())->load();
+            file_put_contents($backupTempPath.'/env.json', json_encode($getEnv, JSON_PRETTY_PRINT));
+
+            $shellFileContent .= 'cd '.$backupTempPath .' && tar -pczf '.$backupFilePath.' ./* '. PHP_EOL;
 
             $shellFileContent .= 'rm -rf '.$backupTempPath.PHP_EOL;
             $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;
