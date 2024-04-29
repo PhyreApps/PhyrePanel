@@ -10,6 +10,7 @@ use App\Listeners\ModelDomainCreatedListener;
 use App\Listeners\ModelDomainDeletingListener;
 use App\Listeners\ModelHostingSubscriptionCreatingListener;
 use App\Listeners\ModelHostingSubscriptionDeletingListener;
+use App\Livewire\Components\QuickServiceRestartMenu;
 use App\Policies\CustomerPolicy;
 use BladeUI\Icons\Factory;
 use Filament\Facades\Filament;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -51,6 +53,8 @@ class AppServiceProvider extends ServiceProvider
             // Using Vite
             Filament::registerViteTheme('resources/css/app.css');
         });
+
+        Livewire::component('quick-service-restart-menu', QuickServiceRestartMenu::class);
 
         Gate::define('delete-customer', [CustomerPolicy::class, 'delete']);
 

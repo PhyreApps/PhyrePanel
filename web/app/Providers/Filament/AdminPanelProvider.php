@@ -17,6 +17,7 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -24,6 +25,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Outerweb\FilamentSettings\Filament\Plugins\FilamentSettingsPlugin;
@@ -39,6 +41,11 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+             ->renderHook(
+                 name: PanelsRenderHook::TOPBAR_START,
+                 hook: fn (): string => Blade::render('@livewire(\'quick-service-restart-menu\')')
+             )
+           //  ->topNavigation()
              ->unsavedChangesAlerts()
              ->globalSearch(true)
              ->databaseNotifications()
