@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Backup;
+use App\Models\HostingSubscriptionBackup;
 use App\Models\RemoteBackupServer;
 use Illuminate\Console\Command;
 
@@ -41,10 +42,19 @@ class RunUploadBackupsToRemoteServers extends Command
                 $findBackups = Backup::where('status', 'completed')->get();
                 if ($findBackups->count() > 0) {
                     foreach ($findBackups as $backup) {
-                        $uploadStatus = $remoteBackupServer->uploadFile($backup->filepath);
+                        $uploadStatus = $remoteBackupServer->uploadFile($backup->filepath, 'phyre-system-backups');
                     }
                 } else {
                     $this->info('No backups found to upload.');
+                }
+
+                $findHostingSubscriptionBackups = HostingSubscriptionBackup::where('status', 'completed')->get();
+                if ($findHostingSubscriptionBackups->count() > 0) {
+                    foreach ($findHostingSubscriptionBackups as $hostingSubscriptionBackup) {
+                        $uploadStatus = $remoteBackupServer->uploadFile($hostingSubscriptionBackup->filepath, 'phyre-hosting-subscription-backups');
+                    }
+                } else {
+                    $this->info('No hosting subscription backups found to upload.');
                 }
 
             }

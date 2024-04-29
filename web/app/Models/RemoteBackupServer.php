@@ -73,7 +73,7 @@ class RemoteBackupServer extends Model
 
     }
 
-    public function uploadFile($filepath)
+    public function uploadFile($filepath, $directory)
     {
         $username = trim($this->username);
         $password = trim($this->password);
@@ -82,12 +82,9 @@ class RemoteBackupServer extends Model
 
         if ($this->type == 'ftp') {
 
-            $path = trim($this->path);
-            if ($path == '/') {
-                $path = '';
-            }
+            $directory = trim($directory);
 
-            $uploadCurlCommand = "curl -T $filepath ftp://$username:$password@$hostname:$port "." $path";
+            $uploadCurlCommand = "curl -T $filepath ftp://$hostname:$port/$directory/ -u '$username:$password' --ftp-create-dirs";
             $uploadCurlCommand = trim($uploadCurlCommand);
 
             $uploadCurlProcess = Process::fromShellCommandline($uploadCurlCommand);
