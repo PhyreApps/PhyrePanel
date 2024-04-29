@@ -298,10 +298,6 @@ class Domain extends Model
             }
         }
 
-        // Reload apache
-        if ($reloadApache) {
-            shell_exec('systemctl reload apache2');
-        }
         $catchMainDomain = '';
         $domainExp = explode('.', $this->domain);
         if (count($domainExp) > 0) {
@@ -377,13 +373,14 @@ class Domain extends Model
                 file_put_contents('/etc/apache2/sites-available/'.$this->domain.'-ssl.conf', $apacheBaseConfigWithSSL);
                 shell_exec('ln -s /etc/apache2/sites-available/'.$this->domain.'-ssl.conf /etc/apache2/sites-enabled/'.$this->domain.'-ssl.conf');
 
-                // Reload apache
-                if ($reloadApache) {
-                    shell_exec('systemctl reload apache2');
-                }
 
             }
 
+        }
+
+        // Reload apache
+        if ($reloadApache) {
+            shell_exec('systemctl reload apache2');
         }
 
     }
