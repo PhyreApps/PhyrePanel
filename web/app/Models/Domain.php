@@ -106,7 +106,7 @@ class Domain extends Model
         return $this->belongsTo(HostingSubscription::class);
     }
 
-    public function configureVirtualHost()
+    public function configureVirtualHost($reloadApache = true)
     {
         $findHostingSubscription = \App\Models\HostingSubscription::where('id', $this->hosting_subscription_id)
             ->first();
@@ -299,8 +299,9 @@ class Domain extends Model
         }
 
         // Reload apache
-        shell_exec('systemctl reload apache2');
-
+        if ($reloadApache) {
+            shell_exec('systemctl reload apache2');
+        }
         $catchMainDomain = '';
         $domainExp = explode('.', $this->domain);
         if (count($domainExp) > 0) {
@@ -377,7 +378,9 @@ class Domain extends Model
                 shell_exec('ln -s /etc/apache2/sites-available/'.$this->domain.'-ssl.conf /etc/apache2/sites-enabled/'.$this->domain.'-ssl.conf');
 
                 // Reload apache
-                shell_exec('systemctl reload apache2');
+                if ($reloadApache) {
+                    shell_exec('systemctl reload apache2');
+                }
 
             }
 

@@ -30,8 +30,9 @@ class RunDomainRepair extends Command
         if ($getAllDomains->count() > 0) {
             foreach ($getAllDomains as $domain) {
                 $this->info('Repair domain: ' . $domain->domain);
-                $domain->configureVirtualHost();
+                $domain->configureVirtualHost(false);
             }
+            shell_exec('service apache2 restart');
         }
     }
 }
