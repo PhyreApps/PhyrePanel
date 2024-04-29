@@ -73,11 +73,7 @@ class DockerTest extends TestCase
 
         $this->assertNotEmpty($pullLog);
         $this->assertStringContainsString('DONE!', $pullLog);
-
-    }
-
-    public function testDockerContainers()
-    {
+        
         $createDockerContainerTest = Livewire::test(CreateDockerContainer::class);
         $createDockerContainerTest->assertSee('Create Docker Container');
 
