@@ -149,11 +149,9 @@ wss.on('connection', (ws, req) => {
     // Ensure pty is killed when websocket is closed and vice versa
     pty.on('exit', () => {
         console.log(`Ended pty (${pty.pid})`);
-        // if (ws.OPEN) {
-        //     ws.close();
-        // }
-        pty.kill();
-        wss.clients.delete(ws);
+        if (ws.OPEN) {
+            ws.close();
+        }
     });
     ws.on('close', () => {
         console.log(`Ended connection from ${remoteIP} (${sessionID})`);
