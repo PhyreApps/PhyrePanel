@@ -30,7 +30,7 @@ class ModulesManager
     public static function getModuleInfo($module)
     {
         if (!is_dir(base_path('Modules/' . $module))) {
-            unset($modules[$key]);
+            return [];
         }
         $moduleJson = file_get_contents(base_path('Modules/' . $module . '/module.json'));
         $moduleJson = json_decode($moduleJson, true);
