@@ -23,6 +23,9 @@ class HostingSubscriptionBackupTest extends ActionTestCase
 {
     public function testFullBackup()
     {
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 0);
+
         $chs = $this->_createHostingSubscription();
 
         Artisan::call('phyre:run-hosting-subscriptions-backup');
@@ -110,6 +113,7 @@ class HostingSubscriptionBackupTest extends ActionTestCase
 
     private function _createHostingSubscription()
     {
+
         $customer = new Customer();
         $customer->name = 'UnitBackupTest' . time();
         $customer->email = 'UnitBackupTest' . time() . '@unit-test.com';

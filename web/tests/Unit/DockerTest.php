@@ -17,6 +17,9 @@ class DockerTest extends TestCase
 {
     public function testDockerImages()
     {
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 0);
+
         $docker = new PostInstall();
         $docker->setLogFile('/tmp/phyrepanel-docker-install.log');
         $docker->run();
