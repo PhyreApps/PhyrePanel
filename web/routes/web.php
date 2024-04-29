@@ -28,14 +28,3 @@ if (!file_exists(storage_path('installed'))) {
 }
 
 Route::get('/installer', \App\Livewire\Installer::class);
-
-
-Route::get('vurti', function () {
-
-    $findDomain = \App\Models\Domain::where('id', 41)->first();
-
-    $findDomain->configureVirtualHost();
-
-    dd(3);
-
-});
