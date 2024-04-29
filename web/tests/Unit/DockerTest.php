@@ -109,5 +109,9 @@ class DockerTest extends TestCase
 
         $this->assertModelMissing($findDockerContainer);
 
+
+        // Unistall docker
+        $modulesTest = Livewire::test(Modules::class);
+        $modulesTest->call('openUnistallModal', 'Docker');
     }
 }
