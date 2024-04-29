@@ -5,6 +5,7 @@ namespace App\Models;
 use Doctrine\DBAL\DriverManager;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Symfony\Component\Process\Process;
 
 class RemoteBackupServer extends Model
 {
@@ -30,9 +31,6 @@ class RemoteBackupServer extends Model
             $model->healthCheck();
         });
 
-        static::updated(function ($model) {
-            $model->healthCheck();
-        });
     }
 
     public function healthCheck()
@@ -48,19 +46,19 @@ class RemoteBackupServer extends Model
                 $path = trim($this->path);
 
                 $curl = curl_init();
-                curl_setopt($curl, CURLOPT_URL, 'ftp://'.$hostname.':'.$port.'/'.$path.'/');
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($curl, CURLOPT_URL, 'ftp://'.$hostname.':'.$port.'/');
                 curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-                curl_setopt($curl, CURLOPT_USERPWD, $username.':'.$password);
+                curl_setopt($curl, CURLOPT_FTPLISTONLY, 1);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($curl, CURLOPT_USERPWD, "$username:$password");
                 $curlResponse = curl_exec($curl);
-                curl_close($curl);
 
-                if ($curlResponse) {
-                    $this->status = 'online';
+                if ($curlResponse === false) {
+                    $this->status = 'offline';
                     $this->save();
                     return;
                 } else {
-                    $this->status = 'offline';
+                    $this->status = 'online';
                     $this->save();
                     return;
                 }
@@ -73,5 +71,39 @@ class RemoteBackupServer extends Model
         }
 
 
+    }
+
+    public function uploadFile($filepath)
+    {
+        $username = trim($this->username);
+        $password = trim($this->password);
+        $hostname = trim($this->hostname);
+        $port = trim($this->port);
+
+        if ($this->type == 'ftp') {
+
+            $path = trim($this->path);
+            if ($path == '/') {
+                $path = '';
+            }
+
+            $uploadCurlCommand = "curl -T $filepath ftp://$username:$password@$hostname:$port "." $path";
+            $uploadCurlCommand = trim($uploadCurlCommand);
+
+            $uploadCurlProcess = Process::fromShellCommandline($uploadCurlCommand);
+            $uploadCurlProcess->run();
+
+            if (!$uploadCurlProcess->isSuccessful()) {
+                return [
+                    'status' => 'error',
+                    'message' => 'Failed to upload backup to remote server.'
+                ];
+            }
+
+            return [
+                'status' => 'success',
+                'message' => 'Backup uploaded successfully.'
+            ];
+        }
     }
 }
