@@ -90,7 +90,6 @@ class DockerContainerApi
         $output = shell_exec("cd $dockerContaienrPath && docker-compose up -d");
 
         // Get docker container id from output
-        $dockerContainerId = trim($output);
         $output = shell_exec('docker ps --format json --filter name='.$this->name);
         $output = json_decode($output, true);
 

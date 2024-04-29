@@ -10,7 +10,7 @@ services:
     ports:
       - {{$externalPort}}:{{ $port }}
 
-    @if(isset($environmentVariables))
+    @if(isset($environmentVariables) && !empty($environmentVariables))
 
     environment:
 

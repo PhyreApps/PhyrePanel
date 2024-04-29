@@ -3,15 +3,19 @@
 namespace tests\Unit;
 
 use App\Models\User;
+use Filament\Actions\DeleteAction;
 use Livewire\Livewire;
+use Modules\Docker\App\Models\DockerContainer;
 use Modules\Docker\Filament\Clusters\Docker\Pages\DockerCatalog;
-use Modules\Docker\Filament\Clusters\Docker\Resources\DockerContainerResource;
+use Modules\Docker\Filament\Clusters\Docker\Resources\DockerContainerResource\Pages\CreateDockerContainer;
+use Modules\Docker\Filament\Clusters\Docker\Resources\DockerContainerResource\Pages\EditDockerContainer;
+use Modules\Docker\Filament\Clusters\Docker\Resources\DockerContainerResource\Pages\ListDockerContainers;
 use Modules\Docker\PostInstall;
 use Tests\TestCase;
 
 class DockerTest extends TestCase
 {
-    public function testDocker()
+    public function testDockerImages()
     {
         $docker = new PostInstall();
         $docker->setLogFile('/tmp/phyrepanel-docker-install.log');
@@ -62,4 +66,43 @@ class DockerTest extends TestCase
 
     }
 
+    public function testDockerContainers()
+    {
+        $createDockerContainerTest = Livewire::test(CreateDockerContainer::class);
+        $createDockerContainerTest->assertSee('Create Docker Container');
+
+        $dockerName = 'nginx-latest-phyre-'.rand(1111,9999);
+        $create = $createDockerContainerTest->fillForm([
+            'name' => $dockerName,
+            'image' => 'nginx',
+            'environmentVariables' => [
+                'PATH' => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+                'NGINX_VERSION' => '1.25.5',
+                'NJS_VERSION' => '0.8.4',
+                'NJS_RELEASE' => '2~bookworm',
+                'PKG_RELEASE' => '1~bookworm',
+            ],
+            'volumeMapping' => [],
+            'port' => '83',
+            'externalPort' => '3000',
+        ])->call('create');
+
+        $this->assertDatabaseHas(DockerContainer::class, [
+            'name' => $dockerName,
+        ]);
+
+        $listDockerContainersTest = Livewire::test(ListDockerContainers::class);
+        $listDockerContainersTest->assertSee($dockerName);
+
+        $findDockerContainer = DockerContainer::where('name', $dockerName)->first();
+
+        $editDockerContainersTest = Livewire::test(EditDockerContainer::class, [
+            'record'=> $findDockerContainer->id
+        ]);
+        $editDockerContainersTest->assertSee('Edit Docker Container');
+        $editDockerContainersTest->callAction(DeleteAction::class);
+
+        $this->assertModelMissing($findDockerContainer);
+
+    }
 }
