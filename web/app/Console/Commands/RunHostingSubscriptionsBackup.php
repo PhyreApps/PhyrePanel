@@ -31,6 +31,9 @@ class RunHostingSubscriptionsBackup extends Command
      */
     public function handle()
     {
+        // TODO - Don't run backups parallel
+        return;
+        
         // Delete backups older than 7 days
         $findBackupsForDeleting = HostingSubscriptionBackup::where('created_at', '<', now()->subDays(7))->get();
         foreach ($findBackupsForDeleting as $backup) {
