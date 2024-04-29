@@ -2,6 +2,7 @@
 
 namespace tests\Unit;
 
+use App\Filament\Pages\Modules;
 use App\Models\User;
 use Filament\Actions\DeleteAction;
 use Livewire\Livewire;
@@ -20,13 +21,14 @@ class DockerTest extends TestCase
         ini_set('memory_limit', '-1');
         ini_set('max_execution_time', 0);
 
-        $docker = new PostInstall();
-        $docker->setLogFile('/tmp/phyrepanel-docker-install.log');
-        $docker->run();
+        $modulesTest = Livewire::test(Modules::class);
+        $modulesTest->call('openInstallModal', 'Docker');
+
+        $installLogFilePath = $modulesTest->get('installLogFilePath');
 
         $dockerIsInstalled = false;
         for ($i = 0; $i < 50; $i++) {
-            $logFile = file_get_contents('/tmp/phyrepanel-docker-install.log');
+            $logFile = file_get_contents($installLogFilePath);
             if (strpos($logFile, 'Done!') !== false) {
                 $dockerIsInstalled = true;
                 break;
