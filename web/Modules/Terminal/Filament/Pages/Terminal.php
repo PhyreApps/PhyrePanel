@@ -30,8 +30,16 @@ class Terminal extends Page
             shell_exec('mkdir -p ' . dirname($appTerminalConfigFile));
         }
 
+        $serverIps = [];
+        $serverIps[] = $serverIp;
+
+        $masterDomain = setting('general.master_domain');
+        if (!empty($masterDomain)) {
+            $serverIps[] = $masterDomain;
+        }
+
         file_put_contents($appTerminalConfigFile, json_encode([
-            'serverIp' => $serverIp,
+            'serverIps' => $serverIps,
         ], JSON_PRETTY_PRINT));
 
         $appTerminalSessionsPath = storage_path('app/terminal/sessions');

@@ -10,7 +10,11 @@ const hostname = execSync('hostname', { silent: true }).toString().trim();
 
 const systemIPs = [];
 const terminalConfig = JSON.parse(readFileSync("/usr/local/phyre/web/storage/app/terminal/config.json").toString());
-systemIPs.push(terminalConfig.serverIp);
+if (terminalConfig.serverIps) {
+    for (const ip of terminalConfig.serverIps) {
+        systemIPs.push(ip);
+    }
+}
 
 const config = {
     WEB_TERMINAL_PORT: 8449,
@@ -145,9 +149,11 @@ wss.on('connection', (ws, req) => {
     // Ensure pty is killed when websocket is closed and vice versa
     pty.on('exit', () => {
         console.log(`Ended pty (${pty.pid})`);
-        if (ws.OPEN) {
-            ws.close();
-        }
+        // if (ws.OPEN) {
+        //     ws.close();
+        // }
+        pty.kill();
+        wss.clients.delete(ws);
     });
     ws.on('close', () => {
         console.log(`Ended connection from ${remoteIP} (${sessionID})`);

@@ -35,6 +35,11 @@ class QuickServiceRestartMenu extends Component implements HasForms, HasActions
         shell_exec('sudo service mysql restart');
     }
 
+    public function restartPhyreServices()
+    {
+        shell_exec('sudo service phyre restart');
+    }
+
     public function render(): View
     {
         return view('filament.quick-service-restart-menu');
