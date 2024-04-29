@@ -17,7 +17,7 @@ class RemoteBackupServerResource extends Resource
 {
     protected static ?string $model = RemoteBackupServer::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'phyre-backup-remote';
 
     protected static ?string $navigationGroup = 'Server Clustering';
 
@@ -70,9 +70,9 @@ class RemoteBackupServerResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('type'),
+                Tables\Columns\TextColumn::make('type')->badge(),
                 Tables\Columns\TextColumn::make('hostname'),
-                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('status')->badge(),
             ])
             ->filters([
                 //
