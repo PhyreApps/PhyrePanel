@@ -3,6 +3,7 @@
 namespace tests\Unit;
 
 use App\Filament\Pages\Modules;
+use App\Models\Module;
 use App\Models\User;
 use Filament\Actions\DeleteAction;
 use Livewire\Livewire;
@@ -27,7 +28,8 @@ class DockerTest extends TestCase
         $installLogFilePath = $modulesTest->get('installLogFilePath');
 
         $dockerIsInstalled = false;
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 400; $i++) {
+            $modulesTest->call('getInstallLog');
             $logFile = file_get_contents($installLogFilePath);
             if (strpos($logFile, 'Done!') !== false) {
                 $dockerIsInstalled = true;
@@ -36,6 +38,9 @@ class DockerTest extends TestCase
             sleep(1);
         }
         $this->assertTrue($dockerIsInstalled);
+
+        $findModule = Module::where('name', 'Docker')->first();
+        $this->assertNotEmpty($findModule);
 
         $this->actingAs(User::factory()->create());
 
