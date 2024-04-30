@@ -7,6 +7,7 @@ use BladeUI\Icons\Factory;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Modules\Microweber\App\Console\Commands\RunDomainRepair;
 use Modules\Microweber\Listeners\DomainIsCreatedListener;
 use Modules\Microweber\MicroweberApacheVirtualHostConfig;
 
@@ -54,7 +55,9 @@ class MicroweberServiceProvider extends ServiceProvider
      */
     protected function registerCommands(): void
     {
-        // $this->commands([]);
+        $this->commands([
+            RunDomainRepair::class
+        ]);
     }
 
     /**
