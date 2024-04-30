@@ -16,7 +16,7 @@ class RunBackup extends Command
      *
      * @var string
      */
-    protected $signature = 'phyre:run-backup';
+    protected $signature = 'phyre:run-backup-checks';
 
     /**
      * The console command description.
