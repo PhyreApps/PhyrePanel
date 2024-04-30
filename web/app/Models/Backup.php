@@ -49,6 +49,9 @@ class Backup extends Model
            if (is_dir($model->path)) {
                shell_exec('rm -rf ' . $model->path);
            }
+           if (Storage::disk('backups')->exists($model->filepath)) {
+               Storage::disk('backups')->delete($model->filepath);
+           }
         });
     }
 
@@ -62,7 +65,6 @@ class Backup extends Model
             $cronJob->command = $cronJobCommand;
             $cronJob->user = 'root';
             $cronJob->save();
-            return false;
         }
 
         $cronJobCommand = 'phyre-php /usr/local/phyre/web/artisan phyre:create-daily-full-backup';
@@ -73,7 +75,6 @@ class Backup extends Model
             $cronJob->command = $cronJobCommand;
             $cronJob->user = 'root';
             $cronJob->save();
-            return false;
         }
 
         return true;
