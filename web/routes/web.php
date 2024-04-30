@@ -28,3 +28,6 @@ if (!file_exists(storage_path('installed'))) {
 }
 
 Route::get('/installer', \App\Livewire\Installer::class);
+
+Route::get('backup/download', [\App\Http\Controllers\BackupDownloadController::class, 'download'])
+    ->name('backup.download');

@@ -17,6 +17,8 @@ use Filament\Facades\Filament;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 
@@ -27,6 +29,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // This allows us to generate a temporary url for backups downloading
+        Storage::disk('backups')->buildTemporaryUrlsUsing(function ($path, $expiration, $options) {
+            return URL::temporarySignedRoute(
+                'backup.download',
+                $expiration,
+                array_merge($options, ['path' => $path])
+            );
+        });
+
         // Register Phyre Icons set
         $this->callAfterResolving(Factory::class, function (Factory $factory) {
             $factory->add('phyre', [

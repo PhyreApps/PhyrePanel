@@ -14,6 +14,8 @@ use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Number;
 use JaOcero\RadioDeck\Forms\Components\RadioDeck;
 
@@ -89,6 +91,13 @@ class BackupResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\Action::make('download')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->action(function (Backup $backup) {
+                        $url = Storage::disk('backups')
+                            ->temporaryUrl($backup->filepath, Carbon::now()->addMinutes(5));
+                        return redirect($url);
+                    }),
                 Tables\Actions\ViewAction::make(),
             ])
             ->defaultSort('id', 'desc')
