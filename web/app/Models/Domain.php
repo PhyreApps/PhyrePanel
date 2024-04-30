@@ -194,9 +194,8 @@ class Domain extends Model
         if (!is_dir($this->domain_root.'/logs/apache2')) {
             shell_exec('mkdir -p '.$this->domain_root.'/logs/apache2');
         }
-
-        shell_exec('chown -R '.$findHostingSubscription->system_username.':'.$webUserGroup.' /var/log/phyre/domains/'.$this->domain);
-        shell_exec('chmod -R 0755 /var/log/phyre/domains/'.$this->domain);
+        shell_exec('chown -R '.$findHostingSubscription->system_username.':'.$webUserGroup.' '.$this->domain_root.'/logs/apache2');
+        shell_exec('chmod -R 775 '.$this->domain_root.'/logs/apache2');
 
         $appType = 'php';
         $appVersion = '8.3';
