@@ -92,7 +92,11 @@ class Domain extends Model
 
         static::deleting(function ($model) {
 
-            ShellApi::exec('rm -rf '.$model->domain_public);
+            if (empty($model->domain_public)) {
+                return;
+            }
+
+            shell_exec('rm -rf '.$model->domain_public);
 
             $deleteApacheWebsite = new ApacheWebsiteDelete();
             $deleteApacheWebsite->setDomain($model->domain);

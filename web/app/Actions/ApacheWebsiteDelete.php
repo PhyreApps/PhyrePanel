@@ -15,6 +15,10 @@ class ApacheWebsiteDelete
 
     public function handle()
     {
+        if (empty($this->domain)) {
+            return false;
+        }
+        
         $apacheConf = '/etc/apache2/sites-available/'.$this->domain.'.conf';
         shell_exec('rm -rf '.$apacheConf);
 
