@@ -27,11 +27,13 @@
     <source>
         <include>
             <directory>app</directory>
-            <directory>app/Filament</directory>
             <directory>Modules</directory>
+        </include>
+        <exclude>
+            <directory>app/Filament</directory>
             <directory>Modules/*/App/Filament</directory>
             <directory>Modules/*/Filament</directory>
-        </include>
+        </exclude>
     </source>
 
     <php>
