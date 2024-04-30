@@ -7,9 +7,7 @@ use App\Helpers;
 use Dotenv\Dotenv;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Support\Env;
-use Illuminate\Support\Number;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Backup extends Model
@@ -80,7 +78,9 @@ class Backup extends Model
                 if (! is_dir($tempValidatePath)) {
                     mkdir($tempValidatePath);
                 }
-                shell_exec('tar -xzf '.$this->filepath.' -C '.$tempValidatePath);
+
+                shell_exec('cd '.$tempValidatePath.' && unzip -o '.Storage::disk('backups')->path($this->filepath));
+
                 $validateDatabaseFile = $tempValidatePath.'/database.sql';
                 $validateEnvFile = $tempValidatePath.'/env.json';
 
@@ -158,11 +158,11 @@ class Backup extends Model
             ];
         }
 
-        $storagePath = storage_path('backups');
+        $storagePath = Storage::path('backups');
         if (! is_dir($storagePath)) {
             mkdir($storagePath);
         }
-        $backupPath = $storagePath.'/'.$this->backup_type.'/'.$this->id;
+        $backupPath = $storagePath.'/'.$this->id;
         if (!is_dir(dirname($backupPath))) {
             mkdir(dirname($backupPath));
         }
@@ -174,13 +174,13 @@ class Backup extends Model
             mkdir($backupTempPath);
         }
 
+        $backupFilename = 'phyre-panel-'.date('Ymd-His').'.zip';
+        $backupFilePath = $storagePath.'/' . $backupFilename;
+
         if ($this->backup_type == 'full') {
 
             // Export Phyre Panel database
             $databaseBackupPath = $backupTempPath.'/database.sql';
-
-            // Export Phyre Panel files
-            $backupFilePath = $backupPath.'/phyre-panel-'.date('Ymd-His').'.tar.gz';
 
             $backupLogFileName = 'backup.log';
             $backupLogFilePath = $backupPath.'/'.$backupLogFileName;
@@ -197,7 +197,7 @@ class Backup extends Model
             $getEnv = Dotenv::createArrayBacked(base_path())->load();
             file_put_contents($backupTempPath.'/env.json', json_encode($getEnv, JSON_PRETTY_PRINT));
 
-            $shellFileContent .= 'cd '.$backupTempPath .' && tar -pczf '.$backupFilePath.' ./* '. PHP_EOL;
+            $shellFileContent .= 'cd '.$backupTempPath .' && zip -r '.$backupFilePath.' ./* '. PHP_EOL;
 
             $shellFileContent .= 'rm -rf '.$backupTempPath.PHP_EOL;
             $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;
@@ -212,7 +212,7 @@ class Backup extends Model
             if ($processId > 0 && is_numeric($processId)) {
 
                 $this->path = $backupPath;
-                $this->filepath = $backupFilePath;
+                $this->filepath = $backupFilename;
                 $this->status = 'processing';
                 $this->queued = true;
                 $this->queued_at = now();
