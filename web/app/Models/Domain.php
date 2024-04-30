@@ -98,9 +98,19 @@ class Domain extends Model
 
             shell_exec('rm -rf '.$model->domain_public);
 
-            $deleteApacheWebsite = new ApacheWebsiteDelete();
-            $deleteApacheWebsite->setDomain($model->domain);
-            $deleteApacheWebsite->handle();
+            $apacheConf = '/etc/apache2/sites-available/'.$model->domain.'.conf';
+            shell_exec('rm -rf '.$apacheConf);
+
+            $apacheConfEnabled = '/etc/apache2/sites-enabled/'.$model->domain.'.conf';
+            shell_exec('rm -rf '.$apacheConfEnabled);
+
+            // SSL
+            $apacheSSLConf = '/etc/apache2/sites-available/'.$model->domain.'-ssl.conf';
+            shell_exec('rm -rf '.$apacheSSLConf);
+
+            $apacheSSLConfEnabled = '/etc/apache2/sites-enabled/'.$model->domain.'-ssl.conf';
+            shell_exec('rm -rf '.$apacheSSLConfEnabled);
+
         });
 
     }
