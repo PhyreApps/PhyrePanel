@@ -33,12 +33,12 @@
 
     LogFormat "%h %l %u %t \"%r\" %>s %b" common
 
-    CustomLog /var/log/phyre/domains/{{$domain}}.bytes bytes
-    CustomLog /var/log/phyre/domains/{{$domain}}.log combined
-    CustomLog /var/log/phyre/domains/{{$domain}}.access.log common
-    CustomLog /var/log/phyre/domains/{{$domain}}.referer.log "%{Referer}i -> %U"
-    CustomLog /var/log/phyre/domains/{{$domain}}.agent.log "%{User-agent}i"
-    ErrorLog /var/log/phyre/domains/{{$domain}}.error.log
+    CustomLog /var/log/phyre/domains/{{$domain}}/bytes.log bytes
+    CustomLog /var/log/phyre/domains/{{$domain}}/combined.log combined
+    CustomLog /var/log/phyre/domains/{{$domain}}/access.log common
+    CustomLog /var/log/phyre/domains/{{$domain}}/referer.log "%{Referer}i -> %U"
+    CustomLog /var/log/phyre/domains/{{$domain}}/agent.log "%{User-agent}i"
+    ErrorLog /var/log/phyre/domains/{{$domain}}/error.log
 
     @if($appType == 'php')
 
