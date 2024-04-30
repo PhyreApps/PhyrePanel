@@ -100,6 +100,11 @@ class HostingSubscription extends Model
         return $this->hasMany(HostingSubscriptionBackup::class);
     }
 
+    public function domain()
+    {
+        return $this->hasMany(Domain::class);
+    }
+
     private function _createLinuxWebUser($model): array
     {
         $findCustomer = Customer::where('id', $model->customer_id)->first();

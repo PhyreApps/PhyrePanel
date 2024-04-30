@@ -11,6 +11,8 @@ use App\Listeners\ModelDomainDeletingListener;
 use App\Listeners\ModelHostingSubscriptionCreatingListener;
 use App\Listeners\ModelHostingSubscriptionDeletingListener;
 use App\Livewire\Components\QuickServiceRestartMenu;
+use App\Models\Domain;
+use App\Models\HostingSubscription;
 use App\Policies\CustomerPolicy;
 use BladeUI\Icons\Factory;
 use Filament\Facades\Filament;
@@ -20,6 +22,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
@@ -69,5 +72,16 @@ class AppServiceProvider extends ServiceProvider
 
         Gate::define('delete-customer', [CustomerPolicy::class, 'delete']);
 
+        if (is_file(storage_path('installed'))) {
+            $getDomains = Domain::all();
+            if ($getDomains->count() > 0) {
+                foreach ($getDomains as $domain) {
+                    $this->app['config']["filesystems.disks.backups_" . Str::slug($domain->domain)] = [
+                        'driver' => 'local',
+                        'root' => $domain->domain_root . '/backups',
+                    ];
+                }
+            }
+        }
     }
 }
