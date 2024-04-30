@@ -60,7 +60,7 @@ class Modules extends Page
         }
     }
 
-    public function openUnistallModal($module)
+    public function openUninstallModal($module)
     {
         $findModule = Module::where('name', $module)->first();
         if ($findModule) {
