@@ -19,7 +19,7 @@ class BackupTest extends ActionTestCase
         ini_set('memory_limit', '-1');
         ini_set('max_execution_time', 0);
 
-        Artisan::call('phyre:run-backup');
+        Artisan::call('phyre:create-daily-full-backup');
 
         $findLastBackup = Backup::orderBy('id', 'asc')->first();
         $this->assertNotEmpty($findLastBackup);
