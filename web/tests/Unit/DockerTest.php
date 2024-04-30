@@ -22,6 +22,8 @@ class DockerTest extends TestCase
         ini_set('memory_limit', '-1');
         ini_set('max_execution_time', 0);
 
+        $this->actingAs(User::factory()->create());
+
         $modulesTest = Livewire::test(Modules::class);
         $modulesTest->call('openInstallModal', 'Docker');
 
@@ -41,8 +43,6 @@ class DockerTest extends TestCase
 
         $findModule = Module::where('name', 'Docker')->first();
         $this->assertNotEmpty($findModule);
-
-        $this->actingAs(User::factory()->create());
 
         $dockerImage = 'nginx';
 
@@ -73,7 +73,7 @@ class DockerTest extends TestCase
 
         $this->assertNotEmpty($pullLog);
         $this->assertStringContainsString('DONE!', $pullLog);
-        
+
         $createDockerContainerTest = Livewire::test(CreateDockerContainer::class);
         $createDockerContainerTest->assertSee('Create Docker Container');
 

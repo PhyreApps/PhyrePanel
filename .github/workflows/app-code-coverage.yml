@@ -63,7 +63,6 @@ jobs:
           phyre-php -v
           
           cd /usr/local/phyre/web/
-          sudo touch /usr/local/phyre/web/storage/installed
           sudo chmod -R 777 vendor
           composer test:coverage
 
