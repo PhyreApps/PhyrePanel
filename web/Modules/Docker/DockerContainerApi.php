@@ -76,6 +76,7 @@ class DockerContainerApi
                 'externalPort' => $this->externalPort,
                 'environmentVariables' => $this->environmentVariables,
                 'volumeMapping' => $this->volumeMapping,
+                'version' => '3'
             ])->render();
         }
 
@@ -83,6 +84,7 @@ class DockerContainerApi
         if (!is_dir($dockerContaienrPath)) {
             shell_exec('mkdir -p ' . $dockerContaienrPath);
         }
+
 
         $dockerComposeFile = $dockerContaienrPath . '/docker-compose.yml';
         file_put_contents($dockerComposeFile, $dockerComposeFileContent);

@@ -13,6 +13,7 @@ use Modules\Docker\Filament\Clusters\Docker\Resources\DockerContainerResource\Pa
 use Modules\Docker\Filament\Clusters\Docker\Resources\DockerContainerResource\Pages\EditDockerContainer;
 use Modules\Docker\Filament\Clusters\Docker\Resources\DockerContainerResource\Pages\ListDockerContainers;
 use Modules\Docker\PostInstall;
+use Psy\Util\Str;
 use Tests\TestCase;
 
 class DockerTest extends TestCase
@@ -23,6 +24,9 @@ class DockerTest extends TestCase
         ini_set('max_execution_time', 0);
 
         $this->actingAs(User::factory()->create());
+        if (!is_file('/usr/local/phyre/web/storage/installed')) {
+            file_put_contents('/usr/local/phyre/web/storage/installed', '');
+        }
 
         $modulesTest = Livewire::test(Modules::class);
         $modulesTest->call('openInstallModal', 'Docker');
@@ -59,17 +63,17 @@ class DockerTest extends TestCase
         $pullDockerImage = $dockerCatalogTest->call('pullDockerImage', $dockerImage)
             ->assertSee('Pull Docker Image');
 
-        $isDokerImagePulled = false;
         $pullLog = '';
+        $isDockerImagePulled = false;
         for ($i = 0; $i < 300; $i++) {
             $pullLog = @file_get_contents($pullDockerImage->get('pullLogFile'));
-            if (strpos($pullLog, 'DONE!') !== false) {
-                $isDokerImagePulled = true;
+            if (str_contains($pullLog, 'DONE!')) {
+                $isDockerImagePulled = true;
                 break;
             }
             sleep(1);
         }
-        $this->assertTrue($isDokerImagePulled);
+        $this->assertTrue($isDockerImagePulled);
 
         $this->assertNotEmpty($pullLog);
         $this->assertStringContainsString('DONE!', $pullLog);
@@ -77,7 +81,7 @@ class DockerTest extends TestCase
         $createDockerContainerTest = Livewire::test(CreateDockerContainer::class);
         $createDockerContainerTest->assertSee('Create Docker Container');
 
-        $dockerName = 'nginx-latest-phyre-'.rand(1111,9999);
+        $dockerName = \Illuminate\Support\Str::random(10);
         $create = $createDockerContainerTest->fillForm([
             'name' => $dockerName,
             'image' => 'nginx',

@@ -89,7 +89,6 @@ class DockerContainer extends Model
             }
 
             $createContainer = $dockerContainerApi->run();
-
             if (!isset($createContainer['ID'])) {
                 throw new \Exception('Failed to create container');
             }
