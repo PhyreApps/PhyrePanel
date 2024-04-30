@@ -16,17 +16,17 @@ class ApacheWebsiteDelete
     public function handle()
     {
         $apacheConf = '/etc/apache2/sites-available/'.$this->domain.'.conf';
-        ShellApi::exec('rm -rf '.$apacheConf);
+        shell_exec('rm -rf '.$apacheConf);
 
         $apacheConfEnabled = '/etc/apache2/sites-enabled/'.$this->domain.'.conf';
-        ShellApi::exec('rm -rf '.$apacheConfEnabled);
+        shell_exec('rm -rf '.$apacheConfEnabled);
 
         // SSL
         $apacheSSLConf = '/etc/apache2/sites-available/'.$this->domain.'-ssl.conf';
-        ShellApi::exec('rm -rf '.$apacheSSLConf);
+        shell_exec('rm -rf '.$apacheSSLConf);
 
         $apacheSSLConfEnabled = '/etc/apache2/sites-enabled/'.$this->domain.'-ssl.conf';
-        ShellApi::exec('rm -rf '.$apacheSSLConfEnabled);
+        shell_exec('rm -rf '.$apacheSSLConfEnabled);
 
     }
 }
