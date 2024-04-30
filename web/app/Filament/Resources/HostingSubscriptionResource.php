@@ -221,6 +221,7 @@ class HostingSubscriptionResource extends Resource
 
         return [
             'HostingSubscription' => $record->domain,
+            'System Username' => $record->system_username,
             'Customer' => optional($record->customer)->name,
         ];
     }
