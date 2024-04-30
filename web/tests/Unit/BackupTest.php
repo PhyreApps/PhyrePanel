@@ -94,9 +94,9 @@ class BackupTest extends ActionTestCase
         $this->assertNotEmpty($findBackup->filepath);
         $this->assertTrue(file_exists(Storage::disk('backups')->path($findBackup->filepath)));
 
-        $getFilesize = filesize($findBackup->filepath);
+        $getFilesize = filesize(Storage::disk('backups')->path($findBackup->filepath));
         $this->assertGreaterThan(0, $getFilesize);
-        $this->assertSame(Helpers::checkPathSize($findBackup->path), $findBackup->size);
+        $this->assertSame($getFilesize, $findBackup->size);
 
         Helpers::extractTar(Storage::disk('backups')->path($findBackup->filepath), $findBackup->path . '/unit-test');
 
