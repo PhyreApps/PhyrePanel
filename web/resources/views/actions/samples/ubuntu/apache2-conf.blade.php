@@ -29,6 +29,10 @@
     #SuexecUserGroup {{$user}} {{$group}}
     #RUidGid {{$user}} {{$group}}
 
+    CustomLog /var/log/phyre/domains/{{$domain}}.bytes bytes
+    CustomLog /var/log/phyre/domains/{{$domain}}.log combined
+    ErrorLog /var/log/phyre/domains/{{$domain}}.error.log
+
     @endif
 
     @if($appType == 'php')

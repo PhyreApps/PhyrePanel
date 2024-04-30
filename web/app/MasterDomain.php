@@ -121,8 +121,14 @@ class MasterDomain
         }
         // End install SSL
 
-        // $indexContent = view('actions.samples.apache.html.app-index-html')->render();
-       // file_put_contents($this->domainPublic . '/index.html', $indexContent);
+        $domainIndexFile = $this->domainPublic . '/index.html';
+        if (file_exists($domainIndexFile)) {
+            $domainIndexFileContent = file_get_contents($domainIndexFile);
+            if (str_contains($domainIndexFileContent, 'Apache2 Debian Default Page')) {
+                 $indexContent = file_get_contents(base_path('resources/views/actions/samples/apache/html/app-index.html'));
+                 file_put_contents($this->domainPublic . '/index.html', $indexContent);
+            }
+        }
 
         shell_exec('chown -R www-data:www-data ' . $this->domainPublic);
         shell_exec('chmod -R 755 ' . $this->domainPublic);
