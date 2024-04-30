@@ -191,6 +191,10 @@ class Domain extends Model
         shell_exec('chmod -R 0711 '.$this->domain_root);
         shell_exec('chmod -R 775 '.$this->domain_public);
 
+        if (!is_dir('/var/log/phyre/domains/')) {
+            shell_exec('mkdir -p /var/log/phyre/domains/');
+        }
+
         $appType = 'php';
         $appVersion = '8.3';
 
