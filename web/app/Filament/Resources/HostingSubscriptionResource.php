@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\HostingSubscriptionResource\Pages;
+use App\Models\Customer;
 use App\Models\Domain;
 use App\Models\HostingSubscription;
 use App\Models\PhyreServer;
@@ -150,7 +151,19 @@ class HostingSubscriptionResource extends Resource
             ])
             ->defaultSort('id', 'desc')
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('domain')
+                    ->attribute('id')
+                    ->label('Domain')
+                    ->searchable()
+                    ->options(fn (): array => HostingSubscription::query()->pluck('domain', 'id')->all()),
+                Tables\Filters\SelectFilter::make('customer_id')
+                    ->searchable()
+                    ->options(fn (): array => Customer::query()->pluck('name', 'id')->all()),
+                Tables\Filters\SelectFilter::make('system_username')
+                    ->attribute('id')
+                    ->label('System Username')
+                    ->searchable()
+                    ->options(fn (): array => HostingSubscription::query()->pluck('system_username', 'id')->all())
             ])
             ->actions([
                 Tables\Actions\Action::make('visit')
@@ -199,7 +212,7 @@ class HostingSubscriptionResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['domain', 'customer.name'];
+        return ['domain', 'system_username', 'customer.name'];
     }
 
     public static function getGlobalSearchResultDetails(Model $record): array
