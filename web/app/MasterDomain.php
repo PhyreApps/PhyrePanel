@@ -32,7 +32,11 @@ class MasterDomain
 
     public function configureVirtualHost()
     {
-        return; // TODO
+        // check is valid domain
+        if (!filter_var($this->domain, FILTER_VALIDATE_DOMAIN)) {
+            return false;
+        }
+
         $apacheVirtualHostBuilder = new \App\VirtualHosts\ApacheVirtualHostBuilder();
         $apacheVirtualHostBuilder->setDomain($this->domain);
         $apacheVirtualHostBuilder->setDomainPublic($this->domainPublic);
@@ -43,8 +47,8 @@ class MasterDomain
         $apacheBaseConfig = $apacheVirtualHostBuilder->buildConfig();
 
         if (!empty($apacheBaseConfig)) {
-            file_put_contents('/etc/apache2/sites-available/000-default.conf', $apacheBaseConfig);
-            shell_exec('ln -s /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-enabled/000-default.conf');
+            file_put_contents('/etc/apache2/sites-available/'.$this->domain.'.conf', $apacheBaseConfig);
+            shell_exec('ln -s /etc/apache2/sites-available/'.$this->domain.'-default.conf /etc/apache2/sites-enabled/'.$this->domain.'-default.conf');
         }
 
 
@@ -109,8 +113,8 @@ class MasterDomain
                     file_put_contents($apache2SSLOptionsFilePath, $apache2SSLOptionsSample);
                 }
 
-                file_put_contents('/etc/apache2/sites-available/000-default-ssl.conf', $apacheBaseConfigWithSSL);
-                shell_exec('ln -s /etc/apache2/sites-available/000-default-ssl.conf /etc/apache2/sites-enabled/000-default-ssl.conf');
+                file_put_contents('/etc/apache2/sites-available/'.$this->domain.'-ssl.conf', $apacheBaseConfigWithSSL);
+                shell_exec('ln -s /etc/apache2/sites-available/'.$this->domain.'-ssl.conf /etc/apache2/sites-enabled/'.$this->domain.'-ssl.conf');
 
             }
 

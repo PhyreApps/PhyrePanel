@@ -67,11 +67,14 @@ class WildcardMasterDomain extends BaseSettings
 
         $amePHPPharFile = base_path().'/Modules/LetsEncrypt/Actions/acmephp.phar';
 
-        //$phyrePHP = ApiClient::getPhyrePHP();
-        $phyrePHP = 'php';
-        $command = $phyrePHP.' '.$amePHPPharFile.' run '.$masterDomain->domainRoot.'/acme-wildcard-config.yaml >> ' . $this->installLogFilePath . ' &';
+        if (!is_dir(dirname($this->installLogFilePath))) {
+            shell_exec('mkdir -p ' . dirname($this->installLogFilePath));
+        }
 
-        $execSSL = shell_exec($command);
+        //$phyrePHP = ApiClient::getPhyrePHP();
+        $phyrePHP = 'phyre-php';
+        $command = $phyrePHP.' '.$amePHPPharFile.' run '.$masterDomain->domainRoot.'/acme-wildcard-config.yaml >> ' . $this->installLogFilePath . ' &';
+        shell_exec($command);
 
         $validateCertificates = [];
         $sslCertificateFilePath = '/root/.acmephp/master/certs/*.'.$masterDomain->domain.'/public/cert.pem';
