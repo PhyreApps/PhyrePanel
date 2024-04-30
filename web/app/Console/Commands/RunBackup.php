@@ -36,21 +36,6 @@ class RunBackup extends Command
             $backup->delete();
         }
 
-        $findBackupsToday = Backup::where('created_at', '>=', Carbon::now()->subHours(24))
-            ->where(function ($query) {
-                $query->where('status', 'completed')
-                    ->orWhere('status', 'processing');
-            })
-            ->first();
-
-        if (! $findBackupsToday) {
-            $backup = new Backup();
-            $backup->backup_type = 'full';
-            $backup->save();
-        } else {
-            $this->info('We already have a backup for today.');
-        }
-
         // Check for pending backups
         $getPendingBackups = Backup::where('status', 'pending')
             ->get();
