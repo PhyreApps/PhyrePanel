@@ -61,6 +61,10 @@ class HostingSubscription extends Model
 
         static::deleting(function ($model) {
 
+            if (empty($model->system_username)) {
+                throw new \Exception('System username is empty');
+            }
+            
             $getLinuxUser = new GetLinuxUser();
             $getLinuxUser->setUsername($model->system_username);
             $getLinuxUserStatus = $getLinuxUser->handle();
