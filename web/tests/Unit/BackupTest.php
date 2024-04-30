@@ -10,6 +10,7 @@ use App\Models\HostingPlan;
 use App\Models\HostingSubscription;
 use Faker\Factory;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Storage;
 use Tests\Feature\Api\ActionTestCase;
 
 class BackupTest extends ActionTestCase
@@ -40,7 +41,7 @@ class BackupTest extends ActionTestCase
         $this->assertTrue($backupFinished);
         $this->assertSame($findLastBackup->status, BackupStatus::Completed);
         $this->assertNotEmpty($findLastBackup->filepath);
-        $this->assertTrue(file_exists($findLastBackup->filepath));
+        $this->assertTrue(file_exists(Storage::disk('backups')->path($findLastBackup->filepath)));
 
         $backup = new Backup();
         $checkCronJob = $backup->checkCronJob();
@@ -91,13 +92,13 @@ class BackupTest extends ActionTestCase
 
         $this->assertTrue($backupCompleted);
         $this->assertNotEmpty($findBackup->filepath);
-        $this->assertTrue(file_exists($findBackup->filepath));
+        $this->assertTrue(file_exists(Storage::disk('backups')->path($findBackup->filepath)));
 
         $getFilesize = filesize($findBackup->filepath);
         $this->assertGreaterThan(0, $getFilesize);
         $this->assertSame(Helpers::checkPathSize($findBackup->path), $findBackup->size);
 
-        Helpers::extractTar($findBackup->filepath, $findBackup->path . '/unit-test');
+        Helpers::extractTar(Storage::disk('backups')->path($findBackup->filepath), $findBackup->path . '/unit-test');
 
 
     }
