@@ -120,6 +120,19 @@ class Domain extends Model
             throw new \Exception('Hosting plan not found');
         }
 
+        if (empty($this->domain_root)) {
+            if ($this->is_main == 1) {
+                $this->domain_root = '/home/'.$findHostingSubscription->system_username;
+                $this->domain_public = '/home/'.$findHostingSubscription->system_username.'/public_html';
+                $this->home_root = '/home/'.$findHostingSubscription->system_username;
+            } else {
+                $this->domain_root = '/home/'.$findHostingSubscription->system_username.'/domains/'.$this->domain;
+                $this->domain_public = $this->domain_root.'/public_html';
+                $this->home_root = '/home/'.$findHostingSubscription->system_username;
+            }
+            $this->save();
+        }
+
         if (!is_dir($this->domain_root)) {
             mkdir($this->domain_root, 0711, true);
         }
