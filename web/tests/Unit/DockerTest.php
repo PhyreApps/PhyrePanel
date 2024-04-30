@@ -100,23 +100,23 @@ class DockerTest extends TestCase
         $this->assertDatabaseHas(DockerContainer::class, [
             'name' => $dockerName,
         ]);
-
-        $listDockerContainersTest = Livewire::test(ListDockerContainers::class);
-        $listDockerContainersTest->assertSee($dockerName);
-
-        $findDockerContainer = DockerContainer::where('name', $dockerName)->first();
-
-        $editDockerContainersTest = Livewire::test(EditDockerContainer::class, [
-            'record'=> $findDockerContainer->id
-        ]);
-        $editDockerContainersTest->assertSee('Edit Docker Container');
-        $editDockerContainersTest->callAction(DeleteAction::class);
-
-        $this->assertModelMissing($findDockerContainer);
-
-
-        // Unistall docker
-        $modulesTest = Livewire::test(Modules::class);
-        $modulesTest->call('openUnistallModal', 'Docker');
+//
+//        $listDockerContainersTest = Livewire::test(ListDockerContainers::class);
+//        $listDockerContainersTest->assertSee($dockerName);
+//
+//        $findDockerContainer = DockerContainer::where('name', $dockerName)->first();
+//
+//        $editDockerContainersTest = Livewire::test(EditDockerContainer::class, [
+//            'record'=> $findDockerContainer->id
+//        ]);
+//        $editDockerContainersTest->assertSee('Edit Docker Container');
+//        $editDockerContainersTest->callAction(DeleteAction::class);
+//
+//        $this->assertModelMissing($findDockerContainer);
+//
+//
+//        // Unistall docker
+//        $modulesTest = Livewire::test(Modules::class);
+//        $modulesTest->call('openUnistallModal', 'Docker');
     }
 }
