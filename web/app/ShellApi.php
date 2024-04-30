@@ -2,12 +2,24 @@
 
 namespace App;
 
+use Illuminate\Support\Str;
+
 class ShellApi
 {
-    public function safeRmRf($pathOrFile, $whiteListedPaths = [])
+    public static function safeDelete($pathOrFile, $whiteListedPaths = [])
     {
-        if (in_array($pathOrFile, $whiteListedPaths)) {
-            return false;
+        if (empty($whiteListedPaths)) {
+            throw new \Exception('Whitelist paths cannot be empty');
+        }
+
+        $errorsBag = [];
+        foreach ($whiteListedPaths as $whiteListedPath) {
+            if (!Str::of($pathOrFile)->startsWith($whiteListedPath)) {
+                $errorsBag[] = 'Cannot delete this path';
+            }
+        }
+        if (!empty($errorsBag)) {
+            throw new \Exception('Cannot delete this path');
         }
 
         $exec = shell_exec('rm -rf ' . $pathOrFile);

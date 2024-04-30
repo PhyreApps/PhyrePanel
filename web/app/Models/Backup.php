@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Filament\Enums\BackupStatus;
 use App\Helpers;
+use App\ShellApi;
 use Dotenv\Dotenv;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -46,9 +47,9 @@ class Backup extends Model
         });
 
         static::deleting(function ($model) {
-           if (is_dir($model->path)) {
-               shell_exec('rm -rf ' . $model->path);
-           }
+           ShellApi::safeDelete($model->path,[
+               Storage::path('backups')
+           ]);
            if (Storage::disk('backups')->exists($model->filepath)) {
                Storage::disk('backups')->delete($model->filepath);
            }
@@ -129,7 +130,7 @@ class Backup extends Model
                     ];
                 }
 
-                shell_exec('rm -rf '.$this->path);
+                ShellApi::safeRmRf($this->path);
 
                 $this->size = filesize(Storage::disk('backups')->path($this->filepath));
                 $this->status = 'completed';
