@@ -12,14 +12,16 @@ class ShellApi
             throw new \Exception('Whitelist paths cannot be empty');
         }
 
-        $errorsBag = [];
+        $canIDeleteFile = false;
         foreach ($whiteListedPaths as $whiteListedPath) {
-            if (!Str::of($pathOrFile)->startsWith($whiteListedPath)) {
-                $errorsBag[] = 'Cannot delete this path';
+            if (Str::of($pathOrFile)->startsWith($whiteListedPath)) {
+                $canIDeleteFile = true;
+                break;
             }
         }
-        if (!empty($errorsBag)) {
-            throw new \Exception('Cannot delete this path');
+
+        if (!$canIDeleteFile) {
+            throw new \Exception('Cannot delete this path:' . $pathOrFile . '. Allowed paths are:' . implode(',', $whiteListedPaths));
         }
 
         $exec = shell_exec('rm -rf ' . $pathOrFile);

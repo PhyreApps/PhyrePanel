@@ -51,7 +51,7 @@ class Backup extends Model
                Storage::path('backups')
            ]);
            if (Storage::disk('backups')->exists($model->filepath)) {
-               Storage::disk('backups')->delete($model->filepath);
+                Storage::disk('backups')->delete($model->filepath);
            }
         });
     }
@@ -130,7 +130,9 @@ class Backup extends Model
                     ];
                 }
 
-                ShellApi::safeRmRf($this->path);
+                ShellApi::safeDelete($this->path,[
+                    Storage::path('backups')
+                ]);
 
                 $this->size = filesize(Storage::disk('backups')->path($this->filepath));
                 $this->status = 'completed';

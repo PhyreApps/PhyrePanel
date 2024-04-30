@@ -95,21 +95,30 @@ class Domain extends Model
             if (empty($model->domain_public)) {
                 return;
             }
+            $findHostingSubscription = HostingSubscription::where('id', $model->hosting_subscription_id)->first();
+            if (! $findHostingSubscription) {
+                return;
+            }
 
-            shell_exec('rm -rf '.$model->domain_public);
+            ShellApi::safeDelete($model->domain_root, ['/home/' . $findHostingSubscription->system_username]);
+
+            $whiteListedPathsForDelete = [
+                '/etc/apache2/sites-available',
+                '/etc/apache2/sites-enabled',
+            ];
 
             $apacheConf = '/etc/apache2/sites-available/'.$model->domain.'.conf';
-            shell_exec('rm -rf '.$apacheConf);
+            ShellApi::safeDelete($apacheConf, $whiteListedPathsForDelete);
 
             $apacheConfEnabled = '/etc/apache2/sites-enabled/'.$model->domain.'.conf';
-            shell_exec('rm -rf '.$apacheConfEnabled);
+            ShellApi::safeDelete($apacheConfEnabled, $whiteListedPathsForDelete);
 
             // SSL
             $apacheSSLConf = '/etc/apache2/sites-available/'.$model->domain.'-ssl.conf';
-            shell_exec('rm -rf '.$apacheSSLConf);
+            ShellApi::safeDelete($apacheSSLConf, $whiteListedPathsForDelete);
 
             $apacheSSLConfEnabled = '/etc/apache2/sites-enabled/'.$model->domain.'-ssl.conf';
-            shell_exec('rm -rf '.$apacheSSLConfEnabled);
+            ShellApi::safeDelete($apacheSSLConfEnabled, $whiteListedPathsForDelete);
 
         });
 
