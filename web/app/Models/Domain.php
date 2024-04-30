@@ -191,8 +191,8 @@ class Domain extends Model
         shell_exec('chmod -R 0711 '.$this->domain_root);
         shell_exec('chmod -R 775 '.$this->domain_public);
 
-        if (!is_dir('/var/log/phyre/domains/'.$this->domain)) {
-            shell_exec('mkdir -p /var/log/phyre/domains/'.$this->domain);
+        if (!is_dir($this->domain_root.'/logs/apache2')) {
+            shell_exec('mkdir -p '.$this->domain_root.'/logs/apache2');
         }
 
         shell_exec('chown -R '.$findHostingSubscription->system_username.':'.$webUserGroup.' /var/log/phyre/domains/'.$this->domain);
