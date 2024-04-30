@@ -116,7 +116,9 @@ class Backup extends Model
                     ];
                 }
 
-                $this->size = Helpers::checkPathSize($this->path);
+                shell_exec('rm -rf '.$this->path);
+
+                $this->size = filesize(Storage::disk('backups')->path($this->filepath));
                 $this->status = 'completed';
                 $this->completed = true;
                 $this->completed_at = now();
