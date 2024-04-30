@@ -135,16 +135,7 @@ class Domain extends Model
         }
 
         if (empty($this->domain_root)) {
-            if ($this->is_main == 1) {
-                $this->domain_root = '/home/'.$findHostingSubscription->system_username;
-                $this->domain_public = '/home/'.$findHostingSubscription->system_username.'/public_html';
-                $this->home_root = '/home/'.$findHostingSubscription->system_username;
-            } else {
-                $this->domain_root = '/home/'.$findHostingSubscription->system_username.'/domains/'.$this->domain;
-                $this->domain_public = $this->domain_root.'/public_html';
-                $this->home_root = '/home/'.$findHostingSubscription->system_username;
-            }
-            $this->save();
+            throw new \Exception('Domain root not found');
         }
 
         if (!is_dir($this->domain_root)) {
