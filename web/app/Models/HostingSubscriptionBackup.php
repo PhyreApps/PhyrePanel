@@ -107,7 +107,7 @@ class HostingSubscriptionBackup extends Model
 
         if ($this->status == BackupStatus::Processing) {
 
-            $backupDoneFile = $this->path.'/backup2.done';
+            $backupDoneFile = $this->path.'/backup.done';
             $backupZipFile = $this->file_path;
 
             if (file_exists($backupDoneFile) && file_exists($backupZipFile)) {
