@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Jackiedo\DotenvEditor\Facades\DotenvEditor;
 
 class Backup extends Model
 {
@@ -47,12 +48,14 @@ class Backup extends Model
         });
 
         static::deleting(function ($model) {
-           ShellApi::safeDelete($model->path,[
-               Storage::path('backups')
-           ]);
-           if (Storage::disk('backups')->exists($model->filepath)) {
-                Storage::disk('backups')->delete($model->filepath);
-           }
+            if (is_file($model->filepath)) {
+//           ShellApi::safeDelete($model->path, [
+//              Storage::path('backups')
+//           ]);
+                if (Storage::disk('backups')->exists($model->filepath)) {
+                    Storage::disk('backups')->delete($model->filepath);
+                }
+            }
         });
     }
 
@@ -96,7 +99,7 @@ class Backup extends Model
                 shell_exec('cd '.$tempValidatePath.' && unzip -o '.Storage::disk('backups')->path($this->filepath));
 
                 $validateDatabaseFile = $tempValidatePath.'/database.sql';
-                $validateEnvFile = $tempValidatePath.'/env.json';
+                $validateEnvFile = $tempValidatePath.'/.env';
 
                 $errorsBag = [];
                 if (! file_exists($validateDatabaseFile)) {
@@ -105,19 +108,19 @@ class Backup extends Model
                 if (! file_exists($validateEnvFile)) {
                     $errorsBag[] = 'Env file not found';
                 }
-                $getEnv = Dotenv::createArrayBacked(base_path())->load();
-                $getEnvFromBackup = json_decode(file_get_contents($validateEnvFile), true);
-                if (empty($getEnvFromBackup)) {
-                    $errorsBag[] = 'Env file is empty';
-                } else {
-                    foreach ($getEnv as $key => $value) {
-                        if (! isset($getEnvFromBackup[$key])) {
-                            $errorsBag[] = 'Env key '.$key.' not found';
-                        }
-                        if ($getEnvFromBackup[$key] != $value) {
-                            $errorsBag[] = 'Env key '.$key.' value mismatch';
-                        }
-                    }
+                if (count($errorsBag) > 0) {
+                    $this->status = 'failed';
+                    $this->save();
+                    return [
+                        'status' => 'failed',
+                        'message' => 'Backup failed. Database or env file missing.',
+                        'errors' => $errorsBag
+                    ];
+                }
+                $originalEnvContent = file_get_contents(base_path().'/.env');
+                $backupEnvContent = file_get_contents($validateEnvFile);
+                if ($originalEnvContent != $backupEnvContent) {
+                    $errorsBag[] = 'Env file content mismatch';
                 }
 
                 if (count($errorsBag) > 0) {
@@ -192,7 +195,7 @@ class Backup extends Model
             mkdir($backupTempPath);
         }
 
-        $backupFilename = 'phyre-panel-'.date('Ymd-His').'.zip';
+        $backupFilename = 'phyre-backup-'.date('Ymd-His').'.zip';
         $backupFilePath = $storagePath.'/' . $backupFilename;
 
         if ($this->backup_type == 'full') {
@@ -210,12 +213,48 @@ class Backup extends Model
             // Export Phyre Panel database
             $shellFileContent .= 'mysqldump -u "'.env('MYSQl_ROOT_USERNAME').'" -p"'.env('MYSQL_ROOT_PASSWORD').'" "'.env('DB_DATABASE').'" > '.$databaseBackupPath . PHP_EOL;
 
-
             // Export Phyre Panel ENV
             $getEnv = Dotenv::createArrayBacked(base_path())->load();
-            file_put_contents($backupTempPath.'/env.json', json_encode($getEnv, JSON_PRETTY_PRINT));
+            $backupStructure = [
+                'env'=>$getEnv,
+            ];
+            file_put_contents($backupTempPath.'/backup.json', json_encode($backupStructure, JSON_PRETTY_PRINT));
+            $shellFileContent .= 'echo "Backup Phyre Panel ENV"'. PHP_EOL;
+            $shellFileContent .= 'cp '.base_path().'/.env '.$backupTempPath.'/.env'. PHP_EOL;
 
-            $shellFileContent .= 'cd '.$backupTempPath .' && zip -r '.$backupFilePath.' ./* '. PHP_EOL;
+            // Export Phyre Panel Hosting Subscription
+            $findHostingSubscription = HostingSubscription::all();
+            if ($findHostingSubscription->count() > 0) {
+                foreach ($findHostingSubscription as $hostingSubscription) {
+                    $hostingSubscriptionPath = $backupTempPath .'/hosting_subscriptions/'.$hostingSubscription->system_username;
+                    $shellFileContent .= PHP_EOL;
+                    $shellFileContent .= 'echo "Backup up hosting subscription: ' . $hostingSubscription->system_username .'" '. PHP_EOL;
+                    $shellFileContent .= 'mkdir -p '.$hostingSubscriptionPath.PHP_EOL;
+                    $shellFileContent .= 'cp -r /home/'.$hostingSubscription->system_username.'/* .[^.]* ' . $hostingSubscriptionPath .PHP_EOL;
+
+                    $shellFileContent .= 'mkdir -p '.$hostingSubscriptionPath.'/databases'.PHP_EOL;
+
+                    $getDatabases = Database::where('hosting_subscription_id', $hostingSubscription->id)
+                        ->where(function ($query) {
+                            $query->where('is_remote_database_server', '0')
+                                ->orWhereNull('is_remote_database_server');
+                        })
+                        ->get();
+
+                    if ($getDatabases->count() > 0) {
+                        foreach ($getDatabases as $database) {
+                            $databaseName = $database->database_name_prefix . $database->database_name;
+                            $shellFileContent .= 'echo "Backup up database: ' . $databaseName . '" ' . PHP_EOL;
+                            $databaseBackupPath = $hostingSubscriptionPath . '/databases/' . $databaseName . '.sql';
+                            $shellFileContent .= 'mysqldump -u "' . env('MYSQl_ROOT_USERNAME') . '" -p"' . env('MYSQL_ROOT_PASSWORD') . '" "' . $databaseName . '" > ' . $databaseBackupPath . PHP_EOL;
+                        }
+                    }
+
+                    $shellFileContent .= PHP_EOL;
+                }
+            }
+
+            $shellFileContent .= 'cd '.$backupTempPath .' && zip -r '.$backupFilePath.' ./* .[^.]* '. PHP_EOL;
 
             $shellFileContent .= 'rm -rf '.$backupTempPath.PHP_EOL;
             $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;
