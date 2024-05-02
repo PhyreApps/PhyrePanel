@@ -3,7 +3,7 @@ steps:
   - name: Phyre Panel - Install Base
     image: ubuntu:22.04
     commands:
-      - apt install -y libicu-dev libzip-dev libpng-dev libjpeg-dev libfreetype6-dev libonig-dev libxml2-dev libcurl4-openssl-dev libssl-dev libpq-dev libsqlite3-dev libxslt1-dev libzip-dev libbz2-dev libreadline-dev libedit-dev libpspell-dev libenchant-dev libgmp-dev libldap2-dev libldb-dev libldap2-dev libldap-2.4-2
+      - apt-get install -y libicu-dev libzip-dev libpng-dev libjpeg-dev libfreetype6-dev libonig-dev libxml2-dev libcurl4-openssl-dev libssl-dev libpq-dev libsqlite3-dev libxslt1-dev libzip-dev libbz2-dev libreadline-dev libedit-dev libpspell-dev libenchant-dev libgmp-dev libldap2-dev libldb-dev libldap2-dev libldap-2.4-2
       - ls -la
 
       - mkdir /phyre-panel
