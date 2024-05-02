@@ -10,7 +10,9 @@ use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
+use Illuminate\Support\Facades\Storage;
 use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
+use Symfony\Component\Console\Input\Input;
 
 class Settings extends BaseSettings
 {
@@ -29,6 +31,7 @@ class Settings extends BaseSettings
 
     public function schema(): array|Closure
     {
+
         return [
             Tabs::make('Settings')
                 ->schema([
@@ -56,6 +59,12 @@ class Settings extends BaseSettings
                             Textarea::make('general.master_domain_page_html'),
                             Textarea::make('general.domain_suspend_page_html'),
                             Textarea::make('general.domain_created_page_html'),
+                        ]),
+
+                    Tabs\Tab::make('Backups')
+                        ->schema([
+                            TextInput::make('general.backup_path')
+                                ->default(Storage::path('backups'))
                         ]),
                 ]),
         ];

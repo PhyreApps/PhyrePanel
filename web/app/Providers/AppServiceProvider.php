@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\BackupStorage;
 use App\Events\ModelDomainCreated;
 use App\Events\ModelDomainDeleting;
 use App\Events\ModelHostingSubscriptionCreated;
@@ -16,7 +17,9 @@ use App\Models\HostingSubscription;
 use App\Policies\CustomerPolicy;
 use BladeUI\Icons\Factory;
 use Filament\Facades\Filament;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -32,15 +35,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // This allows us to generate a temporary url for backups downloading
-        Storage::disk('backups')->buildTemporaryUrlsUsing(function ($path, $expiration, $options) {
-            return URL::temporarySignedRoute(
-                'backup.download',
-                $expiration,
-                array_merge($options, ['path' => $path])
-            );
-        });
-
         // Register Phyre Icons set
         $this->callAfterResolving(Factory::class, function (Factory $factory) {
             $factory->add('phyre', [
@@ -72,16 +66,5 @@ class AppServiceProvider extends ServiceProvider
 
         Gate::define('delete-customer', [CustomerPolicy::class, 'delete']);
 
-        if (is_file(storage_path('installed'))) {
-            $getDomains = Domain::all();
-            if ($getDomains->count() > 0) {
-                foreach ($getDomains as $domain) {
-                    $this->app['config']["filesystems.disks.backups_" . Str::slug($domain->domain)] = [
-                        'driver' => 'local',
-                        'root' => $domain->domain_root . '/backups',
-                    ];
-                }
-            }
-        }
     }
 }

@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\BackupStorage;
 use App\Filament\Enums\BackupStatus;
 use App\Helpers;
 use App\ShellApi;
 use Dotenv\Dotenv;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Jackiedo\DotenvEditor\Facades\DotenvEditor;
@@ -179,20 +181,11 @@ class Backup extends Model
             ];
         }
 
-        $storagePath = Storage::path('backups');
-        if (! is_dir($storagePath)) {
-            mkdir($storagePath);
-        }
+        $storagePath = BackupStorage::getPath();
         $backupPath = $storagePath.'/'.$this->id;
-        if (!is_dir(dirname($backupPath))) {
-            mkdir(dirname($backupPath));
-        }
-        if (! is_dir($backupPath)) {
-            mkdir($backupPath);
-        }
         $backupTempPath = $backupPath.'/temp';
         if (! is_dir($backupTempPath)) {
-            mkdir($backupTempPath);
+            shell_exec('mkdir -p '.$backupTempPath);
         }
 
         $backupFilename = 'phyre-backup-'.date('Ymd-His').'.zip';
@@ -272,11 +265,16 @@ class Backup extends Model
             if ($processId > 0 && is_numeric($processId)) {
 
                 $this->path = $backupPath;
-                $this->filepath = $backupFilename;
+                $this->root_path = $storagePath;
+                $this->temp_path = $backupTempPath;
+                $this->file_path = $backupFilePath;
+                $this->file_name = $backupFilename;
+
                 $this->status = 'processing';
                 $this->queued = true;
                 $this->queued_at = now();
                 $this->process_id = $processId;
+
                 $this->save();
 
                 return [
