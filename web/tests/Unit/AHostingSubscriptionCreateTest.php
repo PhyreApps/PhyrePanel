@@ -61,6 +61,11 @@ class AHostingSubscriptionCreateTest extends ActionTestCase
             sleep(3);
         }
 
+        if (!$installationSuccess) {
+            $logContent = file_get_contents($installLogFilePath);
+            $this->fail('Apache+PHP installation failed. Log: '.$logContent);
+        }
+
         $this->assertTrue($installationSuccess, 'Apache+PHP installation failed');
 
         // Make unauthorized call
