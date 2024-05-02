@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Tests\Feature\Api\ActionTestCase;
 
-class ZBackupTest extends ActionTestCase
+class BackupTest extends ActionTestCase
 {
     public function testFullBackup()
     {
@@ -28,16 +28,21 @@ class ZBackupTest extends ActionTestCase
         $this->assertNotEmpty($findLastBackup->created_at);
         $this->assertSame($findLastBackup->backup_type, 'full');
 
+
         $backupFinished = false;
         for ($i = 0; $i < 100; $i++) {
-            $findLastBackup = Backup::orderBy('id', 'desc')->first();
-            $findLastBackup->checkBackup();
+
+            Artisan::call('phyre:run-backup-checks');
+
+            $findLastBackup = Backup::where('id', $findLastBackup->id)->first();
             if ($findLastBackup->status == BackupStatus::Completed) {
                 $backupFinished = true;
                 break;
             }
             sleep(1);
         }
+
+
         $this->assertTrue($backupFinished);
         $this->assertSame($findLastBackup->status, BackupStatus::Completed);
         $this->assertNotEmpty($findLastBackup->file_path);
@@ -81,12 +86,15 @@ class ZBackupTest extends ActionTestCase
         $findBackup = false;
         $backupCompleted = false;
         for ($i = 0; $i < 200; $i++) {
+
+            Artisan::call('phyre:run-backup-checks');
+
             $findBackup = Backup::where('id', $backupId)->first();
-            $findBackup->checkBackup();
             if ($findBackup->status == BackupStatus::Completed) {
                 $backupCompleted = true;
                 break;
             }
+
             sleep(1);
         }
 
@@ -96,7 +104,7 @@ class ZBackupTest extends ActionTestCase
 
         $getFilesize = filesize($findBackup->file_path);
         $this->assertGreaterThan(0, $getFilesize);
-        $this->assertSame($getFilesize, $findBackup->size);
+        $this->assertSame($getFilesize, intval($findBackup->size));
 
         Helpers::extractZip($findBackup->file_path, $findBackup->path . '/unit-test');
 
