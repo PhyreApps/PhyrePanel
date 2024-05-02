@@ -224,6 +224,20 @@ class Domain extends Model
         shell_exec('chown -R '.$findHostingSubscription->system_username.':'.$webUserGroup.' '.$this->domain_root.'/logs/apache2');
         shell_exec('chmod -R 775 '.$this->domain_root.'/logs/apache2');
 
+        if (!is_file($this->domain_root.'/logs/apache2/bytes.log')) {
+            shell_exec('touch '.$this->domain_root.'/logs/apache2/bytes.log');
+        }
+        if (!is_file($this->domain_root.'/logs/apache2/access.log')) {
+            shell_exec('touch '.$this->domain_root.'/logs/apache2/access.log');
+        }
+        if (!is_file($this->domain_root.'/logs/apache2/error.log')) {
+            shell_exec('touch '.$this->domain_root.'/logs/apache2/error.log');
+        }
+
+        shell_exec('chmod -R 775 '.$this->domain_root.'/logs/apache2/bytes.log');
+        shell_exec('chmod -R 775 '.$this->domain_root.'/logs/apache2/access.log');
+        shell_exec('chmod -R 775 '.$this->domain_root.'/logs/apache2/error.log');
+
         $appType = 'php';
         $appVersion = '8.3';
 
