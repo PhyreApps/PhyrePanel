@@ -83,7 +83,7 @@ class BackupResource extends Resource
                     }),
 
                 Tables\Columns\TextColumn::make('completed_at')
-                    ->label('Completed for')
+                    ->label('Completed time')
                     ->state(function (Backup $backup) {
                         $diff = \Carbon\Carbon::parse($backup->completed_at)
                             ->diffForHumans($backup->created_at);
