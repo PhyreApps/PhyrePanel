@@ -9,7 +9,7 @@ use Illuminate\Console\Command;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RunBackup extends Command
+class RunBackupChecks extends Command
 {
     /**
      * The name and signature of the console command.
