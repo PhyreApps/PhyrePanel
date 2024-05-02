@@ -7,6 +7,7 @@ use App\Filament\Resources\HostingPlanResource\Pages;
 use App\Models\HostingPlan;
 use App\Models\RemoteDatabaseServer;
 use App\SupportedApplicationTypes;
+use Filament\Actions\DeleteAction;
 use Filament\Forms;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
@@ -250,6 +251,7 @@ class HostingPlanResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -42,7 +42,7 @@ class RunBackup extends Command
 
         if ($getPendingBackups->count() > 0) {
             if ($getPendingBackups->count() > 1) {
-                $this->info('Multiple backups are pending..');
+                $this->info('Multiple backups are pending...');
             } else {
                 foreach ($getPendingBackups as $pendingBackup) {
                     $pendingBackup->startBackup();

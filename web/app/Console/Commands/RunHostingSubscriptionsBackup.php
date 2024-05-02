@@ -17,7 +17,7 @@ class RunHostingSubscriptionsBackup extends Command
      *
      * @var string
      */
-    protected $signature = 'phyre:run-hosting-subscriptions-backup';
+    protected $signature = 'phyre:run-hosting-subscriptions-backup-checks';
 
     /**
      * The console command description.
@@ -37,26 +37,26 @@ class RunHostingSubscriptionsBackup extends Command
             $backup->delete();
         }
 
-        // Find Hosting Subscriptions
-        $findHostingSubscriptions = HostingSubscription::all();
-        if ($findHostingSubscriptions->count() > 0) {
-            foreach ($findHostingSubscriptions as $hostingSubscription) {
-
-                $findBackup = HostingSubscriptionBackup::where('hosting_subscription_id', $hostingSubscription->id)
-                    ->where('backup_type', 'full')
-                    ->where('created_at', '>=', Carbon::now()->subHours(24))
-                    ->first();
-                if (! $findBackup) {
-                    $backup = new HostingSubscriptionBackup();
-                    $backup->hosting_subscription_id = $hostingSubscription->id;
-                    $backup->backup_type = 'full';
-                    $backup->save();
-                } else {
-                    $this->error('Backup already exists for ' . $hostingSubscription->domain);
-                    $this->error('Created before: ' . $findBackup->created_at->diffForHumans());
-                }
-            }
-        }
+//        // Find Hosting Subscriptions
+//        $findHostingSubscriptions = HostingSubscription::all();
+//        if ($findHostingSubscriptions->count() > 0) {
+//            foreach ($findHostingSubscriptions as $hostingSubscription) {
+//
+//                $findBackup = HostingSubscriptionBackup::where('hosting_subscription_id', $hostingSubscription->id)
+//                    ->where('backup_type', 'full')
+//                    ->where('created_at', '>=', Carbon::now()->subHours(24))
+//                    ->first();
+//                if (! $findBackup) {
+//                    $backup = new HostingSubscriptionBackup();
+//                    $backup->hosting_subscription_id = $hostingSubscription->id;
+//                    $backup->backup_type = 'full';
+//                    $backup->save();
+//                } else {
+//                    $this->error('Backup already exists for ' . $hostingSubscription->domain);
+//                    $this->error('Created before: ' . $findBackup->created_at->diffForHumans());
+//                }
+//            }
+//        }
 
 
         // Check for pending backups
@@ -64,8 +64,8 @@ class RunHostingSubscriptionsBackup extends Command
             ->get();
 
         if ($getPendingBackups->count() > 0) {
-            if ($getPendingBackups->count() > 3) {
-                $this->info('There are more than 3 pending backups. Please wait for them to finish.');
+            if ($getPendingBackups->count() > 1) {
+                $this->info('Multiple backups are pending...');
             } else {
                 foreach ($getPendingBackups as $pendingBackup) {
                     $pendingBackup->startBackup();

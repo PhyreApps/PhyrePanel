@@ -65,7 +65,7 @@ class HostingSubscriptionBackup extends Model
 
     public function checkCronJob()
     {
-        $cronJobCommand = 'phyre-php /usr/local/phyre/web/artisan phyre:run-hosting-subscriptions-backup';
+        $cronJobCommand = 'phyre-php /usr/local/phyre/web/artisan phyre:run-hosting-subscriptions-backup-checks';
         $findCronJob = CronJob::where('command', $cronJobCommand)->first();
         if (! $findCronJob) {
             $cronJob = new CronJob();
@@ -73,8 +73,18 @@ class HostingSubscriptionBackup extends Model
             $cronJob->command = $cronJobCommand;
             $cronJob->user = 'root';
             $cronJob->save();
-            return false;
         }
+
+        $cronJobCommand = 'phyre-php /usr/local/phyre/web/artisan phyre:create-daily-full-hosting-subscriptions-backup';
+        $findCronJob = CronJob::where('command', $cronJobCommand)->first();
+        if (! $findCronJob) {
+            $cronJob = new CronJob();
+            $cronJob->schedule = '0 0 * * *';
+            $cronJob->command = $cronJobCommand;
+            $cronJob->user = 'root';
+            $cronJob->save();
+        }
+
         return true;
     }
 
