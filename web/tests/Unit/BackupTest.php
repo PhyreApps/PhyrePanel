@@ -80,7 +80,7 @@ class BackupTest extends ActionTestCase
 
         $findBackup = false;
         $backupCompleted = false;
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 200; $i++) {
             $findBackup = Backup::where('id', $backupId)->first();
             $findBackup->checkBackup();
             if ($findBackup->status == BackupStatus::Completed) {
@@ -98,7 +98,7 @@ class BackupTest extends ActionTestCase
         $this->assertGreaterThan(0, $getFilesize);
         $this->assertSame($getFilesize, $findBackup->size);
 
-        Helpers::extractTar($findBackup->file_path, $findBackup->path . '/unit-test');
+        Helpers::extractZip($findBackup->file_path, $findBackup->path . '/unit-test');
 
 
     }
