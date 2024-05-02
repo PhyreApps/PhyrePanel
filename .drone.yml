@@ -4,14 +4,14 @@ steps:
     image: ubuntu
     commands:
       - ls -la
+      
       - sudo mkdir /phyre-panel
       - sudo cp installers/ubuntu-22.04/install-partial/install_base.sh /phyre-panel/install_base.sh
       - sudo chmod +x /phyre-panel/install_base.sh
       - sudo /phyre-panel/install_base.sh
       - sudo cp installers/ubuntu-22.04/install-partial/install_web.sh /phyre-panel/install_web.sh
       - sudo chmod +x /phyre-panel/install_web.sh
-  - name: Phyre Panel - Run Unit Test
-    commands:
+
       - sudo cp -r web /usr/local/phyre/web/
       - cd /usr/local/phyre/web/
       - sudo wget https://getcomposer.org/download/latest-stable/composer.phar
