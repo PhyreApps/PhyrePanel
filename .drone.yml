@@ -4,7 +4,7 @@ steps:
     image: ubuntu:22.04
     commands:
       - apt-get update
-      - apt-get install -y libicu-dev sudo cron
+      - apt-get install -y libicu-dev sudo cron apt-utils
 
       - mkdir /phyre-panel
       - cp installers/ubuntu-22.04/install-partial/install_base.sh /phyre-panel/install_base.sh
