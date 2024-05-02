@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Tests\Feature\Api\ActionTestCase;
 
-class BackupTest extends ActionTestCase
+class ZBackupTest extends ActionTestCase
 {
     public function testFullBackup()
     {
