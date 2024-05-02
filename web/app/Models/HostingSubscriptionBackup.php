@@ -204,6 +204,14 @@ class HostingSubscriptionBackup extends Model
         }
 
         if ($this->backup_type == 'full' || $this->backup_type == 'database') {
+
+            // Export Phyre Panel database
+            $mysqlAuthConf = '/root/.phyre-mysql.cnf';
+            $mysqlAuthContent = '[client]' . PHP_EOL;
+            $mysqlAuthContent .= 'user="' . env('MYSQL_ROOT_USERNAME') .'"'. PHP_EOL;
+            $mysqlAuthContent .= 'password="' . env('MYSQL_ROOT_PASSWORD') . '"' . PHP_EOL;
+            file_put_contents($mysqlAuthConf, $mysqlAuthContent);
+
             $getDatabases = Database::where('hosting_subscription_id', $findHostingSubscription->id)
                 ->where(function ($query) {
                     $query->where('is_remote_database_server', '0')
@@ -218,7 +226,7 @@ class HostingSubscriptionBackup extends Model
                     $shellFileContent .= 'echo "Backup up database: ' . $databaseName .'" '. PHP_EOL;
                     $shellFileContent .= 'mkdir -p '.$backupTempPath . '/databases' . PHP_EOL;
                     $databaseBackupPath = $backupTempPath . '/databases/' . $databaseName . '.sql';
-                    $shellFileContent .= 'mysqldump -u "'.env('MYSQL_ROOT_USERNAME').'" -p"'.env('MYSQL_ROOT_PASSWORD').'" "'.$databaseName.'" > '.$databaseBackupPath . PHP_EOL;
+                    $shellFileContent .= 'mysqldump --defaults-extra-file='.$mysqlAuthConf.' "'.$databaseName.'" > '.$databaseBackupPath . PHP_EOL;
 
                 }
             }
