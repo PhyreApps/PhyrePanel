@@ -77,9 +77,17 @@ class BackupResource extends Resource
                 Tables\Columns\BadgeColumn::make('status')
                     ->badge(),
 
-                Tables\Columns\TextColumn::make('completed_at')
+                Tables\Columns\TextColumn::make('created_at')
                     ->state(function (Backup $backup) {
-                        return $backup->completed_at ? $backup->completed_at : 'N/A';
+                        return $backup->created_at ? $backup->created_at : 'N/A';
+                    }),
+
+                Tables\Columns\TextColumn::make('completed_at')
+                    ->label('Completed for')
+                    ->state(function (Backup $backup) {
+                        $diff = \Carbon\Carbon::parse($backup->completed_at)
+                            ->diffForHumans($backup->created_at);
+                        return $backup->completed_at ? $diff : 'N/A';
                     }),
 
                 Tables\Columns\TextColumn::make('size')
