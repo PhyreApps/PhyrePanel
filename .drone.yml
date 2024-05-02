@@ -1,0 +1,13 @@
+kind: pipeline
+name: default
+
+steps:
+  - name: install
+    image: composer
+    commands:
+      - composer install
+
+  - name: test
+    image: php:7
+    commands:
+      - vendor/bin/phpunit --configuration config.xml
