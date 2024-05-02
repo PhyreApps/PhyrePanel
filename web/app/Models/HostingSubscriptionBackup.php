@@ -199,6 +199,8 @@ class HostingSubscriptionBackup extends Model
 
         if ($this->backup_type == 'full') {
             $shellFileContent .= 'cp -r /home/' . $findHostingSubscription->system_username . ' ' . $backupTempPath . PHP_EOL;
+            $shellFileContent .= 'rsync -azP '. $backupTempPath . '/' . $findHostingSubscription->system_username . '/ ' . $backupTempPath . PHP_EOL;
+            $shellFileContent .= 'rm -rf '. $backupTempPath . '/' . $findHostingSubscription->system_username . '/' . PHP_EOL;
         }
 
         if ($this->backup_type == 'full' || $this->backup_type == 'database') {

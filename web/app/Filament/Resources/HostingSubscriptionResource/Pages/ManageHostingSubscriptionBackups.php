@@ -2,6 +2,8 @@
 
 namespace app\Filament\Resources\HostingSubscriptionResource\Pages;
 
+use App\BackupStorage;
+use App\Filament\Enums\BackupStatus;
 use App\Filament\Enums\HostingSubscriptionBackupType;
 use App\Filament\Resources\Blog\PostResource;
 use App\Filament\Resources\HostingSubscriptionResource;
@@ -18,6 +20,7 @@ use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Carbon;
 use JaOcero\RadioDeck\Forms\Components\RadioDeck;
 
 class ManageHostingSubscriptionBackups extends ManageRelatedRecords
@@ -126,6 +129,18 @@ class ManageHostingSubscriptionBackups extends ManageRelatedRecords
 //
             ])
             ->actions([
+                Tables\Actions\Action::make('download')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->hidden(function (HostingSubscriptionBackup $backup) {
+                        return $backup->status !== BackupStatus::Completed;
+                    })
+                    ->action(function (HostingSubscriptionBackup $backup) {
+
+                        $backupStorage = BackupStorage::getInstance($backup->root_path);
+                        $tempUrl = $backupStorage->temporaryUrl($backup->file_name, Carbon::now()->addMinutes(5));
+
+                        return redirect($tempUrl);
+                    }),
                 Tables\Actions\ViewAction::make(),
              //   Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
