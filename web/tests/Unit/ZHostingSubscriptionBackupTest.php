@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Tests\Feature\Api\ActionTestCase;
 
-class HostingSubscriptionBackupTest extends ActionTestCase
+class ZHostingSubscriptionBackupTest extends ActionTestCase
 {
     public function testFullBackup()
     {
@@ -94,7 +94,7 @@ class HostingSubscriptionBackupTest extends ActionTestCase
         $findDatabase = Database::where('id', $chs['databaseId'])->first();
 
         $extractedDatabase = $findBackup->path . '/unit-test/databases/' . $findDatabase->database_name_prefix . $findDatabase->database_name . '.sql';
-        
+
         $this->assertTrue(file_exists($extractedDatabase));
         $extractedDatabaseContent = file_get_contents($extractedDatabase);
         $this->assertNotEmpty($extractedDatabaseContent);
