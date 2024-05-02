@@ -9,14 +9,14 @@ use Illuminate\Console\Command;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDailyFullBackup extends Command
+class CreateDailyFullHostingSubscriptionsBackup extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'phyre:create-daily-full-backup';
+    protected $signature = 'phyre:create-daily-full-hosting-subscriptions-backup';
 
     /**
      * The console command description.
@@ -30,8 +30,7 @@ class CreateDailyFullBackup extends Command
      */
     public function handle()
     {
-        $backup = new Backup();
-        $backup->backup_type = 'full';
-        $backup->save();
+
+
     }
 }
