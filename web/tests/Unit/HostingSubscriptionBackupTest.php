@@ -87,14 +87,14 @@ class HostingSubscriptionBackupTest extends ActionTestCase
 
         $getFilesize = filesize($findBackup->file_path);
         $this->assertGreaterThan(0, $getFilesize);
-        $this->assertSame(Helpers::checkPathSize($findBackup->path), $findBackup->size);
+        $this->assertSame($getFilesize, $findBackup->size);
 
-        Helpers::extractTar($findBackup->file_path, $findBackup->path . '/unit-test');
+        Helpers::extractZip($findBackup->file_path, $findBackup->path . '/unit-test');
 //
-//        dd($chs);
         $findDatabase = Database::where('id', $chs['databaseId'])->first();
 
-        $extractedDatabase = $findBackup->path . '/unit-test/' . $findDatabase->database_name_prefix . $findDatabase->database_name . '.sql';
+        $extractedDatabase = $findBackup->path . '/unit-test/databases/' . $findDatabase->database_name_prefix . $findDatabase->database_name . '.sql';
+        
         $this->assertTrue(file_exists($extractedDatabase));
         $extractedDatabaseContent = file_get_contents($extractedDatabase);
         $this->assertNotEmpty($extractedDatabaseContent);

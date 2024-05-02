@@ -4,6 +4,15 @@ namespace App;
 
 class Helpers
 {
+    public static function extractZip($tarFile, $extractPath)
+    {
+        shell_exec('mkdir -p ' . $extractPath);
+
+        $exec = shell_exec('unzip -o ' . $tarFile . ' -d ' . $extractPath);
+
+        return $exec;
+    }
+
     public static function extractTar($tarFile, $extractPath)
     {
         shell_exec('mkdir -p ' . $extractPath);

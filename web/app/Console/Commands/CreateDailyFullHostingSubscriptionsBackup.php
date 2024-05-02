@@ -36,7 +36,7 @@ class CreateDailyFullHostingSubscriptionsBackup extends Command
     public function handle()
     {
         // Find Hosting Subscriptions
-        $findHostingSubscriptions = HostingSubscription::limit(1)->get();
+        $findHostingSubscriptions = HostingSubscription::all();
         if ($findHostingSubscriptions->count() > 0) {
             foreach ($findHostingSubscriptions as $hostingSubscription) {
 
