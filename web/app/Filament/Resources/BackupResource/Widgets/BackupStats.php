@@ -2,6 +2,7 @@
 
 namespace app\Filament\Resources\BackupResource\Widgets;
 
+use App\BackupStorage;
 use App\Filament\Resources\BackupResource\Pages\ListBackups;
 use App\Filament\Resources\Shop\OrderResource\Pages\ListOrders;
 use App\Models\Backup;
@@ -31,7 +32,7 @@ class BackupStats extends BaseWidget
             }
         }
         $usedSpace = 0;
-        $backupPath = storage_path('backups');
+        $backupPath = BackupStorage::getPath();
         if (is_dir($backupPath)) {
             $usedSpace = $this->getDirectorySize($backupPath);
         }
