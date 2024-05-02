@@ -3,6 +3,7 @@ steps:
   - name: Phyre Panel - Install Base
     image: ubuntu:22.04
     commands:
+      - apt-get update
       - apt-get install -y libicu-dev
       - ls -la
 
