@@ -11,7 +11,7 @@ jobs:
         #os: [ubuntu-24.04, ubuntu-22.04, ubuntu-20.04]
         os: [ubuntu-22.04]
 
-    runs-on: phyre-hetzner-1
+    runs-on: hetzner-${{ matrix.os }}
 
     steps:
       - name: Checkout Repository
