@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\BackupStorage;
 use App\Filament\Enums\BackupStatus;
 use App\Filament\Enums\BackupType;
 use App\Filament\Resources\BackupResource\Pages;
@@ -102,9 +103,11 @@ class BackupResource extends Resource
                 Tables\Actions\Action::make('download')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->action(function (Backup $backup) {
-                        $url = Storage::disk('backups')
-                            ->temporaryUrl($backup->filepath, Carbon::now()->addMinutes(5));
-                        return redirect($url);
+
+                        $backupStorage = BackupStorage::getInstance($backup->root_path);
+                        $tempUrl = $backupStorage->temporaryUrl($backup->file_name, Carbon::now()->addMinutes(5));
+
+                        return redirect($tempUrl);
                     }),
                 Tables\Actions\ViewAction::make(),
             ])

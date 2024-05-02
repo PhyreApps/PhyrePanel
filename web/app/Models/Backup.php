@@ -89,7 +89,6 @@ class Backup extends Model
     public function checkBackup()
     {
         if ($this->status == BackupStatus::Processing) {
-
             $backupDoneFile = $this->path.'/backup.done';
             if (file_exists($backupDoneFile)) {
 
@@ -98,7 +97,7 @@ class Backup extends Model
                     mkdir($tempValidatePath);
                 }
 
-                shell_exec('cd '.$tempValidatePath.' && unzip -o '.Storage::disk('backups')->path($this->filepath));
+                shell_exec('cd '.$tempValidatePath.' && unzip -o '.$this->file_path);
 
                 $validateDatabaseFile = $tempValidatePath.'/database.sql';
                 $validateEnvFile = $tempValidatePath.'/.env';
@@ -136,10 +135,13 @@ class Backup extends Model
                 }
 
                 ShellApi::safeDelete($this->path,[
-                    Storage::path('backups')
+                    $this->root_path
+                ]);
+                ShellApi::safeDelete($this->temp_path,[
+                    $this->root_path
                 ]);
 
-                $this->size = filesize(Storage::disk('backups')->path($this->filepath));
+                $this->size = filesize($this->file_path);
                 $this->status = 'completed';
                 $this->completed = true;
                 $this->completed_at = now();

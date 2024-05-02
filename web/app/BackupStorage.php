@@ -50,20 +50,26 @@ class BackupStorage
         return $rootPath;
     }
 
-    public static function getInstance()
+    public static function getInstance($path = false)
     {
         $rootPath = self::getPath();
+        if ($path) {
+            $rootPath = $path;
+        }
 
         $storageBuild = Storage::build([
             'driver' => 'local',
             'throw' => false,
             'root' => $rootPath,
         ]);
-        $storageBuild->buildTemporaryUrlsUsing(function ($path, $expiration, $options) {
+        $storageBuild->buildTemporaryUrlsUsing(function ($path, $expiration, $options) use($rootPath) {
             return URL::temporarySignedRoute(
                 'backup.download',
                 $expiration,
-                array_merge($options, ['path' => $path])
+                array_merge($options, [
+                    'path' => $path,
+                    'root_path' => $rootPath,
+                ])
             );
         });
 
