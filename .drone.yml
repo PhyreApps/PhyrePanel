@@ -1,11 +1,10 @@
 kind: pipeline
 steps:
-  - name: Phyre Panel - Install Base
+  - name: run unit tests
     image: ubuntu:22.04
     commands:
       - apt-get update
-      - apt-get install -y libicu-dev sudo
-      - ls -la
+      - apt-get install -y libicu-dev sudo crontab
 
       - mkdir /phyre-panel
       - cp installers/ubuntu-22.04/install-partial/install_base.sh /phyre-panel/install_base.sh
