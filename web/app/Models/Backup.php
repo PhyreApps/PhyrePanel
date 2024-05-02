@@ -256,6 +256,7 @@ class Backup extends Model
                 }
             }
 
+            // With find, we can search for all files,directories (including hidden) in the current directory and zip them
             $shellFileContent .= 'cd '.$backupTempPath .' && find . -exec zip -r '.$backupFilePath.' {} \;'. PHP_EOL;
 
             $shellFileContent .= 'rm -rf '.$backupTempPath.PHP_EOL;
