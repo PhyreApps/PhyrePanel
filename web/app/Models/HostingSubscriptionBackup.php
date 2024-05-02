@@ -218,7 +218,7 @@ class HostingSubscriptionBackup extends Model
                     $shellFileContent .= 'echo "Backup up database: ' . $databaseName .'" '. PHP_EOL;
                     $shellFileContent .= 'mkdir -p '.$backupTempPath . '/databases' . PHP_EOL;
                     $databaseBackupPath = $backupTempPath . '/databases/' . $databaseName . '.sql';
-                    $shellFileContent .= 'mysqldump -u "'.env('MYSQl_ROOT_USERNAME').'" -p"'.env('MYSQL_ROOT_PASSWORD').'" "'.$databaseName.'" > '.$databaseBackupPath . PHP_EOL;
+                    $shellFileContent .= 'mysqldump -u "'.env('MYSQL_ROOT_USERNAME').'" -p"'.env('MYSQL_ROOT_PASSWORD').'" "'.$databaseName.'" > '.$databaseBackupPath . PHP_EOL;
 
                 }
             }

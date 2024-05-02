@@ -98,7 +98,7 @@ RUN cp .env.example .env \
     && sed -i "s/^DB_USERNAME=.*/DB_USERNAME=$PANEL_DB_USER/" .env \
     && sed -i "s/^DB_PASSWORD=.*/DB_PASSWORD=$PANEL_DB_PASSWORD/" .env \
     && sed -i "s/^DB_CONNECTION=.*/DB_CONNECTION=mysql/" .env \
-    && sed -i "s/^MYSQl_ROOT_USERNAME=.*/MYSQl_ROOT_USERNAME=$MYSQL_ROOT_USERNAME/" .env \
+    && sed -i "s/^MYSQL_ROOT_USERNAME=.*/MYSQL_ROOT_USERNAME=$MYSQL_ROOT_USERNAME/" .env \
     && sed -i "s/^MYSQL_ROOT_PASSWORD=.*/MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD/" .env
 
 # Generate application key and migrate database

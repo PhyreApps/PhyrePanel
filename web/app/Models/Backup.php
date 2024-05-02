@@ -206,7 +206,13 @@ class Backup extends Model
             $shellFileContent .= 'echo "Backup Phyre Panel files"'. PHP_EOL;
 
             // Export Phyre Panel database
-            $shellFileContent .= 'mysqldump -u "'.env('MYSQl_ROOT_USERNAME').'" -p"'.env('MYSQL_ROOT_PASSWORD').'" "'.env('DB_DATABASE').'" > '.$databaseBackupPath . PHP_EOL;
+            $mysqlAuthConf = '/root/.phyre-mysql.cnf';
+            $mysqlAuthContent = '[client]' . PHP_EOL;
+            $mysqlAuthContent .= 'user="' . env('MYSQL_ROOT_USERNAME') .'"'. PHP_EOL;
+            $mysqlAuthContent .= 'password="' . env('MYSQL_ROOT_PASSWORD') . '"' . PHP_EOL;
+            file_put_contents($mysqlAuthConf, $mysqlAuthContent);
+
+            $shellFileContent .= 'mysqldump --defaults-extra-file='.$mysqlAuthConf.' "'.env('DB_DATABASE').'" > '.$databaseBackupPath . PHP_EOL;
 
             // Export Phyre Panel ENV
             $getEnv = Dotenv::createArrayBacked(base_path())->load();
@@ -244,7 +250,7 @@ class Backup extends Model
                             $databaseName = $database->database_name_prefix . $database->database_name;
                             $shellFileContent .= 'echo "Backup up database: ' . $databaseName . '" ' . PHP_EOL;
                             $databaseBackupPath = $hostingSubscriptionPath . '/databases/' . $databaseName . '.sql';
-                            $shellFileContent .= 'mysqldump -u "' . env('MYSQl_ROOT_USERNAME') . '" -p"' . env('MYSQL_ROOT_PASSWORD') . '" "' . $databaseName . '" > ' . $databaseBackupPath . PHP_EOL;
+                            $shellFileContent .= 'mysqldump --defaults-extra-file='.$mysqlAuthConf.' "' . $databaseName . '" > ' . $databaseBackupPath . PHP_EOL;
                         }
                     }
 

@@ -58,7 +58,7 @@ class DatabaseUser extends Model
                 $universalDatabaseExecutor = new UniversalDatabaseExecutor(
                     env('MYSQL_HOST'),
                     env('MYSQL_PORT'),
-                    env('MYSQl_ROOT_USERNAME'),
+                    env('MYSQL_ROOT_USERNAME'),
                     env('MYSQL_ROOT_PASSWORD'),
                     $findDatabase->database_name_prefix . $findDatabase->database_name
                 );

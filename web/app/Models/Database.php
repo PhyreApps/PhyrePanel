@@ -62,7 +62,7 @@ class Database extends Model
                 $universalDatabaseExecutor = new UniversalDatabaseExecutor(
                     env('MYSQL_HOST'),
                     env('MYSQL_PORT'),
-                    env('MYSQl_ROOT_USERNAME'),
+                    env('MYSQL_ROOT_USERNAME'),
                     env('MYSQL_ROOT_PASSWORD'),
                 );
                 $createDatabase = $universalDatabaseExecutor->createDatabase($databaseName);
