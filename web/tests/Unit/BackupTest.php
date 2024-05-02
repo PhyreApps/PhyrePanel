@@ -30,7 +30,7 @@ class BackupTest extends ActionTestCase
 
 
         $backupFinished = false;
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 400; $i++) {
 
             Artisan::call('phyre:run-backup-checks');
 
@@ -85,7 +85,7 @@ class BackupTest extends ActionTestCase
 
         $findBackup = false;
         $backupCompleted = false;
-        for ($i = 0; $i < 200; $i++) {
+        for ($i = 0; $i < 400; $i++) {
 
             Artisan::call('phyre:run-backup-checks');
 

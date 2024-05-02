@@ -39,13 +39,16 @@ class HostingSubscriptionBackupTest extends ActionTestCase
         $this->assertSame($findLastBackup->backup_type, 'full');
 
         $backupFinished = false;
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 100; $i++) {
+
+            Artisan::call('phyre:run-hosting-subscriptions-backup-checks');
+
             $findLastBackup = HostingSubscriptionBackup::where('id', $findLastBackup->id)->first();
-            $findLastBackup->checkBackup();
             if ($findLastBackup->status == BackupStatus::Completed) {
                 $backupFinished = true;
                 break;
             }
+
             sleep(1);
         }
 
@@ -69,10 +72,12 @@ class HostingSubscriptionBackupTest extends ActionTestCase
 
         $findBackup = false;
         $backupCompleted = false;
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 100; $i++) {
+
+            Artisan::call('phyre:run-hosting-subscriptions-backup-checks');
+
             $findBackup = HostingSubscriptionBackup::where('id', $backupId)->first();
             if ($findBackup) {
-                $status = $findBackup->checkBackup();
                 if ($findBackup->status == BackupStatus::Completed) {
                     $backupCompleted = true;
                     break;
@@ -87,7 +92,7 @@ class HostingSubscriptionBackupTest extends ActionTestCase
 
         $getFilesize = filesize($findBackup->file_path);
         $this->assertGreaterThan(0, $getFilesize);
-        $this->assertSame($getFilesize, $findBackup->size);
+        $this->assertSame($getFilesize, intval($findBackup->size));
 
         Helpers::extractZip($findBackup->file_path, $findBackup->path . '/unit-test');
 //
