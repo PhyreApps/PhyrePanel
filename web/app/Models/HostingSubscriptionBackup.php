@@ -5,6 +5,7 @@ namespace App\Models;
 use App\BackupStorage;
 use App\Filament\Enums\BackupStatus;
 use App\Helpers;
+use App\ShellApi;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -95,6 +96,7 @@ class HostingSubscriptionBackup extends Model
         $findHostingSubscription = HostingSubscription::select(['id'])
             ->where('id', $this->hosting_subscription_id)
             ->first();
+
         if (! $findHostingSubscription) {
             $this->delete();
             return [
@@ -105,16 +107,23 @@ class HostingSubscriptionBackup extends Model
 
         if ($this->status == BackupStatus::Processing) {
 
-            $backupDoneFile = $this->path.'/backup-'.$this->id.'.done';
-            if (file_exists($backupDoneFile)) {
+            $backupDoneFile = $this->path.'/backup2.done';
+            $backupZipFile = $this->file_path;
 
-                $this->size = Helpers::checkPathSize($this->path);
+            if (file_exists($backupDoneFile) && file_exists($backupZipFile)) {
+
+                $this->size = filesize($this->file_path);
                 $this->status = 'completed';
                 $this->completed = true;
                 $this->completed_at = now();
                 $this->save();
 
-                shell_exec('rm -rf ' . $backupDoneFile);
+                ShellApi::safeDelete($this->path,[
+                    $this->root_path
+                ]);
+                ShellApi::safeDelete($this->temp_path,[
+                    $this->root_path
+                ]);
 
                 return [
                     'status' => 'completed',
@@ -125,7 +134,7 @@ class HostingSubscriptionBackup extends Model
             $checkProcess = shell_exec('ps -p ' . $this->process_id . ' | grep ' . $this->process_id);
             if (Str::contains($checkProcess, $this->process_id)) {
 
-                $this->size = Helpers::checkPathSize($this->path);
+                $this->size = Helpers::checkPathSize($this->temp_path);
                 $this->save();
 
                 return [
