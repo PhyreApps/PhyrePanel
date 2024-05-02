@@ -46,11 +46,15 @@ class MasterDomain
 
         $apacheBaseConfig = $apacheVirtualHostBuilder->buildConfig();
 
+        shell_exec('mkdir -p /var/www/logs/apache2');
+        shell_exec('touch /var/www/logs/apache2/bytes.log');
+        shell_exec('touch /var/www/logs/apache2/access.log');
+        shell_exec('touch /var/www/logs/apache2/error.log');
+
         if (!empty($apacheBaseConfig)) {
             file_put_contents('/etc/apache2/sites-available/'.$this->domain.'.conf', $apacheBaseConfig);
             shell_exec('ln -s /etc/apache2/sites-available/'.$this->domain.'-default.conf /etc/apache2/sites-enabled/'.$this->domain.'-default.conf');
         }
-
 
         // install SSL
         $findDomainSSLCertificate = null;
