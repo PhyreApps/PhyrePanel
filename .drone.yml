@@ -1,8 +1,12 @@
 kind: pipeline
-name: default
-
 steps:
   - name: test
-    image: ubuntu
+    image: node
     commands:
-      - ls -la
+      - npm install
+      - npm test
+services:
+  - name: database
+    image: mysql
+    ports:
+      - 3306
