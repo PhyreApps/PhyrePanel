@@ -159,8 +159,9 @@ class Backup extends Model
             $checkProcess = shell_exec('ps -p ' . $this->process_id . ' | grep ' . $this->process_id);
             if (Str::contains($checkProcess, $this->process_id)) {
 
+
                 $this->size = Helpers::checkPathSize($this->path);
-                $this->backup_log = 'Backup is still processing';
+                $this->backup_log = file_get_contents($this->path.'/backup.log');
                 $this->save();
 
                 return [
