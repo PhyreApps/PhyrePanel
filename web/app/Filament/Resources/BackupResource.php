@@ -102,6 +102,9 @@ class BackupResource extends Resource
             ->actions([
                 Tables\Actions\Action::make('download')
                     ->icon('heroicon-o-arrow-down-tray')
+                    ->hidden(function (Backup $backup) {
+                        return $backup->status !== BackupStatus::Completed;
+                    })
                     ->action(function (Backup $backup) {
 
                         $backupStorage = BackupStorage::getInstance($backup->root_path);

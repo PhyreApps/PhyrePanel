@@ -28,7 +28,7 @@ class HostingSubscriptionBackupTest extends ActionTestCase
 
         $chs = $this->_createHostingSubscription();
 
-        Artisan::call('phyre:run-hosting-subscriptions-backup');
+        Artisan::call('phyre:create-daily-full-hosting-subscriptions-backup');
 
         $findLastBackup = HostingSubscriptionBackup::where('hosting_subscription_id', $chs['hostingSubscriptionId'])
             ->first();
@@ -51,8 +51,8 @@ class HostingSubscriptionBackupTest extends ActionTestCase
 
         $this->assertTrue($backupFinished);
         $this->assertSame($findLastBackup->status, BackupStatus::Completed);
-        $this->assertNotEmpty($findLastBackup->filepath);
-        $this->assertTrue(file_exists($findLastBackup->filepath));
+        $this->assertNotEmpty($findLastBackup->file_path);
+        $this->assertTrue(file_exists($findLastBackup->file_path));
 
         $backup = new HostingSubscriptionBackup();
         $checkCronJob = $backup->checkCronJob();
@@ -82,14 +82,14 @@ class HostingSubscriptionBackupTest extends ActionTestCase
         }
 
         $this->assertTrue($backupCompleted);
-        $this->assertNotEmpty($findBackup->filepath);
-        $this->assertTrue(file_exists($findBackup->filepath));
+        $this->assertNotEmpty($findBackup->file_path);
+        $this->assertTrue(file_exists($findBackup->file_path));
 
-        $getFilesize = filesize($findBackup->filepath);
+        $getFilesize = filesize($findBackup->file_path);
         $this->assertGreaterThan(0, $getFilesize);
         $this->assertSame(Helpers::checkPathSize($findBackup->path), $findBackup->size);
 
-        Helpers::extractTar($findBackup->filepath, $findBackup->path . '/unit-test');
+        Helpers::extractTar($findBackup->file_path, $findBackup->path . '/unit-test');
 //
 //        dd($chs);
         $findDatabase = Database::where('id', $chs['databaseId'])->first();

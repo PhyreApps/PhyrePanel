@@ -40,8 +40,8 @@ class BackupTest extends ActionTestCase
         }
         $this->assertTrue($backupFinished);
         $this->assertSame($findLastBackup->status, BackupStatus::Completed);
-        $this->assertNotEmpty($findLastBackup->filepath);
-        $this->assertTrue(file_exists(Storage::disk('backups')->path($findLastBackup->filepath)));
+        $this->assertNotEmpty($findLastBackup->file_path);
+        $this->assertTrue(file_exists($findLastBackup->file_path));
 
         $backup = new Backup();
         $checkCronJob = $backup->checkCronJob();
@@ -91,14 +91,14 @@ class BackupTest extends ActionTestCase
         }
 
         $this->assertTrue($backupCompleted);
-        $this->assertNotEmpty($findBackup->filepath);
-        $this->assertTrue(file_exists(Storage::disk('backups')->path($findBackup->filepath)));
+        $this->assertNotEmpty($findBackup->file_path);
+        $this->assertTrue(file_exists($findBackup->file_path));
 
-        $getFilesize = filesize(Storage::disk('backups')->path($findBackup->filepath));
+        $getFilesize = filesize($findBackup->file_path);
         $this->assertGreaterThan(0, $getFilesize);
         $this->assertSame($getFilesize, $findBackup->size);
 
-        Helpers::extractTar(Storage::disk('backups')->path($findBackup->filepath), $findBackup->path . '/unit-test');
+        Helpers::extractTar($findBackup->file_path, $findBackup->path . '/unit-test');
 
 
     }

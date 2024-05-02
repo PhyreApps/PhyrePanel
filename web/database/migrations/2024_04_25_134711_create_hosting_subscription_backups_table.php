@@ -17,8 +17,13 @@ return new class extends Migration
             $table->bigInteger('hosting_subscription_id')->nullable();
             $table->string('backup_type')->nullable();
             $table->string('status')->nullable();
+
             $table->string('path')->nullable();
-            $table->string('filepath')->nullable();
+            $table->string('root_path')->nullable();
+            $table->string('temp_path')->nullable();
+            $table->string('file_path')->nullable();
+            $table->string('file_name')->nullable();
+
             $table->string('size')->nullable();
             $table->string('disk')->nullable();
             $table->string('process_id')->nullable();
