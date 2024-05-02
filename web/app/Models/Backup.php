@@ -221,13 +221,14 @@ class Backup extends Model
             $findHostingSubscription = HostingSubscription::all();
             if ($findHostingSubscription->count() > 0) {
                 foreach ($findHostingSubscription as $hostingSubscription) {
-                    $hostingSubscriptionPath = $backupTempPath .'/hosting_subscriptions/'.$hostingSubscription->system_username;
+                    $hostingSubscriptionsMainPath = $backupTempPath .'/hosting_subscriptions';
+                    $hostingSubscriptionPath = $hostingSubscriptionsMainPath .'/'. $hostingSubscription->system_username;
                     $shellFileContent .= PHP_EOL;
                     $shellFileContent .= 'echo "Backup up hosting subscription: ' . $hostingSubscription->system_username .'" '. PHP_EOL;
                     $shellFileContent .= 'mkdir -p '.$hostingSubscriptionPath.PHP_EOL;
 
                     // cp -r (copy recursively, also copy hidden files)
-                    $shellFileContent .= 'cp -r /home/'.$hostingSubscription->system_username.'/ ' . $hostingSubscriptionPath .PHP_EOL;
+                    $shellFileContent .= 'cp -r /home/'.$hostingSubscription->system_username.'/ ' . $hostingSubscriptionsMainPath .PHP_EOL;
 
                     $shellFileContent .= 'mkdir -p '.$hostingSubscriptionPath.'/databases'.PHP_EOL;
 
