@@ -4,7 +4,7 @@ steps:
     image: ubuntu:22.04
     commands:
       - apt-get update
-      - apt-get install -y libicu-dev
+      - apt-get install -y libicu-dev sudo
       - ls -la
 
       - mkdir /phyre-panel
