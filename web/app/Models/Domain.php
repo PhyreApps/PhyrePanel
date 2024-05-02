@@ -404,8 +404,10 @@ class Domain extends Model
                 }
 
                 file_put_contents('/etc/apache2/sites-available/'.$this->domain.'-ssl.conf', $apacheBaseConfigWithSSL);
-                shell_exec('ln -s /etc/apache2/sites-available/'.$this->domain.'-ssl.conf /etc/apache2/sites-enabled/'.$this->domain.'-ssl.conf');
 
+                if (!is_link('/etc/apache2/sites-enabled/' . $this->domain . '-ssl.conf')) {
+                    shell_exec('ln -s /etc/apache2/sites-available/' . $this->domain . '-ssl.conf /etc/apache2/sites-enabled/' . $this->domain . '-ssl.conf');
+                }
 
             }
 
