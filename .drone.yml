@@ -5,10 +5,10 @@ steps:
     commands:
       - ls -la
       - sudo mkdir /phyre-panel
-      - sudo cp installers/${{ matrix.os }}/install-partial/install_base.sh /phyre-panel/install_base.sh
+      - sudo cp installers/ubuntu-22.04/install-partial/install_base.sh /phyre-panel/install_base.sh
       - sudo chmod +x /phyre-panel/install_base.sh
       - sudo /phyre-panel/install_base.sh
-      - sudo cp installers/${{ matrix.os }}/install-partial/install_web.sh /phyre-panel/install_web.sh
+      - sudo cp installers/ubuntu-22.04/install-partial/install_web.sh /phyre-panel/install_web.sh
       - sudo chmod +x /phyre-panel/install_web.sh
   - name: Phyre Panel - Run Unit Test
     commands:
