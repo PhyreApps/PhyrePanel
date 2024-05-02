@@ -65,6 +65,7 @@ jobs:
           
           cd /usr/local/phyre/web/
           sudo chmod -R 777 vendor
+          apt install composer -y
           composer test:coverage
 
       - name: Code Cov
