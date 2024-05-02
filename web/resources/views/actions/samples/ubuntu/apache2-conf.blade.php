@@ -34,10 +34,7 @@
     LogFormat "%h %l %u %t \"%r\" %>s %b" common
 
     CustomLog {{$domainRoot}}/logs/apache2/bytes.log bytes
-    CustomLog {{$domainRoot}}/logs/apache2/combined.log combined
     CustomLog {{$domainRoot}}/logs/apache2/access.log common
-    CustomLog {{$domainRoot}}/logs/apache2/referer.log "%{Referer}i -> %U"
-    CustomLog {{$domainRoot}}/logs/apache2/agent.log "%{User-agent}i"
     ErrorLog {{$domainRoot}}/logs/apache2/error.log
 
     @if($appType == 'php')
