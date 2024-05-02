@@ -111,6 +111,7 @@ class Backup extends Model
                 }
                 if (count($errorsBag) > 0) {
                     $this->status = 'failed';
+                    $this->backup_log = 'Backup failed. Database or env file missing.';
                     $this->save();
                     return [
                         'status' => 'failed',
@@ -126,6 +127,7 @@ class Backup extends Model
 
                 if (count($errorsBag) > 0) {
                     $this->status = 'failed';
+                    $this->backup_log = 'Backup failed. Database or env file content mismatch.';
                     $this->save();
                     return [
                         'status' => 'failed',
@@ -145,6 +147,7 @@ class Backup extends Model
                 $this->status = 'completed';
                 $this->completed = true;
                 $this->completed_at = now();
+                $this->backup_log = 'Backup completed';
                 $this->save();
 
                 return [
@@ -157,6 +160,7 @@ class Backup extends Model
             if (Str::contains($checkProcess, $this->process_id)) {
 
                 $this->size = Helpers::checkPathSize($this->path);
+                $this->backup_log = 'Backup is still processing';
                 $this->save();
 
                 return [
@@ -164,6 +168,7 @@ class Backup extends Model
                     'message' => 'Backup is still processing'
                 ];
             } else {
+                $this->backup_log = 'Backup failed. Process not found';
                 $this->status = 'failed';
                 $this->save();
                 return [

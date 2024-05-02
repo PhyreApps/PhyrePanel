@@ -17,6 +17,7 @@ return new class extends Migration
             $table->bigInteger('hosting_subscription_id')->nullable();
             $table->string('backup_type')->nullable();
             $table->string('status')->nullable();
+            $table->string('backup_log')->nullable();
 
             $table->string('path')->nullable();
             $table->string('root_path')->nullable();

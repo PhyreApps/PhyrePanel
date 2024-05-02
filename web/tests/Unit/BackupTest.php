@@ -30,7 +30,7 @@ class BackupTest extends ActionTestCase
 
 
         $backupFinished = false;
-        for ($i = 0; $i < 400; $i++) {
+        for ($i = 0; $i < 100; $i++) {
 
             Artisan::call('phyre:run-backup-checks');
 
@@ -85,7 +85,7 @@ class BackupTest extends ActionTestCase
 
         $findBackup = false;
         $backupCompleted = false;
-        for ($i = 0; $i < 400; $i++) {
+        for ($i = 0; $i < 100; $i++) {
 
             Artisan::call('phyre:run-backup-checks');
 
@@ -96,6 +96,11 @@ class BackupTest extends ActionTestCase
             }
 
             sleep(1);
+        }
+
+        if (!$backupCompleted) {
+            $findBackup = Backup::where('id', $backupId)->first();
+            $this->fail('Backup not completed: '.$findBackup->backup_log);
         }
 
         $this->assertTrue($backupCompleted);
