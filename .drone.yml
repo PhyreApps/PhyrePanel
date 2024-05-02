@@ -2,6 +2,8 @@ kind: pipeline
 steps:
   - name: run unit tests
     image: ubuntu:22.04
+    environment:
+     DEBIAN_FRONTEND: noninteractive
     commands:
       - apt-get update
       - apt-get install -y libicu-dev sudo cron apt-utils
