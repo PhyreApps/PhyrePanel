@@ -94,6 +94,9 @@ class BackupTest extends ActionTestCase
                 $backupCompleted = true;
                 break;
             }
+            if ($findBackup->status == BackupStatus::Failed) {
+                $this->fail('Backup failed: '.$findBackup->backup_log);
+            }
 
             sleep(1);
         }
