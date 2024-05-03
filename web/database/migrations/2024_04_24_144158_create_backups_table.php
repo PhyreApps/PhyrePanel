@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->string('backup_type')->nullable();
             $table->string('status')->nullable();
-            $table->string('backup_log')->nullable();
+            $table->longText('backup_log')->nullable();
 
             $table->string('path')->nullable();
             $table->string('root_path')->nullable();

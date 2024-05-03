@@ -6,7 +6,7 @@ steps:
      DEBIAN_FRONTEND: noninteractive
     commands:
       - apt-get update
-      - apt-get install -y libicu-dev sudo cron apt-utils -yqq daemonize dbus-user-session fontconfig
+      - apt-get install -y libicu-dev sudo cron apt-utils -yqq daemonize dbus-user-session fontconfig rsync
       - daemonize /usr/bin/unshare --fork --pid --mount-proc /lib/systemd/systemd --system-unit=basic.target
 
       - mkdir /phyre-panel
