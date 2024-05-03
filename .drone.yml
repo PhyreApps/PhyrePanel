@@ -43,9 +43,9 @@ steps:
 
 ---
 kind: pipeline
-name: CentOS Stream 9
+name: CentOS Latest
 steps:
   - name: run unit tests
-    image: centos:stream-9
+    image: centos:latest
     commands:
       - yum install rpm-build
