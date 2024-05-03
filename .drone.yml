@@ -8,7 +8,7 @@ steps:
       - apt-get update
       - apt-get install -y libicu-dev sudo cron apt-utils -yqq daemonize dbus-user-session fontconfig
       - daemonize /usr/bin/unshare --fork --pid --mount-proc /lib/systemd/systemd --system-unit=basic.target
-      - exec nsenter -t $(pidof systemd) -a su - $USER
+      - exec nsenter -t $(pidof systemd)
 
       - mkdir /phyre-panel
       - cp installers/ubuntu-22.04/install-partial/install_base.sh /phyre-panel/install_base.sh
