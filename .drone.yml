@@ -1,6 +1,6 @@
 ---
 kind: pipeline
-name: Ubuntu 20.04
+name: Ubuntu 22.04
 steps:
   - name: run unit tests
     image: ubuntu:22.04
@@ -24,19 +24,28 @@ steps:
       - COMPOSER_ALLOW_SUPERUSER=1 phyre-php composer.phar install
       - /phyre-panel/install_web.sh
       - phyre-php artisan test
-  - name: codecov
-    image: robertstettner/drone-codecov
-    settings:
-      token: ${CODECOV_TOKEN}
-      files: /usr/local/phyre/web/clover.xml
+#  - name: codecov
+#    image: robertstettner/drone-codecov
+#    settings:
+#      token: ${CODECOV_TOKEN}
+#      files: /usr/local/phyre/web/clover.xml
 
 ---
 kind: pipeline
-name: Debian Bullseye
+name: Debian Latest
 steps:
   - name: run unit tests
-    image: debian:bullseye
+    image: debian:latest
     environment:
       DEBIAN_FRONTEND: noninteractive
+    commands:
+      - apt-get update
+
+---
+kind: pipeline
+name: CentOS Latest
+steps:
+  - name: run unit tests
+    image: centos:latest
     commands:
       - apt-get update
