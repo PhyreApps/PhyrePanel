@@ -87,7 +87,7 @@ class MicroweberHostingSubscriptionCreateTest extends ActionTestCase
 
 
         // Check domain is accessible
-        shell_exec('sudo echo "127.0.0.1 '.$hostingSubscriptionDomain.'" | sudo tee -a /etc/hosts');
+        shell_exec('sudo echo "0.0.0.0 '.$hostingSubscriptionDomain.'" | sudo tee -a /etc/hosts');
 
         $domainAccess = shell_exec('curl -s -o /dev/null -w "%{http_code}" http://'.$hostingSubscriptionDomain);
         $this->assertTrue($domainAccess == 200);
