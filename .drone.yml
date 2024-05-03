@@ -22,3 +22,8 @@ steps:
       - COMPOSER_ALLOW_SUPERUSER=1 phyre-php composer.phar install
       - /phyre-panel/install_web.sh
       - phyre-php artisan test
+  - name: codecov
+    image: robertstettner/drone-codecov
+    settings:
+      token: ${CODECOV_TOKEN}
+      files: /usr/local/phyre/web/clover.xml
