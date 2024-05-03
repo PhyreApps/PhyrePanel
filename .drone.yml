@@ -40,12 +40,3 @@ steps:
       DEBIAN_FRONTEND: noninteractive
     commands:
       - apt-get update
-
----
-kind: pipeline
-name: CentOS Latest
-steps:
-  - name: run unit tests
-    image: centos:latest
-    commands:
-      - yum install rpm-build
