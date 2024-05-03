@@ -1,7 +1,7 @@
 ---
 kind: pipeline
 steps:
-  - name: run unit tests
+  - name: ubuntu 22.04 - run unit tests
     image: ubuntu:22.04
     environment:
      DEBIAN_FRONTEND: noninteractive
@@ -32,7 +32,7 @@ steps:
 ---
 kind: pipeline
 steps:
-  - name: run unit tests
+  - name: debian bullseye - run unit tests
     image: debian:bullseye
     environment:
       DEBIAN_FRONTEND: noninteractive

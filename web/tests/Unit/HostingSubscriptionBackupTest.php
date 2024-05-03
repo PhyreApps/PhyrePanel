@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Tests\Feature\Api\ActionTestCase;
 
-class ZHostingSubscriptionBackupTest extends ActionTestCase
+class HostingSubscriptionBackupTest extends ActionTestCase
 {
     public function testFullBackup()
     {
