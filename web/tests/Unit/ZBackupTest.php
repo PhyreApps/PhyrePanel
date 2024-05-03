@@ -39,9 +39,17 @@ class ZBackupTest extends ActionTestCase
                 $backupFinished = true;
                 break;
             }
+            if ($findLastBackup->status == BackupStatus::Failed) {
+                $this->fail('Backup failed: '.$findLastBackup->backup_log);
+                break;
+            }
             sleep(1);
         }
 
+        if (!$backupFinished) {
+            $findLastBackup = Backup::where('id', $findLastBackup->id)->first();
+            $this->fail('Backup not completed: '.$findLastBackup->backup_log);
+        }
 
         $this->assertTrue($backupFinished);
         $this->assertSame($findLastBackup->status, BackupStatus::Completed);
