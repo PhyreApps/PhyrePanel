@@ -1,3 +1,4 @@
+---
 kind: pipeline
 steps:
   - name: run unit tests
@@ -27,3 +28,13 @@ steps:
     settings:
       token: ${CODECOV_TOKEN}
       files: /usr/local/phyre/web/clover.xml
+
+---
+kind: pipeline
+steps:
+  - name: run unit tests
+    image: debian:bullseye
+    environment:
+      DEBIAN_FRONTEND: noninteractive
+    commands:
+      - apt-get update
