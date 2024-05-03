@@ -1,7 +1,8 @@
 ---
 kind: pipeline
+name: Ubuntu 20.04
 steps:
-  - name: ubuntu 22.04 - run unit tests
+  - name: run unit tests
     image: ubuntu:22.04
     environment:
      DEBIAN_FRONTEND: noninteractive
@@ -31,8 +32,9 @@ steps:
 
 ---
 kind: pipeline
+name: Debian Bullseye
 steps:
-  - name: debian bullseye - run unit tests
+  - name: run unit tests
     image: debian:bullseye
     environment:
       DEBIAN_FRONTEND: noninteractive
