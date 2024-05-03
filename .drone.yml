@@ -32,10 +32,10 @@ steps:
 
 ---
 kind: pipeline
-name: Debian Latest
+name: Debian 12
 steps:
   - name: run unit tests
-    image: debian:latest
+    image: debian:12
     environment:
       DEBIAN_FRONTEND: noninteractive
     commands:
@@ -43,9 +43,9 @@ steps:
 
 ---
 kind: pipeline
-name: CentOS Latest
+name: CentOS Stream 9
 steps:
   - name: run unit tests
-    image: centos:latest
+    image: centos:stream-9
     commands:
-      - apt-get update
+      - yum install rpm-build
