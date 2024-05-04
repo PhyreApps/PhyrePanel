@@ -46,11 +46,11 @@ mv greeting.sh /etc/profile.d/phyre-greeting.sh
 
 # Install PHYRE NGINX
 wget https://github.com/PhyreApps/PhyrePanelNGINX/raw/main/compilators/centos/nginx/dist/phyre-nginx-1.25.5-1.el8.x86_64.rpm
-sudo dnf install phyre-nginx-1.25.5-1.el8.x86_64.rpm
+sudo dnf install phyre-nginx-1.25.5-1.el8.x86_64.rpm -y
 
 ## Install PHYRE PHP
 #wget https://github.com/PhyreApps/PhyrePanelNGINX/raw/main/compilators/centos/nginx/dist/phyre-nginx-1.25.5-1.el8.x86_64.rpm
-#rpm -i phyre-nginx-1.25.5-1.el8.x86_64.rpm
+#rpm -i phyre-nginx-1.25.5-1.el8.x86_64.rpm -y
 
 #
 #service phyre start
