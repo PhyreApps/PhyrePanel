@@ -5,6 +5,7 @@ steps:
   - name: run unit tests
     image: centos:latest
     commands:
+      - yum install -y wget sudo
       - mkdir /phyre-panel
       - cp installers/centos-stream-9/install-partial/install_base.sh /phyre-panel/install_base.sh
       - chmod +x /phyre-panel/install_base.sh
