@@ -1,5 +1,28 @@
 ---
 kind: pipeline
+name: CentOS
+steps:
+  - name: run unit tests
+    image: centos:latest
+    commands:
+      - mkdir /phyre-panel
+      - cp installers/centos-stream-9/install-partial/install_base.sh /phyre-panel/install_base.sh
+      - chmod +x /phyre-panel/install_base.sh
+      - /phyre-panel/install_base.sh
+
+---
+kind: pipeline
+name: Debian 12
+steps:
+  - name: run unit tests
+    image: debian:12
+    environment:
+      DEBIAN_FRONTEND: noninteractive
+    commands:
+      - apt-get update
+
+---
+kind: pipeline
 name: Ubuntu 22.04
 steps:
   - name: run unit tests
@@ -29,14 +52,3 @@ steps:
 #    settings:
 #      token: ${CODECOV_TOKEN}
 #      files: /usr/local/phyre/web/clover.xml
-
----
-kind: pipeline
-name: Debian 12
-steps:
-  - name: run unit tests
-    image: debian:12
-    environment:
-      DEBIAN_FRONTEND: noninteractive
-    commands:
-      - apt-get update
