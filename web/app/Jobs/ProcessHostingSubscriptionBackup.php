@@ -36,6 +36,10 @@ class ProcessHostingSubscriptionBackup implements ShouldQueue
         $findHostingSubscriptionBackup = HostingSubscriptionBackup::where('id', $this->id)->first();
         if ($findHostingSubscriptionBackup) {
 
+            if ($findHostingSubscriptionBackup->status == BackupStatus::Pending) {
+                $findHostingSubscriptionBackup->startBackup();
+            }
+
             for ($i = 0; $i < 200; $i++) {
                 echo "Check: ".$i." | Checking backup status...\n";
                 $findHostingSubscriptionBackup->checkBackup();
