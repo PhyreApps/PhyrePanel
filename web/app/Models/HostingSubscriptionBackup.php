@@ -60,9 +60,9 @@ class HostingSubscriptionBackup extends Model
         });
 
         static::deleting(function ($model) {
-//            if (is_file($model->filepath)) {
-//                shell_exec('rm -rf ' . $model->filepath);
-//            }
+            if (is_file($model->file_path)) {
+                shell_exec('rm -rf ' . $model->file_path);
+            }
         });
     }
 
