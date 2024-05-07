@@ -31,10 +31,8 @@ class RunRepair extends Command
     public function handle()
     {
 
-        // Check supervisor config file
-        if (!is_file('/etc/supervisor/conf.d/phyre.conf')) {
-            file_put_contents('/etc/supervisor/conf.d/phyre.conf', file_get_contents(base_path('app/Supervisor/configs/phyre-worker.conf')));
-        }
+        // Overwrite supervisor config file
+        file_put_contents('/etc/supervisor/conf.d/phyre.conf', file_get_contents(base_path('app/Supervisor/configs/phyre-worker.conf')));
 
         // Restart supervisor
         shell_exec('service supervisor restart');

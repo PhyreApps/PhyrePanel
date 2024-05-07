@@ -57,8 +57,11 @@ steps:
 
   - name: codecov
     image: robertstettner/drone-codecov
+    environment:
+      CODECOV_TOKEN:
+          from_secret: CODECOV_TOKEN
     settings:
-      token: ${CODECOV_TOKEN}
+      token: $CODECOV_TOKEN
       files: /usr/local/phyre/web/clover.xml
 ---
 kind: pipeline
