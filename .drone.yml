@@ -11,10 +11,24 @@ steps:
       - apt-get install -y libicu-dev sudo cron apt-utils -yqq daemonize dbus-user-session fontconfig rsync
       - daemonize /usr/bin/unshare --fork --pid --mount-proc /lib/systemd/systemd --system-unit=basic.target
 
+      - ls -la
       - mkdir /phyre-panel
-      - cp installers/ubuntu-22.04/install-partial/install_base.sh /phyre-panel/install_base.sh
+
+      - cp installers/${{ matrix.os }}/install-partial/install_base.sh /phyre-panel/install_base.sh
       - chmod +x /phyre-panel/install_base.sh
       - /phyre-panel/install_base.sh
+
+      - cp installers/${{ matrix.os }}/install-partial/install_web.sh /phyre-panel/install_web.sh
+      - chmod +x /phyre-panel/install_web.sh
+
+      - cp -r web /usr/local/phyre/web/
+      - cd /usr/local/phyre/web/
+      - ls -la
+
+      - wget https://getcomposer.org/download/latest-stable/composer.phar
+      - COMPOSER_ALLOW_SUPERUSER=1 phyre-php composer.phar install
+
+      - /phyre-panel/install_web.sh
 
       - apt-get install autoconf build-essential -y
       - mkdir -p /usr/local/phyre/php-xdebug
@@ -25,25 +39,19 @@ steps:
       - /usr/local/phyre/php/bin/phpize
       - ./configure --enable-xdebug --with-php-config=/usr/local/phyre/php/bin/php-config
       - make
+
       - mkdir -p /usr/local/phyre/php/zend-xdebug
       - cp modules/xdebug.so /usr/local/phyre/php/zend-xdebug/xdebug.so
+
       - chmod 777 /usr/local/phyre/php/zend-xdebug/xdebug.so
 
-      - cp -r web /usr/local/phyre/web/
-      
       - cp /usr/local/phyre/web/tests/xdebug-php-ini.txt /usr/local/phyre/php/bin/php.ini
+
       - chmod 777 /usr/local/phyre/php/bin/php.ini
       - phyre-php -v
-      -
+
       - cd /usr/local/phyre/web/
-      - sudo chmod -R 777 vendor
-      - wget https://getcomposer.org/download/latest-stable/composer.phar
-      - COMPOSER_ALLOW_SUPERUSER=1 phyre-php composer.phar install
-
-      - cp installers/ubuntu-22.04/install-partial/install_web.sh /phyre-panel/install_web.sh
-      - chmod +x /phyre-panel/install_web.sh
-      - /phyre-panel/install_web.sh
-
+      - chmod -R 777 vendor
       - apt install composer -y
       - composer test:coverage
 
