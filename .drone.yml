@@ -1,32 +1,56 @@
 ---
 kind: pipeline
-name: CentOS
+name: Ubuntu 22.04 - CODE COVERAGE
 steps:
   - name: run unit tests
-    image: centos:latest
-    commands:
-      - sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
-      - sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
-      - yum update -y
-      - dnf -y install sudo wget
-      - sudo wget -q -O - http://www.atomicorp.com/installers/atomic | sh
-
-      - mkdir /phyre-panel
-      - cp installers/centos-stream-9/install-partial/install_base.sh /phyre-panel/install_base.sh
-      - chmod +x /phyre-panel/install_base.sh
-      - /phyre-panel/install_base.sh
-
----
-kind: pipeline
-name: Debian 12
-steps:
-  - name: run unit tests
-    image: debian:12
+    image: ubuntu:22.04
     environment:
       DEBIAN_FRONTEND: noninteractive
     commands:
       - apt-get update
+      - apt-get install -y libicu-dev sudo cron apt-utils -yqq daemonize dbus-user-session fontconfig rsync
+      - daemonize /usr/bin/unshare --fork --pid --mount-proc /lib/systemd/systemd --system-unit=basic.target
 
+      - mkdir /phyre-panel
+      - cp installers/ubuntu-22.04/install-partial/install_base.sh /phyre-panel/install_base.sh
+      - chmod +x /phyre-panel/install_base.sh
+      - /phyre-panel/install_base.sh
+
+      - wget https://getcomposer.org/download/latest-stable/composer.phar
+      - COMPOSER_ALLOW_SUPERUSER=1 phyre-php composer.phar install
+
+
+      - cp installers/ubuntu-22.04/install-partial/install_web.sh /phyre-panel/install_web.sh
+      - chmod +x /phyre-panel/install_web.sh
+      - /phyre-panel/install_web.sh
+
+      - apt-get install autoconf build-essential -y
+      - mkdir -p /usr/local/phyre/php-xdebug
+      - /usr/local/phyre/php-xdebug
+      - wget http://xdebug.org/files/xdebug-3.3.2.tgz
+      - tar -xvzf xdebug-3.3.2.tgz
+      - cd xdebug-3.3.2
+      - /usr/local/phyre/php/bin/phpize
+      - ./configure --enable-xdebug --with-php-config=/usr/local/phyre/php/bin/php-config
+      - make
+      - mkdir -p /usr/local/phyre/php/zend-xdebug
+      - cp modules/xdebug.so /usr/local/phyre/php/zend-xdebug/xdebug.so
+      - chmod 777 /usr/local/phyre/php/zend-xdebug/xdebug.so
+      - cp /usr/local/phyre/web/tests/xdebug-php-ini.txt /usr/local/phyre/php/bin/php.ini
+      - chmod 777 /usr/local/phyre/php/bin/php.ini
+      - phyre-php -v
+
+      - cp -r web /usr/local/phyre/web/
+      - cd /usr/local/phyre/web/
+      - sudo chmod -R 777 vendor
+      - apt install composer -y
+      - composer test:coverage
+
+  - name: codecov
+    image: robertstettner/drone-codecov
+    settings:
+      token: ${CODECOV_TOKEN}
+      files: /usr/local/phyre/web/clover.xml
 ---
 kind: pipeline
 name: Ubuntu 22.04
@@ -34,7 +58,7 @@ steps:
   - name: run unit tests
     image: ubuntu:22.04
     environment:
-     DEBIAN_FRONTEND: noninteractive
+      DEBIAN_FRONTEND: noninteractive
     commands:
       - apt-get update
       - apt-get install -y libicu-dev sudo cron apt-utils -yqq daemonize dbus-user-session fontconfig rsync
@@ -53,8 +77,3 @@ steps:
       - COMPOSER_ALLOW_SUPERUSER=1 phyre-php composer.phar install
       - /phyre-panel/install_web.sh
       - phyre-php artisan test
-#  - name: codecov
-#    image: robertstettner/drone-codecov
-#    settings:
-#      token: ${CODECOV_TOKEN}
-#      files: /usr/local/phyre/web/clover.xml
