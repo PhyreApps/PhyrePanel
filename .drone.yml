@@ -16,14 +16,6 @@ steps:
       - chmod +x /phyre-panel/install_base.sh
       - /phyre-panel/install_base.sh
 
-      - wget https://getcomposer.org/download/latest-stable/composer.phar
-      - COMPOSER_ALLOW_SUPERUSER=1 phyre-php composer.phar install
-
-
-      - cp installers/ubuntu-22.04/install-partial/install_web.sh /phyre-panel/install_web.sh
-      - chmod +x /phyre-panel/install_web.sh
-      - /phyre-panel/install_web.sh
-
       - apt-get install autoconf build-essential -y
       - mkdir -p /usr/local/phyre/php-xdebug
       - /usr/local/phyre/php-xdebug
@@ -43,6 +35,13 @@ steps:
       - cp -r web /usr/local/phyre/web/
       - cd /usr/local/phyre/web/
       - sudo chmod -R 777 vendor
+      - wget https://getcomposer.org/download/latest-stable/composer.phar
+      - COMPOSER_ALLOW_SUPERUSER=1 phyre-php composer.phar install
+
+      - cp installers/ubuntu-22.04/install-partial/install_web.sh /phyre-panel/install_web.sh
+      - chmod +x /phyre-panel/install_web.sh
+      - /phyre-panel/install_web.sh
+        
       - apt install composer -y
       - composer test:coverage
 
