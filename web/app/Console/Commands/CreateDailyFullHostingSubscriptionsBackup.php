@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\CreateHostingSubscriptionBackup;
+use App\Jobs\ProcessHostingSubscriptionBackup;
 use App\Models\Backup;
 use App\Models\HostingSubscription;
 use App\Models\HostingSubscriptionBackup;
@@ -46,7 +46,7 @@ class CreateDailyFullHostingSubscriptionsBackup extends Command
                     ->where('created_at', '>=', Carbon::now()->subHours(24))
                     ->first();
                 if (! $findBackup) {
-                    CreateHostingSubscriptionBackup::dispatch($hostingSubscription->id);
+                    ProcessHostingSubscriptionBackup::dispatch($hostingSubscription->id);
                 } else {
                     $this->error('Backup already exists for ' . $hostingSubscription->domain);
                     $this->error('Created before: ' . $findBackup->created_at->diffForHumans());

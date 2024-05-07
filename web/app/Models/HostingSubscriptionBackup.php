@@ -5,6 +5,7 @@ namespace App\Models;
 use App\BackupStorage;
 use App\Filament\Enums\BackupStatus;
 use App\Helpers;
+use App\Jobs\ProcessHostingSubscriptionBackup;
 use App\ShellApi;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -55,7 +56,7 @@ class HostingSubscriptionBackup extends Model
         });
 
         static::created(function ($model) {
-            $model->startBackup();
+            ProcessHostingSubscriptionBackup::dispatch($model->id);
         });
 
         static::deleting(function ($model) {
@@ -67,17 +68,6 @@ class HostingSubscriptionBackup extends Model
 
     public function checkCronJob()
     {
-        $cronJobCommand = 'phyre-php /usr/local/phyre/web/artisan phyre:run-hosting-subscriptions-backup-checks';
-        $findCronJob = CronJob::where('command', $cronJobCommand)->first();
-
-        if (! $findCronJob) {
-            $cronJob = new CronJob();
-            $cronJob->schedule = '*/5 * * * *';
-            $cronJob->command = $cronJobCommand;
-            $cronJob->user = 'root';
-            $cronJob->save();
-        }
-
         $cronJobCommand = 'phyre-php /usr/local/phyre/web/artisan phyre:create-daily-full-hosting-subscriptions-backup';
         $findCronJob = CronJob::where('command', $cronJobCommand)->first();
         if (! $findCronJob) {

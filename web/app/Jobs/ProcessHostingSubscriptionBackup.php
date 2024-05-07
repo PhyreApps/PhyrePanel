@@ -11,18 +11,18 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class CreateHostingSubscriptionBackup implements ShouldQueue
+class ProcessHostingSubscriptionBackup implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $hostingSubscriptionId;
+    protected $id;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($hostingSubscriptionId)
+    public function __construct($id)
     {
-        $this->hostingSubscriptionId = $hostingSubscriptionId;
+        $this->id = $id;
     }
 
     /**
@@ -30,15 +30,10 @@ class CreateHostingSubscriptionBackup implements ShouldQueue
      */
     public function handle(): void
     {
-        echo "Backup hosting subscription with ID: {$this->hostingSubscriptionId}\n";
-
-        $backup = new HostingSubscriptionBackup();
-        $backup->hosting_subscription_id = $this->hostingSubscriptionId;
-        $backup->backup_type = 'full';
-        $backup->save();
+        echo "Backup hosting subscription backup with ID: {$this->id}\n";
 
         $backupDone = false;
-        $findHostingSubscriptionBackup = HostingSubscriptionBackup::where('id', $backup->id)->first();
+        $findHostingSubscriptionBackup = HostingSubscriptionBackup::where('id', $this->id)->first();
         if ($findHostingSubscriptionBackup) {
 
             for ($i = 0; $i < 200; $i++) {
