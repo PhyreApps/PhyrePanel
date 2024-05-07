@@ -31,6 +31,24 @@ class RunRepair extends Command
     public function handle()
     {
 
+        // Check supervisor config file
+        if (!is_file('/etc/supervisor/conf.d/phyre.conf')) {
+            file_put_contents('/etc/supervisor/conf.d/phyre.conf', file_get_contents(base_path('app/Supervisor/configs/phyre-worker.conf')));
+        }
+
+        // Restart supervisor
+        shell_exec('service supervisor restart');
+
+        // Check supervisor config file
+        $checkSupervisorStatus = shell_exec('service supervisor status');
+        if (strpos($checkSupervisorStatus, 'active (running)') !== false) {
+           $this->info('Supervisor is running');
+        } else {
+            $this->info('Supervisor is not running');
+            $this->info('Restarting supervisor');
+            shell_exec('service supervisor restart');
+        }
+
         $checkApacheStatus = shell_exec('service apache2 status');
     }
 }
