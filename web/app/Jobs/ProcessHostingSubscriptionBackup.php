@@ -48,6 +48,10 @@ class ProcessHostingSubscriptionBackup implements ShouldQueue
                     $backupDone = true;
                     break;
                 }
+                if ($findHostingSubscriptionBackup->status == BackupStatus::Failed) {
+                    echo "Backup failed\n";
+                    break;
+                }
 
                 sleep(4);
             }
