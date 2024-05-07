@@ -10,6 +10,8 @@ use Dotenv\Dotenv;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Jackiedo\DotenvEditor\Facades\DotenvEditor;
@@ -220,9 +222,23 @@ class Backup extends Model
 
             $shellFileContent .= 'mysqldump --defaults-extra-file='.$mysqlAuthConf.' "'.env('DB_DATABASE').'" > '.$databaseBackupPath . PHP_EOL;
 
+            // Export Phyre Panel Database
+            $database = [];
+            $tables = Schema::getTables();
+            if (count($tables) > 0) {
+                foreach ($tables as $table) {
+                    $tableData = [];
+                    $tableData['table'] = $table;
+                    $tableData['columns'] = Schema::getColumnListing($table['name']);
+                    $tableData['data'] = DB::table($table['name'])->get()->toArray();
+                    $database[$table['name']] = $tableData;
+                }
+            }
+
             // Export Phyre Panel ENV
             $getEnv = Dotenv::createArrayBacked(base_path())->load();
             $backupStructure = [
+                'database'=>$database,
                 'env'=>$getEnv,
             ];
             file_put_contents($backupTempPath.'/backup.json', json_encode($backupStructure, JSON_PRETTY_PRINT));
