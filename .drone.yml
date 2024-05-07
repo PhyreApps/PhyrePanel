@@ -28,11 +28,13 @@ steps:
       - mkdir -p /usr/local/phyre/php/zend-xdebug
       - cp modules/xdebug.so /usr/local/phyre/php/zend-xdebug/xdebug.so
       - chmod 777 /usr/local/phyre/php/zend-xdebug/xdebug.so
+
+      - cp -r web /usr/local/phyre/web/
+      
       - cp /usr/local/phyre/web/tests/xdebug-php-ini.txt /usr/local/phyre/php/bin/php.ini
       - chmod 777 /usr/local/phyre/php/bin/php.ini
       - phyre-php -v
-
-      - cp -r web /usr/local/phyre/web/
+      -
       - cd /usr/local/phyre/web/
       - sudo chmod -R 777 vendor
       - wget https://getcomposer.org/download/latest-stable/composer.phar
