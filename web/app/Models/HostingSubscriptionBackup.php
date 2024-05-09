@@ -126,6 +126,7 @@ class HostingSubscriptionBackup extends Model
             if (Str::contains($checkProcess, $this->process_id)) {
 
                 $this->size = 0;
+                $this->backup_log = "Backup is started with process id: $this->process_id";
                 $this->save();
 
                 return [
@@ -134,6 +135,7 @@ class HostingSubscriptionBackup extends Model
                 ];
             } else {
                 $this->status = 'failed';
+                $this->backup_log = "Backup failed. Process not found";
                 $this->save();
                 return [
                     'status' => 'failed',
@@ -155,12 +157,13 @@ class HostingSubscriptionBackup extends Model
             ];
         }
 
-        if ($this->status == BackupStatus::Processing) {
+        if ($this->status !== BackupStatus::Pending) {
             return [
-                'status' => 'processing',
-                'message' => 'Backup is already processing'
+                'status' => 'failed',
+                'message' => 'Backup already started'
             ];
         }
+
         $findMainDomain = Domain::where('hosting_subscription_id', $findHostingSubscription->id)
             ->where('is_main', 1)
             ->first();

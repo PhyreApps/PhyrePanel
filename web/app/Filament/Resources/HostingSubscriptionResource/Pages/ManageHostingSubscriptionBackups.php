@@ -91,16 +91,6 @@ class ManageHostingSubscriptionBackups extends ManageRelatedRecords
 
     public function table(Table $table): Table
     {
-
-        $findHostingSubscription = HostingSubscriptionBackup::where('hosting_subscription_id', $this->record->id)
-                            ->where('status', 'processing')
-                            ->get();
-        if ($findHostingSubscription->count() > 0) {
-            foreach ($findHostingSubscription as $backup) {
-                $backup->checkBackup();
-            }
-        }
-
         return $table
             ->recordTitleAttribute('file_name')
             ->columns([
@@ -145,13 +135,14 @@ class ManageHostingSubscriptionBackups extends ManageRelatedRecords
                         return redirect($tempUrl);
                     }),
 
+
                 Tables\Actions\Action::make('viewLog')
                     ->label('View Log')
                     ->icon('heroicon-o-document')
                     ->hidden(function (HostingSubscriptionBackup $backup) {
-                        $hide = false;
-                        if ($backup->status === BackupStatus::Completed) {
-                            $hide = true;
+                        $hide = true;
+                        if ($backup->status === BackupStatus::Processing || $backup->status === BackupStatus::Failed) {
+                            $hide = false;
                         }
                         return $hide;
                     })

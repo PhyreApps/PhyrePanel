@@ -118,9 +118,9 @@ class BackupResource extends Resource
                     ->label('View Log')
                     ->icon('heroicon-o-document')
                     ->hidden(function (Backup $backup) {
-                        $hide = false;
-                        if ($backup->status === BackupStatus::Completed) {
-                            $hide = true;
+                        $hide = true;
+                        if ($backup->status === BackupStatus::Processing || $backup->status === BackupStatus::Failed) {
+                            $hide = false;
                         }
                         return $hide;
                     })
