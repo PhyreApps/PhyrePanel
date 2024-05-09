@@ -2,15 +2,18 @@
 
 namespace App\Filament\Pages\Settings;
 
+use App\Helpers;
 use App\MasterDomain;
 use Closure;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
 use Illuminate\Support\Facades\Storage;
+use Monarobase\CountryList\CountryList;
 use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
 use Symfony\Component\Console\Input\Input;
 
@@ -41,16 +44,15 @@ class Settings extends BaseSettings
                             TextInput::make('general.brand_logo_url'),
                             ColorPicker::make('general.brand_primary_color'),
 
-
                             TextInput::make('general.master_domain')->live(),
-//                            Checkbox::make('general.master_domain_wildcard_enabled')
-//                                ->label('Wildcard on Master Domain')
-//                                ->helperText(function (Get $get) {
-//                                    return 'Enable wildcard for master domain. Eg: *.'.$get('general.master_domain');
-//                                }),
 
                             TextInput::make('general.master_email'),
-                            TextInput::make('general.master_country'),
+                            Select::make('general.master_country')
+                                ->searchable()
+                                ->options(function () {
+                                    $countryList = new CountryList();
+                                    return $countryList->getList();
+                                }),
                             TextInput::make('general.master_locality'),
                             TextInput::make('general.organization_name'),
                         ]),
