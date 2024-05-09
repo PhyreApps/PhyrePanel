@@ -12,6 +12,7 @@ use App\Models\DatabaseUser;
 use App\Models\HostingSubscriptionBackup;
 use App\Models\RemoteDatabaseServer;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
@@ -141,6 +142,19 @@ class ManageHostingSubscriptionBackups extends ManageRelatedRecords
 
                         return redirect($tempUrl);
                     }),
+
+                Tables\Actions\Action::make('viewLog')
+                    ->label('View Log')
+                    ->icon('heroicon-o-document')
+                    ->modalContent(function (HostingSubscriptionBackup $backup) {
+                        return view('filament.modals.view-livewire-component', [
+                            'component' => 'hosting-subscription-backup-log',
+                            'componentProps' => [
+                                'hostingSubscriptionBackupId' => $backup->id,
+                            ],
+                        ]);
+                    }),
+
                 Tables\Actions\ViewAction::make(),
              //   Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
