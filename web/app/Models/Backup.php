@@ -161,10 +161,12 @@ class Backup extends Model
             $checkProcess = shell_exec('ps -p ' . $this->process_id . ' | grep ' . $this->process_id);
             if (Str::contains($checkProcess, $this->process_id)) {
 
+//                $backupLog = file_get_contents($this->path.'/backup.log');
+//                $backupLog = substr($backupLog, -3000, 3000);
 
-                $this->size = 0;
-                $this->backup_log = file_get_contents($this->path.'/backup.log');
-                $this->save();
+//                $this->size = 0;
+                //$this->backup_log = $backupLog;
+//                $this->save();
 
                 return [
                     'status' => 'processing',
