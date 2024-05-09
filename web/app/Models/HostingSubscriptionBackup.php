@@ -122,6 +122,7 @@ class HostingSubscriptionBackup extends Model
             }
 
             $checkProcess = shell_exec('ps -p ' . $this->process_id . ' | grep ' . $this->process_id);
+
             if (Str::contains($checkProcess, $this->process_id)) {
 
                 $this->size = 0;
@@ -136,7 +137,7 @@ class HostingSubscriptionBackup extends Model
                 $this->save();
                 return [
                     'status' => 'failed',
-                    'message' => 'Backup failed'
+                    'message' => 'Backup failed. Process not found'
                 ];
             }
         }
