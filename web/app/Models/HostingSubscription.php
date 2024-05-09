@@ -64,7 +64,7 @@ class HostingSubscription extends Model
             if (empty($model->system_username)) {
                 throw new \Exception('System username is empty');
             }
-            
+
             $getLinuxUser = new GetLinuxUser();
             $getLinuxUser->setUsername($model->system_username);
             $getLinuxUserStatus = $getLinuxUser->handle();
@@ -107,6 +107,11 @@ class HostingSubscription extends Model
     public function domain()
     {
         return $this->hasMany(Domain::class);
+    }
+
+    public function ftpAccounts()
+    {
+        return $this->hasMany(HostingSubscriptionFtpAccount::class);
     }
 
     private function _createLinuxWebUser($model): array

@@ -41,7 +41,7 @@ class ManageHostingSubscriptionDatabases extends ManageRelatedRecords
 
     public static function getNavigationLabel(): string
     {
-        return 'Manage Databases';
+        return 'Databases';
     }
 
     public function form(Form $form): Form

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\HostingSubscriptionResource\Pages;
+use app\Filament\Resources\HostingSubscriptionResource\Pages\ManageHostingSubscriptionFtpAccounts;
 use App\Models\Customer;
 use App\Models\Domain;
 use App\Models\HostingSubscription;
@@ -188,6 +189,7 @@ class HostingSubscriptionResource extends Resource
             Pages\EditHostingSubscription::class,
             Pages\ManageHostingSubscriptionDatabases::class,
             Pages\ManageHostingSubscriptionBackups::class,
+            ManageHostingSubscriptionFtpAccounts::class
         ]);
     }
 
@@ -207,6 +209,7 @@ class HostingSubscriptionResource extends Resource
             'edit' => Pages\EditHostingSubscription::route('/{record}/edit'),
             'databases' => Pages\ManageHostingSubscriptionDatabases::route('/{record}/databases'),
             'backups' => Pages\ManageHostingSubscriptionBackups::route('/{record}/backups'),
+            'ftp-accounts' => Pages\ManageHostingSubscriptionFtpAccounts::route('/{record}/ftp-accounts'),
         ];
     }
 

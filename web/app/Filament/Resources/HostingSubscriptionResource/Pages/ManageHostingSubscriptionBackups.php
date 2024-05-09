@@ -47,7 +47,7 @@ class ManageHostingSubscriptionBackups extends ManageRelatedRecords
 
     public static function getNavigationLabel(): string
     {
-        return 'Manage Backups';
+        return 'Backups';
     }
 
     public function form(Form $form): Form
@@ -99,7 +99,7 @@ class ManageHostingSubscriptionBackups extends ManageRelatedRecords
         }
 
         return $table
-            ->recordTitleAttribute('id')
+            ->recordTitleAttribute('file_name')
             ->columns([
 
                 Tables\Columns\TextColumn::make('backup_type')
