@@ -16,7 +16,7 @@ The admin panel can be opened on port: yourserver.com:8443
 ## Build Status
 
 ### Master branch
-[![Build Status](http://95.217.182.28/api/badges/PhyreApps/PhyrePanel/status.svg)](http://95.217.182.28/PhyreApps/PhyrePanel)
+[![Build Status](https://drone.phyrecloud.com/api/badges/PhyreApps/PhyrePanel/status.svg)](https://drone.phyrecloud.com/PhyreApps/PhyrePanel)
 [![codecov](https://codecov.io/gh/PhyreApps/PhyrePanel/graph/badge.svg?token=BO0RTPLS4W)](https://codecov.io/gh/PhyreApps/PhyrePanel)
 
 All development is done on the `dev` branch. The `master` branch is used for stable releases.
