@@ -152,7 +152,7 @@ class BackupResource extends Resource
     public static function getWidgets(): array
     {
         return [
-            // BackupStats::class,
+            BackupStats::class,
         ];
     }
 
