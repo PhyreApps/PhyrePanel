@@ -11,6 +11,7 @@ use App\Listeners\ModelDomainCreatedListener;
 use App\Listeners\ModelDomainDeletingListener;
 use App\Listeners\ModelHostingSubscriptionCreatingListener;
 use App\Listeners\ModelHostingSubscriptionDeletingListener;
+use App\Livewire\BackupLog;
 use App\Livewire\Components\QuickServiceRestartMenu;
 use App\Livewire\HostingSubscriptionBackupLog;
 use App\Models\Domain;
@@ -65,6 +66,7 @@ class AppServiceProvider extends ServiceProvider
 
         Livewire::component('quick-service-restart-menu', QuickServiceRestartMenu::class);
         Livewire::component('hosting-subscription-backup-log', HostingSubscriptionBackupLog::class);
+        Livewire::component('backup-log', BackupLog::class);
 
         Gate::define('delete-customer', [CustomerPolicy::class, 'delete']);
 

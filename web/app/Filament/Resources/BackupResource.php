@@ -113,6 +113,26 @@ class BackupResource extends Resource
 
                         return redirect($tempUrl);
                     }),
+
+                Tables\Actions\Action::make('viewLog')
+                    ->label('View Log')
+                    ->icon('heroicon-o-document')
+                    ->hidden(function (Backup $backup) {
+                        $hide = false;
+                        if ($backup->status === BackupStatus::Completed) {
+                            $hide = true;
+                        }
+                        return $hide;
+                    })
+                    ->modalContent(function (Backup $backup) {
+                        return view('filament.modals.view-livewire-component', [
+                            'component' => 'backup-log',
+                            'componentProps' => [
+                                'backupId' => $backup->id,
+                            ],
+                        ]);
+                    }),
+
                 Tables\Actions\ViewAction::make(),
             ])
             ->defaultSort('id', 'desc')
@@ -132,7 +152,7 @@ class BackupResource extends Resource
     public static function getWidgets(): array
     {
         return [
-            BackupStats::class,
+            // BackupStats::class,
         ];
     }
 

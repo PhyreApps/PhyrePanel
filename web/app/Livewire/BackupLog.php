@@ -4,17 +4,17 @@ namespace App\Livewire;
 
 use Livewire\Component;
 
-class HostingSubscriptionBackupLog extends Component
+class BackupLog extends Component
 {
-    public $hostingSubscriptionBackupId;
+    public $backupId;
 
     public $backupLog;
 
     public function pullBackupLog()
     {
-        $findHsb = \App\Models\HostingSubscriptionBackup::where('id', $this->hostingSubscriptionBackupId)->first();
-        if ($findHsb) {
-            $backupLog = $findHsb->path . '/backup.log';
+        $findBackup = \App\Models\Backup::where('id', $this->backupId)->first();
+        if ($findBackup) {
+            $backupLog = $findBackup->path . '/backup.log';
             if (file_exists($backupLog)) {
                 $backupLogContent = file_get_contents($backupLog);
                 // Get last 1000 lines of the log
@@ -25,9 +25,9 @@ class HostingSubscriptionBackupLog extends Component
             }
         }
     }
-    public function mount($hostingSubscriptionBackupId)
+    public function mount($backupId)
     {
-        $this->hostingSubscriptionBackupId = $hostingSubscriptionBackupId;
+        $this->backupId = $backupId;
     }
 
     public function render()

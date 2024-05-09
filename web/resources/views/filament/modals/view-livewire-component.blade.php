@@ -1,3 +1,5 @@
 <div>
-    @livewire($component, $componentProps, key($component))
+
+    @livewire($component, $componentProps)
+
 </div>
