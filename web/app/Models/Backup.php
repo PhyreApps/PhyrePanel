@@ -56,9 +56,9 @@ class Backup extends Model
 //           ShellApi::safeDelete($model->path, [
 //              Storage::path('backups')
 //           ]);
-                if (Storage::disk('backups')->exists($model->filepath)) {
-                    Storage::disk('backups')->delete($model->filepath);
-                }
+//                if (Storage::disk('backups')->exists($model->filepath)) {
+//                    Storage::disk('backups')->delete($model->filepath);
+//                }
             }
         });
     }
@@ -162,7 +162,7 @@ class Backup extends Model
             if (Str::contains($checkProcess, $this->process_id)) {
 
 
-                $this->size = Helpers::checkPathSize($this->path);
+                $this->size = 0;
                 $this->backup_log = file_get_contents($this->path.'/backup.log');
                 $this->save();
 
