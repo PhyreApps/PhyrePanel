@@ -4,6 +4,7 @@ namespace tests\Unit;
 
 use App\Filament\Enums\BackupStatus;
 use App\Helpers;
+use App\Jobs\ProcessHostingSubscriptionBackup;
 use App\Models\Backup;
 use App\Models\Customer;
 use App\Models\Database;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Tests\Feature\Api\ActionTestCase;
+use Illuminate\Support\Facades\Queue;
 
 class HostingSubscriptionBackupTest extends ActionTestCase
 {
@@ -26,9 +28,17 @@ class HostingSubscriptionBackupTest extends ActionTestCase
         ini_set('memory_limit', '-1');
         ini_set('max_execution_time', 0);
 
+        Queue::fake();
+
         $chs = $this->_createHostingSubscription();
 
-        Artisan::call('phyre:create-daily-full-hosting-subscriptions-backup');
+        $newBackup = new HostingSubscriptionBackup();
+        $newBackup->backup_type = 'full';
+        $newBackup->hosting_subscription_id = $chs['hostingSubscriptionId'];
+        $newBackup->save();
+
+        $phsb = new ProcessHostingSubscriptionBackup($newBackup->id);
+        $phsb->handle();
 
         $findLastBackup = HostingSubscriptionBackup::where('hosting_subscription_id', $chs['hostingSubscriptionId'])
             ->first();
@@ -40,8 +50,6 @@ class HostingSubscriptionBackupTest extends ActionTestCase
 
         $backupFinished = false;
         for ($i = 0; $i < 100; $i++) {
-
-            Artisan::call('phyre:run-hosting-subscriptions-backup-checks');
 
             $findLastBackup = HostingSubscriptionBackup::where('id', $findLastBackup->id)->first();
             if ($findLastBackup->status == BackupStatus::Completed) {
@@ -68,13 +76,14 @@ class HostingSubscriptionBackupTest extends ActionTestCase
         $backup->hosting_subscription_id = $chs['hostingSubscriptionId'];
         $backup->save();
 
+        $phsb = new ProcessHostingSubscriptionBackup($backup->id);
+        $phsb->handle();
+
         $backupId = $backup->id;
 
         $findBackup = false;
         $backupCompleted = false;
         for ($i = 0; $i < 100; $i++) {
-
-            Artisan::call('phyre:run-hosting-subscriptions-backup-checks');
 
             $findBackup = HostingSubscriptionBackup::where('id', $backupId)->first();
             if ($findBackup) {
