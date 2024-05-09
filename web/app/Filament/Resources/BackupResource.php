@@ -7,6 +7,7 @@ use App\Filament\Enums\BackupStatus;
 use App\Filament\Enums\BackupType;
 use App\Filament\Resources\BackupResource\Pages;
 use app\Filament\Resources\BackupResource\Widgets\BackupStats;
+use App\Helpers;
 use App\Models\Backup;
 use App\Models\HostingSubscription;
 use Filament\Forms\Components\Select;
@@ -83,17 +84,17 @@ class BackupResource extends Resource
                         return $backup->created_at ? $backup->created_at : 'N/A';
                     }),
 
-                Tables\Columns\TextColumn::make('completed_at')
-                    ->label('Completed time')
-                    ->state(function (Backup $backup) {
-                        $diff = \Carbon\Carbon::parse($backup->completed_at)
-                            ->diffForHumans($backup->created_at);
-                        return $backup->completed_at ? $diff : 'N/A';
-                    }),
+//                Tables\Columns\TextColumn::make('completed_at')
+//                    ->label('Completed time')
+//                    ->state(function (Backup $backup) {
+//                        $diff = \Carbon\Carbon::parse($backup->completed_at)
+//                            ->diffForHumans($backup->created_at);
+//                        return $backup->completed_at ? $diff : 'N/A';
+//                    }),
 
                 Tables\Columns\TextColumn::make('size')
                     ->state(function (Backup $backup) {
-                        return $backup->size ? $backup->size : 'N/A';
+                        return ($backup->size > 0) ? Helpers::getHumanReadableSize($backup->size) : 'N/A';
                     }),
             ])
             ->filters([
