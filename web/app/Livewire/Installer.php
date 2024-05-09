@@ -300,19 +300,15 @@ class Installer extends Page
             $this->install_log = nl2br($this->install_log);
 
             if (strpos($this->install_log, 'DONE!') !== false) {
+
+                file_put_contents(storage_path('installed'), 'installed-'.date('Y-m-d H:i:s'));
+
                 return redirect('/admin/login');
             }
 
         } else {
             $this->install_log = 'Waiting for installation log...';
         }
-    }
-
-    public function install()
-    {
-        file_put_contents(storage_path('installed'), 'installed-'.date('Y-m-d H:i:s'));
-
-        return redirect('/admin/login');
     }
 
 }
