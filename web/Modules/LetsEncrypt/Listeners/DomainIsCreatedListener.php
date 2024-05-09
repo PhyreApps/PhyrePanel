@@ -43,7 +43,6 @@ class DomainIsCreatedListener
         if (! in_array('letsencrypt', $findHostingPlan->additional_services)) {
             return;
         }
-        return;
 
         $generalSettings = Settings::general();
 
