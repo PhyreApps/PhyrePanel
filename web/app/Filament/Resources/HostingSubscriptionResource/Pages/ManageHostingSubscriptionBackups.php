@@ -155,11 +155,6 @@ class ManageHostingSubscriptionBackups extends ManageRelatedRecords
                         }
                         return $hide;
                     })
-                    ->modalFooterActions([
-                        Tables\Actions\Action::make('Close')
-                            ->color('secondary')
-                            ->action(fn () => $this->closeTableActionModal()),
-                    ])
                     ->modalContent(function (HostingSubscriptionBackup $backup) {
                         return view('filament.modals.view-livewire-component', [
                             'component' => 'hosting-subscription-backup-log',

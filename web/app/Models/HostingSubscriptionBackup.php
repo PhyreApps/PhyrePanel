@@ -124,7 +124,7 @@ class HostingSubscriptionBackup extends Model
             $checkProcess = shell_exec('ps -p ' . $this->process_id . ' | grep ' . $this->process_id);
             if (Str::contains($checkProcess, $this->process_id)) {
 
-                $this->size = Helpers::checkPathSize($this->temp_path);
+                $this->size = 0;
                 $this->save();
 
                 return [
