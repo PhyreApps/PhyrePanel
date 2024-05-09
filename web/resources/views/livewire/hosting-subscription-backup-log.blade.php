@@ -1,7 +1,13 @@
 <div>
     <div id="js-backup-log" wire:poll="pullBackupLog" class="text-left text-sm font-medium text-gray-950 dark:text-yellow-500 h-[20rem] overflow-y-scroll">
 
-        {!! $this->backupLog !!}
+        @if($this->backupLog == '')
+            <div class="text-center text-gray-500 dark:text-gray-400">
+                {{ __('No backup log available.') }}
+            </div>
+        @else
+            {!! $this->backupLog !!}
+        @endif
 
     </div>
 

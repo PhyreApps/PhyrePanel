@@ -7,6 +7,7 @@ use App\Filament\Enums\BackupStatus;
 use App\Filament\Enums\HostingSubscriptionBackupType;
 use App\Filament\Resources\Blog\PostResource;
 use App\Filament\Resources\HostingSubscriptionResource;
+use App\Helpers;
 use App\Models\Backup;
 use App\Models\DatabaseUser;
 use App\Models\HostingSubscriptionBackup;
@@ -22,6 +23,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\File;
 use JaOcero\RadioDeck\Forms\Components\RadioDeck;
 
 class ManageHostingSubscriptionBackups extends ManageRelatedRecords
@@ -118,7 +120,7 @@ class ManageHostingSubscriptionBackups extends ManageRelatedRecords
 
                 Tables\Columns\TextColumn::make('size')
                     ->state(function (HostingSubscriptionBackup $backup) {
-                        return $backup->size ? $backup->size : 'N/A';
+                        return ($backup->size > 0) ? Helpers::getHumanReadableSize($backup->size) : 'N/A';
                     }),
 
             ])
@@ -146,6 +148,18 @@ class ManageHostingSubscriptionBackups extends ManageRelatedRecords
                 Tables\Actions\Action::make('viewLog')
                     ->label('View Log')
                     ->icon('heroicon-o-document')
+                    ->hidden(function (HostingSubscriptionBackup $backup) {
+                        $hide = false;
+                        if ($backup->status === BackupStatus::Completed) {
+                            $hide = true;
+                        }
+                        return $hide;
+                    })
+                    ->modalFooterActions([
+                        Tables\Actions\Action::make('Close')
+                            ->color('secondary')
+                            ->action(fn () => $this->closeTableActionModal()),
+                    ])
                     ->modalContent(function (HostingSubscriptionBackup $backup) {
                         return view('filament.modals.view-livewire-component', [
                             'component' => 'hosting-subscription-backup-log',
