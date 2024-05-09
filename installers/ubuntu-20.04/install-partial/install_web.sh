@@ -9,6 +9,9 @@ fi
 # Go to web directory
 cd /usr/local/phyre/web
 
+# Add supervisor conf
+cp /usr/local/phyre/web/app/Supervisor/configs/phyre-worker.conf /etc/supervisor/conf.d/phyre.conf
+
 # Create MySQL user
 MYSQL_PHYRE_ROOT_USERNAME="phyre"
 MYSQL_PHYRE_ROOT_PASSWORD="$(tr -dc a-za-z0-9 </dev/urandom | head -c 32; echo)"
