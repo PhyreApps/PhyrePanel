@@ -73,9 +73,6 @@ class DockerContainerResource extends Resource
                 $defaultPort = $port;
             }
         }
-        if ($defaultPort == 80) {
-            $defaultPort = 83;
-        }
 
         $dockerTemplateContent = '';
         $dockerTemplateId = request()->get('docker_template_id', null);
