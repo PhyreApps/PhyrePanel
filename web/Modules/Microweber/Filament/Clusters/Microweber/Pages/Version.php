@@ -4,6 +4,7 @@ namespace Modules\Microweber\Filament\Clusters\Microweber\Pages;
 
 use App\ShellApi;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\DB;
 use MicroweberPackages\ComposerClient\Client;
 use MicroweberPackages\SharedServerScripts\MicroweberAppPathHelper;
 use MicroweberPackages\SharedServerScripts\MicroweberDownloader;
@@ -35,6 +36,8 @@ class Version extends Page
 
     public $supportedLanguages = [];
 
+    public $downloadingNow = false;
+
     protected function getViewData(): array
     {
         $mwComposerClientHelper = new MicroweberComposerClientHelper();
@@ -47,6 +50,11 @@ class Version extends Page
         $this->latestVersionOfApp = $mwComposerClientHelper->getMicroweberDownloaderInstance()->getVersion();
         $this->currentVersionOfApp = $sharedPath->getCurrentVersion();
         $this->latestDownloadDateOfApp = $sharedPath->getCreatedAt();
+
+        $findJob = DB::table('jobs')->where('payload', 'like', '%DownloadMicroweber%')->get();
+        if ($findJob->count() > 0) {
+            $this->downloadingNow = true;
+        }
 
         return [
             'appVersion' => $this->currentVersionOfApp,
