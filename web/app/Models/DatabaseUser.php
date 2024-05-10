@@ -57,8 +57,8 @@ class DatabaseUser extends Model
                 }
             } else {
                 $universalDatabaseExecutor = new UniversalDatabaseExecutor(
-                    PhyreConfig::get('MYSQL_HOST'),
-                    PhyreConfig::get('MYSQL_PORT'),
+                    PhyreConfig::get('MYSQL_HOST', '127.0.0.1'),
+                    PhyreConfig::get('MYSQL_PORT', 3306),
                     PhyreConfig::get('MYSQL_ROOT_USERNAME'),
                     PhyreConfig::get('MYSQL_ROOT_PASSWORD'),
                     $findDatabase->database_name_prefix . $findDatabase->database_name
