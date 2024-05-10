@@ -7,7 +7,6 @@ use MicroweberPackages\SharedServerScripts\MicroweberDownloader;
 
 class MicroweberComposerClientHelper
 {
-
     public function getComposerClientInstance()
     {
         // The module connector must have own instance of composer client
@@ -33,11 +32,10 @@ class MicroweberComposerClientHelper
     {
         $coreDownloader = new MicroweberDownloader();
 
-        $updateAppChannel = 'stable';
-        if ($updateAppChannel == 'stable') {
-            $coreDownloader->setReleaseSource(MicroweberDownloader::STABLE_RELEASE);
-        } else {
+        if (setting('microweber.update_app_channel') == 'development') {
             $coreDownloader->setReleaseSource(MicroweberDownloader::DEV_RELEASE);
+        } else {
+            $coreDownloader->setReleaseSource(MicroweberDownloader::STABLE_RELEASE);
         }
 
         $coreDownloader->setComposerClient($this->getComposerClientInstance());
