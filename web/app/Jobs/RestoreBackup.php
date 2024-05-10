@@ -15,6 +15,9 @@ class RestoreBackup implements ShouldQueue
 
     public $backupFile = null;
 
+    public static $displayName = 'Restore Backup';
+    public static $displayDescription = 'Restore backup file...';
+
     /**
      * Create a new job instance.
      */

@@ -17,6 +17,9 @@ class ProcessHostingSubscriptionBackup implements ShouldQueue
 
     protected $id;
 
+    public static $displayName = 'Hosting Subscription Backup';
+    public static $displayDescription = 'Backup hosting subscription files and database...';
+
     /**
      * Create a new job instance.
      */
