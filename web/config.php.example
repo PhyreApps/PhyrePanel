@@ -64,5 +64,3 @@ return [
     'PUSHER_APP_CLUSTER' => 'mt1',
 
 ];
-
-?>
