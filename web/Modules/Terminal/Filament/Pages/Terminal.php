@@ -59,22 +59,15 @@ class Terminal extends Page
             ], JSON_PRETTY_PRINT));
         }
 
-        $runNewTerminal = true;
-        $checkPort = shell_exec('netstat -tuln | grep 8449');
-        if (!empty($checkPort)) {
-            if (Str::contains($checkPort, 'LISTEN')) {
-                $runNewTerminal = false;
-            }
+        shell_exec('kill -9 $(lsof -t -i:8449)');
+
+        if (!is_dir('/usr/local/phyre/web/Modules/Terminal/nodejs/terminal/node_modules')) {
+            $exec = shell_exec('cd /usr/local/phyre/web/Modules/Terminal/nodejs/terminal && npm install');
         }
-        if ($runNewTerminal) {
-            if (!is_dir('/usr/local/phyre/web/Modules/Terminal/nodejs/terminal/node_modules')) {
-                $exec = shell_exec('cd /usr/local/phyre/web/Modules/Terminal/nodejs/terminal && npm install');
-            }
-            if (!is_dir('/usr/local/phyre/web/storage/logs/terminal')) {
-                $exec = shell_exec('mkdir -p /usr/local/phyre/web/storage/logs/terminal/');
-            }
-            $exec = shell_exec('node /usr/local/phyre/web/Modules/Terminal/nodejs/terminal/server.js >> /usr/local/phyre/web/storage/logs/terminal/server-terminal.log &');
+        if (!is_dir('/usr/local/phyre/web/storage/logs/terminal')) {
+            $exec = shell_exec('mkdir -p /usr/local/phyre/web/storage/logs/terminal/');
         }
+        $exec = shell_exec('node /usr/local/phyre/web/Modules/Terminal/nodejs/terminal/server.js >> /usr/local/phyre/web/storage/logs/terminal/server-terminal.log &');
 
         return [
             'title' => 'Terminal',
