@@ -6,6 +6,7 @@ use App\Models\HostingPlan;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use Modules\Microweber\Filament\Clusters\Microweber\Pages\Version;
+use Modules\Microweber\Jobs\DownloadMicroweber;
 use Tests\Feature\Api\ActionTestCase;
 
 class MicroweberHostingSubscriptionCreateTest extends ActionTestCase
@@ -17,8 +18,8 @@ class MicroweberHostingSubscriptionCreateTest extends ActionTestCase
 
         Artisan::call('phyre:install-module Microweber');
 
-        $version = new Version();
-        $version->checkForUpdates();
+        $downloadMicroweber = new DownloadMicroweber();
+        $downloadMicroweber->handle();
 
         $random = rand(1000, 9999);
         $callHostingPlanStoreResponse = $this->callApiAuthorizedRouteAction('api.hosting-plans.store',[
@@ -73,6 +74,7 @@ class MicroweberHostingSubscriptionCreateTest extends ActionTestCase
             'hosting_plan_id' => $hostingPlanId,
             'domain' => $hostingSubscriptionDomain,
         ])->json();
+
         $this->assertArrayHasKey('status', $callHostingSubscriptionStoreResponse);
         $this->assertTrue($callHostingSubscriptionStoreResponse['status'] == 'ok');
         $this->assertArrayHasKey('data', $callHostingSubscriptionStoreResponse);

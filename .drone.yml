@@ -62,7 +62,10 @@ steps:
           from_secret: CODECOV_TOKEN
     settings:
       token: $CODECOV_TOKEN
-      files: /usr/local/phyre/web/clover.xml
+      files:
+        - /usr/local/phyre/web/clover.xml
+      flags:
+        - unit
 ---
 kind: pipeline
 name: Ubuntu 22.04
