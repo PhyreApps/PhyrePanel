@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\PhyreConfig;
 use App\Services\RemoteDatabaseService;
 use App\UniversalDatabaseExecutor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -60,10 +61,10 @@ class Database extends Model
 
             } else {
                 $universalDatabaseExecutor = new UniversalDatabaseExecutor(
-                    env('MYSQL_HOST'),
-                    env('MYSQL_PORT'),
-                    env('MYSQL_ROOT_USERNAME'),
-                    env('MYSQL_ROOT_PASSWORD'),
+                    PhyreConfig::get('MYSQL_HOST'),
+                    PhyreConfig::get('MYSQL_PORT'),
+                    PhyreConfig::get('MYSQL_ROOT_USERNAME'),
+                    PhyreConfig::get('MYSQL_ROOT_PASSWORD'),
                 );
                 $createDatabase = $universalDatabaseExecutor->createDatabase($databaseName);
                 if (isset($createDatabase['error'])) {

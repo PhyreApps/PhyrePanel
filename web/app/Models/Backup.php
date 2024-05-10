@@ -5,6 +5,7 @@ namespace App\Models;
 use App\BackupStorage;
 use App\Filament\Enums\BackupStatus;
 use App\Helpers;
+use App\PhyreConfig;
 use App\ShellApi;
 use Dotenv\Dotenv;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -213,11 +214,11 @@ class Backup extends Model
             // Export Phyre Panel database
             $mysqlAuthConf = '/root/.phyre-mysql.cnf';
             $mysqlAuthContent = '[client]' . PHP_EOL;
-            $mysqlAuthContent .= 'user="' . env('MYSQL_ROOT_USERNAME') .'"'. PHP_EOL;
-            $mysqlAuthContent .= 'password="' . env('MYSQL_ROOT_PASSWORD') . '"' . PHP_EOL;
+            $mysqlAuthContent .= 'user="' . PhyreConfig::get('MYSQL_ROOT_USERNAME') .'"'. PHP_EOL;
+            $mysqlAuthContent .= 'password="' . PhyreConfig::get('MYSQL_ROOT_PASSWORD') . '"' . PHP_EOL;
             file_put_contents($mysqlAuthConf, $mysqlAuthContent);
 
-            $shellFileContent .= 'mysqldump --defaults-extra-file='.$mysqlAuthConf.' "'.env('DB_DATABASE').'" > '.$databaseBackupPath . PHP_EOL;
+            $shellFileContent .= 'mysqldump --defaults-extra-file='.$mysqlAuthConf.' "'.PhyreConfig::get('DB_DATABASE').'" > '.$databaseBackupPath . PHP_EOL;
 
             // Export Phyre Panel Database
             $database = [];

@@ -6,6 +6,7 @@ use App\BackupStorage;
 use App\Filament\Enums\BackupStatus;
 use App\Helpers;
 use App\Jobs\ProcessHostingSubscriptionBackup;
+use App\PhyreConfig;
 use App\ShellApi;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -202,8 +203,8 @@ class HostingSubscriptionBackup extends Model
             // Export Phyre Panel database
             $mysqlAuthConf = '/root/.phyre-mysql.cnf';
             $mysqlAuthContent = '[client]' . PHP_EOL;
-            $mysqlAuthContent .= 'user="' . env('MYSQL_ROOT_USERNAME') .'"'. PHP_EOL;
-            $mysqlAuthContent .= 'password="' . env('MYSQL_ROOT_PASSWORD') . '"' . PHP_EOL;
+            $mysqlAuthContent .= 'user="' . PhyreConfig::get('MYSQL_ROOT_USERNAME') .'"'. PHP_EOL;
+            $mysqlAuthContent .= 'password="' . PhyreConfig::get('MYSQL_ROOT_PASSWORD') . '"' . PHP_EOL;
             file_put_contents($mysqlAuthConf, $mysqlAuthContent);
 
             $getDatabases = Database::where('hosting_subscription_id', $findHostingSubscription->id)
