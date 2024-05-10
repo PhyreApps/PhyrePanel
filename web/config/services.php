@@ -1,4 +1,5 @@
 <?php
+use App\PhyreConfig;
 
 return [
 
@@ -15,20 +16,20 @@ return [
     */
 
     'mailgun' => [
-        'domain' => env('MAILGUN_DOMAIN'),
-        'secret' => env('MAILGUN_SECRET'),
-        'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
+        'domain' => PhyreConfig::get('MAILGUN_DOMAIN'),
+        'secret' => PhyreConfig::get('MAILGUN_SECRET'),
+        'endpoint' => PhyreConfig::get('MAILGUN_ENDPOINT', 'api.mailgun.net'),
         'scheme' => 'https',
     ],
 
     'postmark' => [
-        'token' => env('POSTMARK_TOKEN'),
+        'token' => PhyreConfig::get('POSTMARK_TOKEN'),
     ],
 
     'ses' => [
-        'key' => env('AWS_ACCESS_KEY_ID'),
-        'secret' => env('AWS_SECRET_ACCESS_KEY'),
-        'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+        'key' => PhyreConfig::get('AWS_ACCESS_KEY_ID'),
+        'secret' => PhyreConfig::get('AWS_SECRET_ACCESS_KEY'),
+        'region' => PhyreConfig::get('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
 ];

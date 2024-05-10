@@ -1,4 +1,5 @@
 <?php
+use App\PhyreConfig;
 
 return [
 
@@ -15,7 +16,7 @@ return [
     |
     */
 
-    'default' => env('BROADCAST_DRIVER', 'null'),
+    'default' => PhyreConfig::get('BROADCAST_DRIVER', 'null'),
 
     /*
     |--------------------------------------------------------------------------
@@ -32,16 +33,16 @@ return [
 
         'pusher' => [
             'driver' => 'pusher',
-            'key' => env('PUSHER_APP_KEY'),
-            'secret' => env('PUSHER_APP_SECRET'),
-            'app_id' => env('PUSHER_APP_ID'),
+            'key' => PhyreConfig::get('PUSHER_APP_KEY'),
+            'secret' => PhyreConfig::get('PUSHER_APP_SECRET'),
+            'app_id' => PhyreConfig::get('PUSHER_APP_ID'),
             'options' => [
-                'cluster' => env('PUSHER_APP_CLUSTER'),
-                'host' => env('PUSHER_HOST') ?: 'api-'.env('PUSHER_APP_CLUSTER', 'mt1').'.pusher.com',
-                'port' => env('PUSHER_PORT', 443),
-                'scheme' => env('PUSHER_SCHEME', 'https'),
+                'cluster' => PhyreConfig::get('PUSHER_APP_CLUSTER'),
+                'host' => PhyreConfig::get('PUSHER_HOST') ?: 'api-'.PhyreConfig::get('PUSHER_APP_CLUSTER', 'mt1').'.pusher.com',
+                'port' => PhyreConfig::get('PUSHER_PORT', 443),
+                'scheme' => PhyreConfig::get('PUSHER_SCHEME', 'https'),
                 'encrypted' => true,
-                'useTLS' => env('PUSHER_SCHEME', 'https') === 'https',
+                'useTLS' => PhyreConfig::get('PUSHER_SCHEME', 'https') === 'https',
             ],
             'client_options' => [
                 // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html
@@ -50,7 +51,7 @@ return [
 
         'ably' => [
             'driver' => 'ably',
-            'key' => env('ABLY_KEY'),
+            'key' => PhyreConfig::get('ABLY_KEY'),
         ],
 
         'redis' => [

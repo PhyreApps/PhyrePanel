@@ -28,7 +28,7 @@ class SetIniSettings extends Command
     public function handle()
     {
 //        $ini = new IniModifier('phyre-config.ini');
-//        $ini->setValue('', '', 'phyre');
+//        $ini->setValue($key, $value, 'phyre');
 //        $ini->save();
 
     }

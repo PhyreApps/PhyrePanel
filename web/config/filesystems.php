@@ -1,4 +1,5 @@
 <?php
+use App\PhyreConfig;
 
 return [
 
@@ -13,7 +14,7 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DISK', 'local'),
+    'default' => PhyreConfig::get('FILESYSTEM_DISK', 'local'),
 
     /*
     |--------------------------------------------------------------------------
@@ -39,20 +40,20 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => PhyreConfig::get('APP_URL').'/storage',
             'visibility' => 'public',
             'throw' => false,
         ],
 
         's3' => [
             'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
-            'endpoint' => env('AWS_ENDPOINT'),
-            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+            'key' => PhyreConfig::get('AWS_ACCESS_KEY_ID'),
+            'secret' => PhyreConfig::get('AWS_SECRET_ACCESS_KEY'),
+            'region' => PhyreConfig::get('AWS_DEFAULT_REGION'),
+            'bucket' => PhyreConfig::get('AWS_BUCKET'),
+            'url' => PhyreConfig::get('AWS_URL'),
+            'endpoint' => PhyreConfig::get('AWS_ENDPOINT'),
+            'use_path_style_endpoint' => PhyreConfig::get('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
         ],
 

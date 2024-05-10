@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
+use App\PhyreConfig;
 
 return [
 
@@ -20,16 +21,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Application Environment
+    | Application PhyreConfig::getironment
     |--------------------------------------------------------------------------
     |
-    | This value determines the "environment" your application is currently
+    | This value determines the "PhyreConfig::getironment" your application is currently
     | running in. This may determine how you prefer to configure various
-    | services the application utilizes. Set this in your ".env" file.
+    | services the application utilizes. Set this in your ".PhyreConfig::get" file.
     |
     */
 
-    'env' => env('APP_ENV', 'production'),
+    'PhyreConfig::get' => PhyreConfig::get('APP_PhyreConfig::get', 'production'),
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +43,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool) PhyreConfig::get('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,9 +56,9 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => PhyreConfig::get('APP_URL', 'http://localhost'),
 
-    'asset_url' => env('ASSET_URL'),
+    'asset_url' => PhyreConfig::get('ASSET_URL'),
 
     /*
     |--------------------------------------------------------------------------
@@ -122,7 +123,7 @@ return [
     |
     */
 
-    'key' => env('APP_KEY'),
+    'key' => PhyreConfig::get('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
 
