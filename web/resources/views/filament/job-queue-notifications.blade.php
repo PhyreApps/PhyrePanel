@@ -9,9 +9,10 @@
         }
     </script>
 
+    <div class="flex flex-col gap-y-2 bottom-4 right-4 w-[24rem] fixed z-50">
 @foreach($jobs as $job)
 
-    <div id="job-queue-{{$job['id']}}" class="fixed z-50 bottom-5 right-5 w-[24rem] rounded-xl text-black dark:text-white px-4 py-4 shadow-sm bg-white ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10">
+    <div id="job-queue-{{$job['id']}}" class="rounded-xl text-black dark:text-white px-4 py-4 shadow-sm bg-white ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10">
 
         <div class="w-full flex justify-between">
             <div class="text-gray-500 dark:text-gray-400">
@@ -41,4 +42,5 @@
     </div>
 
 @endforeach
+    </div>
 </div>
