@@ -39,7 +39,7 @@ class RunRepair extends Command
 
         // Overwrite supervisor config file
         file_put_contents('/etc/supervisor/conf.d/phyre.conf', $supervisorConf);
-        
+
         // Restart supervisor
         shell_exec('service supervisor restart');
 

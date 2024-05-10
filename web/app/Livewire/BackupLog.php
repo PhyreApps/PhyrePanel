@@ -10,14 +10,15 @@ class BackupLog extends Component
 
     public $backupLog;
 
+    public $backupLogFile = '';
+
     public function pullBackupLog()
     {
 
-        $findBackup = \App\Models\Backup::where('id', $this->backupId)->first();
-        if ($findBackup) {
-            $backupLog = $findBackup->path . '/backup.log';
-            if (file_exists($backupLog)) {
-                $backupLogContent = file_get_contents($backupLog);
+        if ($this->backupLogFile) {
+            if (file_exists($this->backupLogFile)) {
+
+                $backupLogContent = shell_exec('tail -n 1000 ' . $this->backupLogFile);
                 // Get last 1000 lines of the log
                 $backupLogContent = substr($backupLogContent, -5000, 5000);
                 $backupLogContent = str_replace("\n", "<br>", $backupLogContent);
@@ -25,10 +26,17 @@ class BackupLog extends Component
                 $this->backupLog = $backupLogContent;
             }
         }
+
     }
     public function mount($backupId)
     {
         $this->backupId = $backupId;
+
+        $findBackup = \App\Models\Backup::where('id', $this->backupId)->first();
+        if ($findBackup) {
+            $this->backupLogFile = $findBackup->path . '/backup.log';
+            $this->pullBackupLog();
+        }
     }
 
     public function render()
