@@ -20,6 +20,7 @@ class DownloadMicroweber implements ShouldQueue
 
     public function handle(): void
     {
+        set_time_limit(0);
 
         $sharedAppPath = config('microweber.sharedPaths.app');
 
