@@ -27,6 +27,11 @@ class ManageBackups extends ManageRecords
         }
 
         return [
+
+            Actions\Action::make('restoring')
+                ->label('Restoring backup...')
+                ->icon('heroicon-o-clock'),
+
             Actions\Action::make('restore')
                 ->hidden($restoringBackup)
                 ->icon('heroicon-o-cloud-arrow-up')

@@ -14,6 +14,7 @@ use App\Listeners\ModelHostingSubscriptionDeletingListener;
 use App\Livewire\BackupLog;
 use App\Livewire\Components\QuickServiceRestartMenu;
 use App\Livewire\HostingSubscriptionBackupLog;
+use App\Livewire\JobQueueNotifications;
 use App\Models\Domain;
 use App\Models\HostingSubscription;
 use App\Policies\CustomerPolicy;
@@ -64,6 +65,7 @@ class AppServiceProvider extends ServiceProvider
             Filament::registerViteTheme('resources/css/app.css');
         });
 
+        Livewire::component('jobs-queue-notifications', JobQueueNotifications::class);
         Livewire::component('quick-service-restart-menu', QuickServiceRestartMenu::class);
         Livewire::component('hosting-subscription-backup-log', HostingSubscriptionBackupLog::class);
         Livewire::component('backup-log', BackupLog::class);
