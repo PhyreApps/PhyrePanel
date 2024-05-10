@@ -18,12 +18,18 @@ class JobQueueNotifications extends Component
             $job->payload = json_decode($job->payload);
             if (isset($job->payload->displayName)) {
                 $displayName = 'Unknown Job';
+                $displayDisplayDescription = '';
 
                 try {
-                    $jobClassInstance = new $job->payload->displayName();
-                    if (method_exists($jobClassInstance, 'getDisplayName')) {
-                        $displayName = $jobClassInstance->getDisplayName();
+
+                    $jobClassInstance = new \ReflectionClass($job->payload->displayName);
+                    if ($jobClassInstance->getStaticPropertyValue('displayName')) {
+                        $displayName = $jobClassInstance->getStaticPropertyValue('displayName');
                     }
+                    if ($jobClassInstance->getStaticPropertyValue('displayDescription')) {
+                        $displayDisplayDescription = $jobClassInstance->getStaticPropertyValue('displayDescription');
+                    }
+
                 } catch (\Exception $e) {
                     $explodeDisplayName = explode('\\', $job->payload->displayName);
                     $displayName = end($explodeDisplayName);
@@ -32,6 +38,7 @@ class JobQueueNotifications extends Component
                 $jobs[] = [
                     'id' => $job->id,
                     'displayName' => $displayName,
+                    'displayDescription' => $displayDisplayDescription,
                     'status' => $job->attempts == 0 ? 'Pending' : 'Processing',
                     'createdAt' => $job->created_at
                 ];

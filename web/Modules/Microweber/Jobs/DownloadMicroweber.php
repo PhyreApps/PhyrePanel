@@ -18,6 +18,9 @@ class DownloadMicroweber implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public static $displayName = 'Download Microweber';
+    public static $displayDescription = 'Download Microweber core, modules and templates';
+
     public function handle(): void
     {
         set_time_limit(0);
