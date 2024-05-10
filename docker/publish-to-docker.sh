@@ -1,3 +1,3 @@
 docker compose up --build
-docker tag phyre-panel:latest bobicloudvision/phyrepanel:latest
-docker push bobicloudvision/phyrepanel:latest
+docker tag phyre-panel:latest bobicloudvision/phyre-panel:latest
+docker push bobicloudvision/phyre-panel:latest
