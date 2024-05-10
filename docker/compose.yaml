@@ -7,9 +7,9 @@
 # You can add other services your application may depend on here, such as a
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
-name: phyre-panel
+name: phyre
 services:
-  app:
+  panel:
     platform: linux/amd64
     ports:
       - 8443:8443
