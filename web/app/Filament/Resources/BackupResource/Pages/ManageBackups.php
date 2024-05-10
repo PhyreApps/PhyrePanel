@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Pages\Concerns\ExposesTableToWidgets;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ManageRecords;
+use Illuminate\Support\Facades\DB;
 
 class ManageBackups extends ManageRecords
 {
@@ -19,8 +20,15 @@ class ManageBackups extends ManageRecords
 
     protected function getActions(): array
     {
+        $restoringBackup = false;
+        $checkJob = DB::table('jobs')->where('payload', 'like', '%RestoreBackup%')->first();
+        if ($checkJob) {
+            $restoringBackup = true;
+        }
+
         return [
             Actions\Action::make('restore')
+                ->hidden($restoringBackup)
                 ->icon('heroicon-o-cloud-arrow-up')
                 ->slideOver()
                 ->modalHeading('Restore data from backup file')
