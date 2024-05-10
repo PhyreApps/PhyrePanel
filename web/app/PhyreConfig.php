@@ -7,9 +7,12 @@ class PhyreConfig
     public static function get($key, $default = null)
     {
         // Parse without sections
-        $iniArray = parse_ini_file(base_path() . "/phyre-config.ini");
-        if (isset($iniArray[$key])) {
-            return $iniArray[$key];
+        $configIni = base_path() . "/phyre-config.ini";
+        if (file_exists($configIni)) {
+            $iniArray = parse_ini_file($configIni);
+            if (isset($iniArray[$key])) {
+                return $iniArray[$key];
+            }
         }
 
         return $default;
