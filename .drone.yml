@@ -54,6 +54,8 @@ steps:
       - chmod -R 777 vendor
       - apt install composer -y
       - composer test:coverage
+      - ls -la
+      - tail /usr/local/phyre/web/clover.xml
 
   - name: codecov
     image: bobicloudvision/drone-codecov
