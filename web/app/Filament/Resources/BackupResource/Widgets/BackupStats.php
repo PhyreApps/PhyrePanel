@@ -28,12 +28,6 @@ class BackupStats extends BaseWidget
     {
 
         $stats = Cache::remember('backup-stats', 300, function () {
-            $findBackups = Backup::select(['id'])->where('status', 'processing')->get();
-            if ($findBackups->count() > 0) {
-                foreach ($findBackups as $backup) {
-                    $backup->checkBackup();
-                }
-            }
             $usedSpace = 0;
             $backupPath = BackupStorage::getPath();
             if (is_dir($backupPath)) {
