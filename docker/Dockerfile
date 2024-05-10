@@ -8,3 +8,5 @@ RUN wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/main/installers/
 RUN chmod +x phyre-install.sh
 RUN ./phyre-install.sh
 
+ENTRYPOINT ["tail"]
+CMD ["-f","/dev/null"]

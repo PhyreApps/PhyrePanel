@@ -11,6 +11,8 @@ name: phyre-panel
 services:
   app:
     platform: linux/amd64
+    ports:
+      - 8443:8443
     build:
       context: .
       target: production
