@@ -39,7 +39,7 @@ class Settings extends BaseSettings
 
         // Restart supervisor
         shell_exec('service supervisor restart');
-        
+
 
         // Make master domain virtual host
         $masterDomain = new MasterDomain();

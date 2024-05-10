@@ -32,8 +32,14 @@ class RunRepair extends Command
     {
 
         // Overwrite supervisor config file
-        file_put_contents('/etc/supervisor/conf.d/phyre.conf', file_get_contents(base_path('app/Supervisor/configs/phyre-worker.conf')));
+        $workersCount = (int) setting('general.supervisor_workers_count');
+        $supervisorConf = view('actions.samples.ubuntu.supervisor-conf', [
+            'workersCount' => $workersCount
+        ])->render();
 
+        // Overwrite supervisor config file
+        file_put_contents('/etc/supervisor/conf.d/phyre.conf', $supervisorConf);
+        
         // Restart supervisor
         shell_exec('service supervisor restart');
 
