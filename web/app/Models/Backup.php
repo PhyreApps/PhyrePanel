@@ -287,8 +287,8 @@ class Backup extends Model
 
             file_put_contents($backupTempScript, $shellFileContent);
 
-            // chmod read only by root
-            shell_exec('chmod 400 '.$backupTempScript);
+            // chmod read and delete by owner only
+            chmod($backupTempScript, 0600);
 
             $processId = shell_exec('bash '.$backupTempScript.' >> ' . $backupLogFilePath . ' & echo $!');
             $processId = intval($processId);
