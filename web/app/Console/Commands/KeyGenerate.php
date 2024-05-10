@@ -2,18 +2,17 @@
 
 namespace App\Console\Commands;
 
-use Dotenv\Dotenv;
 use Illuminate\Console\Command;
 use Jelix\IniFile\IniModifier;
 
-class SetIniSettings extends Command
+class KeyGenerate extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'phyre:set-ini-settings {key} {value}';
+    protected $signature = 'phyre:key-generate';
 
     /**
      * The console command description.
@@ -27,12 +26,13 @@ class SetIniSettings extends Command
      */
     public function handle()
     {
-        $key = $this->argument('key');
-        $value = $this->argument('value');
+        $randomAppKey = 'base64:'.base64_encode(random_bytes(32));
 
         $ini = new IniModifier('phyre-config.ini');
-        $ini->setValue($key, $value, 'phyre');
+        $ini->setValue('APP_KEY', $randomAppKey, 'phyre');
         $ini->save();
+
+        $this->info('Application key set successfully.');
 
     }
 }

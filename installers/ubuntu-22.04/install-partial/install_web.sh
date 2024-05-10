@@ -45,19 +45,17 @@ MYSQL_SCRIPT
 echo "$MYSQL_ROOT_PASSWORD" > /root/.mysql_root_password
 
 # Configure the application
-cp phyre-config.ini.example phyre-config.ini
+phyre-php artisan phyre:set-ini-settings APP_URL "127.0.0.1:8443"
+phyre-php artisan phyre:set-ini-settings APP_ENV "production"
+phyre-php artisan phyre:set-ini-settings APP_NAME "PHYRE_PANEL"
+phyre-php artisan phyre:set-ini-settings DB_DATABASE "$PHYRE_PANEL_DB_NAME"
+phyre-php artisan phyre:set-ini-settings DB_USERNAME "$PHYRE_PANEL_DB_USER"
+phyre-php artisan phyre:set-ini-settings DB_PASSWORD "$PHYRE_PANEL_DB_PASSWORD"
+phyre-php artisan phyre:set-ini-settings DB_CONNECTION "mysql"
+phyre-php artisan phyre:set-ini-settings MYSQL_ROOT_USERNAME "$MYSQL_PHYRE_ROOT_USERNAME"
+phyre-php artisan phyre:set-ini-settings MYSQL_ROOT_PASSWORD "$MYSQL_PHYRE_ROOT_PASSWORD"
+phyre-php artisan phyre:key-generate
 
-sed -i "s/^APP_URL=.*/APP_URL=127.0.0.1:8443" phyre-config.ini
-sed -i "s/^APP_NAME=.*/APP_NAME=PHYRE_PANEL/" phyre-config.ini
-sed -i "s/^DB_DATABASE=.*/DB_DATABASE=$PHYRE_PANEL_DB_NAME/" phyre-config.ini
-sed -i "s/^DB_USERNAME=.*/DB_USERNAME=$PHYRE_PANEL_DB_USER/" phyre-config.ini
-sed -i "s/^DB_PASSWORD=.*/DB_PASSWORD=$PHYRE_PANEL_DB_PASSWORD/" phyre-config.ini
-sed -i "s/^DB_CONNECTION=.*/DB_CONNECTION=mysql/" phyre-config.ini
-
-sed -i "s/^MYSQL_ROOT_USERNAME=.*/MYSQL_ROOT_USERNAME=$MYSQL_PHYRE_ROOT_USERNAME/" phyre-config.ini
-sed -i "s/^MYSQL_ROOT_PASSWORD=.*/MYSQL_ROOT_PASSWORD=$MYSQL_PHYRE_ROOT_PASSWORD/" phyre-config.ini
-
-phyre-php artisan key:generate
 phyre-php artisan migrate
 phyre-php artisan db:seed
 
