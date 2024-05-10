@@ -227,7 +227,7 @@ class HostingSubscriptionBackup extends Model
         }
 
         // With find, we can search for all files,directories (including hidden) in the current directory and zip them
-        $shellFileContent .= 'cd '.$backupTempPath .' && find . -exec zip -r '.$backupFilePath.' {} \;'. PHP_EOL;
+        $shellFileContent .= 'cd '.$backupTempPath .' && find . -exec zip --symlinks -r '.$backupFilePath.' {} \;'. PHP_EOL;
 
         $shellFileContent .= 'rm -rf '.$backupTempPath.PHP_EOL;
         $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;

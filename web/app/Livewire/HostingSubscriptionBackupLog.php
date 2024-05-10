@@ -10,13 +10,14 @@ class HostingSubscriptionBackupLog extends Component
 
     public $backupLog;
 
+    public $backupLogFile = '';
+
     public function pullBackupLog()
     {
-        $findHsb = \App\Models\HostingSubscriptionBackup::where('id', $this->hostingSubscriptionBackupId)->first();
-        if ($findHsb) {
-            $backupLog = $findHsb->path . '/backup.log';
-            if (file_exists($backupLog)) {
-                $backupLogContent = file_get_contents($backupLog);
+        if ($this->backupLogFile) {
+            if (file_exists($this->backupLogFile)) {
+
+                $backupLogContent = shell_exec('tail -n 1000 ' . $this->backupLogFile);
                 // Get last 1000 lines of the log
                 $backupLogContent = substr($backupLogContent, -5000, 5000);
                 $backupLogContent = str_replace("\n", "<br>", $backupLogContent);
@@ -25,9 +26,16 @@ class HostingSubscriptionBackupLog extends Component
             }
         }
     }
+
     public function mount($hostingSubscriptionBackupId)
     {
         $this->hostingSubscriptionBackupId = $hostingSubscriptionBackupId;
+
+        $findHsb = \App\Models\HostingSubscriptionBackup::where('id', $this->hostingSubscriptionBackupId)->first();
+        if ($findHsb) {
+            $this->backupLogFile = $findHsb->path . '/backup.log';
+            $this->pullBackupLog();
+        }
     }
 
     public function render()
