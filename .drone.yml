@@ -56,7 +56,7 @@ steps:
       - composer test:coverage
 
   - name: codecov
-    image: robertstettner/drone-codecov
+    image: bobicloudvision/drone-codecov
     environment:
       CODECOV_TOKEN:
           from_secret: CODECOV_TOKEN
