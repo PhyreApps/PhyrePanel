@@ -52,13 +52,8 @@ class Backup extends Model
         });
 
         static::deleting(function ($model) {
-            if (is_file($model->filepath)) {
-//           ShellApi::safeDelete($model->path, [
-//              Storage::path('backups')
-//           ]);
-//                if (Storage::disk('backups')->exists($model->filepath)) {
-//                    Storage::disk('backups')->delete($model->filepath);
-//                }
+            if (is_file($model->file_path)) {
+                shell_exec('rm -rf ' . $model->file_path);
             }
         });
     }
