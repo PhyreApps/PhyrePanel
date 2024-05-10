@@ -3,7 +3,7 @@ kind: pipeline
 name: Ubuntu 22.04 - CODE COVERAGE
 steps:
   - name: codecov
-    image: bobicloudvision/drone-codecov:latest
+    image: bobicloudvision/drone-codecov
     environment:
       CODECOV_TOKEN:
           from_secret: CODECOV_TOKEN
