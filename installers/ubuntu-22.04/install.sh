@@ -128,8 +128,8 @@ MYSQL_SCRIPT
 echo "$MYSQL_ROOT_PASSWORD" > /root/.mysql_root_password
 
 # Configure the application
+phyre-php artisan phyre:set-ini-settings APP_ENV "local"
 phyre-php artisan phyre:set-ini-settings APP_URL "127.0.0.1:8443"
-phyre-php artisan phyre:set-ini-settings APP_ENV "production"
 phyre-php artisan phyre:set-ini-settings APP_NAME "PHYRE_PANEL"
 phyre-php artisan phyre:set-ini-settings DB_DATABASE "$PHYRE_PANEL_DB_NAME"
 phyre-php artisan phyre:set-ini-settings DB_USERNAME "$PHYRE_PANEL_DB_USER"
@@ -141,6 +141,8 @@ phyre-php artisan phyre:key-generate
 
 phyre-php artisan migrate
 phyre-php artisan db:seed
+
+phyre-php artisan phyre:set-ini-settings APP_ENV "production"
 
 chmod -R o+w /usr/local/phyre/web/storage/
 chmod -R o+w /usr/local/phyre/web/bootstrap/cache/

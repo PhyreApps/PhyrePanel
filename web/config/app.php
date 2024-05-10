@@ -21,16 +21,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Application PhyreConfig::getironment
+    | Application Environment
     |--------------------------------------------------------------------------
     |
-    | This value determines the "PhyreConfig::getironment" your application is currently
+    | This value determines the "environment" your application is currently
     | running in. This may determine how you prefer to configure various
-    | services the application utilizes. Set this in your ".PhyreConfig::get" file.
+    | services the application utilizes. Set this in your ".env" file.
     |
     */
 
-    'PhyreConfig::get' => PhyreConfig::get('APP_PhyreConfig::get', 'production'),
+    'env' => PhyreConfig::get('APP_ENV', 'production'),
 
     /*
     |--------------------------------------------------------------------------
