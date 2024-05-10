@@ -12,6 +12,7 @@ class BackupLog extends Component
 
     public function pullBackupLog()
     {
+
         $findBackup = \App\Models\Backup::where('id', $this->backupId)->first();
         if ($findBackup) {
             $backupLog = $findBackup->path . '/backup.log';

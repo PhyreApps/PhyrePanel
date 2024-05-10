@@ -27,6 +27,20 @@ class Settings extends BaseSettings
     {
         parent::save();
 
+
+        // Overwrite supervisor config file
+        $workersCount = (int) setting('general.supervisor_workers_count');
+        $supervisorConf = view('actions.samples.ubuntu.supervisor-conf', [
+            'workersCount' => $workersCount
+        ])->render();
+
+        // Overwrite supervisor config file
+        file_put_contents('/etc/supervisor/conf.d/phyre.conf', $supervisorConf);
+
+        // Restart supervisor
+        shell_exec('service supervisor restart');
+        
+
         // Make master domain virtual host
         $masterDomain = new MasterDomain();
         $masterDomain->configureVirtualHost();
@@ -67,6 +81,14 @@ class Settings extends BaseSettings
                         ->schema([
                             TextInput::make('general.backup_path')
                                 ->default(Storage::path('backups'))
+                        ]),
+
+                    Tabs\Tab::make('Supervisor')
+                        ->schema([
+                            TextInput::make('general.supervisor_workers_count')
+                                ->numeric()
+                                ->helperText('Number of workers to run supervisor processes. Default is 4.')
+                                ->default(4)
                         ]),
                 ]),
         ];
