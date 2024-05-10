@@ -17,14 +17,18 @@ class JobQueueNotifications extends Component
         foreach ($getJobs as $job) {
             $job->payload = json_decode($job->payload);
             if (isset($job->payload->displayName)) {
-                $jobClassInstance = new $job->payload->displayName;
                 $displayName = 'Unknown Job';
-                if (method_exists($jobClassInstance, 'getDisplayName')) {
-                    $displayName = $jobClassInstance->getDisplayName();
-                } else {
+
+                try {
+                    $jobClassInstance = new $job->payload->displayName();
+                    if (method_exists($jobClassInstance, 'getDisplayName')) {
+                        $displayName = $jobClassInstance->getDisplayName();
+                    }
+                } catch (\Exception $e) {
                     $explodeDisplayName = explode('\\', $job->payload->displayName);
                     $displayName = end($explodeDisplayName);
                 }
+
                 $jobs[] = [
                     'id' => $job->id,
                     'displayName' => $displayName,
