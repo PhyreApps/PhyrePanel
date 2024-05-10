@@ -16,6 +16,7 @@
         "filament/filament": "^3.0",
         "guzzlehttp/guzzle": "^7.2",
         "jaocero/radio-deck": "^1.2",
+        "jelix/inifile": "^3.4",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
