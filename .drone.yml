@@ -5,7 +5,9 @@ steps:
   - name: run unit tests
     image: ubuntu:22.04
     environment:
-      DEBIAN_FRONTEND: noninteractive
+      CODECOV_TOKEN:
+        from_secret: CODECOV_TOKEN
+        DEBIAN_FRONTEND: noninteractive
     commands:
       - MAIN_REPO_DIR=$(pwd)
       - apt-get update
