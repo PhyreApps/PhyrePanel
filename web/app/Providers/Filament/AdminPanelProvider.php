@@ -35,15 +35,18 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+        if (auth()->check()) {
+            $panel->renderHook(
+                name: PanelsRenderHook::BODY_START,
+                hook: fn (): string => Blade::render('@livewire(\'jobs-queue-notifications\')')
+            );
+        }
+
          $panel->default()
             ->darkMode(true)
             ->id('admin')
             ->path('admin')
             ->login()
-             ->renderHook(
-                 name: PanelsRenderHook::BODY_START,
-                 hook: fn (): string => Blade::render('@livewire(\'jobs-queue-notifications\')')
-             )
              ->renderHook(
                  name: PanelsRenderHook::TOPBAR_START,
                  hook: fn (): string => Blade::render('@livewire(\'quick-service-restart-menu\')')
