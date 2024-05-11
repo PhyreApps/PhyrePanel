@@ -98,34 +98,34 @@ class Backup extends Model
                 shell_exec('cd '.$tempValidatePath.' && unzip -o '.$this->file_path);
 
                 $validateDatabaseFile = $tempValidatePath.'/database.sql';
-                $validateEnvFile = $tempValidatePath.'/.env';
+                $validatePhyreConfigFile = $tempValidatePath.'/phyre-config.ini';
 
                 $errorsBag = [];
                 if (! file_exists($validateDatabaseFile)) {
                     $errorsBag[] = 'Database file not found';
                 }
-                if (! file_exists($validateEnvFile)) {
-                    $errorsBag[] = 'Env file not found';
+                if (! file_exists($validatePhyreConfigFile)) {
+                    $errorsBag[] = 'Phyre config file not found';
                 }
                 if (count($errorsBag) > 0) {
                     $this->status = 'failed';
-                    $this->backup_log = 'Backup failed. Database or env file missing.';
+                    $this->backup_log = 'Backup failed. Database or phyre config file missing.';
                     $this->save();
                     return [
                         'status' => 'failed',
-                        'message' => 'Backup failed. Database or env file missing.',
+                        'message' => 'Backup failed. Database or phyre config file missing.',
                         'errors' => $errorsBag
                     ];
                 }
-                $originalEnvContent = file_get_contents(base_path().'/.env');
-                $backupEnvContent = file_get_contents($validateEnvFile);
-                if ($originalEnvContent != $backupEnvContent) {
-                    $errorsBag[] = 'Env file content mismatch';
+                $originalPhyreConfigContent = file_get_contents(base_path().'/phyre-config.ini');
+                $backupPhyreConfigContent = file_get_contents($validatePhyreConfigFile);
+                if ($originalPhyreConfigContent != $backupPhyreConfigContent) {
+                    $errorsBag[] = 'Phyre config content mismatch';
                 }
 
                 if (count($errorsBag) > 0) {
                     $this->status = 'failed';
-                    $this->backup_log = 'Backup failed. Database or env file content mismatch.';
+                    $this->backup_log = 'Backup failed. Database or phyre config file content mismatch.';
                     $this->save();
                     return [
                         'status' => 'failed',
