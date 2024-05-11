@@ -3,11 +3,15 @@ services:
     image: ghcr.io/docker-mailserver/docker-mailserver:latest
     container_name: mailserver
     # Provide the FQDN of your mail server here (Your DNS MX record should point to this value)
-    hostname: mail.test.phyrepanel.com
+    hostname: mail.domain.ai
     ports:
-      - "25:25"
-      - "587:587"
-      - "465:465"
+      - "25:25"    # SMTP  (explicit TLS => STARTTLS)
+      - "465:465"  # ESMTP (implicit TLS)
+      - "587:587"  # ESMTP (explicit TLS => STARTTLS)
+      - "993:993"  # IMAP4 (implicit TLS)
+      - "143:143"  # IMAP4 (explicit TLS => STARTTLS)
+      - "110:110"  # POP3
+      - "995:995"  # POP3 (with TLS)
     volumes:
       - ./docker-data/dms/mail-data/:/var/mail/
       - ./docker-data/dms/mail-state/:/var/mail-state/
@@ -15,15 +19,15 @@ services:
       - ./docker-data/dms/config/:/tmp/docker-mailserver/
       - /etc/localtime:/etc/localtime:ro
     environment:
-      - ENABLE_FAIL2BAN=1
-      # Using letsencrypt for SSL/TLS certificates:
-      - SSL_TYPE=letsencrypt
-      # Allow sending emails from other docker containers:
-      # Beware creating an Open Relay: https://docker-mailserver.github.io/docker-mailserver/latest/config/environment/#permit_docker
+      - ENABLE_FAIL2BAN=0
       - PERMIT_DOCKER=network
-      # You may want to enable this: https://docker-mailserver.github.io/docker-mailserver/latest/config/environment/#spoof_protection
-      # See step 6 below, which demonstrates setup with enabled/disabled SPOOF_PROTECTION:
+      - ONE_DIR=1
+      - ENABLE_POSTGREY=0
+      - ENABLE_CLAMAV=0
+      - ENABLE_SPAMASSASSIN=0
       - SPOOF_PROTECTION=0
+      - ENABLE_POP3=1
     cap_add:
-      - NET_ADMIN # For Fail2Ban to work
+      - NET_ADMIN
+      - SYS_PTRACE
     restart: always
