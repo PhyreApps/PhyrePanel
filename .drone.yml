@@ -2,7 +2,7 @@
 kind: pipeline
 name: Ubuntu 22.04 - Unit Test & Code Coverage
 steps:
-  - name: run & upload code coverage
+  - name: run
     image: ubuntu:22.04
     environment:
       DEBIAN_FRONTEND: noninteractive
