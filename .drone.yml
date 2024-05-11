@@ -58,7 +58,7 @@ steps:
       - cd $MAIN_REPO_DIR
       - apt install -y pip
       - pip install codecov-cli
-      - codecovcli upload-process --token=$CODECOV_TOKEN --file=/usr/local/phyre/web/clover.xml --flags=unit
+      - codecovcli upload-process -t $CODECOV_TOKEN -f /usr/local/phyre/web/clover.xml
 
 ---
 kind: pipeline
