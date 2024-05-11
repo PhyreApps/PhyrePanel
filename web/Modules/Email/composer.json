@@ -1,0 +1,31 @@
+{
+    "name": "nwidart/email",
+    "description": "",
+    "authors": [
+        {
+            "name": "Bozhidar Slaveykov",
+            "email": "selfworksbg@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Email\\": "",
+            "Modules\\Email\\App\\": "app/",
+            "Modules\\Email\\Database\\Factories\\": "database/factories/",
+            "Modules\\Email\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Email\\Tests\\": "tests/"
+        }
+    }
+}

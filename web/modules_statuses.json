@@ -5,5 +5,7 @@
     "Customer": true,
     "Model": true,
     "DockerTemplate": true,
-    "Terminal": true
+    "Terminal": true,
+    "Mail": true,
+    "Email": true
 }

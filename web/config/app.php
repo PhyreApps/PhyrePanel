@@ -172,6 +172,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         \Modules\Customer\App\Providers\CustomerServiceProvider::class,
+        \Modules\Email\App\Providers\EmailServiceProvider::class,
         \Modules\Docker\App\Providers\DockerServiceProvider::class,
         \Modules\Terminal\App\Providers\TerminalServiceProvider::class,
 
