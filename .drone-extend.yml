@@ -26,3 +26,32 @@ steps:
       DEBIAN_FRONTEND: noninteractive
     commands:
       - apt-get update
+
+
+---
+kind: pipeline
+name: Ubuntu 22.04
+steps:
+  - name: run unit tests
+    image: ubuntu:22.04
+    environment:
+      DEBIAN_FRONTEND: noninteractive
+    commands:
+      - apt-get update
+      - apt-get install -y libicu-dev sudo cron apt-utils -yqq daemonize dbus-user-session fontconfig rsync
+      - daemonize /usr/bin/unshare --fork --pid --mount-proc /lib/systemd/systemd --system-unit=basic.target
+
+      - mkdir /phyre-panel
+      - cp installers/ubuntu-22.04/install-partial/install_base.sh /phyre-panel/install_base.sh
+      - chmod +x /phyre-panel/install_base.sh
+      - /phyre-panel/install_base.sh
+      - cp installers/ubuntu-22.04/install-partial/install_web.sh /phyre-panel/install_web.sh
+      - chmod +x /phyre-panel/install_web.sh
+
+      - cp -r web /usr/local/phyre/web/
+      - cd /usr/local/phyre/web/
+      - wget https://getcomposer.org/download/latest-stable/composer.phar
+      - COMPOSER_ALLOW_SUPERUSER=1 phyre-php composer.phar install
+      - /phyre-panel/install_web.sh
+      - phyre-php artisan test
+
