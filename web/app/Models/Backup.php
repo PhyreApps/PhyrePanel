@@ -233,15 +233,13 @@ class Backup extends Model
                 }
             }
 
-            // Export Phyre Panel ENV
-            $getEnv = Dotenv::createArrayBacked(base_path())->load();
             $backupStructure = [
                 'database'=>$database,
-                'env'=>$getEnv,
+                'config'=>PhyreConfig::getAll()
             ];
             file_put_contents($backupTempPath.'/backup.json', json_encode($backupStructure, JSON_PRETTY_PRINT));
-            $shellFileContent .= 'echo "Backup Phyre Panel ENV"'. PHP_EOL;
-            $shellFileContent .= 'cp '.base_path().'/.env '.$backupTempPath.'/.env'. PHP_EOL;
+            $shellFileContent .= 'echo "Backup Phyre Panel Config"'. PHP_EOL;
+            $shellFileContent .= 'cp '.base_path().'/phyre-config.ini '.$backupTempPath.'/phyre-config.ini'. PHP_EOL;
 
             // Export Phyre Panel Hosting Subscription
             $findHostingSubscription = HostingSubscription::all();

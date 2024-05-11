@@ -18,4 +18,15 @@ class PhyreConfig
         return $default;
     }
 
+    public static function getAll()
+    {
+        // Parse without sections
+        $configIni = base_path() . "/phyre-config.ini";
+        if (file_exists($configIni)) {
+            $iniArray = parse_ini_file($configIni);
+            return $iniArray;
+        }
+
+        return [];
+    }
 }
