@@ -18,7 +18,11 @@ services:
       - ./docker-data/dms/mail-logs/:/var/log/mail/
       - ./docker-data/dms/config/:/tmp/docker-mailserver/
       - /etc/localtime:/etc/localtime:ro
+      - ./docker-data/acme-companion/certs/:/etc/letsencrypt/live/:ro
     environment:
+      - SSL_TYPE=letsencrypt
+      - VIRTUAL_HOST=mail.vanesa.ai
+      - LETSENCRYPT_HOST=mail.vanesa.ai
       - ENABLE_FAIL2BAN=0
       - PERMIT_DOCKER=network
       - ONE_DIR=1
