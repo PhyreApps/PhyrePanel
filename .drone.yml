@@ -7,6 +7,7 @@ steps:
     environment:
       DEBIAN_FRONTEND: noninteractive
     commands:
+      - MAIN_REPO_DIR=$(pwd)
       - apt-get update
       - apt-get install -y libicu-dev sudo cron apt-utils -yqq daemonize dbus-user-session fontconfig rsync
       - daemonize /usr/bin/unshare --fork --pid --mount-proc /lib/systemd/systemd --system-unit=basic.target
@@ -48,24 +49,17 @@ steps:
       - cp /usr/local/phyre/web/tests/xdebug-php-ini.txt /usr/local/phyre/php/bin/php.ini
 
       - chmod 777 /usr/local/phyre/php/bin/php.ini
-      - phyre-php -v 
+      - phyre-php -v
 
       - cd /usr/local/phyre/web/
       - chmod -R 777 vendor
       - apt install composer -y
       - composer test:coverage
+      - cd $MAIN_REPO_DIR
+      - apt install -y pip
+      - pip install codecov-cli
+      - codecovcli upload-process --token=$CODECOV_TOKEN --file=/usr/local/phyre/web/clover.xml --flags=unit
 
-  - name: codecov
-    image: bobicloudvision/drone-codecov
-    environment:
-      CODECOV_TOKEN:
-          from_secret: CODECOV_TOKEN
-    settings:
-      token: $CODECOV_TOKEN
-      files:
-        - /usr/local/phyre/web/clover.xml
-      flags:
-        - unit
 ---
 kind: pipeline
 name: Ubuntu 22.04
