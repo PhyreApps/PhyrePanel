@@ -48,7 +48,7 @@ steps:
       - cp /usr/local/phyre/web/tests/xdebug-php-ini.txt /usr/local/phyre/php/bin/php.ini
 
       - chmod 777 /usr/local/phyre/php/bin/php.ini
-      - phyre-php -v
+      - phyre-php -v 
 
       - cd /usr/local/phyre/web/
       - chmod -R 777 vendor
