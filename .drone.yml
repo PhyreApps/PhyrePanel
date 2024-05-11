@@ -56,6 +56,7 @@ steps:
       - apt install composer -y
       - composer test:coverage
       - mv clover.xml $MAIN_REPO_DIR/clover.xml
+      - mv coverage.xml $MAIN_REPO_DIR/coverage.xml
       - cd $MAIN_REPO_DIR
       - apt install -y pip
       - pip install codecov-cli
