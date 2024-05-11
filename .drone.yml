@@ -55,10 +55,11 @@ steps:
       - chmod -R 777 vendor
       - apt install composer -y
       - composer test:coverage
+      - mv clover.xml $MAIN_REPO_DIR/clover.xml
       - cd $MAIN_REPO_DIR
       - apt install -y pip
       - pip install codecov-cli
-      - codecovcli --verbose upload-process -t $CODECOV_TOKEN -f /usr/local/phyre/web/clover.xml
+      - codecovcli --verbose upload-process -t $CODECOV_TOKEN
 
 ---
 kind: pipeline
