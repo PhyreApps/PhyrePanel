@@ -27,6 +27,15 @@ class HostingSubscriptionsController extends ApiController
 
     public function store(HostingSubscriptionCreateRequest $request)
     {
+
+        $findDomain = Domain::where('domain', $request->domain)->first();
+        if ($findDomain) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Domain already exists',
+            ], 400);
+        }
+
         $hostingSubscription = new HostingSubscription();
         $hostingSubscription->customer_id = $request->customer_id;
         $hostingSubscription->hosting_plan_id = $request->hosting_plan_id;
