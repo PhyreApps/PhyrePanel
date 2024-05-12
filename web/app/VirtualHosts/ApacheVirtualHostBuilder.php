@@ -133,7 +133,7 @@ class ApacheVirtualHostBuilder
         $this->proxyPass = $proxyPass;
     }
 
-    public function enableLogs($enableLogs)
+    public function setEnableLogs($enableLogs)
     {
         $this->enableLogs = $enableLogs;
     }
