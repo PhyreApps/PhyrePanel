@@ -37,16 +37,16 @@ class HostingSubscriptionBackup extends Model
         'status' => BackupStatus::class,
     ];
 
-//    protected static function booted(): void
-//    {
-//        static::addGlobalScope('customer', function (Builder $query) {
-//            if (auth()->check() && auth()->guard()->name == 'web_customer') {
-//                $query->whereHas('hostingSubscription', function ($query) {
-//                    $query->where('customer_id', auth()->user()->id);
-//                });
-//            }
-//        });
-//    }
+    protected static function booted(): void
+    {
+        static::addGlobalScope('customer', function (Builder $query) {
+            if (auth()->check() && auth()->guard()->name == 'web_customer') {
+                $query->whereHas('hostingSubscription', function ($query) {
+                    $query->where('customer_id', auth()->user()->id);
+                });
+            }
+        });
+    }
     public static function boot()
     {
         parent::boot();

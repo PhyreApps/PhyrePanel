@@ -75,7 +75,7 @@ class CustomerPanelProvider extends PanelProvider
             ])
             ->authGuard('web_customer')
             ->authMiddleware([
-                Authenticate::class,
+                CustomerAuthenticate::class,
             ]);
     }
 
