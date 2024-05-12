@@ -46,6 +46,9 @@ class HostingSubscription extends Model
                 throw new \Exception('Domain already exists');
             }
             $create = $model->_createLinuxWebUser($model);
+            if (isset($create['error'])) {
+                throw new \Exception($create['message']);
+            }
             if (isset($create['system_username']) && isset($create['system_password'])) {
                 $model->system_username = $create['system_username'];
                 $model->system_password = $create['system_password'];
@@ -125,20 +128,37 @@ class HostingSubscription extends Model
             return [];
         }
 
-        $systemUsername = $this->_generateUsername($model->domain . $findCustomer->id);
-        if ($this->_startsWithNumber($systemUsername)) {
-            $systemUsername = $this->_generateUsername(Str::random(4));
+        if (!empty($model->system_username)) {
+            $getLinuxUser = new GetLinuxUser();
+            $getLinuxUser->setUsername($model->system_username);
+            $linuxUser = $getLinuxUser->handle();
+            if (!empty($linuxUser)) {
+                return [
+                    'error' => true,
+                    'message' => 'System username already exists.'
+                ];
+            }
         }
 
-        $getLinuxUser = new GetLinuxUser();
-        $getLinuxUser->setUsername($systemUsername);
-        $linuxUser = $getLinuxUser->handle();
+        if (empty($model->system_username)) {
+            $systemUsername = $this->_generateUsername($model->domain . $findCustomer->id);
+            if ($this->_startsWithNumber($systemUsername)) {
+                $systemUsername = $this->_generateUsername(Str::random(4));
+            }
 
-        if (! empty($linuxUser)) {
-            $systemUsername = $this->_generateUsername($systemUsername.$findCustomer->id.Str::random(4));
+            $getLinuxUser = new GetLinuxUser();
+            $getLinuxUser->setUsername($systemUsername);
+            $linuxUser = $getLinuxUser->handle();
+
+            if (!empty($linuxUser)) {
+                $systemUsername = $this->_generateUsername($systemUsername . $findCustomer->id . Str::random(4));
+            }
+
+            $systemPassword = Str::random(14);
+        } else {
+            $systemUsername = $model->system_username;
+            $systemPassword = $model->system_password;
         }
-
-        $systemPassword = Str::random(14);
 
         $createLinuxWebUser = new CreateLinuxWebUser();
         $createLinuxWebUser->setUsername($systemUsername);

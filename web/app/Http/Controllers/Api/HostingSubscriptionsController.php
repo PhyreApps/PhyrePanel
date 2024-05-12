@@ -36,14 +36,28 @@ class HostingSubscriptionsController extends ApiController
             ], 400);
         }
 
+        if (isset($request->system_username)) {
+            $findHostingSubscription = HostingSubscription::where('system_username', $request->system_username)->first();
+            if ($findHostingSubscription) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'System username already exists',
+                ], 400);
+            }
+        }
+
         $hostingSubscription = new HostingSubscription();
         $hostingSubscription->customer_id = $request->customer_id;
         $hostingSubscription->hosting_plan_id = $request->hosting_plan_id;
         $hostingSubscription->domain = $request->domain;
 
-        //        $hostingSubscription->username = $request->username;
-        //        $hostingSubscription->password = $request->password;
-        //        $hostingSubscription->description = $request->description;
+        if (isset($request->system_username)) {
+            $hostingSubscription->system_username = $request->system_username;
+        }
+
+        if (isset($request->system_password)) {
+            $hostingSubscription->system_password = $request->system_password;
+        }
 
         $hostingSubscription->setup_date = Carbon::now();
         $hostingSubscription->save();
