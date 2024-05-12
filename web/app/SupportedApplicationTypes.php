@@ -59,6 +59,7 @@ class SupportedApplicationTypes
     {
         $versions = [];
         $phpVersions = [
+            '5.6',
             '7.4',
             '8.0',
             '8.1',

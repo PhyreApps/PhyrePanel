@@ -301,6 +301,8 @@ class Installer extends Page
 
             if (strpos($this->install_log, 'DONE!') !== false) {
 
+                unlink(storage_path($this->install_log_file_path));
+
                 file_put_contents(storage_path('installed'), 'installed-'.date('Y-m-d H:i:s'));
 
                 return redirect('/admin/login');
