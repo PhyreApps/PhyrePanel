@@ -62,6 +62,11 @@ We welcome contributions from the community to help improve PHYRE PANEL. If you 
 
 For support and assistance with PHYRE PANEL, please visit our [documentation](https://phyrepanel.com/docs) or reach out to our [support team](mailto:support@phyrepanel.com).
 
+## Integrations
+
+- WHMCS Plugin
+[https://github.com/PhyreApps/PhyrePanelWHMCSPlugin](https://github.com/PhyreApps/PhyrePanelWHMCSPlugin)
+
 ## Features
 
 - **User-Friendly Interface:** PHYRE PANEL offers a clean and intuitive user interface, making it easy for users to manage their hosting environment.
