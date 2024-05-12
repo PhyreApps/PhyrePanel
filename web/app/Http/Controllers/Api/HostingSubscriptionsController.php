@@ -110,4 +110,46 @@ class HostingSubscriptionsController extends ApiController
         }
 
     }
+
+    public function suspend($id)
+    {
+        $findHostingSubscription = HostingSubscription::where('id', $id)->first();
+        if ($findHostingSubscription) {
+
+            $findDomains = Domain::where('hosting_subscription_id', $findHostingSubscription->id)->get();
+            if ($findDomains->count() > 0) {
+                foreach ($findDomains as $domain) {
+                    $domain->status = Domain::STATUS_SUSPENDED;
+                    $domain->save();
+                }
+            }
+
+            return response()->json([
+                'status' => 'ok',
+                'message' => 'Hosting subscription suspended',
+            ]);
+        }
+
+    }
+
+    public function unsuspend($id)
+    {
+        $findHostingSubscription = HostingSubscription::where('id', $id)->first();
+        if ($findHostingSubscription) {
+
+            $findDomains = Domain::where('hosting_subscription_id', $findHostingSubscription->id)->get();
+            if ($findDomains->count() > 0) {
+                foreach ($findDomains as $domain) {
+                    $domain->status = Domain::STATUS_ACTIVE;
+                    $domain->save();
+                }
+            }
+
+            return response()->json([
+                'status' => 'ok',
+                'message' => 'Hosting subscription unsuspended',
+            ]);
+        }
+
+    }
 }

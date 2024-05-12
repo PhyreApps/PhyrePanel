@@ -31,6 +31,8 @@ Route::middleware(\App\Http\Middleware\ApiKeyMiddleware::class)->group(function(
     Route::post('hosting-subscriptions', [\App\Http\Controllers\Api\HostingSubscriptionsController::class, 'store'])->name('api.hosting-subscriptions.store');
     Route::put('hosting-subscriptions/{id}', [\App\Http\Controllers\Api\HostingSubscriptionsController::class, 'update'])->name('api.hosting-subscriptions.update');
     Route::delete('hosting-subscriptions/{id}', [\App\Http\Controllers\Api\HostingSubscriptionsController::class, 'destroy'])->name('api.hosting-subscriptions.destroy');
+    Route::post('hosting-subscriptions/{id}/suspend', [\App\Http\Controllers\Api\HostingSubscriptionsController::class, 'suspend'])->name('api.hosting-subscriptions.suspend');
+    Route::post('hosting-subscriptions/{id}/unsuspend', [\App\Http\Controllers\Api\HostingSubscriptionsController::class, 'unsuspend'])->name('api.hosting-subscriptions.unsuspend');
 
     // Domains
     Route::get('domains', [\App\Http\Controllers\Api\DomainsController::class, 'index'])->name('api.domains.index');
