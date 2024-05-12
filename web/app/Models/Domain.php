@@ -260,9 +260,6 @@ class Domain extends Model
         $apacheVirtualHostBuilder->setHomeRoot($this->home_root);
         $apacheVirtualHostBuilder->setUser($findHostingSubscription->system_username);
         $apacheVirtualHostBuilder->setUserGroup($webUserGroup);
-        $apacheVirtualHostBuilder->setAdditionalServices($findHostingPlan->additional_services);
-        $apacheVirtualHostBuilder->setAppType($appType);
-        $apacheVirtualHostBuilder->setAppVersion($appVersion);
 
         if ($this->status == self::STATUS_SUSPENDED) {
             $suspendedPath = '/var/www/html/suspended';
@@ -275,9 +272,7 @@ class Domain extends Model
             }
             $apacheVirtualHostBuilder->setDomainRoot($suspendedPath);
             $apacheVirtualHostBuilder->setDomainPublic($suspendedPath);
-        }
-
-        if ($this->status == self::STATUS_DEACTIVATED) {
+        } else if ($this->status == self::STATUS_DEACTIVATED) {
             $deactivatedPath = '/var/www/html/deactivated';
             if (!is_dir($deactivatedPath)) {
                 mkdir($deactivatedPath, 0755, true);
@@ -288,47 +283,53 @@ class Domain extends Model
             }
             $apacheVirtualHostBuilder->setDomainRoot($deactivatedPath);
             $apacheVirtualHostBuilder->setDomainPublic($deactivatedPath);
-        }
+        } else {
 
-        if ($this->server_application_type == 'apache_nodejs') {
-            $apacheVirtualHostBuilder->setAppType('nodejs');
-            $apacheVirtualHostBuilder->setPassengerAppRoot($this->domain_public);
-            $apacheVirtualHostBuilder->setPassengerAppType('node');
-            $apacheVirtualHostBuilder->setPassengerStartupFile('app.js');
+            $apacheVirtualHostBuilder->setEnableLogs(true);
+            $apacheVirtualHostBuilder->setAdditionalServices($findHostingPlan->additional_services);
+            $apacheVirtualHostBuilder->setAppType($appType);
+            $apacheVirtualHostBuilder->setAppVersion($appVersion);
 
-            if (isset($this->server_application_settings['nodejs_version'])) {
-                $apacheVirtualHostBuilder->setAppVersion($this->server_application_settings['nodejs_version']);
-            }
-        }
+            if ($this->server_application_type == 'apache_nodejs') {
+                $apacheVirtualHostBuilder->setAppType('nodejs');
+                $apacheVirtualHostBuilder->setPassengerAppRoot($this->domain_public);
+                $apacheVirtualHostBuilder->setPassengerAppType('node');
+                $apacheVirtualHostBuilder->setPassengerStartupFile('app.js');
 
-        if ($this->server_application_type == 'apache_python') {
-            $apacheVirtualHostBuilder->setAppType('python');
-            $apacheVirtualHostBuilder->setPassengerAppRoot($this->domain_public);
-            $apacheVirtualHostBuilder->setPassengerAppType('python');
-
-            if (isset($this->server_application_settings['python_version'])) {
-                $apacheVirtualHostBuilder->setAppVersion($this->server_application_settings['python_version']);
-            }
-        }
-
-        if ($this->server_application_type == 'apache_ruby') {
-            $apacheVirtualHostBuilder->setAppType('ruby');
-            $apacheVirtualHostBuilder->setPassengerAppRoot($this->domain_public);
-            $apacheVirtualHostBuilder->setPassengerAppType('ruby');
-
-            if (isset($this->server_application_settings['ruby_version'])) {
-                $apacheVirtualHostBuilder->setAppVersion($this->server_application_settings['ruby_version']);
+                if (isset($this->server_application_settings['nodejs_version'])) {
+                    $apacheVirtualHostBuilder->setAppVersion($this->server_application_settings['nodejs_version']);
+                }
             }
 
-        }
-        if ($this->server_application_type == 'apache_docker') {
-            if (isset($this->server_application_settings['docker_container_id'])) {
-                $findDockerContainer = DockerContainer::where('id', $this->server_application_settings['docker_container_id'])
-                    ->first();
-                if ($findDockerContainer) {
-                    $apacheVirtualHostBuilder->setProxyPass('http://127.0.0.1:'.$findDockerContainer->external_port.'/');
-                    $apacheVirtualHostBuilder->setAppType('docker');
-                    $apacheVirtualHostBuilder->setAppVersion($appVersion);
+            if ($this->server_application_type == 'apache_python') {
+                $apacheVirtualHostBuilder->setAppType('python');
+                $apacheVirtualHostBuilder->setPassengerAppRoot($this->domain_public);
+                $apacheVirtualHostBuilder->setPassengerAppType('python');
+
+                if (isset($this->server_application_settings['python_version'])) {
+                    $apacheVirtualHostBuilder->setAppVersion($this->server_application_settings['python_version']);
+                }
+            }
+
+            if ($this->server_application_type == 'apache_ruby') {
+                $apacheVirtualHostBuilder->setAppType('ruby');
+                $apacheVirtualHostBuilder->setPassengerAppRoot($this->domain_public);
+                $apacheVirtualHostBuilder->setPassengerAppType('ruby');
+
+                if (isset($this->server_application_settings['ruby_version'])) {
+                    $apacheVirtualHostBuilder->setAppVersion($this->server_application_settings['ruby_version']);
+                }
+
+            }
+            if ($this->server_application_type == 'apache_docker') {
+                if (isset($this->server_application_settings['docker_container_id'])) {
+                    $findDockerContainer = DockerContainer::where('id', $this->server_application_settings['docker_container_id'])
+                        ->first();
+                    if ($findDockerContainer) {
+                        $apacheVirtualHostBuilder->setProxyPass('http://127.0.0.1:' . $findDockerContainer->external_port . '/');
+                        $apacheVirtualHostBuilder->setAppType('docker');
+                        $apacheVirtualHostBuilder->setAppVersion($appVersion);
+                    }
                 }
             }
         }

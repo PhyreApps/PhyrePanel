@@ -37,6 +37,8 @@ class ApacheVirtualHostBuilder
 
     public $proxyPass = null;
 
+    public $enableLogs = false;
+
     public function setPort($port)
     {
         $this->port = $port;
@@ -131,6 +133,11 @@ class ApacheVirtualHostBuilder
         $this->proxyPass = $proxyPass;
     }
 
+    public function enableLogs($enableLogs)
+    {
+        $this->enableLogs = $enableLogs;
+    }
+
     public function buildConfig()
     {
         $settings = [
@@ -153,6 +160,7 @@ class ApacheVirtualHostBuilder
             'passengerAppType' => $this->passengerAppType,
             'passengerStartupFile' => $this->passengerStartupFile,
             'proxyPass' => $this->proxyPass,
+            'enableLogs' => $this->enableLogs,
         ];
 
         $apacheVirtualHostConfigs = app()->virtualHostManager->getConfigs($this->additionalServices);

@@ -31,11 +31,15 @@
 
     @endif
 
+    @if($enableLogs)
+
     LogFormat "%h %l %u %t \"%r\" %>s %b" common
 
     CustomLog {{$domainRoot}}/logs/apache2/bytes.log bytes
     CustomLog {{$domainRoot}}/logs/apache2/access.log common
     ErrorLog {{$domainRoot}}/logs/apache2/error.log
+
+    @endif
 
     @if($appType == 'php')
 
