@@ -31,3 +31,6 @@ Route::get('/installer', \App\Livewire\Installer::class);
 
 Route::get('backup/download', [\App\Http\Controllers\BackupDownloadController::class, 'download'])
     ->name('backup.download');
+
+Route::get('/customers/{id}/login-with-token', [\App\Http\Controllers\Api\CustomersController::class, 'loginWithToken'])
+    ->name('customers.login-with-token');

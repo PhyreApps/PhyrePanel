@@ -6,6 +6,9 @@ use App\Http\Controllers\Api\Request\CustomerCreateRequest;
 use App\Http\Controllers\ApiController;
 use App\Models\Customer;
 use App\Models\HostingSubscription;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class CustomersController extends ApiController
 {
@@ -129,5 +132,52 @@ class CustomersController extends ApiController
                 'hostingSubscriptions' => $findHostingSubscriptions,
             ],
         ]);
+    }
+
+    public function loginWithToken($customerId, Request $request)
+    {
+        $findCustomer = Customer::where('id', $customerId)->first();
+        if (!$findCustomer) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Customer not found',
+            ], 404);
+        }
+
+
+        $findToken = $findCustomer->tokens()->where('token', $request->token)->where('name', 'externalLogin')->first();
+        if (!$findToken) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Token not found',
+            ], 404);
+        }
+
+        Auth::guard('web_customer')->loginUsingId($findCustomer->id);
+
+        return redirect('/customer');
+    }
+    public function generateLoginToken($customerId, Request $request)
+    {
+        $findCustomer = Customer::where('id', $customerId)->first();
+        if (! $findCustomer) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Customer not found',
+            ], 404);
+        }
+
+        $findCustomer->tokens()->delete();
+
+        $token = $findCustomer->createToken('externalLogin',['*'], now()->addMinute());
+
+        return response()->json([
+            'status' => 'ok',
+            'message' => 'Token generated',
+            'data' => [
+                'token' => $token->accessToken->token,
+            ],
+        ]);
+
     }
 }

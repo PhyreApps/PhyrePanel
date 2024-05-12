@@ -24,7 +24,11 @@ Route::middleware(\App\Http\Middleware\ApiKeyMiddleware::class)->group(function(
     Route::get('customers/{id}', [\App\Http\Controllers\Api\CustomersController::class, 'show'])->name('api.customers.show');
     Route::put('customers/{id}', [\App\Http\Controllers\Api\CustomersController::class, 'update'])->name('api.customers.update');
     Route::delete('customers/{id}', [\App\Http\Controllers\Api\CustomersController::class, 'destroy'])->name('api.customers.destroy');
-    Route::get('customers/{id}/hosting-subscriptions', [\App\Http\Controllers\Api\CustomersController::class, 'getHostingSubscriptionsByCustomerId'])->name('api.customers.hosting-subscriptions');
+    Route::get('customers/{id}/hosting-subscriptions', [\App\Http\Controllers\Api\CustomersController::class, 'getHostingSubscriptionsByCustomerId'])
+        ->name('api.customers.hosting-subscriptions');
+
+    Route::get('/customers/{id}/generate-login-token', [\App\Http\Controllers\Api\CustomersController::class, 'generateLoginToken'])
+        ->name('api.customers.generate-login-token');
 
     // Hosting subscriptions
     Route::get('hosting-subscriptions', [\App\Http\Controllers\Api\HostingSubscriptionsController::class, 'index'])->name('api.hosting-subscriptions.index');
