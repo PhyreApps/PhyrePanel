@@ -41,6 +41,10 @@ class HostingSubscription extends Model
         parent::boot();
 
         static::creating(function ($model) {
+            $findDomain = Domain::where('domain', $model->domain)->first();
+            if ($findDomain) {
+                throw new \Exception('Domain already exists');
+            }
             $create = $model->_createLinuxWebUser($model);
             if (isset($create['system_username']) && isset($create['system_password'])) {
                 $model->system_username = $create['system_username'];
