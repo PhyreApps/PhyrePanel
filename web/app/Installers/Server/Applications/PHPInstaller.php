@@ -94,4 +94,25 @@ class PHPInstaller
         shell_exec('bash /tmp/php-installer.sh >> ' . $this->logFilePath . ' &');
 
     }
+
+    public function installIonCube()
+    {
+
+        // 64  bit
+        // $ wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
+        // tar -zxvf ioncube_loaders_lin_x86*
+        //  cd ioncube/
+        // php -i | grep extension_dir
+        // sudo cp /tmp/ioncube/ioncube_loader_lin_8.2.so /usr/lib/php/20220829
+
+//         sudo vi /etc/php/8.2/cli/php.ini 		#for PHP CLI
+//         sudo vi /etc/php/8.2/fpm/php.ini		#for PHP-FPM & Nginx
+//         sudo vi /etc/php/8.2/apache2/php.ini	        #for Apache2
+
+        // zend_extension = /usr/lib/php/20220829/ioncube_loader_lin_8.2.so
+
+        // command to add zend_extension to the php.ini file
+        // sudo echo "zend_extension = /usr/lib/php/20220829/ioncube_loader_lin_8.2.so" | sudo tee -a /etc/php/8.2/apache2/php.ini
+        // sudo echo "zend_extension = /usr/lib/php/20220829/ioncube_loader_lin_8.2.so" | sudo tee -a /etc/php/8.2/cli/php.ini
+    }
 }
