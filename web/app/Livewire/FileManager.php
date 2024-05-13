@@ -54,7 +54,7 @@ class FileManager extends Component
     public function back()
     {
         $this->canIBack = false;
-        
+
         $newRealPath = dirname($this->currentRealPath);
         if (Str::startsWith($newRealPath, $this->domainHomeRoot)) {
             $this->currentRealPath = $newRealPath;
