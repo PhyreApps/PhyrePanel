@@ -71,7 +71,7 @@ class ManageHostingSubscriptionFileManager extends ViewRecord implements HasTabl
         $findDomain = Domain::select(['home_root', 'hosting_subscription_id', 'is_main'])
             ->where('hosting_subscription_id', $this->record->id)
             ->where('is_main',1)->first();
-        
+
         $this->disk = $findDomain->home_root;
 
         $storage = Storage::build([
@@ -112,11 +112,11 @@ class ManageHostingSubscriptionFileManager extends ViewRecord implements HasTabl
             ->actions([
 
                 ActionGroup::make([
-                    ViewAction::make('open')
-                        ->label('Open')
-                        ->hidden(fn (FileItem $record): bool => ! $record->canOpen())
-                        ->url(fn (FileItem $record): string => $storage->url($record->path))
-                        ->openUrlInNewTab(),
+//                    ViewAction::make('open')
+//                        ->label('Open')
+//                        ->hidden(fn (FileItem $record): bool => ! $record->canOpen())
+//                        ->url(fn (FileItem $record): string => $storage->url($record->path))
+//                        ->openUrlInNewTab(),
                     Action::make('download')
                         ->label('Download')
                         ->icon('heroicon-o-document-arrow-down')
