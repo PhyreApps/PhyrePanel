@@ -199,62 +199,61 @@ class Backup extends Model
         $backupFilename = 'phyre-backup-'.date('Ymd-His').'.zip';
         $backupFilePath = $storagePath.'/' . $backupFilename;
 
-        if ($this->backup_type == 'full') {
+        // Export Phyre Panel database
+        $databaseBackupPath = $backupTempPath.'/database.sql';
 
-            // Export Phyre Panel database
-            $databaseBackupPath = $backupTempPath.'/database.sql';
+        $backupLogFileName = 'backup.log';
+        $backupLogFilePath = $backupPath.'/'.$backupLogFileName;
 
-            $backupLogFileName = 'backup.log';
-            $backupLogFilePath = $backupPath.'/'.$backupLogFileName;
+        $backupTempScript = '/tmp/backup-script-'.$this->id.'.sh';
+        $shellFileContent = '';
+        $shellFileContent .= 'echo "Backup Phyre Panel files"'. PHP_EOL;
 
-            $backupTempScript = '/tmp/backup-script-'.$this->id.'.sh';
-            $shellFileContent = '';
-            $shellFileContent .= 'echo "Backup Phyre Panel files"'. PHP_EOL;
+        // Export Phyre Panel database
+        $mysqlAuthConf = '/root/.phyre-mysql.cnf';
+        $mysqlAuthContent = '[client]' . PHP_EOL;
+        $mysqlAuthContent .= 'user="' . PhyreConfig::get('MYSQL_ROOT_USERNAME') .'"'. PHP_EOL;
+        $mysqlAuthContent .= 'password="' . PhyreConfig::get('MYSQL_ROOT_PASSWORD') . '"' . PHP_EOL;
+        file_put_contents($mysqlAuthConf, $mysqlAuthContent);
 
-            // Export Phyre Panel database
-            $mysqlAuthConf = '/root/.phyre-mysql.cnf';
-            $mysqlAuthContent = '[client]' . PHP_EOL;
-            $mysqlAuthContent .= 'user="' . PhyreConfig::get('MYSQL_ROOT_USERNAME') .'"'. PHP_EOL;
-            $mysqlAuthContent .= 'password="' . PhyreConfig::get('MYSQL_ROOT_PASSWORD') . '"' . PHP_EOL;
-            file_put_contents($mysqlAuthConf, $mysqlAuthContent);
+        $shellFileContent .= 'mysqldump --defaults-extra-file='.$mysqlAuthConf.' "'.PhyreConfig::get('DB_DATABASE').'" > '.$databaseBackupPath . PHP_EOL;
 
-            $shellFileContent .= 'mysqldump --defaults-extra-file='.$mysqlAuthConf.' "'.PhyreConfig::get('DB_DATABASE').'" > '.$databaseBackupPath . PHP_EOL;
-
-            // Export Phyre Panel Database
-            $database = [];
-            $tables = Schema::getTables();
-            if (count($tables) > 0) {
-                foreach ($tables as $table) {
-                    $tableData = [];
-                    $tableData['table'] = $table;
-                    $tableData['columns'] = Schema::getColumnListing($table['name']);
-                    $tableData['data'] = DB::table($table['name'])->get()->toArray();
-                    $database[$table['name']] = $tableData;
-                }
+        // Export Phyre Panel Database
+        $database = [];
+        $tables = Schema::getTables();
+        if (count($tables) > 0) {
+            foreach ($tables as $table) {
+                $tableData = [];
+                $tableData['table'] = $table;
+                $tableData['columns'] = Schema::getColumnListing($table['name']);
+                $tableData['data'] = DB::table($table['name'])->get()->toArray();
+                $database[$table['name']] = $tableData;
             }
+        }
 
-            $backupStructure = [
-                'database'=>$database,
-                'config'=>PhyreConfig::getAll()
-            ];
-            file_put_contents($backupTempPath.'/backup.json', json_encode($backupStructure, JSON_PRETTY_PRINT));
-            $shellFileContent .= 'echo "Backup Phyre Panel Config"'. PHP_EOL;
-            $shellFileContent .= 'cp '.base_path().'/phyre-config.ini '.$backupTempPath.'/phyre-config.ini'. PHP_EOL;
+        $backupStructure = [
+            'database'=>$database,
+            'config'=>PhyreConfig::getAll()
+        ];
+        file_put_contents($backupTempPath.'/backup.json', json_encode($backupStructure, JSON_PRETTY_PRINT));
+        $shellFileContent .= 'echo "Backup Phyre Panel Config"'. PHP_EOL;
+        $shellFileContent .= 'cp '.base_path().'/phyre-config.ini '.$backupTempPath.'/phyre-config.ini'. PHP_EOL;
 
+        if ($this->backup_type == 'full') {
             // Export Phyre Panel Hosting Subscription
             $findHostingSubscription = HostingSubscription::all();
             if ($findHostingSubscription->count() > 0) {
                 foreach ($findHostingSubscription as $hostingSubscription) {
-                    $hostingSubscriptionsMainPath = $backupTempPath .'/hosting_subscriptions';
-                    $hostingSubscriptionPath = $hostingSubscriptionsMainPath .'/'. $hostingSubscription->system_username;
+                    $hostingSubscriptionsMainPath = $backupTempPath . '/hosting_subscriptions';
+                    $hostingSubscriptionPath = $hostingSubscriptionsMainPath . '/' . $hostingSubscription->system_username;
                     $shellFileContent .= PHP_EOL;
-                    $shellFileContent .= 'echo "Backup up hosting subscription: ' . $hostingSubscription->system_username .'" '. PHP_EOL;
-                    $shellFileContent .= 'mkdir -p '.$hostingSubscriptionPath.PHP_EOL;
+                    $shellFileContent .= 'echo "Backup up hosting subscription: ' . $hostingSubscription->system_username . '" ' . PHP_EOL;
+                    $shellFileContent .= 'mkdir -p ' . $hostingSubscriptionPath . PHP_EOL;
 
                     // cp -r (copy recursively, also copy hidden files)
-                    $shellFileContent .= 'cp -r /home/'.$hostingSubscription->system_username.'/ ' . $hostingSubscriptionsMainPath .PHP_EOL;
+                    $shellFileContent .= 'cp -r /home/' . $hostingSubscription->system_username . '/ ' . $hostingSubscriptionsMainPath . PHP_EOL;
 
-                    $shellFileContent .= 'mkdir -p '.$hostingSubscriptionPath.'/databases'.PHP_EOL;
+                    $shellFileContent .= 'mkdir -p ' . $hostingSubscriptionPath . '/databases' . PHP_EOL;
 
                     $getDatabases = Database::where('hosting_subscription_id', $hostingSubscription->id)
                         ->where(function ($query) {
@@ -268,7 +267,7 @@ class Backup extends Model
                             $databaseName = $database->database_name_prefix . $database->database_name;
                             $shellFileContent .= 'echo "Backup up database: ' . $databaseName . '" ' . PHP_EOL;
                             $databaseBackupPath = $hostingSubscriptionPath . '/databases/' . $databaseName . '.sql';
-                            $shellFileContent .= 'mysqldump --defaults-extra-file='.$mysqlAuthConf.' "' . $databaseName . '" > ' . $databaseBackupPath . PHP_EOL;
+                            $shellFileContent .= 'mysqldump --defaults-extra-file=' . $mysqlAuthConf . ' "' . $databaseName . '" > ' . $databaseBackupPath . PHP_EOL;
                         }
                     }
 
@@ -276,50 +275,52 @@ class Backup extends Model
                 }
             }
 
-            // With find, we can search for all files,directories (including hidden) in the current directory and zip them
-            $shellFileContent .= 'cd '.$backupTempPath .' && find . -exec zip --symlinks -r '.$backupFilePath.' {} \;'. PHP_EOL;
-
-            $shellFileContent .= 'rm -rf '.$backupTempPath.PHP_EOL;
-            $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;
-            $shellFileContent .= 'touch ' . $backupPath. '/backup.done' . PHP_EOL;
-            $shellFileContent .= 'rm -rf ' . $backupTempScript;
-
-            file_put_contents($backupTempScript, $shellFileContent);
-
-            // chmod read and delete by owner only
-            chmod($backupTempScript, 0600);
-
-            $processId = shell_exec('bash '.$backupTempScript.' >> ' . $backupLogFilePath . ' & echo $!');
-            $processId = intval($processId);
-
-            if ($processId > 0 && is_numeric($processId)) {
-
-                $this->path = $backupPath;
-                $this->root_path = $storagePath;
-                $this->temp_path = $backupTempPath;
-                $this->file_path = $backupFilePath;
-                $this->file_name = $backupFilename;
-
-                $this->status = 'processing';
-                $this->queued = true;
-                $this->queued_at = now();
-                $this->process_id = $processId;
-
-                $this->save();
-
-                return [
-                    'status' => 'processing',
-                    'message' => 'System backup started'
-                ];
-            } else {
-                $this->status = 'failed';
-                $this->save();
-                return [
-                    'status' => 'failed',
-                    'message' => 'System backup failed to start'
-                ];
-            }
-
         }
+
+        // With find, we can search for all files,directories (including hidden) in the current directory and zip them
+        $shellFileContent .= 'cd '.$backupTempPath .' && find . -exec zip --symlinks -r '.$backupFilePath.' {} \;'. PHP_EOL;
+
+        $shellFileContent .= 'rm -rf '.$backupTempPath.PHP_EOL;
+        $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;
+        $shellFileContent .= 'touch ' . $backupPath. '/backup.done' . PHP_EOL;
+        $shellFileContent .= 'rm -rf ' . $backupTempScript;
+
+        file_put_contents($backupTempScript, $shellFileContent);
+
+        // chmod read and delete by owner only
+        chmod($backupTempScript, 0600);
+
+        $processId = shell_exec('bash '.$backupTempScript.' >> ' . $backupLogFilePath . ' & echo $!');
+        $processId = intval($processId);
+
+        if ($processId > 0 && is_numeric($processId)) {
+
+            $this->path = $backupPath;
+            $this->root_path = $storagePath;
+            $this->temp_path = $backupTempPath;
+            $this->file_path = $backupFilePath;
+            $this->file_name = $backupFilename;
+
+            $this->status = 'processing';
+            $this->queued = true;
+            $this->queued_at = now();
+            $this->process_id = $processId;
+
+            $this->save();
+
+            return [
+                'status' => 'processing',
+                'message' => 'System backup started'
+            ];
+        } else {
+            $this->status = 'failed';
+            $this->save();
+            return [
+                'status' => 'failed',
+                'message' => 'System backup failed to start'
+            ];
+        }
+
+
     }
 }
