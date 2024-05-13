@@ -83,18 +83,30 @@ class FileManager extends Component
                 if ($scanFile == '.' || $scanFile == '..') {
                     continue;
                 }
-                $append = [
-                    'name' => $scanFile,
-                    'path' => $this->currentRealPath . '/' . $scanFile,
-                    'is_dir' => is_dir($this->currentRealPath . '/' . $scanFile)
-                ];
-                if ($append['is_dir']) {
-                    $folders[] = $append;
-                } else {
-                    $files[] = $append;
+                try {
+                    $append = [
+                        'extension' => pathinfo($scanFile, PATHINFO_EXTENSION),
+                        'name' => $scanFile,
+                        'path' => $this->currentRealPath . '/' . $scanFile,
+                        'is_dir' => is_dir($this->currentRealPath . '/' . $scanFile),
+                        'permission' => substr(sprintf('%o', fileperms($this->currentRealPath . '/' . $scanFile)), -4),
+                        'owner' => posix_getpwuid(fileowner($this->currentRealPath . '/' . $scanFile))['name'],
+                        'group' => posix_getgrgid(filegroup($this->currentRealPath . '/' . $scanFile))['name'],
+                        'size' => filesize($this->currentRealPath . '/' . $scanFile),
+                        'last_modified' => filemtime($this->currentRealPath . '/' . $scanFile),
+                        'type' => filetype($this->currentRealPath . '/' . $scanFile),
+                    ];
+                    if ($append['is_dir']) {
+                        $folders[] = $append;
+                    } else {
+                        $files[] = $append;
+                    }
+                } catch (\Exception $e) {
+                    continue;
                 }
             }
         }
+
         $all = array_merge($folders, $files);
 
         return view('livewire.file-manager.index', [
