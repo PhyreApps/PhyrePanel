@@ -56,6 +56,8 @@ class Settings extends BaseSettings
             $masterDomain->domain = $wildcardDomain;
             $masterDomain->configureVirtualHost();
         }
+        
+        file_put_contents('/var/www/html/index.html', setting('general.master_domain_page_html'));
 
     }
 
