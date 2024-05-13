@@ -45,6 +45,7 @@ class MasterDomain
         $apacheVirtualHostBuilder->setDomainRoot($this->domainRoot);
         $apacheVirtualHostBuilder->setHomeRoot($this->domainRoot);
         $apacheVirtualHostBuilder->setServerAdmin($this->email);
+        $apacheVirtualHostBuilder->setDomainAlias('*.'.$this->domain);
 
         $apacheBaseConfig = $apacheVirtualHostBuilder->buildConfig();
 

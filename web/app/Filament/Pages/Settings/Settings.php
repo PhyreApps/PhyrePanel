@@ -44,6 +44,14 @@ class Settings extends BaseSettings
         // Make master domain virtual host
         $masterDomain = new MasterDomain();
         $masterDomain->configureVirtualHost();
+
+        $wildcardDomain = setting('general.wildcard_domain');
+        if (!empty($wildcardDomain)) {
+            $masterDomain = new MasterDomain();
+            $masterDomain->domain = $wildcardDomain;
+            $masterDomain->configureVirtualHost();
+        }
+
     }
 
     public function schema(): array|Closure
@@ -59,6 +67,7 @@ class Settings extends BaseSettings
                             ColorPicker::make('general.brand_primary_color'),
 
                             TextInput::make('general.master_domain')->live(),
+                            TextInput::make('general.wildcard_domain')->live(),
 
                             TextInput::make('general.master_email'),
                             Select::make('general.master_country')
