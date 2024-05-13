@@ -9,3 +9,6 @@ services:
             EULA: "TRUE"
             GAMEMODE: survival
             DIFFICULTY: normal
+        volumes:
+        # attach the relative directory 'data' to the container's /data path
+        - ./data:/data
