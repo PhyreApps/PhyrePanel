@@ -1,31 +1,65 @@
-<div class="rounded-xl bg-white p-4 shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10">
-
-    <div>
-       Path: {{$currentRealPath}}
-    </div>
+<div>
 
     <div class="my-2">
 
-        <x-filament::button wire:click="back">
+        <x-filament::button wire:click="back" icon="heroicon-o-arrow-uturn-left">
            Back
         </x-filament::button>
 
-        <x-filament::button wire:click="refresh">
+        <x-filament::button wire:click="refresh" icon="heroicon-o-arrow-path">
             Refresh
         </x-filament::button>
 
-        <x-filament::button wire:click="createFolder">
-            Create Folder
-        </x-filament::button>
 
-        <x-filament::button wire:click="upload">
+        <x-filament::modal id="create-folder">
+            <x-slot name="trigger">
+                <x-filament::button icon="heroicon-o-plus">
+                    Create Folder
+                </x-filament::button>
+            </x-slot>
+            <x-slot name="heading">
+                Create Folder
+            </x-slot>
+            <x-slot name="footer">
+                <div class="mb-2">
+                    <x-filament::input.wrapper>
+                        <x-filament::input placeholder="Folder name" type="text" wire:model="folderName" wire:keydown.enter="createFolder" />
+                    </x-filament::input.wrapper>
+                </div>
+                <x-filament::button wire:click="createFolder">
+                    Create
+                </x-filament::button>
+            </x-slot>
+        </x-filament::modal>
+
+        <x-filament::modal id="create-file">
+            <x-slot name="trigger">
+                <x-filament::button icon="heroicon-o-pencil">
+                    Create File
+                </x-filament::button>
+            </x-slot>
+            <x-slot name="heading">
+                Create File
+            </x-slot>
+            <x-slot name="footer">
+                <div class="mb-2">
+
+                </div>
+                <x-filament::button wire:click="createFile">
+                    Create
+                </x-filament::button>
+            </x-slot>
+        </x-filament::modal>
+
+        <x-filament::button wire:click="upload" icon="heroicon-o-arrow-up-tray">
             Upload
         </x-filament::button>
+
 
     </div>
 
     @if(!empty($files))
-        <table class="w-full rounded mt-3 border border-slate-200">
+        <table class="w-full rounded mt-4 border border-slate-200">
             <thead>
                 <tr>
                     <th class="p-4">#</th>
@@ -36,6 +70,21 @@
                     <th class="p-4 text-left">Permission</th>
                 </tr>
             </thead>
+            <tbody>
+
+            @if($canIBack)
+            <tr wire:click="back" class="border border-slate-200 cursor-pointer hover:bg-gray-50 p-4">
+                <td colspan="6" class="p-4">
+                    <div class="flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="m4 10l-.707.707L2.586 10l.707-.707zm17 8a1 1 0 1 1-2 0zM8.293 15.707l-5-5l1.414-1.414l5 5zm-5-6.414l5-5l1.414 1.414l-5 5zM4 9h10v2H4zm17 7v2h-2v-2zm-7-7a7 7 0 0 1 7 7h-2a5 5 0 0 0-5-5z" />
+                    </svg>
+                    Back to parent folder
+                    </div>
+                </td>
+            </tr>
+            @endif
+
             @foreach($files as $file)
                 <tr wire:click="goto('{{$file['name']}}')" wire:key="{{md5($file['name'])}}" class="border border-slate-200 cursor-pointer hover:bg-gray-50 p-4">
                     <td class="w-6 p-4">
@@ -108,6 +157,7 @@
                     </td>
                 </tr>
             @endforeach
+            </tbody>
         </table>
     @else
         <p>No files found</p>

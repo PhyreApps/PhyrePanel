@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Domain;
 use App\Models\HostingSubscription;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -18,6 +19,10 @@ class FileManager extends Component
     public $currentRealPath;
 
     public $currentPath;
+
+    public $folderName;
+
+    public $canIBack = false;
 
     public function mount($hostingSubscriptionId)
     {
@@ -52,6 +57,8 @@ class FileManager extends Component
 
         if (Str::startsWith($newRealPath, $this->domainHomeRoot)) {
             $this->currentRealPath = $newRealPath;
+        } else {
+            $this->canIBack = false;
         }
     }
 
@@ -67,6 +74,17 @@ class FileManager extends Component
 
     }
 
+    public function createFolder()
+    {
+        $this->folderName = Str::slug($this->folderName);
+        $newPath = $this->currentRealPath . '/' . $this->folderName;
+        if (!is_dir($newPath)) {
+            mkdir($newPath);
+            $this->folderName = '';
+            $this->dispatch('close-modal', id: 'create-folder');
+        }
+    }
+
     public function render()
     {
         if (!$this->currentRealPath) {
@@ -77,6 +95,10 @@ class FileManager extends Component
         $files = [];
         $folders = [];
         if ($this->currentRealPath) {
+
+            if (Str::startsWith(dirname($this->currentRealPath), $this->domainHomeRoot)) {
+                $this->canIBack = true;
+            }
 
             $scanFiles = scandir($this->currentRealPath);
             foreach ($scanFiles as $scanFile) {
@@ -93,7 +115,7 @@ class FileManager extends Component
                         'owner' => posix_getpwuid(fileowner($this->currentRealPath . '/' . $scanFile))['name'],
                         'group' => posix_getgrgid(filegroup($this->currentRealPath . '/' . $scanFile))['name'],
                         'size' => filesize($this->currentRealPath . '/' . $scanFile),
-                        'last_modified' => filemtime($this->currentRealPath . '/' . $scanFile),
+                        'last_modified' => date('Y-m-d H:i:s', filemtime($this->currentRealPath . '/' . $scanFile)),
                         'type' => filetype($this->currentRealPath . '/' . $scanFile),
                     ];
                     if ($append['is_dir']) {
