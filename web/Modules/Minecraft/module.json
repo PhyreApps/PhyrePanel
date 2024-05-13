@@ -1,0 +1,14 @@
+{
+    "name": "Minecraft",
+    "alias": "minecraft",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "logoIcon": "minecraft-logo",
+    "category": "Game Servers",
+    "adminUrl": "/admin/minecraft/servers",
+    "providers": [
+        "Modules\\Minecraft\\App\\Providers\\MinecraftServiceProvider"
+    ],
+    "files": []
+}

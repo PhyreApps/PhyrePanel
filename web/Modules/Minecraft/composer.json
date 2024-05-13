@@ -1,0 +1,31 @@
+{
+    "name": "phyreapps/minecraft",
+    "description": "",
+    "authors": [
+        {
+            "name": "Bozhidar Slaveykov",
+            "email": "selfworksbg@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Minecraft\\": "",
+            "Modules\\Minecraft\\App\\": "app/",
+            "Modules\\Minecraft\\Database\\Factories\\": "database/factories/",
+            "Modules\\Minecraft\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Minecraft\\Tests\\": "tests/"
+        }
+    }
+}
