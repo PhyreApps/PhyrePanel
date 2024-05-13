@@ -146,6 +146,17 @@ class ManageHostingSubscriptionFileManager extends ViewRecord implements HasTabl
             ->checkIfRecordIsSelectableUsing(fn (FileItem $record): bool => ! $record->isPreviousPath())
             ->headerActionsPosition(HeaderActionsPosition::Bottom)
             ->headerActions([
+
+                Action::make('home')
+                    ->label('Home')
+                    ->action(fn () => $this->path = '')
+                    ->icon('heroicon-o-home'),
+
+                Action::make('back')
+                    ->label('Back')
+                    ->action(fn () => $this->path = dirname($this->path))
+                    ->icon('heroicon-o-arrow-left'),
+
                 Action::make('create_folder')
                     ->label('Create Folder')
                     ->icon('heroicon-o-folder-plus')

@@ -96,15 +96,14 @@ class FileItem extends Model
                 'size' => null,
                 'type' => 'Folder',
                 'path' => $directory,
-            ]
-            ),
+            ]),
             ...collect($storage->files(static::$path))
             ->sort()
             ->map(fn (string $file): array => [
                 'name' => Str::remove(self::$path.'/', $file),
                 'dateModified' => $storage->lastModified($file),
                 'size' => $storage->size($file),
-                'type' => $storage->mimeType($file) ?: null,
+                'type' => $storage->mimeType($file) ?: 'File',
                 'path' => $file,
             ]
             )
