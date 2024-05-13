@@ -13,7 +13,7 @@ class FileItem extends Model
 {
     use Sushi;
 
-    protected static string $disk;
+    protected static string $rootPath;
 
     protected static string $path;
 
@@ -24,9 +24,9 @@ class FileItem extends Model
         'type' => 'string',
     ];
 
-    public static function queryForDiskAndPath(string $disk = 'public', string $path = ''): Builder
+    public static function queryForDiskAndPath(string $rootPath = 'public', string $path = ''): Builder
     {
-        static::$disk = $disk;
+        static::$rootPath = $rootPath;
         static::$path = $path;
 
         return static::query();
@@ -37,7 +37,7 @@ class FileItem extends Model
         return Storage::build([
             'driver' => 'local',
             'throw' => false,
-            'root' => static::$disk,
+            'root' => static::$rootPath,
         ]);
     }
 
@@ -105,8 +105,7 @@ class FileItem extends Model
                 'size' => $storage->size($file),
                 'type' => $storage->mimeType($file) ?: 'File',
                 'path' => $file,
-            ]
-            )
+            ])
         )->toArray();
 
     }
