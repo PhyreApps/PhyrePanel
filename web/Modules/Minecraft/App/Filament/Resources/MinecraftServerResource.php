@@ -55,6 +55,7 @@ class MinecraftServerResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -77,6 +78,7 @@ class MinecraftServerResource extends Resource
             'index' => Pages\ListMinecraftServers::route('/'),
             'create' => Pages\CreateMinecraftServer::route('/create'),
             'edit' => Pages\EditMinecraftServer::route('/{record}/edit'),
+            'view' => Pages\ViewMinecraftServer::route('/{record}'),
         ];
     }
 }
