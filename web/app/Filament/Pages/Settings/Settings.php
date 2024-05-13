@@ -25,8 +25,10 @@ class Settings extends BaseSettings
 
     public function save() : void
     {
-        parent::save();
+        $oldMasterDomain = setting('general.master_domain');
+        $oldWildcardDomain = setting('general.wildcard_domain');
 
+        parent::save();
 
         // Overwrite supervisor config file
         $workersCount = (int) setting('general.supervisor_workers_count');
@@ -41,12 +43,15 @@ class Settings extends BaseSettings
         shell_exec('service supervisor restart');
 
 
-        // Make master domain virtual host
-        $masterDomain = new MasterDomain();
-        $masterDomain->configureVirtualHost();
+        if ($oldMasterDomain != setting('general.master_domain')) {
+            // Make master domain virtual host
+            $masterDomain = new MasterDomain();
+            $masterDomain->configureVirtualHost();
+        }
 
         $wildcardDomain = setting('general.wildcard_domain');
-        if (!empty($wildcardDomain)) {
+        if ($oldWildcardDomain != $wildcardDomain) {
+            // Make wildcard domain virtual host
             $masterDomain = new MasterDomain();
             $masterDomain->domain = $wildcardDomain;
             $masterDomain->configureVirtualHost();
