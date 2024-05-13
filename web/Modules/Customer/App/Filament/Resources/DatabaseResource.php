@@ -23,6 +23,8 @@ class DatabaseResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
+    protected static ?string $navigationGroup = 'Hosting';
+
     public static function form(Form $form): Form
     {
         $systemUsername = '';
