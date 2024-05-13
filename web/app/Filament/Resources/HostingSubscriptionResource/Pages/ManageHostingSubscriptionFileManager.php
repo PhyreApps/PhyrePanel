@@ -68,8 +68,10 @@ class ManageHostingSubscriptionFileManager extends ViewRecord implements HasTabl
 
     public function table(Table $table): Table
     {
-        $hostingSubscription = HostingSubscription::select(['id'])->first();
-        $findDomain = Domain::select(['home_root', 'hosting_subscription_id', 'is_main'])->where('hosting_subscription_id', $hostingSubscription->id)->where('is_main',1)->first();
+        $findDomain = Domain::select(['home_root', 'hosting_subscription_id', 'is_main'])
+            ->where('hosting_subscription_id', $this->record->id)
+            ->where('is_main',1)->first();
+        
         $this->disk = $findDomain->home_root;
 
         $storage = Storage::build([
