@@ -1,7 +1,8 @@
 <x-filament-panels::page>
 
     <div>
-        <livewire:file-manager hostingSubscriptionId="{{$this->data['id']}}" />
+       {{-- hostingSubscriptionId="{{$this->data['id']}}"--}}
+        <livewire:file-manager />
     </div>
 
 </x-filament-panels::page>

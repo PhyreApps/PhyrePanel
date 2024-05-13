@@ -2,141 +2,136 @@
 
 namespace App\Livewire;
 
-use App\Helpers;
-use App\Models\Domain;
-use App\Models\HostingSubscription;
-use Illuminate\Support\Str;
+use App\Models\FileItem;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\TextInput;
+use Filament\Pages\Page;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\BulkAction;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Table;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Number;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 
-class FileManager extends Component
+class FileManager extends Page implements HasTable
 {
-    public $hostingSubscriptionId;
+    use InteractsWithTable;
 
-    public $hostingSubscriptionSystemUsername;
+    protected static ?string $navigationIcon = 'heroicon-o-folder-open';
 
-    public $domainHomeRoot;
+    protected static string $view = 'filament.pages.file-manager';
 
-    public $currentRealPath;
+    protected string $disk = 'local';
 
-    public $currentPath;
+    #[Url(except: '')]
+    public string $path = '';
 
-    public $folderName;
+    protected $listeners = ['updatePath' => '$refresh'];
 
-    public $canIBack = false;
-
-    public function mount($hostingSubscriptionId)
+    public function table(Table $table): Table
     {
-        $this->hostingSubscriptionId = $hostingSubscriptionId;
+        return $table
+            ->heading($this->path ?: 'Root')
+            ->query(
+                FileItem::queryForDiskAndPath($this->disk, $this->path)
+            )
+            ->paginated(false)
+            ->columns([
+                TextColumn::make('name')
+                    ->icon(fn ($record): string => match ($record->type) {
+                        'Folder' => 'heroicon-o-folder',
+                        default => 'heroicon-o-document'
+                    })
+                    ->iconColor(fn ($record): string => match ($record->type) {
+                        'Folder' => 'warning',
+                        default => 'gray',
+                    })
+                    ->action(function (FileItem $record) {
+                        if ($record->isFolder()) {
+                            $this->path = $record->path;
 
-        $findHostingSubscription = HostingSubscription::where('id', $this->hostingSubscriptionId)->first();
-        $findDomain = Domain::where('hosting_subscription_id', $this->hostingSubscriptionId)
-            ->where('is_main', 1)
-            ->first();
+                            $this->dispatch('updatePath');
+                        }
+                    }),
+                TextColumn::make('dateModified')
+                    ->dateTime(),
+                TextColumn::make('size')
+                    ->formatStateUsing(fn ($state) => $state ? Number::fileSize($state) : ''),
+                TextColumn::make('type'),
+            ])
+            ->actions([
+                ViewAction::make('open')
+                    ->label('Open')
+                    ->hidden(fn (FileItem $record): bool => ! $record->canOpen())
+                    ->url(fn (FileItem $record): string => Storage::disk($this->disk)->url($record->path))
+                    ->openUrlInNewTab(),
+                Action::make('download')
+                    ->label('Download')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->hidden(fn (FileItem $record): bool => $record->isFolder())
+                    ->action(fn (FileItem $record) => Storage::disk($this->disk)->download($record->path)),
+                DeleteAction::make('delete')
+                    ->successNotificationTitle('File deleted')
+                    ->hidden(fn (FileItem $record): bool => $record->isPreviousPath())
+                    ->action(function (FileItem $record, Action $action) {
+                        if ($record->delete()) {
+                            $action->sendSuccessNotification();
+                        }
 
-        if (!$findHostingSubscription || !$findDomain) {
-            throw new \Exception('Hosting subscription not found');
-        }
+                    }),
+            ])
+            ->bulkActions([
+                BulkAction::make('delete')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->successNotificationTitle('Files deleted')
+                    ->deselectRecordsAfterCompletion()
+                    ->action(function (Collection $records, BulkAction $action) {
+                        $records->each(fn (FileItem $record) => $record->delete());
+                        $action->sendSuccessNotification();
+                    }),
+            ])
+            ->checkIfRecordIsSelectableUsing(fn (FileItem $record): bool => ! $record->isPreviousPath())
+            ->headerActions([
+                Action::make('create_folder')
+                    ->label('Create Folder')
+                    ->icon('heroicon-o-folder-plus')
+                    ->form([
+                        TextInput::make('name')
+                            ->label('Folder name')
+                            ->placeholder('Folder name')
+                            ->required(),
+                    ])
+                    ->successNotificationTitle('Folder created')
+                    ->action(function (array $data, Component $livewire, Action $action): void {
+                        Storage::disk($livewire->disk)
+                            ->makeDirectory($livewire->path.'/'.$data['name']);
 
-        $this->hostingSubscriptionSystemUsername = $findHostingSubscription->system_username;
-        $this->domainHomeRoot = $findDomain->home_root;
+                        $this->resetTable();
+                        $action->sendSuccessNotification();
+                    }),
 
-    }
-
-    public function openDeleteModal()
-    {
-        $this->dispatch('open-modal', id: 'delete-file');
-    }
-
-    public function goto($dirOrFile)
-    {
-        $newPath = $this->currentRealPath . '/' . $dirOrFile;
-        if (is_dir($newPath)) {
-            $this->currentRealPath = $newPath;
-        }
-
-    }
-
-    public function back()
-    {
-        $this->canIBack = false;
-
-        $newRealPath = dirname($this->currentRealPath);
-        if (Str::startsWith($newRealPath, $this->domainHomeRoot)) {
-            $this->currentRealPath = $newRealPath;
-        }
-    }
-
-    public function canIAccess($realPath, $systemUsername)
-    {
-        $checkOwner = posix_getpwuid(fileowner($realPath));
-
-        if (isset($checkOwner['name']) && $checkOwner['name'] == $systemUsername) {
-            return true;
-        }
-
-        return false;
-
-    }
-
-    public function createFolder()
-    {
-        $this->folderName = Str::slug($this->folderName);
-        $newPath = $this->currentRealPath . '/' . $this->folderName;
-        if (!is_dir($newPath)) {
-            mkdir($newPath);
-            $this->folderName = '';
-            $this->dispatch('close-modal', id: 'create-folder');
-        }
-    }
-
-    public function render()
-    {
-        if (!$this->currentRealPath) {
-            $this->currentRealPath = $this->domainHomeRoot;
-        }
-
-        $all = [];
-        $files = [];
-        $folders = [];
-        if ($this->currentRealPath) {
-
-            if (Str::startsWith(dirname($this->currentRealPath), $this->domainHomeRoot)) {
-                $this->canIBack = true;
-            }
-
-            $scanFiles = scandir($this->currentRealPath);
-            foreach ($scanFiles as $scanFile) {
-                if ($scanFile == '.' || $scanFile == '..') {
-                    continue;
-                }
-                try {
-                    $append = [
-                        'extension' => pathinfo($scanFile, PATHINFO_EXTENSION),
-                        'name' => $scanFile,
-                        'path' => $this->currentRealPath . '/' . $scanFile,
-                        'is_dir' => is_dir($this->currentRealPath . '/' . $scanFile),
-                        'permission' => substr(sprintf('%o', fileperms($this->currentRealPath . '/' . $scanFile)), -4),
-                        'owner' => posix_getpwuid(fileowner($this->currentRealPath . '/' . $scanFile))['name'],
-                        'group' => posix_getgrgid(filegroup($this->currentRealPath . '/' . $scanFile))['name'],
-                        'size' => Helpers::getHumanReadableSize(filesize($this->currentRealPath . '/' . $scanFile)),
-                        'last_modified' => date('Y-m-d H:i:s', filemtime($this->currentRealPath . '/' . $scanFile)),
-                        'type' => filetype($this->currentRealPath . '/' . $scanFile),
-                    ];
-                    if ($append['is_dir']) {
-                        $folders[] = $append;
-                    } else {
-                        $files[] = $append;
-                    }
-                } catch (\Exception $e) {
-                    continue;
-                }
-            }
-        }
-
-        $all = array_merge($folders, $files);
-
-        return view('livewire.file-manager.index', [
-            'files'=>$all
-        ]);
+                Action::make('upload_file')
+                    ->label('Upload files')
+                    ->icon('heroicon-o-document-arrow-up')
+                    ->color('info')
+                    ->form([
+                        FileUpload::make('files')
+                            ->required()
+                            ->multiple()
+                            ->previewable(false)
+                            ->preserveFilenames()
+                            ->disk($this->disk)
+                            ->directory($this->path),
+                    ]),
+            ]);
     }
 }
