@@ -1,5 +1,6 @@
 <div>
 
+    <div>
     <div class="my-2">
 
         <x-filament::button wire:click="back" icon="heroicon-o-arrow-uturn-left">
@@ -55,7 +56,20 @@
         <x-filament::button wire:click="upload" icon="heroicon-o-arrow-up-tray">
             Upload
         </x-filament::button>
-        
+
+    </div>
+
+    <div>
+        <x-filament::modal id="delete-file">
+            <x-slot name="heading">
+                Are you sure you want to delete this file?
+            </x-slot>
+            <x-slot name="footer">
+                <x-filament::button wire:click="delete">
+                    Delete
+                </x-filament::button>
+            </x-slot>
+        </x-filament::modal>
     </div>
 
     <div class="overflow-hidden bg-white shadow ring-1 ring-black ring-opacity-5 md:rounded-lg mt-4">
@@ -70,6 +84,7 @@
                 <th class="p-4 text-left">Last modified</th>
                 <th class="p-4 text-left">Owner/Group</th>
                 <th class="p-4 text-left">Permission</th>
+                <th class="p-4 text-left"></th>
             </tr>
             </thead>
             <tbody>
@@ -91,9 +106,8 @@
             @if(!empty($files))
                 @foreach($files as $file)
                     <tr
-                        wire:click="goto('{{$file['name']}}')" wire:key="{{md5($file['name'])}}"
                         class="transition border border-slate-200 cursor-pointer hover:bg-gray-100 p-4">
-                        <td class="w-6 p-4">
+                        <td class="w-6 p-4" wire:click="goto('{{$file['name']}}')" wire:key="icon-{{md5($file['name'])}}">
                             <div>
                                 @if($file['name'] == 'public_html')
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 text-blue-500"
@@ -170,7 +184,7 @@
                                 @endif
                             </div>
                         </td>
-                        <td class="p-4">
+                        <td class="p-4" wire:click="goto('{{$file['name']}}')" wire:key="name-{{md5($file['name'])}}">
                             {{ $file['name'] }}
                         </td>
                         <td class="p-4">
@@ -185,6 +199,31 @@
                         <td class="p-4">
                             {{$file['permission']}}
                         </td>
+                        <td>
+                            <x-filament::dropdown placement="bottom-start">
+                                <x-slot name="trigger">
+                                    <button type="button" onclick="e.preventDefault()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12a1 1 0 1 0 2 0a1 1 0 1 0-2 0m7 0a1 1 0 1 0 2 0a1 1 0 1 0-2 0m7 0a1 1 0 1 0 2 0a1 1 0 1 0-2 0" />
+                                        </svg>
+                                    </button>
+                                </x-slot>
+
+                                <x-filament::dropdown.list>
+                                    <x-filament::dropdown.list.item wire:click="openViewModal" icon="heroicon-m-eye" icon-color="primary">
+                                        View
+                                    </x-filament::dropdown.list.item>
+
+                                    <x-filament::dropdown.list.item wire:click="openEditModal" icon="heroicon-m-pencil" icon-color="primary">
+                                        Edit
+                                    </x-filament::dropdown.list.item>
+
+                                    <x-filament::dropdown.list.item wire:click="openDeleteModal" icon="heroicon-m-trash" icon-color="danger">
+                                        Delete
+                                    </x-filament::dropdown.list.item>
+                                </x-filament::dropdown.list>
+                            </x-filament::dropdown>
+                        </td>
                     </tr>
                 @endforeach
             @endif
@@ -192,4 +231,6 @@
             </tbody>
         </table>
     </div>
+
+</div>
 </div>

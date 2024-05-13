@@ -42,6 +42,11 @@ class FileManager extends Component
 
     }
 
+    public function openDeleteModal()
+    {
+        $this->dispatch('open-modal', id: 'delete-file');
+    }
+
     public function goto($dirOrFile)
     {
         $newPath = $this->currentRealPath . '/' . $dirOrFile;
