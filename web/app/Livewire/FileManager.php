@@ -6,9 +6,11 @@ use App\Models\Domain;
 use App\Models\FileItem;
 use App\Models\HostingSubscription;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Pages\Page;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\ViewAction;
@@ -68,17 +70,18 @@ class FileManager extends Page implements HasTable
                     ->action(function (FileItem $record) {
                         if ($record->isFolder()) {
                             $this->path = $record->path;
-
                             $this->dispatch('updatePath');
                         }
                     }),
                 TextColumn::make('dateModified')
                     ->dateTime(),
                 TextColumn::make('size')
-                    ->formatStateUsing(fn ($state) => $state ? Number::fileSize($state) : ''),
+                    ->formatStateUsing(fn ($state) => $state ? Number::fileSize($state) : '0.0KB'),
                 TextColumn::make('type'),
             ])
             ->actions([
+
+                ActionGroup::make([
                 ViewAction::make('open')
                     ->label('Open')
                     ->hidden(fn (FileItem $record): bool => ! $record->canOpen())
@@ -98,6 +101,7 @@ class FileManager extends Page implements HasTable
                         }
 
                     }),
+                ]),
             ])
             ->bulkActions([
                 BulkAction::make('delete')
@@ -123,9 +127,29 @@ class FileManager extends Page implements HasTable
                             ->required(),
                     ])
                     ->successNotificationTitle('Folder created')
-                    ->action(function (array $data, Component $livewire, Action $action): void {
-                        Storage::disk($livewire->disk)
-                            ->makeDirectory($livewire->path.'/'.$data['name']);
+                    ->action(function (array $data, Component $livewire, Action $action) use($storage) : void {
+                        $storage->makeDirectory($livewire->path.'/'.$data['name']);
+
+                        $this->resetTable();
+                        $action->sendSuccessNotification();
+                    }),
+
+                Action::make('create_file')
+                    ->label('Create File')
+                    ->icon('heroicon-o-document-plus')
+                    ->form([
+                        TextInput::make('file_name')
+                            ->label('File name')
+                            ->placeholder('File name')
+                            ->required(),
+                        Textarea::make('file_content')
+                            ->label('Content')
+                            ->required(),
+                    ])
+                    ->successNotificationTitle('File created')
+                    ->action(function (array $data, Component $livewire, Action $action) use($storage) : void {
+
+                        $storage->put($livewire->path.'/'.$data['file_name'], $data['file_content']);
 
                         $this->resetTable();
                         $action->sendSuccessNotification();
