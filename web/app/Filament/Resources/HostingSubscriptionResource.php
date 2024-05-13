@@ -167,6 +167,7 @@ class HostingSubscriptionResource extends Resource
                     ->options(fn (): array => HostingSubscription::query()->pluck('system_username', 'id')->all())
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\Action::make('visit')
                     ->label('Open website')
                     ->icon('heroicon-m-arrow-top-right-on-square')
@@ -207,6 +208,7 @@ class HostingSubscriptionResource extends Resource
             'index' => Pages\ListHostingSubscriptions::route('/'),
             'create' => Pages\CreateHostingSubscription::route('/create'),
             'edit' => Pages\EditHostingSubscription::route('/{record}/edit'),
+            'view' => Pages\ViewHostingSubscription::route('/{record}'),
             'databases' => Pages\ManageHostingSubscriptionDatabases::route('/{record}/databases'),
             'backups' => Pages\ManageHostingSubscriptionBackups::route('/{record}/backups'),
             'ftp-accounts' => Pages\ManageHostingSubscriptionFtpAccounts::route('/{record}/ftp-accounts'),
