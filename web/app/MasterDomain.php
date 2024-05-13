@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Models\DomainSslCertificate;
+
 class MasterDomain
 {
     public $domain;
@@ -56,8 +58,15 @@ class MasterDomain
             shell_exec('ln -s /etc/apache2/sites-available/'.$this->domain.'-default.conf /etc/apache2/sites-enabled/'.$this->domain.'-default.conf');
         }
 
-        // install SSL
+        // Install SSL
         $findDomainSSLCertificate = null;
+
+        $catchMainDomain = '';
+        $domainExp = explode('.', $this->domain);
+        if (count($domainExp) > 0) {
+            unset($domainExp[0]);
+            $catchMainDomain = implode('.', $domainExp);
+        }
 
         // Try to find wildcard SSL certificate
         $findDomainSSLCertificateWildcard = \App\Models\DomainSslCertificate::where('domain', '*.' . $this->domain)
@@ -67,7 +76,15 @@ class MasterDomain
             $findDomainSSLCertificate = $findDomainSSLCertificateWildcard;
         } else {
             $findDomainSSL = \App\Models\DomainSslCertificate::where('domain', $this->domain)->first();
-            $findDomainSSLCertificate = $findDomainSSL;
+            if ($findDomainSSL) {
+                $findDomainSSLCertificate = $findDomainSSL;
+            } else {
+                $findMainDomainWildcardSSLCertificate = \App\Models\DomainSslCertificate::where('domain', '*.'.$catchMainDomain)
+                    ->first();
+                if ($findMainDomainWildcardSSLCertificate) {
+                    $findDomainSSLCertificate = $findMainDomainWildcardSSLCertificate;
+                }
+            }
         }
 
         if ($findDomainSSLCertificate) {
