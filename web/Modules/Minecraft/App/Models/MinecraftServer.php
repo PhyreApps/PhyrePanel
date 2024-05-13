@@ -54,9 +54,7 @@ class MinecraftServer extends Model
 
             file_put_contents($minecraftServerPath.'/docker-compose.yml', $minecraftServerDocker);
             $docker = shell_exec('cd '.$minecraftServerPath.' && docker-compose up -d');
-
-            dd($docker);
-
+            
         });
 
         static::created(function ($model) {
