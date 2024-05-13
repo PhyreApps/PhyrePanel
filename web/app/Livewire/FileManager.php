@@ -3,11 +3,17 @@
 namespace App\Livewire;
 
 use App\Models\Domain;
+use App\Models\HostingSubscription;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class FileManager extends Component
 {
     public $hostingSubscriptionId;
+
+    public $hostingSubscriptionSystemUsername;
+
+    public $domainHomeRoot;
 
     public $currentRealPath;
 
@@ -16,24 +22,62 @@ class FileManager extends Component
     public function mount($hostingSubscriptionId)
     {
         $this->hostingSubscriptionId = $hostingSubscriptionId;
-    }
 
-    public function render()
-    {
+        $findHostingSubscription = HostingSubscription::where('id', $this->hostingSubscriptionId)->first();
         $findDomain = Domain::where('hosting_subscription_id', $this->hostingSubscriptionId)
             ->where('is_main', 1)
             ->first();
 
-        if ($findDomain) {
-            if (!$this->currentRealPath) {
-                $this->currentRealPath = $findDomain->home_root;
-            }
+        if (!$findHostingSubscription || !$findDomain) {
+            throw new \Exception('Hosting subscription not found');
+        }
+
+        $this->hostingSubscriptionSystemUsername = $findHostingSubscription->system_username;
+        $this->domainHomeRoot = $findDomain->home_root;
+
+    }
+
+    public function goto($dirOrFile)
+    {
+        $newPath = $this->currentRealPath . '/' . $dirOrFile;
+        if (is_dir($newPath)) {
+            $this->currentRealPath = $newPath;
+        }
+
+    }
+
+    public function back()
+    {
+        $newRealPath = dirname($this->currentRealPath);
+
+        if (Str::startsWith($newRealPath, $this->domainHomeRoot)) {
+            $this->currentRealPath = $newRealPath;
+        }
+    }
+
+    public function canIAccess($realPath, $systemUsername)
+    {
+        $checkOwner = posix_getpwuid(fileowner($realPath));
+
+        if (isset($checkOwner['name']) && $checkOwner['name'] == $systemUsername) {
+            return true;
+        }
+
+        return false;
+
+    }
+
+    public function render()
+    {
+        if (!$this->currentRealPath) {
+            $this->currentRealPath = $this->domainHomeRoot;
         }
 
         $all = [];
         $files = [];
         $folders = [];
         if ($this->currentRealPath) {
+
             $scanFiles = scandir($this->currentRealPath);
             foreach ($scanFiles as $scanFile) {
                 if ($scanFile == '.' || $scanFile == '..') {

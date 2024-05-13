@@ -4,6 +4,12 @@
        Path: {{$currentRealPath}}
     </div>
 
+    <div>
+        <button wire:click="back" class="bg-gray-100 text-gray-800 px-2 py-1 rounded-md">
+            Back
+        </button>
+    </div>
+
     @if(!empty($files))
         <table class="w-full rounded mt-2 border border-slate-200">
             <thead>
@@ -17,7 +23,7 @@
                 </tr>
             </thead>
             @foreach($files as $file)
-                <tr class="border border-slate-200 cursor-pointer hover:bg-gray-50 p-4">
+                <tr wire:click="goto('{{$file['name']}}')" wire:key="{{md5($file['name'])}}" class="border border-slate-200 cursor-pointer hover:bg-gray-50 p-4">
                     <td class="w-6 p-4">
                         <div>
                             @if($file['name'] == 'public_html')
