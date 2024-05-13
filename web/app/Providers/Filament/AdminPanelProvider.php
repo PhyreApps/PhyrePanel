@@ -123,6 +123,10 @@ class AdminPanelProvider extends PanelProvider
                     if (is_dir($modulePathPages)) {
                         $panel->discoverPages(in: $modulePathPages, for: 'Modules\\' . $module->name . '\\Filament\\Pages');
                     }
+                    $modulePathResources = module_path($module->name, 'App/Filament/Resources');
+                    if (is_dir($modulePathResources)) {
+                        $panel->discoverResources(in: $modulePathResources, for: 'Modules\\' . $module->name . '\\App\\Filament\\Resources');
+                    }
                 }
             }
         }

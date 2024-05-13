@@ -11,6 +11,17 @@ echo \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt-get update
 
-sudo apt-get install docker-compose docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+DEPENDENCIES_LIST=(
+    "docker-compose"
+    "docker-ce"
+    "docker-ce-cli"
+    "containerd.io"
+    "docker-buildx-plugin"
+    "docker-compose-plugin"
+)
+
+for DEPENDENCY in "${DEPENDENCIES_LIST[@]}"; do
+    sudo apt install -y $DEPENDENCY
+done
 
 echo "Done!"
