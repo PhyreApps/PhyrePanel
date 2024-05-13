@@ -55,8 +55,8 @@ class MasterDomain
         shell_exec('touch /var/www/logs/apache2/error.log');
 
         if (!empty($apacheBaseConfig)) {
-            file_put_contents('/etc/apache2/sites-available/'.$this->domain.'.conf', $apacheBaseConfig);
-            shell_exec('ln -s /etc/apache2/sites-available/'.$this->domain.'-default.conf /etc/apache2/sites-enabled/'.$this->domain.'-default.conf');
+            file_put_contents('/etc/apache2/sites-available/zzz-'.$this->domain.'.conf', $apacheBaseConfig);
+            shell_exec('ln -s /etc/apache2/sites-available/zzz-'.$this->domain.'-default.conf /etc/apache2/sites-enabled/'.$this->domain.'-default.conf');
         }
 
         // Install SSL
@@ -135,8 +135,8 @@ class MasterDomain
                     file_put_contents($apache2SSLOptionsFilePath, $apache2SSLOptionsSample);
                 }
 
-                file_put_contents('/etc/apache2/sites-available/'.$this->domain.'-ssl.conf', $apacheBaseConfigWithSSL);
-                shell_exec('ln -s /etc/apache2/sites-available/'.$this->domain.'-ssl.conf /etc/apache2/sites-enabled/'.$this->domain.'-ssl.conf');
+                file_put_contents('/etc/apache2/sites-available/zzz-'.$this->domain.'-ssl.conf', $apacheBaseConfigWithSSL);
+                shell_exec('ln -s /etc/apache2/sites-available/zzz-'.$this->domain.'-ssl.conf /etc/apache2/sites-enabled/'.$this->domain.'-ssl.conf');
 
             }
 
