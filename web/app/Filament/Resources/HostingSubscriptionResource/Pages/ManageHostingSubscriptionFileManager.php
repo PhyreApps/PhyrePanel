@@ -79,7 +79,7 @@ class ManageHostingSubscriptionFileManager extends ViewRecord implements HasTabl
         ]);
 
         return $table
-            ->deferLoading()
+         //   ->deferLoading()
             ->heading($this->disk .'/'. $this->path ?: 'Root')
             ->query(
                 FileItem::queryForDiskAndPath($this->disk, $this->path)
