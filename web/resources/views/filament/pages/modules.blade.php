@@ -39,14 +39,14 @@
             <div class="grid grid-cols-3 gap-6 mb-6">
         @foreach($modules as $module)
             <div class="sm:flex gap-3 px-6 py-6 rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10">
-                <div class="mb-2">
+                <div class="">
                     <div class="flex flex-col items-center w-16">
                         <x-filament::icon :icon="$module['logoIcon']"
                                           class="w-12 h-12 text-primary-500"/>
                     </div>
                 </div>
                 <div class="flex justify-between items-center w-full">
-                    <div class="flex flex-col">
+                    <div class="flex flex-col h-12">
                         <div class="flex gap-2 items-center">
                             {{$module['name']}}
                             @if ($module['installed'])
