@@ -32,10 +32,19 @@ class FileItem extends Model
         return static::query();
     }
 
+    public function storageInstance()
+    {
+        return Storage::build([
+            'driver' => 'local',
+            'throw' => false,
+            'root' => static::$disk,
+        ]);
+    }
+
     public function isFolder(): bool
     {
         return $this->type === 'Folder'
-            && is_dir(Storage::disk(static::$disk)->path($this->path));
+            && is_dir($this->storageInstance()->path($this->path));
     }
 
     public function isPreviousPath(): bool
@@ -46,17 +55,17 @@ class FileItem extends Model
     public function delete(): bool
     {
         if ($this->isFolder()) {
-            return Storage::disk(static::$disk)->deleteDirectory($this->path);
+            return $this->storageInstance()->deleteDirectory($this->path);
         }
 
-        return Storage::disk(static::$disk)->delete($this->path);
+        return $this->storageInstance()->delete($this->path);
     }
 
     public function canOpen(): bool
     {
         return $this->type !== 'Folder'
-            && Storage::disk(static::$disk)->exists($this->path)
-            && Storage::disk(static::$disk)->getVisibility($this->path) === FilesystemContract::VISIBILITY_PUBLIC;
+            && $this->storageInstance()->exists($this->path)
+            && $this->storageInstance()->getVisibility($this->path) === FilesystemContract::VISIBILITY_PUBLIC;
     }
 
     public function getRows(): array
@@ -76,7 +85,7 @@ class FileItem extends Model
             ];
         }
 
-        $storage = Storage::disk(static::$disk);
+        $storage = $this->storageInstance();
 
         return collect($backPath)->push(
             ...collect($storage->directories(static::$path))

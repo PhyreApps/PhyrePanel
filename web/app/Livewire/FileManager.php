@@ -2,7 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Models\Domain;
 use App\Models\FileItem;
+use App\Models\HostingSubscription;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Pages\Page;
@@ -37,6 +39,16 @@ class FileManager extends Page implements HasTable
 
     public function table(Table $table): Table
     {
+        $hostingSubscription = HostingSubscription::where('id', 16)->first();
+        $findDomain = Domain::where('hosting_subscription_id', $hostingSubscription->id)->where('is_main',1)->first();
+        $this->disk = $findDomain->home_root;
+
+        $storage = Storage::build([
+            'driver' => 'local',
+            'throw' => false,
+            'root' => $this->disk,
+        ]);
+
         return $table
             ->heading($this->path ?: 'Root')
             ->query(
@@ -70,13 +82,13 @@ class FileManager extends Page implements HasTable
                 ViewAction::make('open')
                     ->label('Open')
                     ->hidden(fn (FileItem $record): bool => ! $record->canOpen())
-                    ->url(fn (FileItem $record): string => Storage::disk($this->disk)->url($record->path))
+                    ->url(fn (FileItem $record): string => $storage->url($record->path))
                     ->openUrlInNewTab(),
                 Action::make('download')
                     ->label('Download')
                     ->icon('heroicon-o-document-arrow-down')
                     ->hidden(fn (FileItem $record): bool => $record->isFolder())
-                    ->action(fn (FileItem $record) => Storage::disk($this->disk)->download($record->path)),
+                    ->action(fn (FileItem $record) => $storage->download($record->path)),
                 DeleteAction::make('delete')
                     ->successNotificationTitle('File deleted')
                     ->hidden(fn (FileItem $record): bool => $record->isPreviousPath())
