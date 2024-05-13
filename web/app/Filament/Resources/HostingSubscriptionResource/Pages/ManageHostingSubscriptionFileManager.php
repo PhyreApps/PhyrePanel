@@ -144,7 +144,7 @@ class ManageHostingSubscriptionFileManager extends ViewRecord implements HasTabl
                     }),
             ])
             ->checkIfRecordIsSelectableUsing(fn (FileItem $record): bool => ! $record->isPreviousPath())
-            ->headerActionsPosition(HeaderActionsPosition::Bottom)
+          //  ->headerActionsPosition(HeaderActionsPosition::Bottom)
             ->headerActions([
 
                 Action::make('home')
