@@ -14,7 +14,9 @@ class MinecraftServer extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'name',
+    ];
 
 
     protected static function booted(): void
@@ -33,6 +35,27 @@ class MinecraftServer extends Model
 
         static::creating(function ($model) {
 
+            $minectaftId = 1;
+            $findLastMinecraftServer = MinecraftServer::orderBy('id', 'desc')->first();
+            if ($findLastMinecraftServer) {
+                $minectaftId = $findLastMinecraftServer->id + 1;
+                $model->name = 'Server #'.$minectaftId;
+            } else {
+                $model->name = 'Server #1';
+            }
+
+            $minecraftServersPath = '/home/minecraft/servers';
+            $minecraftServerPath = $minecraftServersPath . '/'.$minectaftId;
+            shell_exec('mkdir -p '.$minecraftServerPath);
+
+            $minecraftServerDocker = view('minecraft::actions.docker-compose', [
+                'id' => $minectaftId
+            ])->render();
+
+            file_put_contents($minecraftServerPath.'/docker-compose.yml', $minecraftServerDocker);
+            $docker = shell_exec('cd '.$minecraftServerPath.' && docker-compose up -d');
+
+            dd($docker);
 
         });
 

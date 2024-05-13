@@ -25,7 +25,12 @@ class MinecraftServerResource extends Resource
     {
         return $form
             ->schema([
-                //
+
+                Forms\Components\TextInput::make('name')
+                    ->label('Name')
+                    ->placeholder('Enter the name of the server'),
+
+
             ]);
     }
 
