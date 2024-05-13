@@ -5,6 +5,7 @@ namespace App\Filament\Resources\HostingSubscriptionResource\Pages;
 use App\Filament\Resources\HostingSubscriptionResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Resources\Pages\Page;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewHostingSubscription extends ViewRecord
@@ -16,6 +17,7 @@ class ViewHostingSubscription extends ViewRecord
     public static function getPages(): array
     {
         return [
+
         ];
     }
 
@@ -25,4 +27,5 @@ class ViewHostingSubscription extends ViewRecord
 
         ];
     }
+
 }

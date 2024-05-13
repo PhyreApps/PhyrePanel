@@ -58,7 +58,6 @@
 
     </div>
 
-    @if(!empty($files))
         <div class="overflow-hidden bg-white shadow ring-1 ring-black ring-opacity-5 md:rounded-lg mt-4">
         <table class="w-full">
             <thead>
@@ -86,6 +85,7 @@
             </tr>
             @endif
 
+            @if(!empty($files))
             @foreach($files as $file)
                 <tr wire:click="goto('{{$file['name']}}')" wire:key="{{md5($file['name'])}}" class="transition border border-slate-200 cursor-pointer hover:bg-gray-100 p-4">
                     <td class="w-6 p-4">
@@ -158,10 +158,9 @@
                     </td>
                 </tr>
             @endforeach
+            @endif
+
             </tbody>
         </table>
         </div>
-    @else
-        <p>No files found</p>
-    @endif
 </div>
