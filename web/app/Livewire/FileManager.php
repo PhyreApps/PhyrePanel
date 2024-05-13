@@ -2,9 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Helpers;
 use App\Models\Domain;
 use App\Models\HostingSubscription;
-use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -114,7 +114,7 @@ class FileManager extends Component
                         'permission' => substr(sprintf('%o', fileperms($this->currentRealPath . '/' . $scanFile)), -4),
                         'owner' => posix_getpwuid(fileowner($this->currentRealPath . '/' . $scanFile))['name'],
                         'group' => posix_getgrgid(filegroup($this->currentRealPath . '/' . $scanFile))['name'],
-                        'size' => filesize($this->currentRealPath . '/' . $scanFile),
+                        'size' => Helpers::getHumanReadableSize(filesize($this->currentRealPath . '/' . $scanFile)),
                         'last_modified' => date('Y-m-d H:i:s', filemtime($this->currentRealPath . '/' . $scanFile)),
                         'type' => filetype($this->currentRealPath . '/' . $scanFile),
                     ];

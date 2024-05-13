@@ -59,7 +59,8 @@
     </div>
 
     @if(!empty($files))
-        <table class="w-full rounded mt-4 border border-slate-200">
+        <div class="overflow-hidden bg-white shadow ring-1 ring-black ring-opacity-5 md:rounded-lg mt-4">
+        <table class="w-full">
             <thead>
                 <tr>
                     <th class="p-4">#</th>
@@ -73,7 +74,7 @@
             <tbody>
 
             @if($canIBack)
-            <tr wire:click="back" class="border border-slate-200 cursor-pointer hover:bg-gray-50 p-4">
+            <tr wire:click="back" class="transition border border-slate-200 cursor-pointer hover:bg-gray-100 p-4">
                 <td colspan="6" class="p-4">
                     <div class="flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
@@ -86,7 +87,7 @@
             @endif
 
             @foreach($files as $file)
-                <tr wire:click="goto('{{$file['name']}}')" wire:key="{{md5($file['name'])}}" class="border border-slate-200 cursor-pointer hover:bg-gray-50 p-4">
+                <tr wire:click="goto('{{$file['name']}}')" wire:key="{{md5($file['name'])}}" class="transition border border-slate-200 cursor-pointer hover:bg-gray-100 p-4">
                     <td class="w-6 p-4">
                         <div>
                             @if($file['name'] == 'public_html')
@@ -159,6 +160,7 @@
             @endforeach
             </tbody>
         </table>
+        </div>
     @else
         <p>No files found</p>
     @endif
