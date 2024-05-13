@@ -66,8 +66,8 @@ class Settings extends BaseSettings
                             TextInput::make('general.brand_logo_url'),
                             ColorPicker::make('general.brand_primary_color'),
 
-                            TextInput::make('general.master_domain')->live(),
-                            TextInput::make('general.wildcard_domain')->live(),
+                            TextInput::make('general.master_domain')->regex('/^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/i'),
+                            TextInput::make('general.wildcard_domain')->regex('/^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/i'),
 
                             TextInput::make('general.master_email'),
                             Select::make('general.master_country')
