@@ -56,7 +56,7 @@ class MasterDomain
 
         if (!empty($apacheBaseConfig)) {
             file_put_contents('/etc/apache2/sites-available/zzz-'.$this->domain.'.conf', $apacheBaseConfig);
-            shell_exec('ln -s /etc/apache2/sites-available/zzz-'.$this->domain.'-default.conf /etc/apache2/sites-enabled/zzz-'.$this->domain.'-default.conf');
+            shell_exec('ln -s /etc/apache2/sites-available/zzz-'.$this->domain.'.conf /etc/apache2/sites-enabled/zzz-'.$this->domain.'.conf');
         }
 
         // Install SSL
