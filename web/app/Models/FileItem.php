@@ -109,5 +109,6 @@ class FileItem extends Model
             ]
             )
         )->toArray();
+
     }
 }

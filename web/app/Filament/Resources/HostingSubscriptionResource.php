@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\HostingSubscriptionResource\Pages;
+use app\Filament\Resources\HostingSubscriptionResource\Pages\ManageHostingSubscriptionFileManager;
 use app\Filament\Resources\HostingSubscriptionResource\Pages\ManageHostingSubscriptionFtpAccounts;
 use App\Models\Customer;
 use App\Models\Domain;
@@ -190,7 +191,8 @@ class HostingSubscriptionResource extends Resource
             Pages\EditHostingSubscription::class,
             Pages\ManageHostingSubscriptionDatabases::class,
             Pages\ManageHostingSubscriptionBackups::class,
-            ManageHostingSubscriptionFtpAccounts::class
+            Pages\ManageHostingSubscriptionFtpAccounts::class,
+            Pages\ManageHostingSubscriptionFileManager::class
         ]);
     }
 
@@ -208,10 +210,11 @@ class HostingSubscriptionResource extends Resource
             'index' => Pages\ListHostingSubscriptions::route('/'),
             'create' => Pages\CreateHostingSubscription::route('/create'),
             'edit' => Pages\EditHostingSubscription::route('/{record}/edit'),
-            'view' => Pages\ViewHostingSubscription::route('/{record}'),
+          //  'view' => Pages\ViewHostingSubscription::route('/{record}'),
             'databases' => Pages\ManageHostingSubscriptionDatabases::route('/{record}/databases'),
             'backups' => Pages\ManageHostingSubscriptionBackups::route('/{record}/backups'),
             'ftp-accounts' => Pages\ManageHostingSubscriptionFtpAccounts::route('/{record}/ftp-accounts'),
+            'file-manager' => Pages\ManageHostingSubscriptionFileManager::route('/{record}/file-manager'),
         ];
     }
 
