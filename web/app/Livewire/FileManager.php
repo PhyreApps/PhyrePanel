@@ -8,7 +8,7 @@ use App\Models\HostingSubscription;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
-class FileManagerOld extends Component
+class FileManager extends Component
 {
     public $hostingSubscriptionId;
 
