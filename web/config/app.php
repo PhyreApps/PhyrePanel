@@ -175,6 +175,7 @@ return [
         \Modules\Email\App\Providers\EmailServiceProvider::class,
         \Modules\Docker\App\Providers\DockerServiceProvider::class,
         \Modules\Terminal\App\Providers\TerminalServiceProvider::class,
+        \Modules\Minecraft\App\Providers\MinecraftServiceProvider::class,
 
     ])->toArray(),
 
