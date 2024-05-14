@@ -7,6 +7,8 @@ steps:
     environment:
       DEBIAN_FRONTEND: noninteractive
     commands:
+      - service mysql start
+      - service phyre start
       - MAIN_REPO_DIR=$(pwd)
       - apt-get install -y rsync
       - cp /usr/local/phyre/web/phyre-config.ini  /usr/local/phyre/phyre-config.ini.bak
