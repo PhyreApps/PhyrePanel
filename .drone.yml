@@ -87,8 +87,3 @@ steps:
       - apt install -y pip
       - pip install codecov-cli
       - codecovcli --verbose upload-process -t $CODECOV_TOKEN
-
-
-depends_on:
-  - Docker - Quick Test
-  - Ubuntu 22.04 - Unit Test & Code Coverage
