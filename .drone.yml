@@ -81,6 +81,7 @@ steps:
       - cd /usr/local/phyre/web/
       - chmod -R 777 vendor
       - apt install composer -y
+      - phyre-php artisan phyre:set-ini-settings APP_ENV "local"
       - composer test:coverage
       - mv clover.xml $MAIN_REPO_DIR/clover.xml
       - mv coverage.xml $MAIN_REPO_DIR/coverage.xml
