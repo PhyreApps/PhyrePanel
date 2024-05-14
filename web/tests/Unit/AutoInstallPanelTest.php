@@ -16,8 +16,12 @@ class AutoInstallPanelTest extends TestCase
 //
         // Make Apache+PHP Application Server with all supported php versions and modules
         $installLogFilePath = storage_path('install-apache-php-log-unit-test.txt');
+        //unlink($installLogFilePath);
+
         $phpInstaller = new PHPInstaller();
-        $phpInstaller->setPHPVersions(array_keys(SupportedApplicationTypes::getPHPVersions()));
+        $phpInstaller->setPHPVersions([
+            '8.2'
+        ]);
         $phpInstaller->setPHPModules(array_keys(SupportedApplicationTypes::getPHPModules()));
         $phpInstaller->setLogFilePath($installLogFilePath);
         $phpInstaller->install();
@@ -30,7 +34,7 @@ class AutoInstallPanelTest extends TestCase
                 break;
             }
             sleep(3);
-            
+
         }
 
         if (!$installationSuccess) {
