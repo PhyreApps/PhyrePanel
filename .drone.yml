@@ -4,7 +4,6 @@ name: Docker - Quick Test
 steps:
   - name: run
     image: bobicloudvision/phyre-panel:latest
-    failure: "fail-fast"
     environment:
       DEBIAN_FRONTEND: noninteractive
     commands:
@@ -22,13 +21,15 @@ steps:
       - COMPOSER_ALLOW_SUPERUSER=1 phyre-php composer.phar install
       - phyre-php artisan phyre:set-ini-settings APP_ENV "local"
       - phyre-php artisan migrate
-      - phyre-php artisan test --coverage -c "phpunit-coverage.xml"
+      - phyre-php artisan test
 ---
 kind: pipeline
 name: Ubuntu 22.04 - Unit Test & Code Coverage
 steps:
   - name: run
     image: ubuntu:22.04
+    depends_on:
+      - Docker - Quick Test
     environment:
       DEBIAN_FRONTEND: noninteractive
       CODECOV_TOKEN:
