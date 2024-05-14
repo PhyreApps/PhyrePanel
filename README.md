@@ -15,6 +15,8 @@
   <a href="https://discord.gg/vsxBuMFK"><img src="https://img.shields.io/discord/1227542192189603872?logo=discord&label=discord"/></a>
   <a href="https://github.com/PhyreApps/PhyrePanel"><img src="https://img.shields.io/github/stars/PhyreApps/PhyrePanel" /></a>
   <a href="https://github.com/PhyreApps/PhyrePanel/blob/main/LICENSE"><img src="https://img.shields.io/github/license/PhyreApps/PhyrePanel"/></a>
+  <a href="https://drone.phyrecloud.com/PhyreApps/PhyrePanel"><img src="https://drone.phyrecloud.com/api/badges/PhyreApps/PhyrePanel/status.svg"/></a>
+  <a href="https://codecov.io/gh/PhyreApps/PhyrePanel"><img src="https://codecov.io/gh/PhyreApps/PhyrePanel/graph/badge.svg?token=BO0RTPLS4W"/></a>
 </p>
 
 ![Phyre Panel - Dashboard](screenshots/dashboard.png)
