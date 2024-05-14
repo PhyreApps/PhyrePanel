@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\DomainSslCertificate;
+use App\VirtualHosts\DTO\ApacheVirtualHostSettings;
 
 class MasterDomain
 {
@@ -39,15 +40,15 @@ class MasterDomain
             return false;
         }
 
-        $apacheVirtualHostBuilder = new \App\VirtualHosts\ApacheVirtualHostBuilder();
-        $apacheVirtualHostBuilder->setDomain($this->domain);
-        $apacheVirtualHostBuilder->setDomainPublic($this->domainPublic);
-        $apacheVirtualHostBuilder->setDomainRoot($this->domainRoot);
-        $apacheVirtualHostBuilder->setHomeRoot($this->domainRoot);
-        $apacheVirtualHostBuilder->setServerAdmin($this->email);
-        $apacheVirtualHostBuilder->setDomainAlias('*.'.$this->domain);
+        $apacheVirtualHost = new ApacheVirtualHostSettings();
+        $apacheVirtualHost->setDomain($this->domain);
+        $apacheVirtualHost->setDomainPublic($this->domainPublic);
+        $apacheVirtualHost->setDomainRoot($this->domainRoot);
+        $apacheVirtualHost->setHomeRoot($this->domainRoot);
+        $apacheVirtualHost->setServerAdmin($this->email);
+        $apacheVirtualHost->setDomainAlias('*.'.$this->domain);
 
-        $apacheBaseConfig = $apacheVirtualHostBuilder->buildConfig();
+        $virtualHostSettings = $apacheVirtualHost->getSettings();
 
         if ($fixPermissions) {
             shell_exec('mkdir -p /var/www/logs/apache2');
@@ -85,7 +86,7 @@ class MasterDomain
             }
         }
 
-        $apacheBaseConfigWithSSL = null;
+        $virtualHostSettingsWithSSL = null;
 
         if ($findDomainSSLCertificate) {
 
@@ -115,34 +116,33 @@ class MasterDomain
                 file_put_contents($sslCertificateChainFile, $findDomainSSLCertificate->certificate_chain);
             }
 
-            $apacheVirtualHostBuilder->setPort(443);
-            $apacheVirtualHostBuilder->setSSLCertificateFile($sslCertificateFile);
-            $apacheVirtualHostBuilder->setSSLCertificateKeyFile($sslCertificateKeyFile);
-            $apacheVirtualHostBuilder->setSSLCertificateChainFile($sslCertificateChainFile);
+            $apacheVirtualHost->setPort(443);
+            $apacheVirtualHost->setSSLCertificateFile($sslCertificateFile);
+            $apacheVirtualHost->setSSLCertificateKeyFile($sslCertificateKeyFile);
+            $apacheVirtualHost->setSSLCertificateChainFile($sslCertificateChainFile);
 
-            $apacheBaseConfigWithSSL = $apacheVirtualHostBuilder->buildConfig();
-
+            $virtualHostSettingsWithSSL = $apacheVirtualHost->getSettings();
 
         }
         // End install SSL
 
         if ($fixPermissions) {
-        $domainIndexFile = $this->domainPublic . '/index.html';
-        if (file_exists($domainIndexFile)) {
-            $domainIndexFileContent = file_get_contents($domainIndexFile);
-            if (str_contains($domainIndexFileContent, 'Apache2 Debian Default Page')) {
-                 $indexContent = file_get_contents(base_path('resources/views/actions/samples/apache/html/app-index.html'));
-                 file_put_contents($this->domainPublic . '/index.html', $indexContent);
+            $domainIndexFile = $this->domainPublic . '/index.html';
+            if (file_exists($domainIndexFile)) {
+                $domainIndexFileContent = file_get_contents($domainIndexFile);
+                if (str_contains($domainIndexFileContent, 'Apache2 Debian Default Page')) {
+                     $indexContent = file_get_contents(base_path('resources/views/actions/samples/apache/html/app-index.html'));
+                     file_put_contents($this->domainPublic . '/index.html', $indexContent);
+                }
             }
-        }
 
-        shell_exec('chown -R www-data:www-data ' . $this->domainPublic);
-        shell_exec('chmod -R 755 ' . $this->domainPublic);
+            shell_exec('chown -R www-data:www-data ' . $this->domainPublic);
+            shell_exec('chmod -R 755 ' . $this->domainPublic);
         }
 
         return [
-            'apacheBaseConfig' => $apacheBaseConfig,
-            'apacheBaseConfigWithSSL' => $apacheBaseConfigWithSSL ?? null
+            'virtualHostSettings' => $virtualHostSettings,
+            'virtualHostSettingsWithSSL' => $virtualHostSettingsWithSSL ?? null
         ];
 
     }
