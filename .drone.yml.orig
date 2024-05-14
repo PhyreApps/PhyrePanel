@@ -11,7 +11,7 @@ steps:
     commands:
       - MAIN_REPO_DIR=$(pwd)
       - apt-get update
-      - apt-get install -y libicu-dev sudo cron apt-utils -yqq daemonize dbus-user-session fontconfig rsync
+      - apt-get install -yq libicu-dev sudo cron apt-utils -yqq daemonize dbus-user-session fontconfig rsync
       - daemonize /usr/bin/unshare --fork --pid --mount-proc /lib/systemd/systemd --system-unit=basic.target
 
       - ls -la
@@ -60,6 +60,6 @@ steps:
       - mv clover.xml $MAIN_REPO_DIR/clover.xml
       - mv coverage.xml $MAIN_REPO_DIR/coverage.xml
       - cd $MAIN_REPO_DIR
-      - apt install -y pip
+      - apt install -yq pip
       - pip install codecov-cli
       - codecovcli --verbose upload-process -t $CODECOV_TOKEN

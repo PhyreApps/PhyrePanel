@@ -23,27 +23,27 @@ jobs:
         run: |
           ls -la
           sudo mkdir /phyre-panel
-          
+
           sudo cp installers/${{ matrix.os }}/install-partial/install_base.sh /phyre-panel/install_base.sh
           sudo chmod +x /phyre-panel/install_base.sh
           sudo /phyre-panel/install_base.sh
-          
+
           sudo cp installers/${{ matrix.os }}/install-partial/install_web.sh /phyre-panel/install_web.sh
           sudo chmod +x /phyre-panel/install_web.sh
 
       - name: Run Code Coverage
         run: |
-          
+
           sudo cp -r web /usr/local/phyre/web/
           cd /usr/local/phyre/web/
           ls -la
-          
+
           sudo wget https://getcomposer.org/download/latest-stable/composer.phar
           sudo COMPOSER_ALLOW_SUPERUSER=1 phyre-php composer.phar install
-          
+
           sudo /phyre-panel/install_web.sh
-          
-          sudo apt-get install autoconf build-essential -y 
+
+          sudo apt-get install autoconf build-essential -yq
           sudo mkdir -p /usr/local/phyre/php-xdebug
           cd /usr/local/phyre/php-xdebug
           sudo wget http://xdebug.org/files/xdebug-3.3.2.tgz
@@ -52,17 +52,17 @@ jobs:
           sudo /usr/local/phyre/php/bin/phpize
           sudo ./configure --enable-xdebug --with-php-config=/usr/local/phyre/php/bin/php-config
           sudo make
-          
+
           sudo mkdir -p /usr/local/phyre/php/zend-xdebug
           sudo cp modules/xdebug.so /usr/local/phyre/php/zend-xdebug/xdebug.so
 
           sudo chmod 777 /usr/local/phyre/php/zend-xdebug/xdebug.so
-          
+
           sudo cp /usr/local/phyre/web/tests/xdebug-php-ini.txt /usr/local/phyre/php/bin/php.ini
-          
+
           sudo chmod 777 /usr/local/phyre/php/bin/php.ini
           phyre-php -v
-          
+
           cd /usr/local/phyre/web/
           sudo chmod -R 777 vendor
           apt install composer -y
