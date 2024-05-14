@@ -75,8 +75,7 @@ class Domain extends Model
                 $model->domain_public = $model->domain_root.'/public_html';
                 $model->home_root = '/home/'.$findHostingSubscription->user;
             }
-
-            $model->save();
+            $model->saveQuietly();
 
             $model->configureVirtualHost(true);
 
@@ -85,6 +84,8 @@ class Domain extends Model
         });
 
         static::saved(function ($model) {
+
+            $model->configureVirtualHost(true);
 
             $apacheBuild = new ApacheBuild();
             $apacheBuild->build();
@@ -146,7 +147,7 @@ class Domain extends Model
 
         if ($this->is_installed_default_app_template == null) {
             $this->is_installed_default_app_template = 1;
-            $this->save();
+            $this->saveQuietly();
             if ($this->server_application_type == 'apache_php') {
                 if (!is_file($this->domain_public . '/index.php')) {
                     $indexContent = view('actions.samples.apache.php.app-php-sample')->render();
