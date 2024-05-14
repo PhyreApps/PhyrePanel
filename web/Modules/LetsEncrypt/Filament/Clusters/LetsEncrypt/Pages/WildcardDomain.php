@@ -18,7 +18,7 @@ use Illuminate\Support\Str;
 use Modules\LetsEncrypt\Filament\Clusters\LetsEncryptCluster;
 use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
 
-class WildcardMasterDomain extends BaseSettings
+class WildcardDomain extends BaseSettings
 {
     protected static ?string $navigationGroup = 'Let\'s Encrypt';
 
@@ -35,7 +35,7 @@ class WildcardMasterDomain extends BaseSettings
 
     public static function getNavigationLabel() : string
     {
-        return 'Wildcard Master Domain';
+        return 'Wildcard Domain';
     }
     public function getFormActions() : array
     {
@@ -47,6 +47,7 @@ class WildcardMasterDomain extends BaseSettings
     public function installCertificates()
     {
         $masterDomain = new MasterDomain();
+        $masterDomain->domain = setting('general.wildcard_domain');
 
         if (file_exists($this->installLogFilePath)) {
             unlink($this->installLogFilePath);
@@ -61,6 +62,7 @@ class WildcardMasterDomain extends BaseSettings
             'locality' => $masterDomain->locality,
             'organization' => $masterDomain->organization
         ])->render();
+        
         $acmeConfigYaml = preg_replace('~(*ANY)\A\s*\R|\s*(?!\r\n)\s$~mu', '', $acmeConfigYaml);
 
         file_put_contents($masterDomain->domainRoot.'/acme-wildcard-config.yaml', $acmeConfigYaml);
@@ -176,9 +178,9 @@ class WildcardMasterDomain extends BaseSettings
                 Wizard\Step::make('Install')
                     //->description('Install a wildcard SSL certificate for the master domain')
                     ->schema([
-                        TextInput::make('master_domain')
+                        TextInput::make('wildcard_domain')
                             ->helperText('Install a wildcard SSL certificate for the master domain')
-                            ->placeholder(setting('general.master_domain'))
+                            ->placeholder(setting('general.wildcard_domain'))
                             ->disabled(),
                     ])->afterValidation(function () {
                         if (file_exists($this->installLogFilePath)) {
