@@ -56,29 +56,29 @@ class DomainIsCreatedListener
         $createdDatabaseHost = null;
         $createdDatabasePort = null;
 
-        try {
-
-            $databaseUserPassword = Str::password(24);
-            $databaseName = $databaseUsername = 'mw'.time();
-
-            $hss = new HostingSubscriptionService($findDomain->hosting_subscription_id);
-            $createDatabase = $hss->createDatabase($databaseName);
-            if (isset($createDatabase['data']['database_name'])) {
-                $createdDatabaseName = $createDatabase['data']['database_name'];
-            }
-            $createDatabaseUser = $hss->createDatabaseUser($createDatabase['data']['database_id'], $databaseUsername,$databaseUserPassword);
-            if (isset($createDatabaseUser['data']['database_user'])) {
-                $createdDatabaseUsername = $createDatabaseUser['data']['database_user'];
-                $createdDatabaseUserPassword = $createDatabaseUser['data']['database_password'];
-                $createdDatabaseHost = $createDatabase['data']['database_host'];
-                $createdDatabasePort = $createDatabase['data']['database_port'];
-            }
-
-            $databasesAreCreated = true;
-
-        } catch (\Exception $e) {
-            $databasesAreCreated = false;
-        }
+//        try {
+//
+//            $databaseUserPassword = Str::password(24);
+//            $databaseName = $databaseUsername = 'mw'.time();
+//
+//            $hss = new HostingSubscriptionService($findDomain->hosting_subscription_id);
+//            $createDatabase = $hss->createDatabase($databaseName);
+//            if (isset($createDatabase['data']['database_name'])) {
+//                $createdDatabaseName = $createDatabase['data']['database_name'];
+//            }
+//            $createDatabaseUser = $hss->createDatabaseUser($createDatabase['data']['database_id'], $databaseUsername,$databaseUserPassword);
+//            if (isset($createDatabaseUser['data']['database_user'])) {
+//                $createdDatabaseUsername = $createDatabaseUser['data']['database_user'];
+//                $createdDatabaseUserPassword = $createDatabaseUser['data']['database_password'];
+//                $createdDatabaseHost = $createDatabase['data']['database_host'];
+//                $createdDatabasePort = $createDatabase['data']['database_port'];
+//            }
+//
+//            $databasesAreCreated = true;
+//
+//        } catch (\Exception $e) {
+//            $databasesAreCreated = false;
+//        }
 
         $installationType = 'symlink';
         $installationLanguage = 'bg';
