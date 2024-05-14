@@ -48,6 +48,10 @@ class HostingSubscriptionWithNodeJSCreateTest extends ActionTestCase
 //
         // Make Apache+PHP Application Server with all supported php versions and modules
         $installLogFilePath = storage_path('install-apache-nodejs-log-unit-test.txt');
+        if (is_file($installLogFilePath)) {
+            unlink($installLogFilePath);
+        }
+
         $phpInstaller = new NodeJsInstaller();
         $phpInstaller->setNodeJsVersions(array_keys(SupportedApplicationTypes::getNodeJsVersions()));
         $phpInstaller->setLogFilePath($installLogFilePath);

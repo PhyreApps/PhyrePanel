@@ -22,11 +22,9 @@ class NodeJsInstaller
     {
         $commands = [];
         $commands[] = 'apt-get install -y npm';
-        foreach ($this->nodejsVersions as $nodejsVersion) {
-            $commands[] = 'curl -sL https://deb.nodesource.com/setup_'.$nodejsVersion.'.x -o /tmp/nodesource'.$nodejsVersion.'_setup.sh';
-            $commands[] = 'sudo bash /tmp/nodesource'.$nodejsVersion.'_setup.sh';
-        }
-        $commands[] = 'sudo apt-get install -y install nodejs';
+        $commands[] = 'curl -sL https://deb.nodesource.com/setup_20.x -o /tmp/nodesource_setup.sh';
+        $commands[] = 'bash /tmp/nodesource_setup.sh';
+        $commands[] = 'apt-get install nodejs -y';
 
         // Install Apache Passenger
         $commands[] = 'curl https://oss-binaries.phusionpassenger.com/auto-software-signing-gpg-key.txt | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/phusion.gpg >/dev/null';
