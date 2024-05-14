@@ -7,6 +7,7 @@ use App\Events\DomainIsCreated;
 use App\Events\ModelDomainDeleting;
 use App\ShellApi;
 use App\VirtualHosts\ApacheBuild;
+use App\VirtualHosts\DTO\ApacheVirtualHostSettings;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Docker\App\Models\DockerContainer;
@@ -241,7 +242,7 @@ class Domain extends Model
             shell_exec('chmod -f 751 '.$this->domain_public . '/cgi-bin/php');
         }
 
-        $apacheVirtualHostBuilder = new \App\VirtualHosts\ApacheVirtualHostBuilder();
+        $apacheVirtualHostBuilder = new ApacheVirtualHostSettings();
         $apacheVirtualHostBuilder->setDomain($this->domain);
         $apacheVirtualHostBuilder->setDomainPublic($this->domain_public);
         $apacheVirtualHostBuilder->setDomainRoot($this->domain_root);
@@ -322,7 +323,7 @@ class Domain extends Model
             }
         }
 
-        $apacheBaseConfig = $apacheVirtualHostBuilder->buildConfig();
+        $virtualHostSettings = $apacheVirtualHostBuilder->getSettings();
 
         $catchMainDomain = '';
         $domainExp = explode('.', $this->domain);
@@ -352,7 +353,7 @@ class Domain extends Model
             }
         }
 
-        $apacheBaseConfigWithSSL = null;
+        $virtualHostSettingsWithSSL = null;
         if ($findDomainSSLCertificate) {
 
             $sslCertificateFile = $this->home_root . '/certs/' . $this->domain . '/public/cert.pem';
@@ -391,13 +392,13 @@ class Domain extends Model
             $apacheVirtualHostBuilder->setSSLCertificateKeyFile($sslCertificateKeyFile);
             $apacheVirtualHostBuilder->setSSLCertificateChainFile($sslCertificateChainFile);
 
-            $apacheBaseConfigWithSSL = $apacheVirtualHostBuilder->buildConfig();
+            $virtualHostSettingsWithSSL = $apacheVirtualHostBuilder->getSettings();
 
         }
 
         return [
-            'apacheBaseConfig' => $apacheBaseConfig,
-            'apacheBaseConfigWithSSL' => $apacheBaseConfigWithSSL,
+            'virtualHostSettings' => $virtualHostSettings,
+            'virtualHostSettingsWithSSL' => $virtualHostSettingsWithSSL,
         ];
 
     }
