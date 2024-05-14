@@ -10,6 +10,7 @@ steps:
         from_secret: CODECOV_TOKEN
     commands:
       - MAIN_REPO_DIR=$(pwd)
+      - apt-get install -y rsync
       - rsync $MAIN_REPO_DIR/web/ /usr/local/phyre/web/ -r
       - cd /usr/local/phyre/web/
       - ls -la
