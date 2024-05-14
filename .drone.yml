@@ -14,4 +14,5 @@ steps:
       - rsync $MAIN_REPO_DIR/web/ /usr/local/phyre/web/ -r
       - cd /usr/local/phyre/web/
       - ls -la
+      - composer install
       - phyre-php artisan test
