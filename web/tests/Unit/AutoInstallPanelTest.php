@@ -30,6 +30,7 @@ class AutoInstallPanelTest extends TestCase
                 break;
             }
             sleep(3);
+            
         }
 
         if (!$installationSuccess) {
