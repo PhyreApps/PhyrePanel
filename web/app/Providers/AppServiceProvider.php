@@ -46,10 +46,6 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
 
-        App::singleton('file_manager_api', function () {
-            return new \App\FileManagerApi();
-        });
-
         App::singleton('virtualHostManager', function () {
             return new \App\VirtualHosts\ApacheVirtualHostManager();
         });
