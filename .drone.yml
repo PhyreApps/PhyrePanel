@@ -14,7 +14,8 @@ steps:
       - cp -r $MAIN_REPO_DIR/web /usr/local/phyre/web
       - cp /usr/local/phyre/phyre-config.ini.bak /usr/local/phyre/web/phyre-config.ini
       - cd /usr/local/phyre/web/
-      - ls -la 
+      - ls -la
       - wget https://getcomposer.org/download/latest-stable/composer.phar
       - COMPOSER_ALLOW_SUPERUSER=1 phyre-php composer.phar install
+      - phyre-php artisan migrate
       - phyre-php artisan test
