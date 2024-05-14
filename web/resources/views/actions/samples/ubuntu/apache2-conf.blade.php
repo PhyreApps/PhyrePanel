@@ -1,8 +1,3 @@
-#=========================================================================#
-# PHYRE HOSTING PANEL - Default Web Domain Template                       #
-# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
-# https://phyrepanel.com/docs/server-administration/web-templates.html    #
-#=========================================================================#
 
 <VirtualHost *:{{$port}}>
 
@@ -121,7 +116,21 @@
 
     @endif
 
-    Include /etc/apache2/phyre/options-ssl-apache.conf
+
+    SSLEngine on
+
+    # Intermediate configuration, tweak to your needs
+    SSLProtocol             all -SSLv2 -SSLv3 -TLSv1 -TLSv1.1
+    SSLCipherSuite          ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+    SSLHonorCipherOrder     off
+    SSLSessionTickets       off
+
+    SSLOptions +StrictRequire
+
+    # Add vhost name to log entries:
+    LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" vhost_combined
+    LogFormat "%v %h %l %u %t \"%r\" %>s %b" vhost_common
+
 
     @endif
 
