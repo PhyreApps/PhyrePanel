@@ -32,7 +32,7 @@ class MasterDomain
 
     }
 
-    public function configureVirtualHost()
+    public function configureVirtualHost($fixPermissions = false)
     {
         // check is valid domain
         if (!filter_var($this->domain, FILTER_VALIDATE_DOMAIN)) {
@@ -49,14 +49,11 @@ class MasterDomain
 
         $apacheBaseConfig = $apacheVirtualHostBuilder->buildConfig();
 
-        shell_exec('mkdir -p /var/www/logs/apache2');
-        shell_exec('touch /var/www/logs/apache2/bytes.log');
-        shell_exec('touch /var/www/logs/apache2/access.log');
-        shell_exec('touch /var/www/logs/apache2/error.log');
-
-        if (!empty($apacheBaseConfig)) {
-            file_put_contents('/etc/apache2/sites-available/zzz-'.$this->domain.'.conf', $apacheBaseConfig);
-            shell_exec('ln -s /etc/apache2/sites-available/zzz-'.$this->domain.'.conf /etc/apache2/sites-enabled/zzz-'.$this->domain.'.conf');
+        if ($fixPermissions) {
+            shell_exec('mkdir -p /var/www/logs/apache2');
+            shell_exec('touch /var/www/logs/apache2/bytes.log');
+            shell_exec('touch /var/www/logs/apache2/access.log');
+            shell_exec('touch /var/www/logs/apache2/error.log');
         }
 
         // Install SSL
@@ -87,6 +84,8 @@ class MasterDomain
                 }
             }
         }
+
+        $apacheBaseConfigWithSSL = null;
 
         if ($findDomainSSLCertificate) {
 
@@ -122,27 +121,12 @@ class MasterDomain
             $apacheVirtualHostBuilder->setSSLCertificateChainFile($sslCertificateChainFile);
 
             $apacheBaseConfigWithSSL = $apacheVirtualHostBuilder->buildConfig();
-            if (!empty($apacheBaseConfigWithSSL)) {
 
-                // Add SSL options conf file
-                $apache2SSLOptionsSample = view('actions.samples.ubuntu.apache2-ssl-options-conf')->render();
-                $apache2SSLOptionsFilePath = '/etc/apache2/phyre/options-ssl-apache.conf';
-
-                if (!file_exists($apache2SSLOptionsFilePath)) {
-                    if (!is_dir('/etc/apache2/phyre')) {
-                        mkdir('/etc/apache2/phyre');
-                    }
-                    file_put_contents($apache2SSLOptionsFilePath, $apache2SSLOptionsSample);
-                }
-
-                file_put_contents('/etc/apache2/sites-available/zzz-'.$this->domain.'-ssl.conf', $apacheBaseConfigWithSSL);
-                shell_exec('ln -s /etc/apache2/sites-available/zzz-'.$this->domain.'-ssl.conf /etc/apache2/sites-enabled/zzz-'.$this->domain.'-ssl.conf');
-
-            }
 
         }
         // End install SSL
 
+        if ($fixPermissions) {
         $domainIndexFile = $this->domainPublic . '/index.html';
         if (file_exists($domainIndexFile)) {
             $domainIndexFileContent = file_get_contents($domainIndexFile);
@@ -154,6 +138,12 @@ class MasterDomain
 
         shell_exec('chown -R www-data:www-data ' . $this->domainPublic);
         shell_exec('chmod -R 755 ' . $this->domainPublic);
-        shell_exec('systemctl restart apache2');
+        }
+
+        return [
+            'apacheBaseConfig' => $apacheBaseConfig,
+            'apacheBaseConfigWithSSL' => $apacheBaseConfigWithSSL ?? null
+        ];
+
     }
 }

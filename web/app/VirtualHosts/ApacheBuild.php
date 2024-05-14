@@ -2,6 +2,7 @@
 
 namespace App\VirtualHosts;
 
+use App\MasterDomain;
 use App\Models\Domain;
 
 class ApacheBuild
@@ -86,6 +87,32 @@ IncludeOptional conf-enabled/*.conf
         foreach ($getAllDomains as $domain) {
 
             $domainVirtualHost = $domain->configureVirtualHost($this->fixPermissions);
+            if (isset($domainVirtualHost['apacheBaseConfig'])) {
+                $virtualHostMerged .= $domainVirtualHost['apacheBaseConfig'] . "\n\n";
+            }
+            if (isset($domainVirtualHost['apacheBaseConfigWithSSL'])) {
+                $virtualHostMerged .= $domainVirtualHost['apacheBaseConfigWithSSL'] . "\n\n";
+            }
+        }
+
+        if (!empty(setting('general.master_domain'))) {
+            // Make master domain virtual host
+            $masterDomain = new MasterDomain();
+            $domainVirtualHost = $masterDomain->configureVirtualHost($this->fixPermissions);
+            if (isset($domainVirtualHost['apacheBaseConfig'])) {
+                $virtualHostMerged .= $domainVirtualHost['apacheBaseConfig'] . "\n\n";
+            }
+            if (isset($domainVirtualHost['apacheBaseConfigWithSSL'])) {
+                $virtualHostMerged .= $domainVirtualHost['apacheBaseConfigWithSSL'] . "\n\n";
+            }
+        }
+
+        $wildcardDomain = setting('general.wildcard_domain');
+        if (!empty($wildcardDomain)) {
+            // Make wildcard domain virtual host
+            $masterDomain = new MasterDomain();
+            $masterDomain->domain = $wildcardDomain;
+            $domainVirtualHost = $masterDomain->configureVirtualHost($this->fixPermissions);
             if (isset($domainVirtualHost['apacheBaseConfig'])) {
                 $virtualHostMerged .= $domainVirtualHost['apacheBaseConfig'] . "\n\n";
             }

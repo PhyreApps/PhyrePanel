@@ -42,22 +42,20 @@ class Settings extends BaseSettings
         // Restart supervisor
         shell_exec('service supervisor restart');
 
-
-        if ($oldMasterDomain != setting('general.master_domain')) {
-            // Make master domain virtual host
-            $masterDomain = new MasterDomain();
-            $masterDomain->configureVirtualHost();
-        }
-
-        $wildcardDomain = setting('general.wildcard_domain');
-        if ($oldWildcardDomain != $wildcardDomain) {
-            // Make wildcard domain virtual host
-            $masterDomain = new MasterDomain();
-            $masterDomain->domain = $wildcardDomain;
-            $masterDomain->configureVirtualHost();
-        }
-        
         file_put_contents('/var/www/html/index.html', setting('general.master_domain_page_html'));
+
+        $rebuildApache = false;
+        if ($oldMasterDomain != setting('general.master_domain')) {
+            $rebuildApache = true;
+        }
+        if ($oldWildcardDomain != setting('general.wildcard_domain')) {
+            $rebuildApache = true;
+        }
+        if ($rebuildApache) {
+            $apacheBuild = new \App\VirtualHosts\ApacheBuild();
+            $apacheBuild->fixPermissions();
+            $apacheBuild->build();
+        }
 
     }
 
