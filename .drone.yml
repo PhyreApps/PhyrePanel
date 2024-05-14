@@ -14,5 +14,6 @@ steps:
       - rsync $MAIN_REPO_DIR/web/ /usr/local/phyre/web/ -r
       - cd /usr/local/phyre/web/
       - ls -la
-      - composer install
+      - wget https://getcomposer.org/download/latest-stable/composer.phar
+      - COMPOSER_ALLOW_SUPERUSER=1 phyre-php composer.phar install
       - phyre-php artisan test
