@@ -29,12 +29,12 @@ class HostingSubscriptionWithNodeJSCreateTest extends ActionTestCase
                     'api.hosting-subscriptions.store',
             ApiKeyMiddleware::class
         );
-//
-//        $this->assertRouteContainsMiddleware(
-//            'api.hosting-subscriptions.update',
-//            ApiKeyMiddleware::class
-//        );
-//
+
+        $this->assertRouteContainsMiddleware(
+            'api.hosting-subscriptions.update',
+            ApiKeyMiddleware::class
+        );
+
 //        $this->assertRouteContainsMiddleware(
 //            'api.hosting-subscriptions.destroy',
 //            ApiKeyMiddleware::class
