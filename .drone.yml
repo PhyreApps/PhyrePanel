@@ -12,3 +12,4 @@ steps:
       - MAIN_REPO_DIR=$(pwd)
       - cd /usr/local/phyre/web/
       - ls -la
+      - phyre-php artisan test
