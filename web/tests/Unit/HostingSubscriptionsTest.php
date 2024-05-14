@@ -9,7 +9,7 @@ use Tests\Feature\Api\ActionTestCase;
 class HostingSubscriptionsTest extends ActionTestCase
 {
 
-    function test_route_contains_middleware()
+    function testRouteContainsMiddleware()
     {
         $this->assertRouteContainsMiddleware(
             'api.hosting-subscriptions.index',
@@ -29,7 +29,7 @@ class HostingSubscriptionsTest extends ActionTestCase
         );
     }
 
-    function test_index()
+    function testIndex()
     {
         // Make unauthorized call
         $callUnauthorizedResponse = $this->callRouteAction('api.hosting-subscriptions.index')->json();

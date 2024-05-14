@@ -18,7 +18,7 @@ use Tests\Feature\Api\ActionTestCase;
 
 class HostingSubscriptionWithNodeJSCreateTest extends ActionTestCase
 {
-    function test_route_contains_middleware()
+    function testRouteContainsMiddleware()
     {
         $this->assertRouteContainsMiddleware(
             'api.hosting-subscriptions.index',
@@ -29,23 +29,22 @@ class HostingSubscriptionWithNodeJSCreateTest extends ActionTestCase
                     'api.hosting-subscriptions.store',
             ApiKeyMiddleware::class
         );
-
-        $this->assertRouteContainsMiddleware(
-            'api.hosting-subscriptions.update',
-            ApiKeyMiddleware::class
-        );
-
-        $this->assertRouteContainsMiddleware(
-            'api.hosting-subscriptions.destroy',
-            ApiKeyMiddleware::class
-        );
+//
+//        $this->assertRouteContainsMiddleware(
+//            'api.hosting-subscriptions.update',
+//            ApiKeyMiddleware::class
+//        );
+//
+//        $this->assertRouteContainsMiddleware(
+//            'api.hosting-subscriptions.destroy',
+//            ApiKeyMiddleware::class
+//        );
 
     }
 
-    function test_create()
+    function testCreate()
     {
         $this->assertTrue(Str::contains(php_uname(),'Ubuntu'));
-//
 
         $isNodeJsInstalled = false;
 

@@ -25,10 +25,11 @@ class HostingSubscriptionBackupTest extends ActionTestCase
 {
     public function testFullBackup()
     {
+
         ini_set('memory_limit', '-1');
         ini_set('max_execution_time', 0);
 
-        Queue::fake();
+     //   Queue::fake();
 
         $chs = $this->_createHostingSubscription();
 
@@ -36,6 +37,7 @@ class HostingSubscriptionBackupTest extends ActionTestCase
         $newBackup->backup_type = 'full';
         $newBackup->hosting_subscription_id = $chs['hostingSubscriptionId'];
         $newBackup->save();
+
 
         $phsb = new ProcessHostingSubscriptionBackup($newBackup->id);
         $phsb->handle();

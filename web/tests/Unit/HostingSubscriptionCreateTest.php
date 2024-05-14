@@ -15,7 +15,7 @@ use Tests\Feature\Api\ActionTestCase;
 
 class HostingSubscriptionCreateTest extends ActionTestCase
 {
-    function test_route_contains_middleware()
+    function testRouteContainsMiddleware()
     {
         $this->assertRouteContainsMiddleware(
             'api.hosting-subscriptions.index',

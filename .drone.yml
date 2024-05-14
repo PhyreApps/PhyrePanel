@@ -21,7 +21,7 @@ steps:
       - COMPOSER_ALLOW_SUPERUSER=1 phyre-php composer.phar install
       - phyre-php artisan phyre:set-ini-settings APP_ENV "local"
       - phyre-php artisan migrate
-      - phyre-php artisan test --filter AutoInstallPanelTest
+      - phyre-php artisan test
 ---
 kind: pipeline
 name: Ubuntu 22.04 - Unit Test & Code Coverage
