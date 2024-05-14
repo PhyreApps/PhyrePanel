@@ -88,7 +88,7 @@ IncludeOptional conf-enabled/*.conf
 
         file_put_contents('/etc/apache2/apache2.conf', $virtualHostMerged);
 
-        shell_exec('sudo service apache2 restart');
+        shell_exec('systemctl reload apache2');
     }
 
 }
