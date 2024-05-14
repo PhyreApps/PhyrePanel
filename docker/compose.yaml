@@ -7,16 +7,12 @@
 # You can add other services your application may depend on here, such as a
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
+name: phyre
 services:
-  app:
+  panel:
     platform: linux/amd64
-    container_name: phyrepanel
+    ports:
+      - 8443:8443
     build:
       context: .
-    # If your application exposes a port, uncomment the following lines and change
-    # the port numbers as needed. The first number is the host port and the second
-    # is the port inside the container.
-    ports:
-       - 8080:8080
-       - 8443:8443
-       - 3306:3306
+      target: production

@@ -4,12 +4,15 @@ namespace Modules\Microweber\Filament\Clusters\Microweber\Pages;
 
 use App\ShellApi;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\DB;
 use MicroweberPackages\ComposerClient\Client;
 use MicroweberPackages\SharedServerScripts\MicroweberAppPathHelper;
 use MicroweberPackages\SharedServerScripts\MicroweberDownloader;
 use MicroweberPackages\SharedServerScripts\MicroweberModuleConnectorsDownloader;
 use MicroweberPackages\SharedServerScripts\MicroweberTemplatesDownloader;
 use Modules\Microweber\Filament\Clusters\MicroweberCluster;
+use Modules\Microweber\Jobs\DownloadMicroweber;
+use Modules\Microweber\MicroweberComposerClientHelper;
 
 class Version extends Page
 {
@@ -33,18 +36,25 @@ class Version extends Page
 
     public $supportedLanguages = [];
 
+    public $downloadingNow = false;
+
     protected function getViewData(): array
     {
-        $release = $this->__getMicroweberDownloaderInstance()->getRelease();
+        $mwComposerClientHelper = new MicroweberComposerClientHelper();
 
         $sharedPath = new MicroweberAppPathHelper();
         $sharedPath->setPath(config('microweber.sharedPaths.app'));
 
         $this->supportedLanguages = $sharedPath->getSupportedLanguages();
         $this->supportedTemplates = $sharedPath->getSupportedTemplates();
-        $this->latestVersionOfApp = $this->__getMicroweberDownloaderInstance()->getVersion();
+        $this->latestVersionOfApp = $mwComposerClientHelper->getMicroweberDownloaderInstance()->getVersion();
         $this->currentVersionOfApp = $sharedPath->getCurrentVersion();
         $this->latestDownloadDateOfApp = $sharedPath->getCreatedAt();
+
+        $findJob = DB::table('jobs')->where('payload', 'like', '%DownloadMicroweber%')->get();
+        if ($findJob->count() > 0) {
+            $this->downloadingNow = true;
+        }
 
         return [
             'appVersion' => $this->currentVersionOfApp,
@@ -60,65 +70,7 @@ class Version extends Page
 
     public function checkForUpdates()
     {
-        $sharedAppPath = config('microweber.sharedPaths.app');
+        DownloadMicroweber::dispatch();
 
-        if (! is_dir(dirname($sharedAppPath))) {
-            mkdir(dirname($sharedAppPath));
-        }
-
-        $shellPath = '/usr/local/phyre/web/vendor/microweber-packages/shared-server-scripts/shell-scripts';
-        ShellApi::exec('chmod +x '.$shellPath.'/*');
-
-        // Download core app
-        $status = $this->__getMicroweberDownloaderInstance()
-            ->download(config('microweber.sharedPaths.app'));
-
-        // Download modules
-        $modulesDownloader = new MicroweberModuleConnectorsDownloader();
-        $modulesDownloader->setComposerClient($this->__getComposerClientInstance());
-        $status = $modulesDownloader->download(config('microweber.sharedPaths.modules'));
-
-        // Download templates
-        $templatesDownloader = new MicroweberTemplatesDownloader();
-        $templatesDownloader->setComposerClient($this->__getComposerLicensedInstance());
-        $status = $templatesDownloader->download(config('microweber.sharedPaths.templates'));
-
-    }
-
-    private function __getComposerClientInstance()
-    {
-        // The module connector must have own instance of composer client
-        $composerClient = new Client();
-        $composerClient->packageServers = [
-            'https://market.microweberapi.com/packages/microweberserverpackages/packages.json',
-        ];
-
-        return $composerClient;
-    }
-
-    private function __getComposerLicensedInstance()
-    {
-        $composerClientLicensed = new Client();
-        $composerClientLicensed->addLicense([
-            'local_key' => setting('whitelabel_license_key')
-        ]);
-
-        return $composerClientLicensed;
-    }
-
-    private function __getMicroweberDownloaderInstance()
-    {
-        $coreDownloader = new MicroweberDownloader();
-
-        $updateAppChannel = 'stable';
-        if ($updateAppChannel == 'stable') {
-            $coreDownloader->setReleaseSource(MicroweberDownloader::STABLE_RELEASE);
-        } else {
-            $coreDownloader->setReleaseSource(MicroweberDownloader::DEV_RELEASE);
-        }
-
-        $coreDownloader->setComposerClient($this->__getComposerClientInstance());
-
-        return $coreDownloader;
     }
 }

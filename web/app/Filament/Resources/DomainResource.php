@@ -300,6 +300,10 @@ class DomainResource extends Resource
                     ->searchable()
                     ->sortable(),
 
+                Tables\Columns\TextColumn::make('domain_root')
+                    ->searchable()
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('hostingSubscription.customer.name')
                     ->searchable()
                     ->sortable(),

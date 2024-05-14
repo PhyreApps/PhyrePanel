@@ -1,4 +1,5 @@
 <?php
+use App\PhyreConfig;
 
 return [
 
@@ -8,7 +9,7 @@ return [
         //
         //            // Send the NewDevice notification
         //
-        //            'enabled' => env('NEW_DEVICE_NOTIFICATION', true),
+        //            'enabled' => PhyreConfig::get('NEW_DEVICE_NOTIFICATION', true),
         //
         //
         //

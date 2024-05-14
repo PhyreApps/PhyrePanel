@@ -4,6 +4,7 @@ namespace tests\Unit;
 
 use App\Filament\Enums\BackupStatus;
 use App\Helpers;
+use App\Jobs\ProcessHostingSubscriptionBackup;
 use App\Models\Backup;
 use App\Models\Customer;
 use App\Models\Database;
@@ -18,14 +19,26 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Tests\Feature\Api\ActionTestCase;
+use Illuminate\Support\Facades\Queue;
 
 class HostingSubscriptionBackupTest extends ActionTestCase
 {
     public function testFullBackup()
     {
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 0);
+
+        Queue::fake();
+
         $chs = $this->_createHostingSubscription();
 
-        Artisan::call('phyre:run-hosting-subscriptions-backup');
+        $newBackup = new HostingSubscriptionBackup();
+        $newBackup->backup_type = 'full';
+        $newBackup->hosting_subscription_id = $chs['hostingSubscriptionId'];
+        $newBackup->save();
+
+        $phsb = new ProcessHostingSubscriptionBackup($newBackup->id);
+        $phsb->handle();
 
         $findLastBackup = HostingSubscriptionBackup::where('hosting_subscription_id', $chs['hostingSubscriptionId'])
             ->first();
@@ -36,20 +49,21 @@ class HostingSubscriptionBackupTest extends ActionTestCase
         $this->assertSame($findLastBackup->backup_type, 'full');
 
         $backupFinished = false;
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 100; $i++) {
+
             $findLastBackup = HostingSubscriptionBackup::where('id', $findLastBackup->id)->first();
-            $findLastBackup->checkBackup();
             if ($findLastBackup->status == BackupStatus::Completed) {
                 $backupFinished = true;
                 break;
             }
+
             sleep(1);
         }
 
         $this->assertTrue($backupFinished);
         $this->assertSame($findLastBackup->status, BackupStatus::Completed);
-        $this->assertNotEmpty($findLastBackup->filepath);
-        $this->assertTrue(file_exists($findLastBackup->filepath));
+        $this->assertNotEmpty($findLastBackup->file_path);
+        $this->assertTrue(file_exists($findLastBackup->file_path));
 
         $backup = new HostingSubscriptionBackup();
         $checkCronJob = $backup->checkCronJob();
@@ -62,14 +76,17 @@ class HostingSubscriptionBackupTest extends ActionTestCase
         $backup->hosting_subscription_id = $chs['hostingSubscriptionId'];
         $backup->save();
 
+        $phsb = new ProcessHostingSubscriptionBackup($backup->id);
+        $phsb->handle();
+
         $backupId = $backup->id;
 
         $findBackup = false;
         $backupCompleted = false;
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 100; $i++) {
+
             $findBackup = HostingSubscriptionBackup::where('id', $backupId)->first();
             if ($findBackup) {
-                $status = $findBackup->checkBackup();
                 if ($findBackup->status == BackupStatus::Completed) {
                     $backupCompleted = true;
                     break;
@@ -79,19 +96,19 @@ class HostingSubscriptionBackupTest extends ActionTestCase
         }
 
         $this->assertTrue($backupCompleted);
-        $this->assertNotEmpty($findBackup->filepath);
-        $this->assertTrue(file_exists($findBackup->filepath));
+        $this->assertNotEmpty($findBackup->file_path);
+        $this->assertTrue(file_exists($findBackup->file_path));
 
-        $getFilesize = filesize($findBackup->filepath);
+        $getFilesize = filesize($findBackup->file_path);
         $this->assertGreaterThan(0, $getFilesize);
-        $this->assertSame(Helpers::checkPathSize($findBackup->path), $findBackup->size);
+        $this->assertSame($getFilesize, intval($findBackup->size));
 
-        Helpers::extractTar($findBackup->filepath, $findBackup->path . '/unit-test');
+        Helpers::extractZip($findBackup->file_path, $findBackup->path . '/unit-test');
 //
-//        dd($chs);
         $findDatabase = Database::where('id', $chs['databaseId'])->first();
 
-        $extractedDatabase = $findBackup->path . '/unit-test/' . $findDatabase->database_name_prefix . $findDatabase->database_name . '.sql';
+        $extractedDatabase = $findBackup->path . '/unit-test/databases/' . $findDatabase->database_name_prefix . $findDatabase->database_name . '.sql';
+
         $this->assertTrue(file_exists($extractedDatabase));
         $extractedDatabaseContent = file_get_contents($extractedDatabase);
         $this->assertNotEmpty($extractedDatabaseContent);
@@ -110,6 +127,7 @@ class HostingSubscriptionBackupTest extends ActionTestCase
 
     private function _createHostingSubscription()
     {
+
         $customer = new Customer();
         $customer->name = 'UnitBackupTest' . time();
         $customer->email = 'UnitBackupTest' . time() . '@unit-test.com';

@@ -12,7 +12,7 @@ class ApachePingWebsitesWithCurl extends Command
      *
      * @var string
      */
-    protected $signature = 'apache:ping-websites-with-curl';
+    protected $signature = 'phyre:apache-ping-websites-with-curl';
 
     /**
      * The console command description.
@@ -28,24 +28,12 @@ class ApachePingWebsitesWithCurl extends Command
      */
     public function handle()
     {
-        $findCustomer = \App\Models\Customer::first();
-        $findHostingPlan = \App\Models\HostingPlan::where('id',2)->first();
 
-        for ($i = 0; $i <= 50000; $i++) {
-            $newSubscription = new \App\Models\HostingSubscription();
-            $newSubscription->customer_id = $findCustomer->id;
-            $newSubscription->hosting_plan_id = $findHostingPlan->id;
-            $newSubscription->domain = 'next-'.rand(11111,99999).'server-1-'.$i.rand(11111,99999).'.test.multiweber.com';
-            $newSubscription->save();
-        }
+        $getDomains = Domain::get();
 
-        return;
+        foreach ($getDomains as $domainData) {
 
-        // Retrieve all website configurations from the database
-        $websiteConfigs = Domain::get();
-
-        foreach ($websiteConfigs as $config) {
-            $domain = $config->domain;
+            $domain = $domainData->domain;
 
             $cmd = "curl -s -o /dev/null -w '%{http_code}' http://$domain";
             $response = shell_exec($cmd);

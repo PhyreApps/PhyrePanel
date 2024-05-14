@@ -76,6 +76,7 @@ class DockerContainerApi
                 'externalPort' => $this->externalPort,
                 'environmentVariables' => $this->environmentVariables,
                 'volumeMapping' => $this->volumeMapping,
+                'version' => '3'
             ])->render();
         }
 
@@ -84,13 +85,13 @@ class DockerContainerApi
             shell_exec('mkdir -p ' . $dockerContaienrPath);
         }
 
+
         $dockerComposeFile = $dockerContaienrPath . '/docker-compose.yml';
         file_put_contents($dockerComposeFile, $dockerComposeFileContent);
 
         $output = shell_exec("cd $dockerContaienrPath && docker-compose up -d");
 
         // Get docker container id from output
-        $dockerContainerId = trim($output);
         $output = shell_exec('docker ps --format json --filter name='.$this->name);
         $output = json_decode($output, true);
 

@@ -5,12 +5,14 @@ version: '{{$version}}'
 services:
 
   {{$name}}:
-    image: {{$image}}
+    image: "{{$image}}"
     restart: always
     ports:
       - {{$externalPort}}:{{ $port }}
 
-    @if(isset($environmentVariables))
+    @if(isset($environmentVariables)
+                && !empty($environmentVariables)
+                && is_array($environmentVariables))
 
     environment:
 

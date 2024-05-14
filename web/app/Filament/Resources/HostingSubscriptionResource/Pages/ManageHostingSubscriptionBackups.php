@@ -2,14 +2,18 @@
 
 namespace app\Filament\Resources\HostingSubscriptionResource\Pages;
 
+use App\BackupStorage;
+use App\Filament\Enums\BackupStatus;
 use App\Filament\Enums\HostingSubscriptionBackupType;
 use App\Filament\Resources\Blog\PostResource;
 use App\Filament\Resources\HostingSubscriptionResource;
+use App\Helpers;
 use App\Models\Backup;
 use App\Models\DatabaseUser;
 use App\Models\HostingSubscriptionBackup;
 use App\Models\RemoteDatabaseServer;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
@@ -18,6 +22,8 @@ use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\File;
 use JaOcero\RadioDeck\Forms\Components\RadioDeck;
 
 class ManageHostingSubscriptionBackups extends ManageRelatedRecords
@@ -44,7 +50,7 @@ class ManageHostingSubscriptionBackups extends ManageRelatedRecords
 
     public static function getNavigationLabel(): string
     {
-        return 'Manage Backups';
+        return 'Backups';
     }
 
     public function form(Form $form): Form
@@ -85,18 +91,8 @@ class ManageHostingSubscriptionBackups extends ManageRelatedRecords
 
     public function table(Table $table): Table
     {
-
-        $findHostingSubscription = HostingSubscriptionBackup::where('hosting_subscription_id', $this->record->id)
-                            ->where('status', 'processing')
-                            ->get();
-        if ($findHostingSubscription->count() > 0) {
-            foreach ($findHostingSubscription as $backup) {
-                $backup->checkBackup();
-            }
-        }
-
         return $table
-            ->recordTitleAttribute('id')
+            ->recordTitleAttribute('file_name')
             ->columns([
 
                 Tables\Columns\TextColumn::make('backup_type')
@@ -114,7 +110,7 @@ class ManageHostingSubscriptionBackups extends ManageRelatedRecords
 
                 Tables\Columns\TextColumn::make('size')
                     ->state(function (HostingSubscriptionBackup $backup) {
-                        return $backup->size ? $backup->size : 'N/A';
+                        return ($backup->size > 0) ? Helpers::getHumanReadableSize($backup->size) : 'N/A';
                     }),
 
             ])
@@ -126,6 +122,39 @@ class ManageHostingSubscriptionBackups extends ManageRelatedRecords
 //
             ])
             ->actions([
+                Tables\Actions\Action::make('download')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->hidden(function (HostingSubscriptionBackup $backup) {
+                        return $backup->status !== BackupStatus::Completed;
+                    })
+                    ->action(function (HostingSubscriptionBackup $backup) {
+
+                        $backupStorage = BackupStorage::getInstance($backup->root_path);
+                        $tempUrl = $backupStorage->temporaryUrl($backup->file_name, Carbon::now()->addMinutes(5));
+
+                        return redirect($tempUrl);
+                    }),
+
+
+                Tables\Actions\Action::make('viewLog')
+                    ->label('View Log')
+                    ->icon('heroicon-o-document')
+                    ->hidden(function (HostingSubscriptionBackup $backup) {
+                        $hide = true;
+                        if ($backup->status === BackupStatus::Processing || $backup->status === BackupStatus::Failed) {
+                            $hide = false;
+                        }
+                        return $hide;
+                    })
+                    ->modalContent(function (HostingSubscriptionBackup $backup) {
+                        return view('filament.modals.view-livewire-component', [
+                            'component' => 'hosting-subscription-backup-log',
+                            'componentProps' => [
+                                'hostingSubscriptionBackupId' => $backup->id,
+                            ],
+                        ]);
+                    }),
+
                 Tables\Actions\ViewAction::make(),
              //   Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

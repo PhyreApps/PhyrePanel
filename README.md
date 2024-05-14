@@ -1,27 +1,28 @@
-# Welcome to PHYRE PANEL
+<h1 align="center">
+ <a href="https://www.phyrepanel.com">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://phyrepanel.com/phyre-logo.svg"/>
+    <img height="69" src="https://phyrepanel.com/phyre-logo.svg"/>
+  </picture>
+ </a>
+ <br />
+</h1>
+<p align="center">
+ Powerful Linux multi-platform hosting control panel designed to simplify the process of managing web hosting servers. 
+</p>
+<p align="center">
+  <a href="https://www.phyrepanel.com/"><img src="https://img.shields.io/badge/Website-blue?logo=googlechrome&logoColor=black"/></a>
+  <a href="https://discord.gg/vsxBuMFK"><img src="https://img.shields.io/discord/1227542192189603872?logo=discord&label=discord"/></a>
+  <a href="https://github.com/PhyreApps/PhyrePanel"><img src="https://img.shields.io/github/stars/PhyreApps/PhyrePanel" /></a>
+  <a href="https://github.com/PhyreApps/PhyrePanel/blob/main/LICENSE"><img src="https://img.shields.io/github/license/PhyreApps/PhyrePanel"/></a>
+  <a href="https://drone.phyrecloud.com/PhyreApps/PhyrePanel"><img src="https://drone.phyrecloud.com/api/badges/PhyreApps/PhyrePanel/status.svg"/></a>
+  <a href="https://codecov.io/gh/PhyreApps/PhyrePanel"><img src="https://codecov.io/gh/PhyreApps/PhyrePanel/graph/badge.svg?token=BO0RTPLS4W"/></a>
+</p>
 
 ![Phyre Panel - Dashboard](screenshots/dashboard.png)
 ## About PHYRE PANEL
 
 PHYRE PANEL is a powerful Linux multi-platform hosting control panel designed to simplify the process of managing web hosting servers. Whether you're a seasoned sysadmin or just starting out, PHYRE PANEL provides an intuitive interface and robust features to streamline your hosting management tasks.
-
-
-## Build Status
-
-### Master branch
-![Unit Tests](https://github.com/PhyreApps/PhyrePanel/actions/workflows/app-unit-test.yml/badge.svg)
-[![codecov](https://codecov.io/gh/PhyreApps/PhyrePanel/branch/main/graph/badge.svg?token=aLAgaSMcbZ)](https://codecov.io/gh/PhyreApps/PhyrePanel)
-
-### Dev branch
-![Unit Tests](https://github.com/PhyreApps/PhyrePanel/actions/workflows/app-unit-test.yml/badge.svg?branch=dev)
-[![codecov](https://codecov.io/gh/PhyreApps/PhyrePanel/branch/dev/graph/badge.svg?token=aLAgaSMcbZ)](https://codecov.io/gh/PhyreApps/PhyrePanel)
-
-All development is done on the `dev` branch. The `master` branch is used for stable releases.
-
-Please note that the `dev` branch is not guaranteed to be stable at all times, and may contain bugs or other issues. Use it at your own risk.
-
-Please submit all pull requests to the `dev` branch.
-
 
 ## Installation
 To install PhyrePanel, you need to run this commands:
@@ -29,6 +30,19 @@ To install PhyrePanel, you need to run this commands:
 wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/main/installers/install.sh && chmod +x install.sh && ./install.sh
 ```
 The admin panel can be opened on port: yourserver.com:8443
+
+
+## Build Status
+
+### Master branch
+[![Build Status](https://drone.phyrecloud.com/api/badges/PhyreApps/PhyrePanel/status.svg)](https://drone.phyrecloud.com/PhyreApps/PhyrePanel)
+[![codecov](https://codecov.io/gh/PhyreApps/PhyrePanel/graph/badge.svg?token=BO0RTPLS4W)](https://codecov.io/gh/PhyreApps/PhyrePanel)
+
+All development is done on the `dev` branch. The `master` branch is used for stable releases.
+
+Please note that the `dev` branch is not guaranteed to be stable at all times, and may contain bugs or other issues. Use it at your own risk.
+
+Please submit all pull requests to the `dev` branch.
 
 ## Server Application Types Supported
 
@@ -66,6 +80,11 @@ We welcome contributions from the community to help improve PHYRE PANEL. If you 
 ## Support
 
 For support and assistance with PHYRE PANEL, please visit our [documentation](https://phyrepanel.com/docs) or reach out to our [support team](mailto:support@phyrepanel.com).
+
+## Integrations
+
+- WHMCS Plugin
+[https://github.com/PhyreApps/PhyrePanelWHMCSPlugin](https://github.com/PhyreApps/PhyrePanelWHMCSPlugin)
 
 ## Features
 

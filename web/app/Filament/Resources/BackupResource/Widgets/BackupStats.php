@@ -2,6 +2,7 @@
 
 namespace app\Filament\Resources\BackupResource\Widgets;
 
+use App\BackupStorage;
 use App\Filament\Resources\BackupResource\Pages\ListBackups;
 use App\Filament\Resources\Shop\OrderResource\Pages\ListOrders;
 use App\Models\Backup;
@@ -10,6 +11,7 @@ use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
+use Illuminate\Support\Facades\Cache;
 
 class BackupStats extends BaseWidget
 {
@@ -24,21 +26,22 @@ class BackupStats extends BaseWidget
 
     protected function getStats(): array
     {
-        $findBackups = Backup::select(['id'])->where('status', 'processing')->get();
-        if ($findBackups->count() > 0) {
-            foreach ($findBackups as $backup) {
-                $backup->checkBackup();
+
+        $stats = Cache::remember('backup-stats', 300, function () {
+            $usedSpace = 0;
+            $backupPath = BackupStorage::getPath();
+            if (is_dir($backupPath)) {
+                $usedSpace = $this->getDirectorySize($backupPath);
             }
-        }
-        $usedSpace = 0;
-        $backupPath = storage_path('backups');
-        if (is_dir($backupPath)) {
-            $usedSpace = $this->getDirectorySize($backupPath);
-        }
+            return [
+                'totalBackups' => Backup::count(),
+                'usedSpace' => $usedSpace,
+            ];
+        });
 
         return [
-            Stat::make('Total backups', Backup::count()),
-            Stat::make('Total used space', $usedSpace),
+            Stat::make('Total backups', $stats['totalBackups']),
+            Stat::make('Total used space', $stats['usedSpace']),
         ];
     }
 

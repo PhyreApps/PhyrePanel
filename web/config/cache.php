@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Str;
+use App\PhyreConfig;
 
 return [
 
@@ -15,7 +16,7 @@ return [
     |
     */
 
-    'default' => 'array', //env('CACHE_DRIVER', 'file'),
+    'default' => 'array', //PhyreConfig::get('CACHE_DRIVER', 'file'),
 
     /*
     |--------------------------------------------------------------------------
@@ -57,18 +58,18 @@ return [
 
         'memcached' => [
             'driver' => 'memcached',
-            'persistent_id' => env('MEMCACHED_PERSISTENT_ID'),
+            'persistent_id' => PhyreConfig::get('MEMCACHED_PERSISTENT_ID'),
             'sasl' => [
-                env('MEMCACHED_USERNAME'),
-                env('MEMCACHED_PASSWORD'),
+                PhyreConfig::get('MEMCACHED_USERNAME'),
+                PhyreConfig::get('MEMCACHED_PASSWORD'),
             ],
             'options' => [
                 // Memcached::OPT_CONNECT_TIMEOUT => 2000,
             ],
             'servers' => [
                 [
-                    'host' => env('MEMCACHED_HOST', '127.0.0.1'),
-                    'port' => env('MEMCACHED_PORT', 11211),
+                    'host' => PhyreConfig::get('MEMCACHED_HOST', '127.0.0.1'),
+                    'port' => PhyreConfig::get('MEMCACHED_PORT', 11211),
                     'weight' => 100,
                 ],
             ],
@@ -82,11 +83,11 @@ return [
 
         'dynamodb' => [
             'driver' => 'dynamodb',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
-            'table' => env('DYNAMODB_CACHE_TABLE', 'cache'),
-            'endpoint' => env('DYNAMODB_ENDPOINT'),
+            'key' => PhyreConfig::get('AWS_ACCESS_KEY_ID'),
+            'secret' => PhyreConfig::get('AWS_SECRET_ACCESS_KEY'),
+            'region' => PhyreConfig::get('AWS_DEFAULT_REGION', 'us-east-1'),
+            'table' => PhyreConfig::get('DYNAMODB_CACHE_TABLE', 'cache'),
+            'endpoint' => PhyreConfig::get('DYNAMODB_ENDPOINT'),
         ],
 
         'octane' => [
@@ -106,6 +107,6 @@ return [
     |
     */
 
-    'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_'),
+    'prefix' => PhyreConfig::get('CACHE_PREFIX', Str::slug(PhyreConfig::get('APP_NAME', 'laravel'), '_').'_cache_'),
 
 ];

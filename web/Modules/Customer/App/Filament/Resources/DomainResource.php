@@ -31,6 +31,8 @@ class DomainResource extends Resource
 
     protected static ?int $navigationSort = 0;
 
+    protected static ?string $navigationGroup = 'Hosting';
+
     public static function form(Form $form): Form
     {
         $hostingSubscriptions = [];

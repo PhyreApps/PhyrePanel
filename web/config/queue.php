@@ -1,4 +1,5 @@
 <?php
+use App\PhyreConfig;
 
 return [
 
@@ -13,7 +14,7 @@ return [
     |
     */
 
-    'default' => env('QUEUE_CONNECTION', 'sync'),
+    'default' => 'database',
 
     /*
     |--------------------------------------------------------------------------
@@ -53,19 +54,19 @@ return [
 
         'sqs' => [
             'driver' => 'sqs',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'prefix' => env('SQS_PREFIX', 'https://sqs.us-east-1.amazonaws.com/your-account-id'),
-            'queue' => env('SQS_QUEUE', 'default'),
-            'suffix' => env('SQS_SUFFIX'),
-            'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+            'key' => PhyreConfig::get('AWS_ACCESS_KEY_ID'),
+            'secret' => PhyreConfig::get('AWS_SECRET_ACCESS_KEY'),
+            'prefix' => PhyreConfig::get('SQS_PREFIX', 'https://sqs.us-east-1.amazonaws.com/your-account-id'),
+            'queue' => PhyreConfig::get('SQS_QUEUE', 'default'),
+            'suffix' => PhyreConfig::get('SQS_SUFFIX'),
+            'region' => PhyreConfig::get('AWS_DEFAULT_REGION', 'us-east-1'),
             'after_commit' => false,
         ],
 
         'redis' => [
             'driver' => 'redis',
             'connection' => 'default',
-            'queue' => env('REDIS_QUEUE', 'default'),
+            'queue' => PhyreConfig::get('REDIS_QUEUE', 'default'),
             'retry_after' => 90,
             'block_for' => null,
             'after_commit' => false,
@@ -85,7 +86,7 @@ return [
     */
 
     'batching' => [
-        'database' => env('DB_CONNECTION', 'mysql'),
+        'database' => PhyreConfig::get('DB_CONNECTION', 'mysql'),
         'table' => 'job_batches',
     ],
 
@@ -101,8 +102,8 @@ return [
     */
 
     'failed' => [
-        'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
-        'database' => env('DB_CONNECTION', 'mysql'),
+        'driver' => PhyreConfig::get('QUEUE_FAILED_DRIVER', 'database-uuids'),
+        'database' => PhyreConfig::get('DB_CONNECTION', 'mysql'),
         'table' => 'failed_jobs',
     ],
 

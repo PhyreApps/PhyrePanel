@@ -128,21 +128,21 @@ MYSQL_SCRIPT
 echo "$MYSQL_ROOT_PASSWORD" > /root/.mysql_root_password
 
 # Configure the application
-cp .env.example .env
+phyre-php artisan phyre:set-ini-settings APP_ENV "local"
+phyre-php artisan phyre:set-ini-settings APP_URL "127.0.0.1:8443"
+phyre-php artisan phyre:set-ini-settings APP_NAME "PHYRE_PANEL"
+phyre-php artisan phyre:set-ini-settings DB_DATABASE "$PHYRE_PANEL_DB_NAME"
+phyre-php artisan phyre:set-ini-settings DB_USERNAME "$PHYRE_PANEL_DB_USER"
+phyre-php artisan phyre:set-ini-settings DB_PASSWORD "$PHYRE_PANEL_DB_PASSWORD"
+phyre-php artisan phyre:set-ini-settings DB_CONNECTION "mysql"
+phyre-php artisan phyre:set-ini-settings MYSQL_ROOT_USERNAME "$MYSQL_PHYRE_ROOT_USERNAME"
+phyre-php artisan phyre:set-ini-settings MYSQL_ROOT_PASSWORD "$MYSQL_PHYRE_ROOT_PASSWORD"
+phyre-php artisan phyre:key-generate
 
-sed -i "s/^APP_URL=.*/APP_URL=127.0.0.1:8443" .env
-sed -i "s/^APP_NAME=.*/APP_NAME=PHYRE_PANEL/" .env
-sed -i "s/^DB_DATABASE=.*/DB_DATABASE=$PHYRE_PANEL_DB_NAME/" .env
-sed -i "s/^DB_USERNAME=.*/DB_USERNAME=$PHYRE_PANEL_DB_USER/" .env
-sed -i "s/^DB_PASSWORD=.*/DB_PASSWORD=$PHYRE_PANEL_DB_PASSWORD/" .env
-sed -i "s/^DB_CONNECTION=.*/DB_CONNECTION=mysql/" .env
-
-sed -i "s/^MYSQl_ROOT_USERNAME=.*/MYSQl_ROOT_USERNAME=$MYSQL_PHYRE_ROOT_USERNAME/" .env
-sed -i "s/^MYSQL_ROOT_PASSWORD=.*/MYSQL_ROOT_PASSWORD=$MYSQL_PHYRE_ROOT_PASSWORD/" .env
-
-phyre-php artisan key:generate
 phyre-php artisan migrate
 phyre-php artisan db:seed
+
+phyre-php artisan phyre:set-ini-settings APP_ENV "production"
 
 chmod -R o+w /usr/local/phyre/web/storage/
 chmod -R o+w /usr/local/phyre/web/bootstrap/cache/

@@ -6,6 +6,8 @@ use App\Actions\ApacheWebsiteDelete;
 use App\Events\DomainIsCreated;
 use App\Events\ModelDomainDeleting;
 use App\ShellApi;
+use App\VirtualHosts\ApacheBuild;
+use App\VirtualHosts\DTO\ApacheVirtualHostSettings;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Docker\App\Models\DockerContainer;
@@ -73,30 +75,37 @@ class Domain extends Model
                 $model->domain_public = $model->domain_root.'/public_html';
                 $model->home_root = '/home/'.$findHostingSubscription->user;
             }
+            $model->saveQuietly();
 
-            $model->save();
-
-            $model->configureVirtualHost();
+            $model->configureVirtualHost(true);
 
             event(new DomainIsCreated($model));
 
         });
 
-        static::updating(function ($model) {
-            $model->configureVirtualHost();
-        });
-
         static::saved(function ($model) {
-            $model->configureVirtualHost();
+
+            $model->configureVirtualHost(true);
+
+            $apacheBuild = new ApacheBuild();
+            $apacheBuild->build();
+
         });
 
         static::deleting(function ($model) {
 
-            ShellApi::exec('rm -rf '.$model->domain_public);
+            if (empty($model->domain_public)) {
+                return;
+            }
 
-            $deleteApacheWebsite = new ApacheWebsiteDelete();
-            $deleteApacheWebsite->setDomain($model->domain);
-            $deleteApacheWebsite->handle();
+            if ($model->is_main == 1) {
+                $findHostingSubscription = HostingSubscription::where('id', $model->hosting_subscription_id)->first();
+                if (!$findHostingSubscription) {
+                    return;
+                }
+                ShellApi::safeDelete($model->domain_root, ['/home/' . $findHostingSubscription->system_username]);
+            }
+
         });
 
     }
@@ -106,7 +115,7 @@ class Domain extends Model
         return $this->belongsTo(HostingSubscription::class);
     }
 
-    public function configureVirtualHost()
+    public function configureVirtualHost($fixPermissions = false)
     {
         $findHostingSubscription = \App\Models\HostingSubscription::where('id', $this->hosting_subscription_id)
             ->first();
@@ -120,19 +129,25 @@ class Domain extends Model
             throw new \Exception('Hosting plan not found');
         }
 
-        if (!is_dir($this->domain_root)) {
-            mkdir($this->domain_root, 0711, true);
+        if (empty($this->domain_root)) {
+            throw new \Exception('Domain root not found');
         }
-        if (!is_dir($this->domain_public)) {
-            mkdir($this->domain_public, 0755, true);
-        }
-        if (!is_dir($this->home_root)) {
-            mkdir($this->home_root, 0711, true);
+
+        if ($fixPermissions) {
+            if (!is_dir($this->domain_root)) {
+                mkdir($this->domain_root, 0711, true);
+            }
+            if (!is_dir($this->domain_public)) {
+                mkdir($this->domain_public, 0755, true);
+            }
+            if (!is_dir($this->home_root)) {
+                mkdir($this->home_root, 0711, true);
+            }
         }
 
         if ($this->is_installed_default_app_template == null) {
             $this->is_installed_default_app_template = 1;
-            $this->save();
+            $this->saveQuietly();
             if ($this->server_application_type == 'apache_php') {
                 if (!is_file($this->domain_public . '/index.php')) {
                     $indexContent = view('actions.samples.apache.php.app-php-sample')->render();
@@ -182,14 +197,36 @@ class Domain extends Model
 
         $webUserGroup = $findHostingSubscription->system_username;
 
-        // Fix file permissions
-        shell_exec('chown -R '.$findHostingSubscription->system_username.':'.$webUserGroup.' '.$this->home_root);
-        shell_exec('chown -R '.$findHostingSubscription->system_username.':'.$webUserGroup.' '.$this->domain_root);
-        shell_exec('chown -R '.$findHostingSubscription->system_username.':'.$webUserGroup.' '.$this->domain_public);
+        if ($fixPermissions) {
+            // Fix file permissions
+            shell_exec('chown -R ' . $findHostingSubscription->system_username . ':' . $webUserGroup . ' ' . $this->home_root);
+            shell_exec('chown -R ' . $findHostingSubscription->system_username . ':' . $webUserGroup . ' ' . $this->domain_root);
+            shell_exec('chown -R ' . $findHostingSubscription->system_username . ':' . $webUserGroup . ' ' . $this->domain_public);
 
-        shell_exec('chmod -R 0711 '.$this->home_root);
-        shell_exec('chmod -R 0711 '.$this->domain_root);
-        shell_exec('chmod -R 775 '.$this->domain_public);
+            shell_exec('chmod -R 0711 ' . $this->home_root);
+            shell_exec('chmod -R 0711 ' . $this->domain_root);
+            shell_exec('chmod -R 775 ' . $this->domain_public);
+
+            if (!is_dir($this->domain_root . '/logs/apache2')) {
+                shell_exec('mkdir -p ' . $this->domain_root . '/logs/apache2');
+            }
+            shell_exec('chown -R ' . $findHostingSubscription->system_username . ':' . $webUserGroup . ' ' . $this->domain_root . '/logs/apache2');
+            shell_exec('chmod -R 775 ' . $this->domain_root . '/logs/apache2');
+
+            if (!is_file($this->domain_root . '/logs/apache2/bytes.log')) {
+                shell_exec('touch ' . $this->domain_root . '/logs/apache2/bytes.log');
+            }
+            if (!is_file($this->domain_root . '/logs/apache2/access.log')) {
+                shell_exec('touch ' . $this->domain_root . '/logs/apache2/access.log');
+            }
+            if (!is_file($this->domain_root . '/logs/apache2/error.log')) {
+                shell_exec('touch ' . $this->domain_root . '/logs/apache2/error.log');
+            }
+
+            shell_exec('chmod -R 775 ' . $this->domain_root . '/logs/apache2/bytes.log');
+            shell_exec('chmod -R 775 ' . $this->domain_root . '/logs/apache2/access.log');
+            shell_exec('chmod -R 775 ' . $this->domain_root . '/logs/apache2/error.log');
+        }
 
         $appType = 'php';
         $appVersion = '8.3';
@@ -206,16 +243,13 @@ class Domain extends Model
             shell_exec('chmod -f 751 '.$this->domain_public . '/cgi-bin/php');
         }
 
-        $apacheVirtualHostBuilder = new \App\VirtualHosts\ApacheVirtualHostBuilder();
+        $apacheVirtualHostBuilder = new ApacheVirtualHostSettings();
         $apacheVirtualHostBuilder->setDomain($this->domain);
         $apacheVirtualHostBuilder->setDomainPublic($this->domain_public);
         $apacheVirtualHostBuilder->setDomainRoot($this->domain_root);
         $apacheVirtualHostBuilder->setHomeRoot($this->home_root);
         $apacheVirtualHostBuilder->setUser($findHostingSubscription->system_username);
         $apacheVirtualHostBuilder->setUserGroup($webUserGroup);
-        $apacheVirtualHostBuilder->setAdditionalServices($findHostingPlan->additional_services);
-        $apacheVirtualHostBuilder->setAppType($appType);
-        $apacheVirtualHostBuilder->setAppVersion($appVersion);
 
         if ($this->status == self::STATUS_SUSPENDED) {
             $suspendedPath = '/var/www/html/suspended';
@@ -228,9 +262,7 @@ class Domain extends Model
             }
             $apacheVirtualHostBuilder->setDomainRoot($suspendedPath);
             $apacheVirtualHostBuilder->setDomainPublic($suspendedPath);
-        }
-
-        if ($this->status == self::STATUS_DEACTIVATED) {
+        } else if ($this->status == self::STATUS_DEACTIVATED) {
             $deactivatedPath = '/var/www/html/deactivated';
             if (!is_dir($deactivatedPath)) {
                 mkdir($deactivatedPath, 0755, true);
@@ -241,65 +273,58 @@ class Domain extends Model
             }
             $apacheVirtualHostBuilder->setDomainRoot($deactivatedPath);
             $apacheVirtualHostBuilder->setDomainPublic($deactivatedPath);
-        }
+        } else {
 
-        if ($this->server_application_type == 'apache_nodejs') {
-            $apacheVirtualHostBuilder->setAppType('nodejs');
-            $apacheVirtualHostBuilder->setPassengerAppRoot($this->domain_public);
-            $apacheVirtualHostBuilder->setPassengerAppType('node');
-            $apacheVirtualHostBuilder->setPassengerStartupFile('app.js');
+          //  $apacheVirtualHostBuilder->setEnableLogs(true);
+            $apacheVirtualHostBuilder->setAdditionalServices($findHostingPlan->additional_services);
+            $apacheVirtualHostBuilder->setAppType($appType);
+            $apacheVirtualHostBuilder->setAppVersion($appVersion);
 
-            if (isset($this->server_application_settings['nodejs_version'])) {
-                $apacheVirtualHostBuilder->setAppVersion($this->server_application_settings['nodejs_version']);
-            }
-        }
+            if ($this->server_application_type == 'apache_nodejs') {
+                $apacheVirtualHostBuilder->setAppType('nodejs');
+                $apacheVirtualHostBuilder->setPassengerAppRoot($this->domain_public);
+                $apacheVirtualHostBuilder->setPassengerAppType('node');
+                $apacheVirtualHostBuilder->setPassengerStartupFile('app.js');
 
-        if ($this->server_application_type == 'apache_python') {
-            $apacheVirtualHostBuilder->setAppType('python');
-            $apacheVirtualHostBuilder->setPassengerAppRoot($this->domain_public);
-            $apacheVirtualHostBuilder->setPassengerAppType('python');
-
-            if (isset($this->server_application_settings['python_version'])) {
-                $apacheVirtualHostBuilder->setAppVersion($this->server_application_settings['python_version']);
-            }
-        }
-
-        if ($this->server_application_type == 'apache_ruby') {
-            $apacheVirtualHostBuilder->setAppType('ruby');
-            $apacheVirtualHostBuilder->setPassengerAppRoot($this->domain_public);
-            $apacheVirtualHostBuilder->setPassengerAppType('ruby');
-
-            if (isset($this->server_application_settings['ruby_version'])) {
-                $apacheVirtualHostBuilder->setAppVersion($this->server_application_settings['ruby_version']);
+                if (isset($this->server_application_settings['nodejs_version'])) {
+                    $apacheVirtualHostBuilder->setAppVersion($this->server_application_settings['nodejs_version']);
+                }
             }
 
-        }
-        if ($this->server_application_type == 'apache_docker') {
-            if (isset($this->server_application_settings['docker_container_id'])) {
-                $findDockerContainer = DockerContainer::where('id', $this->server_application_settings['docker_container_id'])
-                    ->first();
-                if ($findDockerContainer) {
-                    $apacheVirtualHostBuilder->setProxyPass('http://127.0.0.1:'.$findDockerContainer->external_port.'/');
-                    $apacheVirtualHostBuilder->setAppType('docker');
-                    $apacheVirtualHostBuilder->setAppVersion($appVersion);
+            if ($this->server_application_type == 'apache_python') {
+                $apacheVirtualHostBuilder->setAppType('python');
+                $apacheVirtualHostBuilder->setPassengerAppRoot($this->domain_public);
+                $apacheVirtualHostBuilder->setPassengerAppType('python');
+
+                if (isset($this->server_application_settings['python_version'])) {
+                    $apacheVirtualHostBuilder->setAppVersion($this->server_application_settings['python_version']);
+                }
+            }
+
+            if ($this->server_application_type == 'apache_ruby') {
+                $apacheVirtualHostBuilder->setAppType('ruby');
+                $apacheVirtualHostBuilder->setPassengerAppRoot($this->domain_public);
+                $apacheVirtualHostBuilder->setPassengerAppType('ruby');
+
+                if (isset($this->server_application_settings['ruby_version'])) {
+                    $apacheVirtualHostBuilder->setAppVersion($this->server_application_settings['ruby_version']);
+                }
+
+            }
+            if ($this->server_application_type == 'apache_docker') {
+                if (isset($this->server_application_settings['docker_container_id'])) {
+                    $findDockerContainer = DockerContainer::where('id', $this->server_application_settings['docker_container_id'])
+                        ->first();
+                    if ($findDockerContainer) {
+                        $apacheVirtualHostBuilder->setProxyPass('http://127.0.0.1:' . $findDockerContainer->external_port . '/');
+                        $apacheVirtualHostBuilder->setAppType('docker');
+                        $apacheVirtualHostBuilder->setAppVersion($appVersion);
+                    }
                 }
             }
         }
 
-        $apacheBaseConfig = $apacheVirtualHostBuilder->buildConfig();
-
-        if (!empty($apacheBaseConfig)) {
-            file_put_contents('/etc/apache2/sites-available/'.$this->domain.'.conf', $apacheBaseConfig);
-
-            // check symlink exists
-            $symlinkExists = file_exists('/etc/apache2/sites-enabled/'.$this->domain.'.conf');
-            if (!$symlinkExists) {
-                shell_exec('ln -s /etc/apache2/sites-available/' . $this->domain . '.conf /etc/apache2/sites-enabled/' . $this->domain . '.conf');
-            }
-        }
-
-        // Reload apache
-        shell_exec('systemctl reload apache2');
+        $virtualHostSettings = $apacheVirtualHostBuilder->getSettings();
 
         $catchMainDomain = '';
         $domainExp = explode('.', $this->domain);
@@ -329,6 +354,7 @@ class Domain extends Model
             }
         }
 
+        $virtualHostSettingsWithSSL = null;
         if ($findDomainSSLCertificate) {
 
             $sslCertificateFile = $this->home_root . '/certs/' . $this->domain . '/public/cert.pem';
@@ -336,22 +362,30 @@ class Domain extends Model
             $sslCertificateChainFile = $this->home_root . '/certs/' . $this->domain . '/public/fullchain.pem';
 
             if (!empty($findDomainSSLCertificate->certificate)) {
-                if (!is_dir($this->home_root . '/certs/' . $this->domain . '/public')) {
-                    mkdir($this->home_root . '/certs/' . $this->domain . '/public', 0755, true);
+                if (!file_exists($sslCertificateFile)) {
+                    if (!is_dir($this->home_root . '/certs/' . $this->domain . '/public')) {
+                        mkdir($this->home_root . '/certs/' . $this->domain . '/public', 0755, true);
+                    }
+                    file_put_contents($sslCertificateFile, $findDomainSSLCertificate->certificate);
                 }
-                file_put_contents($sslCertificateFile, $findDomainSSLCertificate->certificate);
             }
+
             if (!empty($findDomainSSLCertificate->private_key)) {
-                if (!is_dir($this->home_root . '/certs/' . $this->domain . '/private')) {
-                    mkdir($this->home_root . '/certs/' . $this->domain . '/private', 0755, true);
+                if (!file_exists($sslCertificateKeyFile)) {
+                    if (!is_dir($this->home_root . '/certs/' . $this->domain . '/private')) {
+                        mkdir($this->home_root . '/certs/' . $this->domain . '/private', 0755, true);
+                    }
+                    file_put_contents($sslCertificateKeyFile, $findDomainSSLCertificate->private_key);
                 }
-                file_put_contents($sslCertificateKeyFile, $findDomainSSLCertificate->private_key);
             }
+
             if (!empty($findDomainSSLCertificate->certificate_chain)) {
-                if (!is_dir($this->home_root . '/certs/' . $this->domain . '/public')) {
-                    mkdir($this->home_root . '/certs/' . $this->domain . '/public', 0755, true);
+                if (!file_exists($sslCertificateChainFile)) {
+                    if (!is_dir($this->home_root . '/certs/' . $this->domain . '/public')) {
+                        mkdir($this->home_root . '/certs/' . $this->domain . '/public', 0755, true);
+                    }
+                    file_put_contents($sslCertificateChainFile, $findDomainSSLCertificate->certificate_chain);
                 }
-                file_put_contents($sslCertificateChainFile, $findDomainSSLCertificate->certificate_chain);
             }
 
             $apacheVirtualHostBuilder->setPort(443);
@@ -359,29 +393,14 @@ class Domain extends Model
             $apacheVirtualHostBuilder->setSSLCertificateKeyFile($sslCertificateKeyFile);
             $apacheVirtualHostBuilder->setSSLCertificateChainFile($sslCertificateChainFile);
 
-            $apacheBaseConfigWithSSL = $apacheVirtualHostBuilder->buildConfig();
-            if (!empty($apacheBaseConfigWithSSL)) {
-
-                // Add SSL options conf file
-                $apache2SSLOptionsSample = view('actions.samples.ubuntu.apache2-ssl-options-conf')->render();
-                $apache2SSLOptionsFilePath = '/etc/apache2/phyre/options-ssl-apache.conf';
-
-                if (!file_exists($apache2SSLOptionsFilePath)) {
-                    if (!is_dir('/etc/apache2/phyre')) {
-                        mkdir('/etc/apache2/phyre');
-                    }
-                    file_put_contents($apache2SSLOptionsFilePath, $apache2SSLOptionsSample);
-                }
-
-                file_put_contents('/etc/apache2/sites-available/'.$this->domain.'-ssl.conf', $apacheBaseConfigWithSSL);
-                shell_exec('ln -s /etc/apache2/sites-available/'.$this->domain.'-ssl.conf /etc/apache2/sites-enabled/'.$this->domain.'-ssl.conf');
-
-                // Reload apache
-                shell_exec('systemctl reload apache2');
-
-            }
+            $virtualHostSettingsWithSSL = $apacheVirtualHostBuilder->getSettings();
 
         }
+
+        return [
+            'virtualHostSettings' => $virtualHostSettings,
+            'virtualHostSettingsWithSSL' => $virtualHostSettingsWithSSL,
+        ];
 
     }
 }

@@ -1,4 +1,5 @@
 <?php
+use App\PhyreConfig;
 
 return [
 
@@ -28,7 +29,7 @@ return [
     |
     */
 
-    'compiled' => env(
+    'compiled' => PhyreConfig::get(
         'VIEW_COMPILED_PATH',
         realpath(storage_path('framework/views'))
     ),

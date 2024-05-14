@@ -29,13 +29,8 @@ if (!file_exists(storage_path('installed'))) {
 
 Route::get('/installer', \App\Livewire\Installer::class);
 
+Route::get('backup/download', [\App\Http\Controllers\BackupDownloadController::class, 'download'])
+    ->name('backup.download');
 
-Route::get('vurti', function () {
-
-    $findDomain = \App\Models\Domain::where('id', 41)->first();
-
-    $findDomain->configureVirtualHost();
-
-    dd(3);
-
-});
+Route::get('/customers/{id}/login-with-token', [\App\Http\Controllers\Api\CustomersController::class, 'loginWithToken'])
+    ->name('customers.login-with-token');

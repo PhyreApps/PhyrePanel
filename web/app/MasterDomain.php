@@ -2,6 +2,9 @@
 
 namespace App;
 
+use App\Models\DomainSslCertificate;
+use App\VirtualHosts\DTO\ApacheVirtualHostSettings;
+
 class MasterDomain
 {
     public $domain;
@@ -30,26 +33,39 @@ class MasterDomain
 
     }
 
-    public function configureVirtualHost()
+    public function configureVirtualHost($fixPermissions = false)
     {
-        return; // TODO
-        $apacheVirtualHostBuilder = new \App\VirtualHosts\ApacheVirtualHostBuilder();
-        $apacheVirtualHostBuilder->setDomain($this->domain);
-        $apacheVirtualHostBuilder->setDomainPublic($this->domainPublic);
-        $apacheVirtualHostBuilder->setDomainRoot($this->domainRoot);
-        $apacheVirtualHostBuilder->setHomeRoot($this->domainRoot);
-        $apacheVirtualHostBuilder->setServerAdmin($this->email);
-
-        $apacheBaseConfig = $apacheVirtualHostBuilder->buildConfig();
-
-        if (!empty($apacheBaseConfig)) {
-            file_put_contents('/etc/apache2/sites-available/000-default.conf', $apacheBaseConfig);
-            shell_exec('ln -s /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-enabled/000-default.conf');
+        // check is valid domain
+        if (!filter_var($this->domain, FILTER_VALIDATE_DOMAIN)) {
+            return false;
         }
 
+        $apacheVirtualHost = new ApacheVirtualHostSettings();
+        $apacheVirtualHost->setDomain($this->domain);
+        $apacheVirtualHost->setDomainPublic($this->domainPublic);
+        $apacheVirtualHost->setDomainRoot($this->domainRoot);
+        $apacheVirtualHost->setHomeRoot($this->domainRoot);
+        $apacheVirtualHost->setServerAdmin($this->email);
+        $apacheVirtualHost->setDomainAlias('*.'.$this->domain);
 
-        // install SSL
+        $virtualHostSettings = $apacheVirtualHost->getSettings();
+
+        if ($fixPermissions) {
+            shell_exec('mkdir -p /var/www/logs/apache2');
+            shell_exec('touch /var/www/logs/apache2/bytes.log');
+            shell_exec('touch /var/www/logs/apache2/access.log');
+            shell_exec('touch /var/www/logs/apache2/error.log');
+        }
+
+        // Install SSL
         $findDomainSSLCertificate = null;
+
+        $catchMainDomain = '';
+        $domainExp = explode('.', $this->domain);
+        if (count($domainExp) > 0) {
+            unset($domainExp[0]);
+            $catchMainDomain = implode('.', $domainExp);
+        }
 
         // Try to find wildcard SSL certificate
         $findDomainSSLCertificateWildcard = \App\Models\DomainSslCertificate::where('domain', '*.' . $this->domain)
@@ -59,8 +75,18 @@ class MasterDomain
             $findDomainSSLCertificate = $findDomainSSLCertificateWildcard;
         } else {
             $findDomainSSL = \App\Models\DomainSslCertificate::where('domain', $this->domain)->first();
-            $findDomainSSLCertificate = $findDomainSSL;
+            if ($findDomainSSL) {
+                $findDomainSSLCertificate = $findDomainSSL;
+            } else {
+                $findMainDomainWildcardSSLCertificate = \App\Models\DomainSslCertificate::where('domain', '*.'.$catchMainDomain)
+                    ->first();
+                if ($findMainDomainWildcardSSLCertificate) {
+                    $findDomainSSLCertificate = $findMainDomainWildcardSSLCertificate;
+                }
+            }
         }
+
+        $virtualHostSettingsWithSSL = null;
 
         if ($findDomainSSLCertificate) {
 
@@ -90,38 +116,34 @@ class MasterDomain
                 file_put_contents($sslCertificateChainFile, $findDomainSSLCertificate->certificate_chain);
             }
 
-            $apacheVirtualHostBuilder->setPort(443);
-            $apacheVirtualHostBuilder->setSSLCertificateFile($sslCertificateFile);
-            $apacheVirtualHostBuilder->setSSLCertificateKeyFile($sslCertificateKeyFile);
-            $apacheVirtualHostBuilder->setSSLCertificateChainFile($sslCertificateChainFile);
+            $apacheVirtualHost->setPort(443);
+            $apacheVirtualHost->setSSLCertificateFile($sslCertificateFile);
+            $apacheVirtualHost->setSSLCertificateKeyFile($sslCertificateKeyFile);
+            $apacheVirtualHost->setSSLCertificateChainFile($sslCertificateChainFile);
 
-            $apacheBaseConfigWithSSL = $apacheVirtualHostBuilder->buildConfig();
-            if (!empty($apacheBaseConfigWithSSL)) {
-
-                // Add SSL options conf file
-                $apache2SSLOptionsSample = view('actions.samples.ubuntu.apache2-ssl-options-conf')->render();
-                $apache2SSLOptionsFilePath = '/etc/apache2/phyre/options-ssl-apache.conf';
-
-                if (!file_exists($apache2SSLOptionsFilePath)) {
-                    if (!is_dir('/etc/apache2/phyre')) {
-                        mkdir('/etc/apache2/phyre');
-                    }
-                    file_put_contents($apache2SSLOptionsFilePath, $apache2SSLOptionsSample);
-                }
-
-                file_put_contents('/etc/apache2/sites-available/000-default-ssl.conf', $apacheBaseConfigWithSSL);
-                shell_exec('ln -s /etc/apache2/sites-available/000-default-ssl.conf /etc/apache2/sites-enabled/000-default-ssl.conf');
-
-            }
+            $virtualHostSettingsWithSSL = $apacheVirtualHost->getSettings();
 
         }
         // End install SSL
 
-        // $indexContent = view('actions.samples.apache.html.app-index-html')->render();
-       // file_put_contents($this->domainPublic . '/index.html', $indexContent);
+        if ($fixPermissions) {
+            $domainIndexFile = $this->domainPublic . '/index.html';
+            if (file_exists($domainIndexFile)) {
+                $domainIndexFileContent = file_get_contents($domainIndexFile);
+                if (str_contains($domainIndexFileContent, 'Apache2 Debian Default Page')) {
+                     $indexContent = file_get_contents(base_path('resources/views/actions/samples/apache/html/app-index.html'));
+                     file_put_contents($this->domainPublic . '/index.html', $indexContent);
+                }
+            }
 
-        shell_exec('chown -R www-data:www-data ' . $this->domainPublic);
-        shell_exec('chmod -R 755 ' . $this->domainPublic);
-        shell_exec('systemctl restart apache2');
+            shell_exec('chown -R www-data:www-data ' . $this->domainPublic);
+            shell_exec('chmod -R 755 ' . $this->domainPublic);
+        }
+
+        return [
+            'virtualHostSettings' => $virtualHostSettings,
+            'virtualHostSettingsWithSSL' => $virtualHostSettingsWithSSL ?? null
+        ];
+
     }
 }

@@ -17,6 +17,7 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -24,6 +25,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Outerweb\FilamentSettings\Filament\Plugins\FilamentSettingsPlugin;
@@ -33,12 +35,23 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+        if (auth()->check()) {
+            $panel->renderHook(
+                name: PanelsRenderHook::BODY_START,
+                hook: fn (): string => Blade::render('@livewire(\'jobs-queue-notifications\')')
+            );
+        }
 
          $panel->default()
             ->darkMode(true)
             ->id('admin')
             ->path('admin')
             ->login()
+             ->renderHook(
+                 name: PanelsRenderHook::TOPBAR_START,
+                 hook: fn (): string => Blade::render('@livewire(\'quick-service-restart-menu\')')
+             )
+           //  ->topNavigation()
              ->unsavedChangesAlerts()
              ->globalSearch(true)
              ->databaseNotifications()
@@ -90,26 +103,29 @@ class AdminPanelProvider extends PanelProvider
         $defaultColor = Color::Yellow;
         $brandLogo = asset('images/phyre-logo.svg');
 
-        if (!app()->runningInConsole()) {
-            $isAppInstalled = file_exists(storage_path('installed'));
-            if ($isAppInstalled) {
-                if (setting('general.brand_logo_url')) {
-                    $brandLogo = setting('general.brand_logo_url');
-                }
-                if (setting('general.brand_primary_color')) {
-                    $defaultColor = Color::hex(setting('general.brand_primary_color'));
-                }
-                $findModules = Module::where('installed', 1)->get();
-                if ($findModules->count() > 0) {
-                    foreach ($findModules as $module) {
-                        $modulePathClusters = module_path($module->name, 'Filament/Clusters');
-                        if (is_dir($modulePathClusters)) {
-                            $panel->discoverClusters(in: $modulePathClusters, for: 'Modules\\' . $module->name . '\\Filament\\Clusters');
-                        }
-                        $modulePathPages = module_path($module->name, 'Filament/Pages');
-                        if (is_dir($modulePathPages)) {
-                            $panel->discoverPages(in: $modulePathPages, for: 'Modules\\' . $module->name . '\\Filament\\Pages');
-                        }
+
+        $isAppInstalled = file_exists(storage_path('installed'));
+        if ($isAppInstalled) {
+            if (setting('general.brand_logo_url')) {
+                $brandLogo = setting('general.brand_logo_url');
+            }
+            if (setting('general.brand_primary_color')) {
+                $defaultColor = Color::hex(setting('general.brand_primary_color'));
+            }
+            $findModules = Module::where('installed', 1)->get();
+            if ($findModules->count() > 0) {
+                foreach ($findModules as $module) {
+                    $modulePathClusters = module_path($module->name, 'Filament/Clusters');
+                    if (is_dir($modulePathClusters)) {
+                        $panel->discoverClusters(in: $modulePathClusters, for: 'Modules\\' . $module->name . '\\Filament\\Clusters');
+                    }
+                    $modulePathPages = module_path($module->name, 'Filament/Pages');
+                    if (is_dir($modulePathPages)) {
+                        $panel->discoverPages(in: $modulePathPages, for: 'Modules\\' . $module->name . '\\Filament\\Pages');
+                    }
+                    $modulePathResources = module_path($module->name, 'App/Filament/Resources');
+                    if (is_dir($modulePathResources)) {
+                        $panel->discoverResources(in: $modulePathResources, for: 'Modules\\' . $module->name . '\\App\\Filament\\Resources');
                     }
                 }
             }

@@ -39,14 +39,14 @@
             <div class="grid grid-cols-3 gap-6 mb-6">
         @foreach($modules as $module)
             <div class="sm:flex gap-3 px-6 py-6 rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10">
-                <div class="mb-2">
+                <div class="">
                     <div class="flex flex-col items-center w-16">
                         <x-filament::icon :icon="$module['logoIcon']"
                                           class="w-12 h-12 text-primary-500"/>
                     </div>
                 </div>
                 <div class="flex justify-between items-center w-full">
-                    <div class="flex flex-col">
+                    <div class="flex flex-col h-12">
                         <div class="flex gap-2 items-center">
                             {{$module['name']}}
                             @if ($module['installed'])
@@ -84,12 +84,12 @@
                                     </div>
                                 </x-filament::dropdown.list.item>
                                 @if ($module['installed'])
-                                    <x-filament::dropdown.list.item wire:key="btn-unistall-modal-{{md5($module['name'])}}" wire:click="openUnistallModal('{{$module['name']}}')">
+                                    <x-filament::dropdown.list.item wire:key="btn-Uninstall-modal-{{md5($module['name'])}}" wire:click="openUninstallModal('{{$module['name']}}')">
                                         <div class="flex gap-2 items-center">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24">
                                                 <path fill="currentColor" d="M7.615 20q-.69 0-1.152-.462T6 18.385V6H5V5h4v-.77h6V5h4v1h-1v12.385q0 .69-.462 1.152T16.385 20zm2.193-3h1V8h-1zm3.384 0h1V8h-1z"></path>
                                             </svg>
-                                            Unistall
+                                            Uninstall
                                         </div>
                                     </x-filament::dropdown.list.item>
                                 @endif

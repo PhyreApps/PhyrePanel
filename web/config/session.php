@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Str;
+use App\PhyreConfig;
 
 return [
 
@@ -18,7 +19,7 @@ return [
     |
     */
 
-    'driver' => env('SESSION_DRIVER', 'file'),
+    'driver' => PhyreConfig::get('SESSION_DRIVER', 'file'),
 
     /*
     |--------------------------------------------------------------------------
@@ -31,7 +32,7 @@ return [
     |
     */
 
-    'lifetime' => env('SESSION_LIFETIME', 120),
+    'lifetime' => PhyreConfig::get('SESSION_LIFETIME', 120),
 
     'expire_on_close' => false,
 
@@ -72,7 +73,7 @@ return [
     |
     */
 
-    'connection' => env('SESSION_CONNECTION'),
+    'connection' => PhyreConfig::get('SESSION_CONNECTION'),
 
     /*
     |--------------------------------------------------------------------------
@@ -100,7 +101,7 @@ return [
     |
     */
 
-    'store' => env('SESSION_STORE'),
+    'store' => PhyreConfig::get('SESSION_STORE'),
 
     /*
     |--------------------------------------------------------------------------
@@ -126,9 +127,9 @@ return [
     |
     */
 
-    'cookie' => env(
+    'cookie' => PhyreConfig::get(
         'SESSION_COOKIE',
-        Str::slug(env('APP_NAME', 'laravel'), '_').'_session'
+        Str::slug(PhyreConfig::get('APP_NAME', 'laravel'), '_').'_session'
     ),
 
     /*
@@ -155,7 +156,7 @@ return [
     |
     */
 
-    'domain' => env('SESSION_DOMAIN'),
+    'domain' => PhyreConfig::get('SESSION_DOMAIN'),
 
     /*
     |--------------------------------------------------------------------------
@@ -168,7 +169,7 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE'),
+    'secure' => PhyreConfig::get('SESSION_SECURE_COOKIE'),
 
     /*
     |--------------------------------------------------------------------------

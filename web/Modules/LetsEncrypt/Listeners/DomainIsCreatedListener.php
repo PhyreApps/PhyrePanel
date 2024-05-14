@@ -4,7 +4,6 @@ namespace Modules\LetsEncrypt\Listeners;
 
 use App\ApiClient;
 use App\Events\DomainIsCreated;
-use App\FileManagerApi;
 use App\Models\DomainSslCertificate;
 use App\Models\HostingPlan;
 use App\Models\HostingSubscription;

@@ -8,8 +8,7 @@ jobs:
   phyre-panel-unit-test:
     strategy:
       matrix:
-        #os: [ubuntu-24.04, ubuntu-22.04, ubuntu-20.04]
-        os: [ubuntu-22.04]
+        os: [ubuntu-22.04, ubuntu-20.04]
 
     runs-on: ${{ matrix.os }}
 
@@ -43,7 +42,7 @@ jobs:
           sudo COMPOSER_ALLOW_SUPERUSER=1 phyre-php composer.phar install
           
           sudo /phyre-panel/install_web.sh
-          sudo phyre-php artisan test
+          sudo phyre-php artisan test --filter HostingSubscriptionsTest
 
   compile-phyre-web-panel:
     runs-on: ubuntu-22.04

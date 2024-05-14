@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use App\BackupStorage;
 use App\Filament\Enums\BackupStatus;
 use App\Helpers;
+use App\Jobs\ProcessHostingSubscriptionBackup;
+use App\PhyreConfig;
+use App\ShellApi;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -53,28 +57,28 @@ class HostingSubscriptionBackup extends Model
         });
 
         static::created(function ($model) {
-            $model->startBackup();
+            ProcessHostingSubscriptionBackup::dispatch($model->id);
         });
 
         static::deleting(function ($model) {
-            if (is_file($model->filepath)) {
-                shell_exec('rm -rf ' . $model->filepath);
+            if (is_file($model->file_path)) {
+                shell_exec('rm -rf ' . $model->file_path);
             }
         });
     }
 
     public function checkCronJob()
     {
-        $cronJobCommand = 'phyre-php /usr/local/phyre/web/artisan phyre:run-hosting-subscriptions-backup';
+        $cronJobCommand = 'phyre-php /usr/local/phyre/web/artisan phyre:create-daily-full-hosting-subscriptions-backup';
         $findCronJob = CronJob::where('command', $cronJobCommand)->first();
         if (! $findCronJob) {
             $cronJob = new CronJob();
-            $cronJob->schedule = '*/5 * * * *';
+            $cronJob->schedule = '0 0 * * *';
             $cronJob->command = $cronJobCommand;
             $cronJob->user = 'root';
             $cronJob->save();
-            return false;
         }
+
         return true;
     }
 
@@ -83,6 +87,7 @@ class HostingSubscriptionBackup extends Model
         $findHostingSubscription = HostingSubscription::select(['id'])
             ->where('id', $this->hosting_subscription_id)
             ->first();
+
         if (! $findHostingSubscription) {
             $this->delete();
             return [
@@ -93,16 +98,23 @@ class HostingSubscriptionBackup extends Model
 
         if ($this->status == BackupStatus::Processing) {
 
-            $backupDoneFile = $this->path.'/backup-'.$this->id.'.done';
-            if (file_exists($backupDoneFile)) {
+            $backupDoneFile = $this->path.'/backup.done';
+            $backupZipFile = $this->file_path;
 
-                $this->size = Helpers::checkPathSize($this->path);
+            if (file_exists($backupDoneFile) && file_exists($backupZipFile)) {
+
+                $this->size = filesize($this->file_path);
                 $this->status = 'completed';
                 $this->completed = true;
                 $this->completed_at = now();
                 $this->save();
 
-                shell_exec('rm -rf ' . $backupDoneFile);
+                ShellApi::safeDelete($this->path,[
+                    $this->root_path
+                ]);
+                ShellApi::safeDelete($this->temp_path,[
+                    $this->root_path
+                ]);
 
                 return [
                     'status' => 'completed',
@@ -111,9 +123,11 @@ class HostingSubscriptionBackup extends Model
             }
 
             $checkProcess = shell_exec('ps -p ' . $this->process_id . ' | grep ' . $this->process_id);
+
             if (Str::contains($checkProcess, $this->process_id)) {
 
-                $this->size = Helpers::checkPathSize($this->path);
+                $this->size = 0;
+                $this->backup_log = "Backup is started with process id: $this->process_id";
                 $this->save();
 
                 return [
@@ -122,10 +136,11 @@ class HostingSubscriptionBackup extends Model
                 ];
             } else {
                 $this->status = 'failed';
+                $this->backup_log = "Backup failed. Process not found";
                 $this->save();
                 return [
                     'status' => 'failed',
-                    'message' => 'Backup failed'
+                    'message' => 'Backup failed. Process not found'
                 ];
             }
         }
@@ -143,12 +158,13 @@ class HostingSubscriptionBackup extends Model
             ];
         }
 
-        if ($this->status == BackupStatus::Processing) {
+        if ($this->status !== BackupStatus::Pending) {
             return [
-                'status' => 'processing',
-                'message' => 'Backup is already processing'
+                'status' => 'failed',
+                'message' => 'Backup already started'
             ];
         }
+
         $findMainDomain = Domain::where('hosting_subscription_id', $findHostingSubscription->id)
             ->where('is_main', 1)
             ->first();
@@ -160,32 +176,37 @@ class HostingSubscriptionBackup extends Model
             ];
         }
 
-        $storagePath = storage_path('backups');
-        $backupPath = $storagePath.'/hosting_subscriptions/'.$this->backup_type.'/'.$this->id;
+        $backupStorageRootPath = '/var/lib/phyre/backups/hosting_subscriptions';
+        $backupPath = $backupStorageRootPath . '/' . $findHostingSubscription->customer_id;
+
         $backupTempPath = $backupPath.'/temp';
         shell_exec('mkdir -p ' . $backupTempPath);
 
+        $backupFileName = Str::slug($findHostingSubscription->system_username .'-'. date('Ymd-His')) . '.zip';
+        $backupFilePath = $backupStorageRootPath.'/'.$backupFileName;
 
-        $backupFileName = Str::slug($findHostingSubscription->system_username .'-'. date('Ymd-His')) . '.tar.gz';
-        $backupFilePath = $backupPath.'/'.$backupFileName;
-
-        $backupLogFileName = 'backup.log';
-        $backupLogFilePath = $backupPath.'/'.$backupLogFileName;
-
-        $backupTargetPath = $findMainDomain->domain_root . '/backups';
-        $backupTargetFilePath = $backupTargetPath.'/'.$backupFileName;
+        $backupLogFilePath = $backupPath.'/backup.log';
 
         $backupTempScript = '/tmp/backup-script-'.$this->id.'.sh';
         $shellFileContent = '';
-        $shellFileContent .= 'mkdir -p '. $backupTargetPath.PHP_EOL;
-        $shellFileContent .= 'echo "Backup up domain: '.$findHostingSubscription->domain .'"'. PHP_EOL;
+        $shellFileContent .= 'echo "Backup up user: '.$findHostingSubscription->system_username .'"'. PHP_EOL;
         $shellFileContent .= 'echo "Backup filename: '.$backupFileName.'"' . PHP_EOL;
 
         if ($this->backup_type == 'full') {
             $shellFileContent .= 'cp -r /home/' . $findHostingSubscription->system_username . ' ' . $backupTempPath . PHP_EOL;
+            $shellFileContent .= 'rsync -azP '. $backupTempPath . '/' . $findHostingSubscription->system_username . '/ ' . $backupTempPath . PHP_EOL;
+            $shellFileContent .= 'rm -rf '. $backupTempPath . '/' . $findHostingSubscription->system_username . '/' . PHP_EOL;
         }
 
         if ($this->backup_type == 'full' || $this->backup_type == 'database') {
+
+            // Export Phyre Panel database
+            $mysqlAuthConf = '/root/.phyre-mysql.cnf';
+            $mysqlAuthContent = '[client]' . PHP_EOL;
+            $mysqlAuthContent .= 'user="' . PhyreConfig::get('MYSQL_ROOT_USERNAME') .'"'. PHP_EOL;
+            $mysqlAuthContent .= 'password="' . PhyreConfig::get('MYSQL_ROOT_PASSWORD') . '"' . PHP_EOL;
+            file_put_contents($mysqlAuthConf, $mysqlAuthContent);
+
             $getDatabases = Database::where('hosting_subscription_id', $findHostingSubscription->id)
                 ->where(function ($query) {
                     $query->where('is_remote_database_server', '0')
@@ -195,30 +216,23 @@ class HostingSubscriptionBackup extends Model
 
             if ($getDatabases->count() > 0) {
                 foreach ($getDatabases as $database) {
-//                    $findDatabaseUser = DatabaseUser::where('database_id', $database->id)
-//                        ->first();
-//                    if (!$findDatabaseUser) {
-//                        continue;
-//                    }
                     $databaseName = $database->database_name_prefix . $database->database_name;
-//                    $databaseUser = $findDatabaseUser->username_prefix . $findDatabaseUser->username;
-//                    $databaseUserPassword = $findDatabaseUser->password;
 
                     $shellFileContent .= 'echo "Backup up database: ' . $databaseName .'" '. PHP_EOL;
-               //     $shellFileContent .= 'echo "Backup up database user: ' . $databaseUser .'" '. PHP_EOL;
-                    $databaseBackupPath = $backupTempPath . '/' . $databaseName . '.sql';
-                    $shellFileContent .= 'mysqldump -u "'.env('MYSQl_ROOT_USERNAME').'" -p"'.env('MYSQL_ROOT_PASSWORD').'" "'.$databaseName.'" > '.$databaseBackupPath . PHP_EOL;
+                    $shellFileContent .= 'mkdir -p '.$backupTempPath . '/databases' . PHP_EOL;
+                    $databaseBackupPath = $backupTempPath . '/databases/' . $databaseName . '.sql';
+                    $shellFileContent .= 'mysqldump --defaults-extra-file='.$mysqlAuthConf.' "'.$databaseName.'" > '.$databaseBackupPath . PHP_EOL;
 
                 }
             }
         }
 
-        $shellFileContent .= 'cd '.$backupTempPath .' && tar -czvf '.$backupFilePath.' ./* '. PHP_EOL;
+        // With find, we can search for all files,directories (including hidden) in the current directory and zip them
+        $shellFileContent .= 'cd '.$backupTempPath .' && find . -exec zip --symlinks -r '.$backupFilePath.' {} \;'. PHP_EOL;
 
         $shellFileContent .= 'rm -rf '.$backupTempPath.PHP_EOL;
         $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;
-        $shellFileContent .= 'touch ' . $backupTargetPath. '/backup-'.$this->id.'.done' . PHP_EOL;
-        $shellFileContent .= 'mv '.$backupFilePath.' '. $backupTargetFilePath.PHP_EOL;
+        $shellFileContent .= 'touch ' . $backupPath. '/backup.done' . PHP_EOL;
         $shellFileContent .= 'rm -rf ' . $backupTempScript . PHP_EOL;
 
         file_put_contents($backupTempScript, $shellFileContent);
@@ -228,8 +242,12 @@ class HostingSubscriptionBackup extends Model
 
         if ($processId > 0 && is_numeric($processId)) {
 
-            $this->path = $findMainDomain->domain_root . '/backups';
-            $this->filepath = $backupTargetFilePath;
+            $this->path = $backupPath;
+            $this->root_path = $backupStorageRootPath;
+            $this->temp_path = $backupTempPath;
+            $this->file_path = $backupFilePath;
+            $this->file_name = $backupFileName;
+
             $this->status = 'processing';
             $this->queued = true;
             $this->queued_at = now();

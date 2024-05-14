@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
+use App\PhyreConfig;
 
 return [
 
@@ -29,7 +30,7 @@ return [
     |
     */
 
-    'env' => env('APP_ENV', 'production'),
+    'env' => PhyreConfig::get('APP_ENV', 'production'),
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +43,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool) PhyreConfig::get('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,9 +56,9 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => PhyreConfig::get('APP_URL', 'http://localhost'),
 
-    'asset_url' => env('ASSET_URL'),
+    'asset_url' => PhyreConfig::get('ASSET_URL'),
 
     /*
     |--------------------------------------------------------------------------
@@ -122,7 +123,7 @@ return [
     |
     */
 
-    'key' => env('APP_KEY'),
+    'key' => PhyreConfig::get('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
 
@@ -171,8 +172,10 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         \Modules\Customer\App\Providers\CustomerServiceProvider::class,
+        \Modules\Email\App\Providers\EmailServiceProvider::class,
         \Modules\Docker\App\Providers\DockerServiceProvider::class,
         \Modules\Terminal\App\Providers\TerminalServiceProvider::class,
+        \Modules\Minecraft\App\Providers\MinecraftServiceProvider::class,
 
     ])->toArray(),
 

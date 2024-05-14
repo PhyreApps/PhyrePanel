@@ -15,6 +15,9 @@ class ApacheVirtualHostManager
     {
         $allConfigs = [];
         foreach ($this->registerConfigs as $module => $configs) {
+            if (empty($forModules)) {
+                continue;
+            }
             if (! in_array($module, $forModules)) {
                 continue;
             }

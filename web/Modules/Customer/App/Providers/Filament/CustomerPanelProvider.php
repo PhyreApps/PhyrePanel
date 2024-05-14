@@ -30,15 +30,13 @@ class CustomerPanelProvider extends PanelProvider
         $defaultColor = Color::Yellow;
         $brandLogo = asset('images/phyre-logo.svg');
 
-        if (!app()->runningInConsole()) {
-            $isAppInstalled = file_exists(storage_path('installed'));
-            if ($isAppInstalled) {
-                if (setting('general.brand_logo_url')) {
-                    $brandLogo = setting('general.brand_logo_url');
-                }
-                if (setting('general.brand_primary_color')) {
-                    $defaultColor = Color::hex(setting('general.brand_primary_color'));
-                }
+        $isAppInstalled = file_exists(storage_path('installed'));
+        if ($isAppInstalled) {
+            if (setting('general.brand_logo_url')) {
+                $brandLogo = setting('general.brand_logo_url');
+            }
+            if (setting('general.brand_primary_color')) {
+                $defaultColor = Color::hex(setting('general.brand_primary_color'));
             }
         }
 
@@ -77,7 +75,7 @@ class CustomerPanelProvider extends PanelProvider
             ])
             ->authGuard('web_customer')
             ->authMiddleware([
-                Authenticate::class,
+                CustomerAuthenticate::class,
             ]);
     }
 

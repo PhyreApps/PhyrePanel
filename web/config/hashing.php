@@ -1,4 +1,5 @@
 <?php
+use App\PhyreConfig;
 
 return [
 
@@ -29,7 +30,7 @@ return [
     */
 
     'bcrypt' => [
-        'rounds' => env('BCRYPT_ROUNDS', 12),
+        'rounds' => PhyreConfig::get('BCRYPT_ROUNDS', 12),
         'verify' => true,
     ],
 

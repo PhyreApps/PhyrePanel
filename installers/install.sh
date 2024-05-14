@@ -38,6 +38,8 @@ DISTRO_NAME=$(cat /etc/os-release | grep -w "NAME" | cut -d "=" -f 2)
 DISTRO_NAME=${DISTRO_NAME//\"/} # Remove quotes from name string
 # Lowercase the distro name
 DISTRO_NAME=$(echo $DISTRO_NAME | tr '[:upper:]' '[:lower:]')
+# replace spaces
+DISTRO_NAME=${DISTRO_NAME// /-}
 
 INSTALLER_URL="https://raw.githubusercontent.com/PhyreApps/PhyrePanel/main/installers/${DISTRO_NAME}-${DISTRO_VERSION}/install.sh"
 

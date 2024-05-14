@@ -2,8 +2,33 @@
 
 namespace App;
 
+use Illuminate\Support\Str;
+
 class ShellApi
 {
+    public static function safeDelete($pathOrFile, $whiteListedPaths = [])
+    {
+        if (empty($whiteListedPaths)) {
+            throw new \Exception('Whitelist paths cannot be empty');
+        }
+
+        $canIDeleteFile = false;
+        foreach ($whiteListedPaths as $whiteListedPath) {
+            if (Str::of($pathOrFile)->startsWith($whiteListedPath)) {
+                $canIDeleteFile = true;
+                break;
+            }
+        }
+
+        if (!$canIDeleteFile) {
+            throw new \Exception('Cannot delete this path:' . $pathOrFile . '. Allowed paths are:' . implode(',', $whiteListedPaths));
+        }
+
+        $exec = shell_exec('rm -rf ' . $pathOrFile);
+
+        return $exec;
+    }
+
     public static function exec($command, $argsArray = [])
     {
         $args = '';
@@ -15,27 +40,9 @@ class ShellApi
 
         $fullCommand = $command.' '.$args;
 
-        // Run the command as sudo "/usr/bin/sudo "
-        $execOutput = shell_exec('/usr/bin/sudo '.$fullCommand);
-        $execOutput = str_replace(PHP_EOL, '', $execOutput);
+        $execOutput = shell_exec($fullCommand);
 
         return $execOutput;
     }
 
-    public static function callBin($command, $argsArray = [])
-    {
-        $args = '';
-        if (! empty($argsArray)) {
-            foreach ($argsArray as $arg) {
-                $args .= escapeshellarg($arg).' ';
-            }
-        }
-
-        $fullCommand = escapeshellarg('/usr/local/phyre/bin/'.$command.'.sh').' '.$args;
-        $commandAsSudo = '/usr/bin/sudo '.$fullCommand;
-
-        $execOutput = shell_exec($commandAsSudo);
-
-        return $execOutput;
-    }
 }

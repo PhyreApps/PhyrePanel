@@ -10,7 +10,11 @@ const hostname = execSync('hostname', { silent: true }).toString().trim();
 
 const systemIPs = [];
 const terminalConfig = JSON.parse(readFileSync("/usr/local/phyre/web/storage/app/terminal/config.json").toString());
-systemIPs.push(terminalConfig.serverIp);
+if (terminalConfig.serverIps) {
+    for (const ip of terminalConfig.serverIps) {
+        systemIPs.push(ip);
+    }
+}
 
 const config = {
     WEB_TERMINAL_PORT: 8449,

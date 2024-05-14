@@ -27,14 +27,37 @@ class HostingSubscriptionsController extends ApiController
 
     public function store(HostingSubscriptionCreateRequest $request)
     {
+
+        $findDomain = Domain::where('domain', $request->domain)->first();
+        if ($findDomain) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Domain already exists',
+            ], 400);
+        }
+
+        if (isset($request->system_username)) {
+            $findHostingSubscription = HostingSubscription::where('system_username', $request->system_username)->first();
+            if ($findHostingSubscription) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'System username already exists',
+                ], 400);
+            }
+        }
+
         $hostingSubscription = new HostingSubscription();
         $hostingSubscription->customer_id = $request->customer_id;
         $hostingSubscription->hosting_plan_id = $request->hosting_plan_id;
         $hostingSubscription->domain = $request->domain;
 
-        //        $hostingSubscription->username = $request->username;
-        //        $hostingSubscription->password = $request->password;
-        //        $hostingSubscription->description = $request->description;
+        if (isset($request->system_username)) {
+            $hostingSubscription->system_username = $request->system_username;
+        }
+
+        if (isset($request->system_password)) {
+            $hostingSubscription->system_password = $request->system_password;
+        }
 
         $hostingSubscription->setup_date = Carbon::now();
         $hostingSubscription->save();
@@ -83,6 +106,48 @@ class HostingSubscriptionsController extends ApiController
                 'data' => [
                     'hostingSubscription' => $findHostingSubscription,
                 ],
+            ]);
+        }
+
+    }
+
+    public function suspend($id)
+    {
+        $findHostingSubscription = HostingSubscription::where('id', $id)->first();
+        if ($findHostingSubscription) {
+
+            $findDomains = Domain::where('hosting_subscription_id', $findHostingSubscription->id)->get();
+            if ($findDomains->count() > 0) {
+                foreach ($findDomains as $domain) {
+                    $domain->status = Domain::STATUS_SUSPENDED;
+                    $domain->save();
+                }
+            }
+
+            return response()->json([
+                'status' => 'ok',
+                'message' => 'Hosting subscription suspended',
+            ]);
+        }
+
+    }
+
+    public function unsuspend($id)
+    {
+        $findHostingSubscription = HostingSubscription::where('id', $id)->first();
+        if ($findHostingSubscription) {
+
+            $findDomains = Domain::where('hosting_subscription_id', $findHostingSubscription->id)->get();
+            if ($findDomains->count() > 0) {
+                foreach ($findDomains as $domain) {
+                    $domain->status = Domain::STATUS_ACTIVE;
+                    $domain->save();
+                }
+            }
+
+            return response()->json([
+                'status' => 'ok',
+                'message' => 'Hosting subscription unsuspended',
             ]);
         }
 
