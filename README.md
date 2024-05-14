@@ -1,4 +1,23 @@
-# Welcome to PHYRE PANEL
+<h1 align="center">
+ <a href="https://www.phyrepanel.com">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://phyrepanel.com/phyre-logo.svg"/>
+    <img height="120" src="https://phyrepanel.com/phyre-logo.svg"/>
+  </picture>
+ </a>
+ <br />
+</h1>
+<p align="center">
+ Powerful Linux multi-platform hosting control panel designed to simplify the process of managing web hosting servers. 
+</p>
+<p align="center">
+  <a href="https://www.phyrepanel.com/"><img src="https://img.shields.io/badge/Website-blue?logo=googlechrome&logoColor=black"/></a>
+  <a href="https://discord.gg/vsxBuMFK"><img src="https://img.shields.io/discord/1227542192189603872?logo=discord&label=discord"/></a>
+  <a href="https://github.com/PhyreApps/PhyrePanel"><img src="https://img.shields.io/github/stars/PhyreApps/PhyrePanel" /></a>
+  <a href="https://github.com/PhyreApps/PhyrePanel/blob/main/LICENSE"><img src="https://img.shields.io/github/license/PhyreApps/PhyrePanel"/></a>
+</p>
+
+<hr />
 
 ![Phyre Panel - Dashboard](screenshots/dashboard.png)
 ## About PHYRE PANEL
