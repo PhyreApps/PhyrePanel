@@ -83,13 +83,7 @@ class Domain extends Model
 
         });
 
-        static::updating(function ($model) {
-            $model->configureVirtualHost(true);
-        });
-
         static::saved(function ($model) {
-
-            $model->configureVirtualHost(true);
 
             $apacheBuild = new ApacheBuild();
             $apacheBuild->build();
@@ -101,12 +95,14 @@ class Domain extends Model
             if (empty($model->domain_public)) {
                 return;
             }
-            $findHostingSubscription = HostingSubscription::where('id', $model->hosting_subscription_id)->first();
-            if (! $findHostingSubscription) {
-                return;
-            }
 
-            ShellApi::safeDelete($model->domain_root, ['/home/' . $findHostingSubscription->system_username]);
+            if ($model->is_main == 1) {
+                $findHostingSubscription = HostingSubscription::where('id', $model->hosting_subscription_id)->first();
+                if (!$findHostingSubscription) {
+                    return;
+                }
+                ShellApi::safeDelete($model->domain_root, ['/home/' . $findHostingSubscription->system_username]);
+            }
 
         });
 
