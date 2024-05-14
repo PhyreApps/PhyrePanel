@@ -28,6 +28,7 @@ name: Ubuntu 22.04 - Unit Test & Code Coverage
 steps:
   - name: run
     image: ubuntu:22.04
+    platform: linux/amd64
     environment:
       DEBIAN_FRONTEND: noninteractive
       CODECOV_TOKEN:
