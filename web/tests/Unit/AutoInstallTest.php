@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\Unit;
+namespace Tests\Unit;
 
 use App\Installers\Server\Applications\PHPInstaller;
 use App\SupportedApplicationTypes;

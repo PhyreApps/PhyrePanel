@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\Unit;
+namespace Tests\Unit;
 
 use App\Filament\Pages\Modules;
 use App\Models\Module;

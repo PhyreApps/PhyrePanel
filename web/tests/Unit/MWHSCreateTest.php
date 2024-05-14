@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\Unit;
+namespace Tests\Unit;
 
 use App\Models\HostingPlan;
 use Illuminate\Support\Facades\Artisan;

@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\Unit;
+namespace Tests\Unit;
 
 use Faker\Factory;
 use Tests\Feature\Api\ActionTestCase;

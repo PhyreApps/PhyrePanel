@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\Unit;
+namespace Tests\Unit;
 
 use App\Filament\Enums\BackupStatus;
 use App\Helpers;
