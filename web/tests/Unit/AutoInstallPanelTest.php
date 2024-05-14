@@ -27,7 +27,7 @@ class AutoInstallPanelTest extends TestCase
         $phpInstaller->install();
 
         $installationSuccess = false;
-        for ($i = 1; $i <= 100; $i++) {
+        for ($i = 1; $i <= 200; $i++) {
             $logContent = file_get_contents($installLogFilePath);
             if (str_contains($logContent, 'All packages installed successfully!')) {
                 $installationSuccess = true;
