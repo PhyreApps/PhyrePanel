@@ -74,6 +74,10 @@ class MicroweberHostingSubscriptionCreateTest extends ActionTestCase
             'domain' => $hostingSubscriptionDomain,
         ])->json();
 
+        if (!isset($callHostingSubscriptionStoreResponse['status'])) {
+            $this->fail(json_encode($callHostingSubscriptionStoreResponse));
+        }
+
         $this->assertArrayHasKey('status', $callHostingSubscriptionStoreResponse);
         $this->assertTrue($callHostingSubscriptionStoreResponse['status'] == 'ok');
         $this->assertArrayHasKey('data', $callHostingSubscriptionStoreResponse);
