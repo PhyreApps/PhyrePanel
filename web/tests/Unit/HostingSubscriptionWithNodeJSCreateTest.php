@@ -89,7 +89,7 @@ class HostingSubscriptionWithNodeJSCreateTest extends ActionTestCase
         $this->assertIsArray($callStoreResponse['errors']);
 
         // Create a customer
-        $randId = rand(1000, 9999);
+        $randId = rand(10000, 99999);
         $callCustomerStoreResponse = $this->callApiAuthorizedRouteAction(
             'api.customers.store',
             [
@@ -108,19 +108,21 @@ class HostingSubscriptionWithNodeJSCreateTest extends ActionTestCase
         $customerId = $callCustomerStoreResponse['data']['customer']['id'];
 
         // Create a hosting subscription
-        $randId = rand(1000, 9999);
+        $randId = rand(10000, 99999);
         $hostingPlanId = null;
 
         $createHostingPlan = new HostingPlan();
         $createHostingPlan->name = 'Phyre Unit Test #'.$randId;
         $createHostingPlan->description = 'Unit Test Hosting Plan';
-        $createHostingPlan->disk_space = 1000;
-        $createHostingPlan->bandwidth = 1000;
         $createHostingPlan->default_server_application_type = 'apache_nodejs';
         $createHostingPlan->default_server_application_settings = [
             'nodejs_version' => '20',
         ];
+        $createHostingPlan->additional_services = [];
+        $createHostingPlan->features = [];
+        $createHostingPlan->limitations = [];
         $createHostingPlan->save();
+
         $hostingPlanId = $createHostingPlan->id;
 
 

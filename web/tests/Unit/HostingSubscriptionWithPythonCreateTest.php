@@ -109,12 +109,13 @@ class HostingSubscriptionWithPythonCreateTest extends ActionTestCase
         $createHostingPlan = new HostingPlan();
         $createHostingPlan->name = 'Phyre Unit Test #'.$randId;
         $createHostingPlan->description = 'Unit Test Hosting Plan';
-        $createHostingPlan->disk_space = 1000;
-        $createHostingPlan->bandwidth = 1000;
         $createHostingPlan->default_server_application_type = 'apache_python';
         $createHostingPlan->default_server_application_settings = [
             'python_version' => '3.9',
         ];
+        $createHostingPlan->additional_services = [];
+        $createHostingPlan->features = [];
+        $createHostingPlan->limitations = [];
         $createHostingPlan->save();
         $hostingPlanId = $createHostingPlan->id;
 
