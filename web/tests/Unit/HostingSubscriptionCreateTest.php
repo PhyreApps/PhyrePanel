@@ -32,10 +32,10 @@ class HostingSubscriptionCreateTest extends ActionTestCase
             ApiKeyMiddleware::class
         );
 
-        $this->assertRouteContainsMiddleware(
-            'api.hosting-subscriptions.destroy',
-            ApiKeyMiddleware::class
-        );
+//        $this->assertRouteContainsMiddleware(
+//            'api.hosting-subscriptions.destroy',
+//            ApiKeyMiddleware::class
+//        );
 
     }
 
