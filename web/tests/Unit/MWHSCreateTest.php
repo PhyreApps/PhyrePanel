@@ -9,7 +9,7 @@ use Modules\Microweber\Filament\Clusters\Microweber\Pages\Version;
 use Modules\Microweber\Jobs\DownloadMicroweber;
 use Tests\Feature\Api\ActionTestCase;
 
-class MicroweberHostingSubscriptionCreateTest extends ActionTestCase
+class MWHSCreateTest extends ActionTestCase
 {
     function testCreateInstallation()
     {

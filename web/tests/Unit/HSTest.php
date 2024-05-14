@@ -6,7 +6,7 @@ use App\Http\Middleware\ApiKeyMiddleware;
 use PHPUnit\Framework\TestCase;
 use Tests\Feature\Api\ActionTestCase;
 
-class HostingSubscriptionsTest extends ActionTestCase
+class HSTest extends ActionTestCase
 {
 
     function testRouteContainsMiddleware()

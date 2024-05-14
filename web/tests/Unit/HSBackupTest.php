@@ -21,7 +21,7 @@ use Illuminate\Support\Str;
 use Tests\Feature\Api\ActionTestCase;
 use Illuminate\Support\Facades\Queue;
 
-class HostingSubscriptionBackupTest extends ActionTestCase
+class HSBackupTest extends ActionTestCase
 {
     public function testFullBackup()
     {

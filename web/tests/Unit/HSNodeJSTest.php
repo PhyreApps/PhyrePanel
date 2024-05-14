@@ -16,7 +16,7 @@ use Illuminate\Support\Str;
 use PHPUnit\Framework\TestCase;
 use Tests\Feature\Api\ActionTestCase;
 
-class HostingSubscriptionWithNodeJSCreateTest extends ActionTestCase
+class HSNodeJSTest extends ActionTestCase
 {
     function testRouteContainsMiddleware()
     {
@@ -35,15 +35,16 @@ class HostingSubscriptionWithNodeJSCreateTest extends ActionTestCase
             ApiKeyMiddleware::class
         );
 
-//        $this->assertRouteContainsMiddleware(
-//            'api.hosting-subscriptions.destroy',
-//            ApiKeyMiddleware::class
-//        );
+        $this->assertRouteContainsMiddleware(
+            'api.hosting-subscriptions.destroy',
+            ApiKeyMiddleware::class
+        );
 
     }
 
     function testCreate()
     {
+
         $this->assertTrue(Str::contains(php_uname(),'Ubuntu'));
 
         $isNodeJsInstalled = false;
