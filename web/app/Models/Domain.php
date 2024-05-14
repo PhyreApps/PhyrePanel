@@ -328,9 +328,6 @@ class Domain extends Model
 
         $apacheBaseConfig = $apacheVirtualHostBuilder->buildConfig();
 
-
-        // Certificate setup
-
         $catchMainDomain = '';
         $domainExp = explode('.', $this->domain);
         if (count($domainExp) > 0) {
