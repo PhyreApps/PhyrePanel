@@ -56,29 +56,29 @@ class PHPInstaller
         $lastItem = end($this->phpVersions);
         foreach ($this->phpVersions as $phpVersion) {
             if ($phpVersion == $lastItem) {
-                $commands[] = 'sudo a2enmod php' . $phpVersion;
+                $commands[] = 'a2enmod php' . $phpVersion;
             } else {
-                $commands[] = 'sudo a2dismod php' . $phpVersion;
+                $commands[] = 'a2dismod php' . $phpVersion;
             }
         }
 
-        $commands[] = 'sudo a2enmod cgi';
-        $commands[] = 'sudo a2enmod mime';
-        $commands[] = 'sudo a2enmod rewrite';
-        $commands[] = 'sudo a2enmod env';
-        $commands[] = 'sudo a2enmod ssl';
-        $commands[] = 'sudo a2enmod actions';
-        $commands[] = 'sudo a2enmod headers';
-        $commands[] = 'sudo a2enmod suexec';
-        $commands[] = 'sudo a2enmod ruid2';
-        $commands[] = 'sudo a2enmod proxy';
-        $commands[] = 'sudo a2enmod proxy_http';
+        $commands[] = 'a2enmod cgi';
+        $commands[] = 'a2enmod mime';
+        $commands[] = 'a2enmod rewrite';
+        $commands[] = 'a2enmod env';
+        $commands[] = 'a2enmod ssl';
+        $commands[] = 'a2enmod actions';
+        $commands[] = 'a2enmod headers';
+        $commands[] = 'a2enmod suexec';
+        $commands[] = 'a2enmod ruid2';
+        $commands[] = 'a2enmod proxy';
+        $commands[] = 'a2enmod proxy_http';
 
         // For Fast CGI
-//        $commands[] = 'sudo a2enmod fcgid';
-//        $commands[] = 'sudo a2enmod alias';
-//        $commands[] = 'sudo a2enmod proxy_fcgi';
-//        $commands[] = 'sudo a2enmod setenvif';
+//        $commands[] = 'a2enmod fcgid';
+//        $commands[] = 'a2enmod alias';
+//        $commands[] = 'a2enmod proxy_fcgi';
+//        $commands[] = 'a2enmod setenvif';
 
        // $commands[] = 'ufw allow in "Apache Full"';
         $commands[] = 'systemctl restart apache2';
