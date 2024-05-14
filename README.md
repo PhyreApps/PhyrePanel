@@ -17,8 +17,6 @@
   <a href="https://github.com/PhyreApps/PhyrePanel/blob/main/LICENSE"><img src="https://img.shields.io/github/license/PhyreApps/PhyrePanel"/></a>
 </p>
 
-<hr />
-
 ![Phyre Panel - Dashboard](screenshots/dashboard.png)
 ## About PHYRE PANEL
 
