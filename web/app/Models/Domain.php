@@ -277,7 +277,7 @@ class Domain extends Model
             $apacheVirtualHostBuilder->setDomainPublic($deactivatedPath);
         } else {
 
-            $apacheVirtualHostBuilder->setEnableLogs(true);
+          //  $apacheVirtualHostBuilder->setEnableLogs(true);
             $apacheVirtualHostBuilder->setAdditionalServices($findHostingPlan->additional_services);
             $apacheVirtualHostBuilder->setAppType($appType);
             $apacheVirtualHostBuilder->setAppVersion($appVersion);
