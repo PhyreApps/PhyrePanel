@@ -29,9 +29,7 @@ class MicroweberHostingSubscriptionCreateTest extends ActionTestCase
             'bandwidth' => 1000,
             'default_server_application_type' => 'apache_php',
             'default_database_server_type' => 'mysql',
-            'additional_services' => [
-                'microweber' => true
-            ],
+            'additional_services' => ['microweber'],
         ])->json();
         $this->assertArrayHasKey('status', $callHostingPlanStoreResponse);
         $this->assertTrue($callHostingPlanStoreResponse['status'] == 'ok');
