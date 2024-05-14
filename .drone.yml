@@ -6,12 +6,13 @@ steps:
     image: bobicloudvision/phyre-panel:latest
     environment:
       DEBIAN_FRONTEND: noninteractive
-      CODECOV_TOKEN:
-        from_secret: CODECOV_TOKEN
     commands:
       - MAIN_REPO_DIR=$(pwd)
       - apt-get install -y rsync
-      - rsync $MAIN_REPO_DIR/web/ /usr/local/phyre/web/ -r
+      - cp /usr/local/phyre/web/phyre-config.ini  /usr/local/phyre/phyre-config.ini.bak
+      - rm -rf /usr/local/phyre/web
+      - cp -r $MAIN_REPO_DIR/web /usr/local/phyre/web
+      - cp /usr/local/phyre/phyre-config.ini.bak /usr/local/phyre/web/phyre-config.ini
       - cd /usr/local/phyre/web/
       - ls -la
       - wget https://getcomposer.org/download/latest-stable/composer.phar
