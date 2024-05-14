@@ -3,6 +3,9 @@
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="vendor/autoload.php"
          stopOnFailure="true"
+         stopOnDefect="true"
+         stopOnError="true"
+         stopOnIncomplete="true"
          colors="true"
 >
     <logging>
