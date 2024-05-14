@@ -6,6 +6,7 @@ use App\Actions\ApacheWebsiteDelete;
 use App\Events\DomainIsCreated;
 use App\Events\ModelDomainDeleting;
 use App\ShellApi;
+use App\VirtualHosts\ApacheBuild;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Docker\App\Models\DockerContainer;
@@ -76,18 +77,23 @@ class Domain extends Model
 
             $model->save();
 
-            $model->configureVirtualHost();
+            $model->configureVirtualHost(true);
 
             event(new DomainIsCreated($model));
 
         });
 
         static::updating(function ($model) {
-            $model->configureVirtualHost();
+            $model->configureVirtualHost(true);
         });
 
         static::saved(function ($model) {
-            $model->configureVirtualHost();
+
+            $model->configureVirtualHost(true);
+
+            $apacheBuild = new ApacheBuild();
+            $apacheBuild->build();
+
         });
 
         static::deleting(function ($model) {
@@ -101,24 +107,6 @@ class Domain extends Model
             }
 
             ShellApi::safeDelete($model->domain_root, ['/home/' . $findHostingSubscription->system_username]);
-
-            $whiteListedPathsForDelete = [
-                '/etc/apache2/sites-available',
-                '/etc/apache2/sites-enabled',
-            ];
-
-            $apacheConf = '/etc/apache2/sites-available/'.$model->domain.'.conf';
-            ShellApi::safeDelete($apacheConf, $whiteListedPathsForDelete);
-
-            $apacheConfEnabled = '/etc/apache2/sites-enabled/'.$model->domain.'.conf';
-            ShellApi::safeDelete($apacheConfEnabled, $whiteListedPathsForDelete);
-
-            // SSL
-            $apacheSSLConf = '/etc/apache2/sites-available/'.$model->domain.'-ssl.conf';
-            ShellApi::safeDelete($apacheSSLConf, $whiteListedPathsForDelete);
-
-            $apacheSSLConfEnabled = '/etc/apache2/sites-enabled/'.$model->domain.'-ssl.conf';
-            ShellApi::safeDelete($apacheSSLConfEnabled, $whiteListedPathsForDelete);
 
         });
 
@@ -342,7 +330,7 @@ class Domain extends Model
 
 
         // Certificate setup
-        
+
         $catchMainDomain = '';
         $domainExp = explode('.', $this->domain);
         if (count($domainExp) > 0) {

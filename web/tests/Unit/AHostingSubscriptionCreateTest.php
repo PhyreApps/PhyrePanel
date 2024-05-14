@@ -171,9 +171,10 @@ class AHostingSubscriptionCreateTest extends ActionTestCase
         $domainData = $callDomainDetailsResponseData[0];
 
         // Check virtual host is created
-        $virtualHostFile = '/etc/apache2/sites-available/'.$hostingSubscriptionDomain.'.conf';
+        $virtualHostFile = '/etc/apache2/apache2.conf';
         $this->assertFileExists($virtualHostFile);
         $virtualHostFileContent = file_get_contents($virtualHostFile);
+
 
         $this->assertStringContainsString('ServerName '.$hostingSubscriptionDomain, $virtualHostFileContent);
         //$this->assertStringContainsString('ServerAlias www.'.$hostingSubscriptionDomain, $virtualHostFileContent);
@@ -183,7 +184,7 @@ class AHostingSubscriptionCreateTest extends ActionTestCase
         $this->assertStringContainsString('php_admin_value open_basedir '.$domainData['home_root'], $virtualHostFileContent);
 
         // Check virtual host is enabled
-        $this->assertFileExists('/etc/apache2/sites-enabled/'.$hostingSubscriptionDomain.'.conf');
+        $this->assertFileExists('/etc/apache2/apache2.conf');
 
         // Check apache config is valid
         shell_exec('apachectl -t >> /tmp/apache_config_check.txt  2>&1');
