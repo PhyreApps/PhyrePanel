@@ -13,9 +13,7 @@ class MicroweberHostingSubscriptionCreateTest extends ActionTestCase
 {
     function testCreateInstallation()
     {
-        $this->assertTrue(true);
-        return;
-
+        
         ini_set('memory_limit', '-1');
         ini_set('max_execution_time', 0);
 
