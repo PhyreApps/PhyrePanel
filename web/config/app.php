@@ -43,7 +43,7 @@ return [
     |
     */
 
-    'debug' => 1, //(bool) PhyreConfig::get('APP_DEBUG', false),
+    'debug' => (bool) PhyreConfig::get('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
