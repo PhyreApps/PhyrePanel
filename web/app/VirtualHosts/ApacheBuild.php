@@ -6,6 +6,14 @@ use App\Models\Domain;
 
 class ApacheBuild
 {
+
+    public $fixPermissions = false;
+
+    public function fixPermissions()
+    {
+        $this->fixPermissions = true;
+    }
+
     public function build()
     {
         $virtualHostMerged = '
@@ -77,7 +85,7 @@ IncludeOptional conf-enabled/*.conf
         $getAllDomains = Domain::all();
         foreach ($getAllDomains as $domain) {
 
-            $domainVirtualHost = $domain->configureVirtualHost(false);
+            $domainVirtualHost = $domain->configureVirtualHost($this->fixPermissions);
             if (isset($domainVirtualHost['apacheBaseConfig'])) {
                 $virtualHostMerged .= $domainVirtualHost['apacheBaseConfig'] . "\n\n";
             }

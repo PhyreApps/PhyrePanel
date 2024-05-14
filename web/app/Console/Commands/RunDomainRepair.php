@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Domain;
+use App\VirtualHosts\ApacheBuild;
 use Illuminate\Console\Command;
 
 class RunDomainRepair extends Command
@@ -26,13 +27,8 @@ class RunDomainRepair extends Command
      */
     public function handle()
     {
-        $getAllDomains = Domain::all();
-        if ($getAllDomains->count() > 0) {
-            foreach ($getAllDomains as $domain) {
-                $this->info('Repair domain: ' . $domain->domain);
-                $domain->configureVirtualHost(false);
-            }
-            shell_exec('service apache2 restart');
-        }
+        $apache = new ApacheBuild();
+        $apache->fixPermissions();
+        $apache->build();
     }
 }
