@@ -4,3 +4,11 @@ name: Docker - Quick Test
 steps:
   - name: run
     image: bobicloudvision/phyre-panel:latest
+    environment:
+      DEBIAN_FRONTEND: noninteractive
+      CODECOV_TOKEN:
+        from_secret: CODECOV_TOKEN
+    commands:
+      - MAIN_REPO_DIR=$(pwd)
+      - cd /usr/local/phyre/web/
+      - ls -la
