@@ -29,9 +29,15 @@ class MWHSCreateTest extends ActionTestCase
             'disk_space' => 1000,
             'bandwidth' => 1000,
             'default_server_application_type' => 'apache_php',
-            'default_database_server_type' => 'mysql',
+            'default_server_application_settings' => [
+                'php_version' => '8.2',
+            ],
             'additional_services' => ['microweber'],
+            'default_database_server_type' => 'internal',
+
         ])->json();
+
+
         $this->assertArrayHasKey('status', $callHostingPlanStoreResponse);
         $this->assertTrue($callHostingPlanStoreResponse['status'] == 'ok');
         $hostingPlanId = $callHostingPlanStoreResponse['data']['hostingPlan']['id'];
