@@ -26,6 +26,8 @@ class PHPInstaller
     public function install()
     {
         $commands = [];
+        $commands[] = 'echo "Starting PHP Installation..."';
+        $commands[] = 'apt-get install -y sudo';
         $commands[] = 'add-apt-repository -y ppa:ondrej/php';
         $commands[] = 'add-apt-repository -y ppa:ondrej/apache2';
 
@@ -90,7 +92,6 @@ class PHPInstaller
         $shellFileContent .= 'rm -f /tmp/php-installer.sh';
 
         file_put_contents('/tmp/php-installer.sh', $shellFileContent);
-
         shell_exec('bash /tmp/php-installer.sh >> ' . $this->logFilePath . ' &');
 
     }
@@ -103,16 +104,17 @@ class PHPInstaller
         // tar -zxvf ioncube_loaders_lin_x86*
         //  cd ioncube/
         // php -i | grep extension_dir
-        // sudo cp /tmp/ioncube/ioncube_loader_lin_8.2.so /usr/lib/php/20220829
+        // sudo cp /tmp/ioncube/ioncube_loader_lin_7.4.so /usr/lib/php/20190902
 
 //         sudo vi /etc/php/8.2/cli/php.ini 		#for PHP CLI
 //         sudo vi /etc/php/8.2/fpm/php.ini		#for PHP-FPM & Nginx
 //         sudo vi /etc/php/8.2/apache2/php.ini	        #for Apache2
 
-        // zend_extension = /usr/lib/php/20220829/ioncube_loader_lin_8.2.so
+        // zend_extension = /usr/lib/php/20190902/ioncube_loader_lin_8.2.so
 
-        // command to add zend_extension to the php.ini file
-        // sudo echo "zend_extension = /usr/lib/php/20220829/ioncube_loader_lin_8.2.so" | sudo tee -a /etc/php/8.2/apache2/php.ini
-        // sudo echo "zend_extension = /usr/lib/php/20220829/ioncube_loader_lin_8.2.so" | sudo tee -a /etc/php/8.2/cli/php.ini
+        // command to add zend_extension to the php.ini file -cphp8.2-cgi.ini
+        // sudo echo "zend_extension = /usr/lib/php/20190902/ioncube_loader_lin_8.2.so" | sudo tee -a /etc/php/8.2/cgi/php.ini
+        // sudo echo "zend_extension = /usr/lib/php/20190902/ioncube_loader_lin_8.2.so" | sudo tee -a /etc/php/8.2/apache2/php.ini
+        // sudo echo "zend_extension = /usr/lib/php/20190902/ioncube_loader_lin_8.2.so" | sudo tee -a /etc/php/8.2/cli/php.ini
     }
 }
