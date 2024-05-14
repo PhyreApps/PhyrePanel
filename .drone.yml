@@ -17,5 +17,6 @@ steps:
       - ls -la
       - wget https://getcomposer.org/download/latest-stable/composer.phar
       - COMPOSER_ALLOW_SUPERUSER=1 phyre-php composer.phar install
+      - phyre-php artisan phyre:set-ini-settings APP_ENV "local"
       - phyre-php artisan migrate
       - phyre-php artisan test
