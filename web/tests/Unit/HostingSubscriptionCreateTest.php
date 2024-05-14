@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 use PHPUnit\Framework\TestCase;
 use Tests\Feature\Api\ActionTestCase;
 
-class AHostingSubscriptionCreateTest extends ActionTestCase
+class HostingSubscriptionCreateTest extends ActionTestCase
 {
     function test_route_contains_middleware()
     {

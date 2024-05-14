@@ -29,6 +29,14 @@ class PythonInstaller
             $commands[] = 'apt-get install -y python' . $pythonVersion . '-wheel';
         }
 
+        // Install Apache Passenger
+        $commands[] = 'curl https://oss-binaries.phusionpassenger.com/auto-software-signing-gpg-key.txt | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/phusion.gpg >/dev/null';
+        $commands[] = "sudo sh -c 'echo deb https://oss-binaries.phusionpassenger.com/apt/passenger jammy main > /etc/apt/sources.list.d/passenger.list'";
+        $commands[] = 'apt-get update';
+        $commands[] = 'sudo apt-get install -y libapache2-mod-passenger';
+        $commands[] = 'sudo a2enmod passenger';
+        $commands[] = 'sudo service apache2 restart';
+
         $shellFileContent = '';
         foreach ($commands as $command) {
             $shellFileContent .= $command . PHP_EOL;
