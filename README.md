@@ -2,7 +2,7 @@
  <a href="https://www.phyrepanel.com">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://phyrepanel.com/phyre-logo.svg"/>
-    <img height="120" src="https://phyrepanel.com/phyre-logo.svg"/>
+    <img height="69" src="https://phyrepanel.com/phyre-logo.svg"/>
   </picture>
  </a>
  <br />
