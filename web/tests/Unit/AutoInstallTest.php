@@ -7,7 +7,7 @@ use App\SupportedApplicationTypes;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
-class AutoInstallPanelTest extends TestCase
+class AutoInstallTest extends TestCase
 {
     public function testInstall()
     {
