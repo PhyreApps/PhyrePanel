@@ -33,6 +33,7 @@ steps:
       CODECOV_TOKEN:
         from_secret: CODECOV_TOKEN
     commands:
+      - export DEBIAN_FRONTEND=noninteractive
       - MAIN_REPO_DIR=$(pwd)
       - apt-get update
       - apt-get install -y libicu-dev sudo cron apt-utils -yqq daemonize dbus-user-session fontconfig rsync
