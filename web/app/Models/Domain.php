@@ -336,15 +336,15 @@ class Domain extends Model
 
         $apacheBaseConfig = $apacheVirtualHostBuilder->buildConfig();
 
-        if (!empty($apacheBaseConfig)) {
-            file_put_contents('/etc/apache2/sites-available/'.$this->domain.'.conf', $apacheBaseConfig);
-
-            // check symlink exists
-            $symlinkExists = file_exists('/etc/apache2/sites-enabled/'.$this->domain.'.conf');
-            if (!$symlinkExists) {
-                shell_exec('ln -s /etc/apache2/sites-available/' . $this->domain . '.conf /etc/apache2/sites-enabled/' . $this->domain . '.conf');
-            }
-        }
+//        if (!empty($apacheBaseConfig)) {
+//            file_put_contents('/etc/apache2/sites-available/'.$this->domain.'.conf', $apacheBaseConfig);
+//
+//            // check symlink exists
+//            $symlinkExists = file_exists('/etc/apache2/sites-enabled/'.$this->domain.'.conf');
+//            if (!$symlinkExists) {
+//                shell_exec('ln -s /etc/apache2/sites-available/' . $this->domain . '.conf /etc/apache2/sites-enabled/' . $this->domain . '.conf');
+//            }
+//        }
 
         $catchMainDomain = '';
         $domainExp = explode('.', $this->domain);
@@ -374,6 +374,7 @@ class Domain extends Model
             }
         }
 
+        $apacheBaseConfigWithSSL = null;
         if ($findDomainSSLCertificate) {
 
             $sslCertificateFile = $this->home_root . '/certs/' . $this->domain . '/public/cert.pem';
@@ -408,30 +409,35 @@ class Domain extends Model
             if (!empty($apacheBaseConfigWithSSL)) {
 
                 // Add SSL options conf file
-                $apache2SSLOptionsSample = view('actions.samples.ubuntu.apache2-ssl-options-conf')->render();
-                $apache2SSLOptionsFilePath = '/etc/apache2/phyre/options-ssl-apache.conf';
+//                $apache2SSLOptionsSample = view('actions.samples.ubuntu.apache2-ssl-options-conf')->render();
+//                $apache2SSLOptionsFilePath = '/etc/apache2/phyre/options-ssl-apache.conf';
 
-                if (!file_exists($apache2SSLOptionsFilePath)) {
-                    if (!is_dir('/etc/apache2/phyre')) {
-                        mkdir('/etc/apache2/phyre');
-                    }
-                    file_put_contents($apache2SSLOptionsFilePath, $apache2SSLOptionsSample);
-                }
+//                if (!file_exists($apache2SSLOptionsFilePath)) {
+//                    if (!is_dir('/etc/apache2/phyre')) {
+//                        mkdir('/etc/apache2/phyre');
+//                    }
+//                    file_put_contents($apache2SSLOptionsFilePath, $apache2SSLOptionsSample);
+//                }
 
-                file_put_contents('/etc/apache2/sites-available/'.$this->domain.'-ssl.conf', $apacheBaseConfigWithSSL);
+//                file_put_contents('/etc/apache2/sites-available/'.$this->domain.'-ssl.conf', $apacheBaseConfigWithSSL);
 
-                if (!is_link('/etc/apache2/sites-enabled/' . $this->domain . '-ssl.conf')) {
-                    shell_exec('ln -s /etc/apache2/sites-available/' . $this->domain . '-ssl.conf /etc/apache2/sites-enabled/' . $this->domain . '-ssl.conf');
-                }
+//                if (!is_link('/etc/apache2/sites-enabled/' . $this->domain . '-ssl.conf')) {
+//                    shell_exec('ln -s /etc/apache2/sites-available/' . $this->domain . '-ssl.conf /etc/apache2/sites-enabled/' . $this->domain . '-ssl.conf');
+//                }
 
             }
 
         }
 
-        // Reload apache
-        if ($reloadApache) {
-            shell_exec('systemctl reload apache2');
-        }
+//        // Reload apache
+//        if ($reloadApache) {
+//            shell_exec('systemctl reload apache2');
+//        }
+
+        return [
+            'apacheBaseConfig' => $apacheBaseConfig,
+            'apacheBaseConfigWithSSL' => $apacheBaseConfigWithSSL,
+        ];
 
     }
 }
