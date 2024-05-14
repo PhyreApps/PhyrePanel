@@ -46,33 +46,38 @@ class HostingSubscriptionWithNodeJSCreateTest extends ActionTestCase
     {
         $this->assertTrue(Str::contains(php_uname(),'Ubuntu'));
 //
-        // Make Apache+PHP Application Server with all supported php versions and modules
-        $installLogFilePath = storage_path('install-apache-nodejs-log-unit-test.txt');
-        if (is_file($installLogFilePath)) {
-            unlink($installLogFilePath);
-        }
 
-        $phpInstaller = new NodeJsInstaller();
-        $phpInstaller->setNodeJsVersions(array_keys(SupportedApplicationTypes::getNodeJsVersions()));
-        $phpInstaller->setLogFilePath($installLogFilePath);
-        $phpInstaller->install();
+        $isNodeJsInstalled = false;
 
-        $installationSuccess = false;
-        for ($i = 1; $i <= 100; $i++) {
-            $logContent = file_get_contents($installLogFilePath);
-            if (str_contains($logContent, 'All packages installed successfully!')) {
-                $installationSuccess = true;
-                break;
+        if (!$isNodeJsInstalled) {
+            // Make Apache+NodeJS Application Server with all supported php versions and modules
+            $installLogFilePath = storage_path('install-apache-nodejs-log-unit-test.txt');
+            if (is_file($installLogFilePath)) {
+                unlink($installLogFilePath);
             }
-            sleep(3);
-        }
 
-        if (!$installationSuccess) {
-            $logContent = file_get_contents($installLogFilePath);
-            $this->fail('Apache+NodeJS installation failed. Log: '.$logContent);
-        }
+            $nodeJSInstaller = new NodeJsInstaller();
+            $nodeJSInstaller->setNodeJsVersions(array_keys(SupportedApplicationTypes::getNodeJsVersions()));
+            $nodeJSInstaller->setLogFilePath($installLogFilePath);
+            $nodeJSInstaller->install();
 
-        $this->assertTrue($installationSuccess, 'Apache+NodeJS installation failed');
+            $installationSuccess = false;
+            for ($i = 1; $i <= 100; $i++) {
+                $logContent = file_get_contents($installLogFilePath);
+                if (str_contains($logContent, 'All packages installed successfully!')) {
+                    $installationSuccess = true;
+                    break;
+                }
+                sleep(3);
+            }
+
+            if (!$installationSuccess) {
+                $logContent = file_get_contents($installLogFilePath);
+                $this->fail('Apache+NodeJS installation failed. Log: ' . $logContent);
+            }
+
+            $this->assertTrue($installationSuccess, 'Apache+NodeJS installation failed');
+        }
 
         // Make unauthorized call
         $callUnauthorizedResponse = $this->callRouteAction('api.hosting-subscriptions.store')->json();
@@ -124,7 +129,6 @@ class HostingSubscriptionWithNodeJSCreateTest extends ActionTestCase
         $createHostingPlan->save();
 
         $hostingPlanId = $createHostingPlan->id;
-
 
         $hostingSubscriptionDomain = 'phyre-unit-test-'.$randId.'.com';
         $callHostingSubscriptionStoreResponse = $this->callApiAuthorizedRouteAction(
