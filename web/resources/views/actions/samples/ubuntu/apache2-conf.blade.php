@@ -1,4 +1,3 @@
-
 <VirtualHost *:{{$port}}>
 
     @if(!empty($serverAdmin))
@@ -135,4 +134,3 @@
     @endif
 
 </VirtualHost>
-

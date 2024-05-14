@@ -129,7 +129,7 @@ class Domain extends Model
         return $this->belongsTo(HostingSubscription::class);
     }
 
-    public function configureVirtualHost($reloadApache = true)
+    public function configureVirtualHost($fixPermissions = false)
     {
         $findHostingSubscription = \App\Models\HostingSubscription::where('id', $this->hosting_subscription_id)
             ->first();
@@ -147,14 +147,16 @@ class Domain extends Model
             throw new \Exception('Domain root not found');
         }
 
-        if (!is_dir($this->domain_root)) {
-            mkdir($this->domain_root, 0711, true);
-        }
-        if (!is_dir($this->domain_public)) {
-            mkdir($this->domain_public, 0755, true);
-        }
-        if (!is_dir($this->home_root)) {
-            mkdir($this->home_root, 0711, true);
+        if ($fixPermissions) {
+            if (!is_dir($this->domain_root)) {
+                mkdir($this->domain_root, 0711, true);
+            }
+            if (!is_dir($this->domain_public)) {
+                mkdir($this->domain_public, 0755, true);
+            }
+            if (!is_dir($this->home_root)) {
+                mkdir($this->home_root, 0711, true);
+            }
         }
 
         if ($this->is_installed_default_app_template == null) {
@@ -209,34 +211,36 @@ class Domain extends Model
 
         $webUserGroup = $findHostingSubscription->system_username;
 
-        // Fix file permissions
-        shell_exec('chown -R '.$findHostingSubscription->system_username.':'.$webUserGroup.' '.$this->home_root);
-        shell_exec('chown -R '.$findHostingSubscription->system_username.':'.$webUserGroup.' '.$this->domain_root);
-        shell_exec('chown -R '.$findHostingSubscription->system_username.':'.$webUserGroup.' '.$this->domain_public);
+        if ($fixPermissions) {
+            // Fix file permissions
+            shell_exec('chown -R ' . $findHostingSubscription->system_username . ':' . $webUserGroup . ' ' . $this->home_root);
+            shell_exec('chown -R ' . $findHostingSubscription->system_username . ':' . $webUserGroup . ' ' . $this->domain_root);
+            shell_exec('chown -R ' . $findHostingSubscription->system_username . ':' . $webUserGroup . ' ' . $this->domain_public);
 
-        shell_exec('chmod -R 0711 '.$this->home_root);
-        shell_exec('chmod -R 0711 '.$this->domain_root);
-        shell_exec('chmod -R 775 '.$this->domain_public);
+            shell_exec('chmod -R 0711 ' . $this->home_root);
+            shell_exec('chmod -R 0711 ' . $this->domain_root);
+            shell_exec('chmod -R 775 ' . $this->domain_public);
 
-        if (!is_dir($this->domain_root.'/logs/apache2')) {
-            shell_exec('mkdir -p '.$this->domain_root.'/logs/apache2');
-        }
-        shell_exec('chown -R '.$findHostingSubscription->system_username.':'.$webUserGroup.' '.$this->domain_root.'/logs/apache2');
-        shell_exec('chmod -R 775 '.$this->domain_root.'/logs/apache2');
+            if (!is_dir($this->domain_root . '/logs/apache2')) {
+                shell_exec('mkdir -p ' . $this->domain_root . '/logs/apache2');
+            }
+            shell_exec('chown -R ' . $findHostingSubscription->system_username . ':' . $webUserGroup . ' ' . $this->domain_root . '/logs/apache2');
+            shell_exec('chmod -R 775 ' . $this->domain_root . '/logs/apache2');
 
-        if (!is_file($this->domain_root.'/logs/apache2/bytes.log')) {
-            shell_exec('touch '.$this->domain_root.'/logs/apache2/bytes.log');
-        }
-        if (!is_file($this->domain_root.'/logs/apache2/access.log')) {
-            shell_exec('touch '.$this->domain_root.'/logs/apache2/access.log');
-        }
-        if (!is_file($this->domain_root.'/logs/apache2/error.log')) {
-            shell_exec('touch '.$this->domain_root.'/logs/apache2/error.log');
-        }
+            if (!is_file($this->domain_root . '/logs/apache2/bytes.log')) {
+                shell_exec('touch ' . $this->domain_root . '/logs/apache2/bytes.log');
+            }
+            if (!is_file($this->domain_root . '/logs/apache2/access.log')) {
+                shell_exec('touch ' . $this->domain_root . '/logs/apache2/access.log');
+            }
+            if (!is_file($this->domain_root . '/logs/apache2/error.log')) {
+                shell_exec('touch ' . $this->domain_root . '/logs/apache2/error.log');
+            }
 
-        shell_exec('chmod -R 775 '.$this->domain_root.'/logs/apache2/bytes.log');
-        shell_exec('chmod -R 775 '.$this->domain_root.'/logs/apache2/access.log');
-        shell_exec('chmod -R 775 '.$this->domain_root.'/logs/apache2/error.log');
+            shell_exec('chmod -R 775 ' . $this->domain_root . '/logs/apache2/bytes.log');
+            shell_exec('chmod -R 775 ' . $this->domain_root . '/logs/apache2/access.log');
+            shell_exec('chmod -R 775 ' . $this->domain_root . '/logs/apache2/error.log');
+        }
 
         $appType = 'php';
         $appVersion = '8.3';
@@ -336,16 +340,9 @@ class Domain extends Model
 
         $apacheBaseConfig = $apacheVirtualHostBuilder->buildConfig();
 
-//        if (!empty($apacheBaseConfig)) {
-//            file_put_contents('/etc/apache2/sites-available/'.$this->domain.'.conf', $apacheBaseConfig);
-//
-//            // check symlink exists
-//            $symlinkExists = file_exists('/etc/apache2/sites-enabled/'.$this->domain.'.conf');
-//            if (!$symlinkExists) {
-//                shell_exec('ln -s /etc/apache2/sites-available/' . $this->domain . '.conf /etc/apache2/sites-enabled/' . $this->domain . '.conf');
-//            }
-//        }
 
+        // Certificate setup
+        
         $catchMainDomain = '';
         $domainExp = explode('.', $this->domain);
         if (count($domainExp) > 0) {
@@ -382,22 +379,30 @@ class Domain extends Model
             $sslCertificateChainFile = $this->home_root . '/certs/' . $this->domain . '/public/fullchain.pem';
 
             if (!empty($findDomainSSLCertificate->certificate)) {
-                if (!is_dir($this->home_root . '/certs/' . $this->domain . '/public')) {
-                    mkdir($this->home_root . '/certs/' . $this->domain . '/public', 0755, true);
+                if (!file_exists($sslCertificateFile)) {
+                    if (!is_dir($this->home_root . '/certs/' . $this->domain . '/public')) {
+                        mkdir($this->home_root . '/certs/' . $this->domain . '/public', 0755, true);
+                    }
+                    file_put_contents($sslCertificateFile, $findDomainSSLCertificate->certificate);
                 }
-                file_put_contents($sslCertificateFile, $findDomainSSLCertificate->certificate);
             }
+
             if (!empty($findDomainSSLCertificate->private_key)) {
-                if (!is_dir($this->home_root . '/certs/' . $this->domain . '/private')) {
-                    mkdir($this->home_root . '/certs/' . $this->domain . '/private', 0755, true);
+                if (!file_exists($sslCertificateKeyFile)) {
+                    if (!is_dir($this->home_root . '/certs/' . $this->domain . '/private')) {
+                        mkdir($this->home_root . '/certs/' . $this->domain . '/private', 0755, true);
+                    }
+                    file_put_contents($sslCertificateKeyFile, $findDomainSSLCertificate->private_key);
                 }
-                file_put_contents($sslCertificateKeyFile, $findDomainSSLCertificate->private_key);
             }
+
             if (!empty($findDomainSSLCertificate->certificate_chain)) {
-                if (!is_dir($this->home_root . '/certs/' . $this->domain . '/public')) {
-                    mkdir($this->home_root . '/certs/' . $this->domain . '/public', 0755, true);
+                if (!file_exists($sslCertificateChainFile)) {
+                    if (!is_dir($this->home_root . '/certs/' . $this->domain . '/public')) {
+                        mkdir($this->home_root . '/certs/' . $this->domain . '/public', 0755, true);
+                    }
+                    file_put_contents($sslCertificateChainFile, $findDomainSSLCertificate->certificate_chain);
                 }
-                file_put_contents($sslCertificateChainFile, $findDomainSSLCertificate->certificate_chain);
             }
 
             $apacheVirtualHostBuilder->setPort(443);
@@ -406,33 +411,8 @@ class Domain extends Model
             $apacheVirtualHostBuilder->setSSLCertificateChainFile($sslCertificateChainFile);
 
             $apacheBaseConfigWithSSL = $apacheVirtualHostBuilder->buildConfig();
-            if (!empty($apacheBaseConfigWithSSL)) {
-
-                // Add SSL options conf file
-//                $apache2SSLOptionsSample = view('actions.samples.ubuntu.apache2-ssl-options-conf')->render();
-//                $apache2SSLOptionsFilePath = '/etc/apache2/phyre/options-ssl-apache.conf';
-
-//                if (!file_exists($apache2SSLOptionsFilePath)) {
-//                    if (!is_dir('/etc/apache2/phyre')) {
-//                        mkdir('/etc/apache2/phyre');
-//                    }
-//                    file_put_contents($apache2SSLOptionsFilePath, $apache2SSLOptionsSample);
-//                }
-
-//                file_put_contents('/etc/apache2/sites-available/'.$this->domain.'-ssl.conf', $apacheBaseConfigWithSSL);
-
-//                if (!is_link('/etc/apache2/sites-enabled/' . $this->domain . '-ssl.conf')) {
-//                    shell_exec('ln -s /etc/apache2/sites-available/' . $this->domain . '-ssl.conf /etc/apache2/sites-enabled/' . $this->domain . '-ssl.conf');
-//                }
-
-            }
 
         }
-
-//        // Reload apache
-//        if ($reloadApache) {
-//            shell_exec('systemctl reload apache2');
-//        }
 
         return [
             'apacheBaseConfig' => $apacheBaseConfig,
