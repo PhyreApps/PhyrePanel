@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace tests\Unit;
 
 use App\Http\Middleware\ApiKeyMiddleware;
 use PHPUnit\Framework\TestCase;
