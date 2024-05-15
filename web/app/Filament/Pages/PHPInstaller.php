@@ -2,6 +2,9 @@
 
 namespace App\Filament\Pages;
 
+use App\Installers\Server\Applications\NodeJsInstaller;
+use App\Installers\Server\Applications\PythonInstaller;
+use App\Installers\Server\Applications\RubyInstaller;
 use App\Livewire\Installer;
 use App\SupportedApplicationTypes;
 use Filament\Forms\Components\CheckboxList;
@@ -53,7 +56,20 @@ class PHPInstaller extends Installer
                                 ->columns(5)
                                 ->options(SupportedApplicationTypes::getPHPModules()),
 
-                        ]),
+                        ])->afterValidation(function () {
+
+                            $this->install_log = 'Prepare installation...';
+                            if (is_file(storage_path('server-app-configuration.json'))) {
+                                unlink(storage_path('server-app-configuration.json'));
+                            }
+
+                            $phpInstaller = new \App\Installers\Server\Applications\PHPInstaller();
+                            $phpInstaller->setPHPVersions($this->server_php_versions);
+                            $phpInstaller->setPHPModules($this->server_php_modules);
+                            $phpInstaller->setLogFilePath(storage_path($this->install_log_file_path));
+                            $phpInstaller->install();
+
+                        }),
 
                     Wizard\Step::make('Step 2')
                         ->description('Finish installation')
