@@ -29,6 +29,11 @@ class PHPInstaller extends Installer
 
     protected static bool $shouldRegisterNavigation = false;
 
+    public function getTitle(): string
+    {
+        return 'PHP Installer';
+    }
+
     public function form(Form $form): Form
     {
 
@@ -97,4 +102,10 @@ class PHPInstaller extends Installer
             ]);
 
     }
+
+    public function getRedirectLinkAfterInstall()
+    {
+        return '/admin/php-info';
+    }
+
 }

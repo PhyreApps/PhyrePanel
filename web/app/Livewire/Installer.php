@@ -305,12 +305,17 @@ class Installer extends Page
 
                 file_put_contents(storage_path('installed'), 'installed-'.date('Y-m-d H:i:s'));
 
-                return redirect('/admin/login');
+                return redirect($this->getRedirectLinkAfterInstall());
             }
 
         } else {
             $this->install_log = 'Waiting for installation log...';
         }
+    }
+
+    public function getRedirectLinkAfterInstall()
+    {
+        return '/admin/login';
     }
 
 }
