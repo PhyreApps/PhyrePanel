@@ -77,5 +77,6 @@ class ApacheBuild implements ShouldQueue
         file_put_contents('/etc/apache2/apache2.conf', $apache2);
 
         shell_exec('systemctl reload apache2');
+
     }
 }
