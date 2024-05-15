@@ -29,7 +29,7 @@ class ApacheBuild implements ShouldQueue
      */
     public function handle(): void
     {
-        $getAllDomains = Domain::all();
+        $getAllDomains = Domain::whereNot('status','<=>', 'broken')->get();
         $virtualHosts = [];
         foreach ($getAllDomains as $domain) {
             $virtualHostSettings = $domain->configureVirtualHost();
@@ -40,7 +40,6 @@ class ApacheBuild implements ShouldQueue
                 $virtualHosts[] = $virtualHostSettings['virtualHostSettingsWithSSL'];
             }
         }
-
 
         // Make master domain virtual host
         if (!empty(setting('general.master_domain'))) {
@@ -73,6 +72,8 @@ class ApacheBuild implements ShouldQueue
         $apache2 = view('actions.samples.ubuntu.apache2-conf-build', [
             'virtualHosts' => $virtualHosts
         ])->render();
+
+        $apache2 = preg_replace('~(*ANY)\A\s*\R|\s*(?!\r\n)\s$~mu', '', $apache2);
 
         file_put_contents('/etc/apache2/apache2.conf', $apache2);
 

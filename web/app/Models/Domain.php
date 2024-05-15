@@ -20,6 +20,8 @@ class Domain extends Model
     public const STATUS_DELETED = 'deleted';
     public const STATUS_DEACTIVATED = 'deactivated';
 
+    public const STATUS_BROKEN = 'broken';
+
     protected $fillable = [
         'domain',
         'domain_root',
@@ -272,6 +274,17 @@ class Domain extends Model
             }
             $apacheVirtualHostBuilder->setDomainRoot($deactivatedPath);
             $apacheVirtualHostBuilder->setDomainPublic($deactivatedPath);
+        } else if ($this->status == self::STATUS_BROKEN) {
+            $brokenPath = '/var/www/html/broken';
+            if (!is_dir($brokenPath)) {
+                mkdir($brokenPath, 0755, true);
+            }
+            if (!is_file($brokenPath . '/index.html')) {
+                $brokenPageHtmlPath = base_path('resources/views/actions/samples/apache/html/app-broken-page.html');
+                file_put_contents($brokenPath . '/index.html', file_get_contents($brokenPageHtmlPath));
+            }
+            $apacheVirtualHostBuilder->setDomainRoot($brokenPath);
+            $apacheVirtualHostBuilder->setDomainPublic($brokenPath);
         } else {
 
           //  $apacheVirtualHostBuilder->setEnableLogs(true);

@@ -61,8 +61,9 @@ class RunRepair extends Command
 
     public function fixApacheErrors()
     {
-        // Restart Apache
-        shell_exec('service apache2 restart');
+        // Rebuild apache config
+        $apacheBuild = new ApacheBuild();
+        $apacheBuild->handle();
 
         $checkApacheStatus = shell_exec('service apache2 status');
 
@@ -99,17 +100,21 @@ class RunRepair extends Command
             }
 
             if (count($apacheBrokenVirtualHosts) > 0) {
+
                 $this->error('Broken virtual hosts found');
+
                 foreach ($apacheBrokenVirtualHosts as $brokenVirtualHost) {
                     $this->error('Virtual host found: ' . $brokenVirtualHost['ServerName']);
                     $this->error('Turn on maintenance mode: ' . $brokenVirtualHost['ServerName']);
                     $findDomain = Domain::where('domain', $brokenVirtualHost['ServerName'])->first();
                     if ($findDomain) {
-                        $findDomain->status = Domain::STATUS_SUSPENDED;
+                        $findDomain->status = Domain::STATUS_BROKEN;
                         $findDomain->save();
                     }
                 }
+
                 $this->info('Run apache build...');
+
                 $apacheBuild = new ApacheBuild();
                 $apacheBuild->handle();
             }
