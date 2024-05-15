@@ -181,13 +181,13 @@ class Settings extends Page
                 'icon'=>'heroicon-o-paint-brush',
                 'links'=> [
                     [
-                        'title'=>'Phyre Theme',
-                        'icon'=>'heroicon-o-color-swatch',
+                        'title'=>'Phyre Logo',
+                        'icon'=>'heroicon-o-photograph',
                         'url'=> route('filament.admin.pages.phyre-apperance')
                     ],
                     [
-                        'title'=>'Phyre Logo',
-                        'icon'=>'heroicon-o-photograph',
+                        'title'=>'Phyre Theme',
+                        'icon'=>'heroicon-o-color-swatch',
                         'url'=> route('filament.admin.pages.phyre-apperance')
                     ],
                 ]

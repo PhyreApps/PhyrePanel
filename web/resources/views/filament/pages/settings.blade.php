@@ -1,12 +1,12 @@
 <x-filament-panels::page>
 
-    <div class="grid grid-cols-3 gap-4 gap-y-8 bg-white/5 p-8 shadow rounded-xl">
+    <div class="grid grid-cols-3 gap-4 gap-y-8 p-8 rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:divide-white/10 dark:bg-gray-900 dark:ring-white/10">
         @foreach($linkGroups as $group)
 
             <div>
                 <div class="flex gap-2 items-center">
                     <x-filament::icon-button size="xl" icon="{{$group['icon']}}" />
-                    <div class="text-primary-500 text-xl">
+                    <div class="text-primary-500 text-lg">
                         {{ $group['title'] }}
                     </div>
                 </div>
@@ -14,7 +14,7 @@
                     <ul class="flex flex-col gap-y-1">
                     @foreach($group['links'] as $link)
                         <li>
-                            <a class="cursor-pointer font-medium hover:text-primary-500 transition" href="{{$link['url']}}">
+                            <a class="cursor-pointer text-sm font-medium hover:text-primary-500 transition" href="{{$link['url']}}">
                                 {{$link['title']}}
                             </a>
                         </li>
