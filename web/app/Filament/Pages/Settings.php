@@ -76,10 +76,22 @@ class Settings extends Page
                     ],
                 ]
             ],
-//            'Server Management'=>[
-//                'title'=>'Server Management',
-//                'icon'=>'heroicon-o-server',
-//                'links'=> [
+            'Server Management'=>[
+                'title'=>'Server Management',
+                'icon'=>'heroicon-o-server',
+                'links'=> [
+
+                        [
+                            'title'=>'PHP Info',
+                            'icon'=>'heroicon-o-information-circle',
+                            'url'=> route('filament.admin.pages.php-info')
+                        ],
+                        [
+                            'title'=>'PHP Installer',
+                            'icon'=>'heroicon-o-cog',
+                            'url'=> route('filament.admin.pages.php-installer')
+                        ]
+
 //                    [
 //                        'title'=>'Server Information',
 //                        'icon'=>'heroicon-o-information-circle',
@@ -105,8 +117,8 @@ class Settings extends Page
 //                        'icon'=>'heroicon-o-cloud-upload',
 //                        'url'=>''
 //                    ],
-//                ]
-//            ],
+                ]
+            ],
             'Statistics'=> [
                 'title'=>'Statistics',
                 'icon'=>'heroicon-o-chart-bar',
