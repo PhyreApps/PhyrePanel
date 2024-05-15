@@ -17,7 +17,7 @@ use Monarobase\CountryList\CountryList;
 use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
 use Symfony\Component\Console\Input\Input;
 
-class General extends BaseSettings
+class GeneralSettings extends BaseSettings
 {
 
     protected static bool $shouldRegisterNavigation = false;

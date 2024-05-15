@@ -2,7 +2,7 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\Settings\General;
+use App\Filament\Pages\Settings\GeneralSettings;
 use App\Filament\Widgets\CustomersCount;
 use App\Filament\Widgets\ServerDiskUsageStatistic;
 use App\Filament\Widgets\ServerMemoryStatistic;
@@ -72,7 +72,7 @@ class AdminPanelProvider extends PanelProvider
                 //  FilamentAuthenticationLogPlugin::make(),
                 FilamentApexChartsPlugin::make(),
                 FilamentSettingsPlugin::make()->pages([
-                    General::class,
+                    GeneralSettings::class,
                 ]),
             ])
          //   ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')

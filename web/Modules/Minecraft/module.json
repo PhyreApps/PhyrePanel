@@ -10,5 +10,5 @@
     "providers": [
         "Modules\\Minecraft\\App\\Providers\\MinecraftServiceProvider"
     ],
-    "files": []
+    "files": [] 
 }

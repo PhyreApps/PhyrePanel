@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 
 class Modules extends Page
 {
-    protected static ?string $navigationIcon = 'heroicon-o-puzzle-piece';
+    protected static ?string $navigationIcon = 'heroicon-o-cube';
 
     protected static string $view = 'filament.pages.modules';
 
