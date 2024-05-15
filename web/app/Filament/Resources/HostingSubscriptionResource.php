@@ -25,7 +25,7 @@ class HostingSubscriptionResource extends Resource
 {
     protected static ?string $model = HostingSubscription::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-star';
 
     protected static ?string $navigationGroup = 'Hosting Services';
 
