@@ -4,6 +4,7 @@
     "description": "",
     "keywords": [],
     "priority": 0,
+    "hidden": true,
     "logoIcon": "email-logo",
     "category": "DevOps",
     "adminUrl": "/admin/email",
