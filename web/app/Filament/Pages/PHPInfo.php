@@ -1,22 +1,10 @@
 <?php
 
-namespace app\Filament\Pages;
+namespace App\Filament\Pages;
 
-use App\Installers\Server\Applications\NodeJsInstaller;
-use App\Installers\Server\Applications\PythonInstaller;
-use App\Installers\Server\Applications\RubyInstaller;
-use App\Livewire\Installer;
-use App\SupportedApplicationTypes;
-use Filament\Forms\Components\CheckboxList;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Wizard;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Pages\Page;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\HtmlString;
 
-class PHPInfo extends Installer
+class PHPInfo extends Page
 {
 
     protected static string $view = 'filament.pages.php-info';
@@ -32,5 +20,29 @@ class PHPInfo extends Installer
         return 'PHP Info';
     }
 
+
+    protected function getViewData(): array
+    {
+        $installedPHPVersions = [];
+
+        $getPHPVersions = shell_exec('sudo update-alternatives --list php');
+        if (!empty($getPHPVersions)) {
+            $getPHPVersions = explode("\n", $getPHPVersions);
+            if (is_array($getPHPVersions)) {
+                $getPHPVersions = array_filter($getPHPVersions);
+                foreach ($getPHPVersions as $phpVersion) {
+                    $phpVersion = str_replace('/usr/bin/php', '', $phpVersion);
+                    $phpVersion = str_replace('php', '', $phpVersion);
+                    $phpVersion = str_replace('.', '', $phpVersion);
+                    $phpVersion = substr($phpVersion, 0, 1) . '.' . substr($phpVersion, 1);
+                    $installedPHPVersions[] = $phpVersion;
+                }
+            }
+        }
+
+        return [
+            'installedPHPVersions' => $installedPHPVersions,
+        ];
+    }
 
 }
