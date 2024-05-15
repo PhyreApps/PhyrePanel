@@ -5,8 +5,8 @@ namespace App\Models;
 use App\Actions\ApacheWebsiteDelete;
 use App\Events\DomainIsCreated;
 use App\Events\ModelDomainDeleting;
+use App\Jobs\ApacheBuild;
 use App\ShellApi;
-use App\VirtualHosts\ApacheBuild;
 use App\VirtualHosts\DTO\ApacheVirtualHostSettings;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -87,8 +87,7 @@ class Domain extends Model
 
             $model->configureVirtualHost(true);
 
-            $apacheBuild = new ApacheBuild();
-            $apacheBuild->build();
+            ApacheBuild::dispatch();
 
         });
 

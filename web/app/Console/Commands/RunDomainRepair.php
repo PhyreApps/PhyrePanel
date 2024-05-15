@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\ApacheBuild;
 use App\Models\Domain;
-use App\VirtualHosts\ApacheBuild;
 use Illuminate\Console\Command;
 
 class RunDomainRepair extends Command
@@ -27,8 +27,6 @@ class RunDomainRepair extends Command
      */
     public function handle()
     {
-        $apache = new ApacheBuild();
-        $apache->fixPermissions();
-        $apache->build();
+        ApacheBuild::dispatch(true);
     }
 }
