@@ -21,6 +21,29 @@ class PHPInfo extends Page
     }
 
 
+    public function getInstalledPHPModules($phpVersion)
+    {
+        $modules = [];
+        $getModules = shell_exec('php' . $phpVersion . ' -m');
+        if (!empty($getModules)) {
+            $getModules = explode("\n", $getModules);
+            if (is_array($getModules)) {
+                $getModules = array_filter($getModules);
+                foreach ($getModules as $module) {
+                    if ($module == '[PHP Modules]') {
+                        continue;
+                    }
+                    if ($module == '[Zend Modules]') {
+                        continue;
+                    }
+                    $modules[] = $module;
+                }
+                $modules = array_unique($modules);
+            }
+        }
+        return $modules;
+    }
+
     protected function getViewData(): array
     {
         $installedPHPVersions = [];
@@ -35,7 +58,10 @@ class PHPInfo extends Page
                     $phpVersion = str_replace('php', '', $phpVersion);
                     $phpVersion = str_replace('.', '', $phpVersion);
                     $phpVersion = substr($phpVersion, 0, 1) . '.' . substr($phpVersion, 1);
-                    $installedPHPVersions[] = $phpVersion;
+                    $installedPHPVersions[] = [
+                        'version' => $phpVersion,
+                        'modules' => $this->getInstalledPHPModules($phpVersion) ?? 'No modules found.',
+                    ];
                 }
             }
         }
