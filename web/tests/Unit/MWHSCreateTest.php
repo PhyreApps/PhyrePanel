@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Jobs\ApacheBuild;
 use App\Models\HostingPlan;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
@@ -81,6 +82,9 @@ class MWHSCreateTest extends ActionTestCase
             'hosting_plan_id' => $hostingPlanId,
             'domain' => $hostingSubscriptionDomain,
         ])->json();
+
+        $apacheBuild = new ApacheBuild();
+        $apacheBuild->handle();
 
         if (!isset($callHostingSubscriptionStoreResponse['status'])) {
             $this->fail(json_encode($callHostingSubscriptionStoreResponse));

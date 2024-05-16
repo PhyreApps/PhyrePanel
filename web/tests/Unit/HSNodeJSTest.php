@@ -6,6 +6,7 @@ use App\Http\Middleware\ApiKeyMiddleware;
 use App\Installers\Server\Applications\NodeJsInstaller;
 use App\Installers\Server\Applications\PHPInstaller;
 use App\Installers\Server\Applications\PythonInstaller;
+use App\Jobs\ApacheBuild;
 use App\Models\Database;
 use App\Models\DatabaseUser;
 use App\Models\Domain;
@@ -139,6 +140,9 @@ class HSNodeJSTest extends ActionTestCase
                 'domain' => $hostingSubscriptionDomain,
             ]
         )->json();
+
+        $apacheBuild = new ApacheBuild();
+        $apacheBuild->handle();
 
         $this->assertArrayHasKey('status', $callHostingSubscriptionStoreResponse);
         $this->assertTrue($callHostingSubscriptionStoreResponse['status'] == 'ok');

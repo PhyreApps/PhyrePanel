@@ -130,6 +130,9 @@ class HostingSubscriptionWithPythonCreateTest extends ActionTestCase
             ]
         )->json();
 
+        $apacheBuild = new ApacheBuild();
+        $apacheBuild->handle();
+
         $this->assertArrayHasKey('status', $callHostingSubscriptionStoreResponse);
         $this->assertTrue($callHostingSubscriptionStoreResponse['status'] == 'ok');
 
