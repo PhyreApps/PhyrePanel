@@ -53,10 +53,10 @@ class PhyreApiSDK
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $requestType);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
-//        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-//            'Content-Type: application/x-www-form-urlencoded',
-//            'Authorization: Basic '.base64_encode($this->username.':'.$this->password)
-//        ));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/x-www-form-urlencoded',
+            'Authorization: Basic '.base64_encode($this->username.':'.$this->password)
+        ));
         $response = curl_exec($ch);
         curl_close($ch);
 

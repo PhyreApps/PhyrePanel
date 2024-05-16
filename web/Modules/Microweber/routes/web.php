@@ -17,17 +17,3 @@ use Modules\Microweber\App\Http\Controllers\MicroweberController;
 Route::group([], function () {
     Route::resource('microweber', MicroweberController::class)->names('microweber');
 });
-
-Route::get('waaw', function () {
-
-    $whiteLabelSettings = [];
-    $whiteLabelSettings['whmcs_url'] = 'qko';
-
-    $whitelabel = new \MicroweberPackages\SharedServerScripts\MicroweberWhitelabelSettingsUpdater();
-    $whitelabel->setPath(config('microweber.sharedPaths.app'));
-    $apply = $whitelabel->apply($whiteLabelSettings);
-
-    dd($apply);
-
-
-});

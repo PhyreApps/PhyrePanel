@@ -36,6 +36,7 @@
             <directory>app/Filament</directory>
             <directory>Modules/*/App/Filament</directory>
             <directory>Modules/*/Filament</directory>
+            <directory>Modules/*/Database/migrations</directory>
         </exclude>
     </source>
 
