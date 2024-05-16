@@ -18,9 +18,9 @@ echo "$INSTALL_WEB" >> ubuntu-20.04/install.sh
 
 # get content from file
 INSTALL_BASE=$(cat ubuntu-22.04/install-partial/install_base.sh)
-INSTALL_LOG=$(cat ubuntu-22.04/install-partial/install_log.sh)
-DOWNLOAD_WEB=$(cat ubuntu-22.04/install-partial/download_web.sh)
-INSTALL_WEB=$(cat ubuntu-22.04/install-partial/install_web.sh)
+INSTALL_LOG=$(cat ubuntu-20.04/install-partial/install_log.sh)
+DOWNLOAD_WEB=$(cat ubuntu-20.04/install-partial/download_web.sh)
+INSTALL_WEB=$(cat ubuntu-20.04/install-partial/install_web.sh)
 
 # create installer
 rm -rf ubuntu-22.04/install.sh
