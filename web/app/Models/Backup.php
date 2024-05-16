@@ -286,7 +286,7 @@ class Backup extends Model
                     }
 
                     $shellFileContent .= PHP_EOL;
-                    
+
                 }
             }
 
@@ -298,6 +298,7 @@ class Backup extends Model
         $shellFileContent .= 'rm -rf '.$backupTempPath.PHP_EOL;
         $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;
         $shellFileContent .= 'touch ' . $backupPath. '/backup.done' . PHP_EOL;
+        $shellFileContent .= 'phyre-php /usr/local/phyre/web/artisan phyre:run-backup-checks'. PHP_EOL;
         $shellFileContent .= 'rm -rf ' . $backupTempScript;
 
         file_put_contents($backupTempScript, $shellFileContent);
