@@ -41,7 +41,7 @@ enum BackupStatus: string implements HasColor, HasIcon, HasLabel
         return match ($this) {
             self::Pending => 'heroicon-m-sparkles',
             self::Processing => 'heroicon-m-arrow-path',
-            self::Cancelled => 'heroicon-m-truck',
+            self::Cancelled => 'heroicon-o-x-mark',
             self::Completed => 'heroicon-m-check-badge',
             self::Failed => 'heroicon-m-x-circle',
         };

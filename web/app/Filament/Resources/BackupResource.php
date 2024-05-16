@@ -103,6 +103,21 @@ class BackupResource extends Resource
                 //
             ])
             ->actions([
+
+                Tables\Actions\Action::make('cancel')
+                    ->icon('heroicon-o-x-mark')
+                    ->hidden(function (Backup $backup) {
+                        return $backup->status !== BackupStatus::Processing;
+                    })
+                    ->action(function (Backup $backup) {
+
+                        shell_exec('kill -9 ' . $backup->process_id);
+
+                        $backup->update([
+                            'status' => BackupStatus::Cancelled,
+                        ]);
+                    }),
+
                 Tables\Actions\Action::make('download')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->hidden(function (Backup $backup) {
