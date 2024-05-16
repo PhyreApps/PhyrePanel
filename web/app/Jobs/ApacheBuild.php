@@ -29,6 +29,9 @@ class ApacheBuild implements ShouldQueue
      */
     public function handle(): void
     {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '20480M');
+
         $getAllDomains = Domain::whereNot('status','<=>', 'broken')->get();
         $virtualHosts = [];
         foreach ($getAllDomains as $domain) {
