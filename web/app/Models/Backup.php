@@ -239,6 +239,19 @@ class Backup extends Model
         $shellFileContent .= 'echo "Backup Phyre Panel Config"'. PHP_EOL;
         $shellFileContent .= 'cp '.base_path().'/phyre-config.ini '.$backupTempPath.'/phyre-config.ini'. PHP_EOL;
 
+        // Make exclude.lst file
+        $backupManagerConfig = app()->backupManager->getConfigs([
+            'microweber'
+        ]);
+        $excludeListContent = '';
+        if (isset($backupManagerConfig['excludePaths'])) {
+            foreach ($backupManagerConfig['excludePaths'] as $exclude) {
+                $excludeListContent .= $exclude . PHP_EOL;
+            }
+        }
+        $excludeListPath = $backupTempPath.'/exclude.lst';
+        file_put_contents($excludeListPath, $excludeListContent);
+
         if ($this->backup_type == 'full') {
             // Export Phyre Panel Hosting Subscription
             $findHostingSubscription = HostingSubscription::all();
@@ -251,7 +264,8 @@ class Backup extends Model
                     $shellFileContent .= 'mkdir -p ' . $hostingSubscriptionPath . PHP_EOL;
 
                     // cp -r (copy recursively, also copy hidden files)
-                    $shellFileContent .= 'cp -r /home/' . $hostingSubscription->system_username . '/ ' . $hostingSubscriptionsMainPath . PHP_EOL;
+                  //  $shellFileContent .= 'cp -r /home/' . $hostingSubscription->system_username . '/ ' . $hostingSubscriptionsMainPath . PHP_EOL;
+                    $shellFileContent .= "rsync -av --exclude-from='$excludeListPath' /home/$hostingSubscription->system_username/ " . $hostingSubscriptionPath . PHP_EOL;
 
                     $shellFileContent .= 'mkdir -p ' . $hostingSubscriptionPath . '/databases' . PHP_EOL;
 
@@ -278,7 +292,7 @@ class Backup extends Model
         }
 
         // With find, we can search for all files,directories (including hidden) in the current directory and zip them
-        $shellFileContent .= 'cd '.$backupTempPath .' && find . -exec zip --symlinks -r '.$backupFilePath.' {} \;'. PHP_EOL;
+        $shellFileContent .= 'cd '.$backupTempPath .' && find . -exec zip -1 --symlinks -r '.$backupFilePath.' {} \;'. PHP_EOL;
 
         $shellFileContent .= 'rm -rf '.$backupTempPath.PHP_EOL;
         $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;
