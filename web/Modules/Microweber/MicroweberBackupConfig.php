@@ -13,7 +13,7 @@ class MicroweberBackupConfig extends BackupConfigBase
         'public_html/userfiles/cache/',
         'public_html/userfiles/media/thumbnails/',
         'public_html/storage/framework/sessions/',
-
+        'public_html/storage/cache/'
     ];
 
 }
