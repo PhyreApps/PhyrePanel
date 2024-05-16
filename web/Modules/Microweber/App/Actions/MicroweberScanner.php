@@ -43,7 +43,9 @@ class MicroweberScanner
                     }
 
                     $findInstallation->app_version = $installation['version'];
-                    $findInstallation->template = $installation['app_details']['template'];
+                    if (isset($installation['app_details']['template'])) {
+                        $findInstallation->template = $installation['app_details']['template'];
+                    }
 
                     if ($installation['is_symlink']) {
                         $findInstallation->installation_type = 'symlink';
