@@ -106,9 +106,9 @@ class BackupResource extends Resource
 
                 Tables\Actions\Action::make('cancel')
                     ->icon('heroicon-o-x-mark')
-//                    ->hidden(function (Backup $backup) {
-//                        return $backup->status !== BackupStatus::Processing;
-//                    })
+                    ->hidden(function (Backup $backup) {
+                        return $backup->status !== BackupStatus::Processing;
+                    })
                     ->action(function (Backup $backup) {
 
                         try {
