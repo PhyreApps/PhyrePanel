@@ -6,6 +6,7 @@ use App\Filament\Resources\BackupResource;
 use App\Jobs\RestoreBackup;
 use Filament\Actions;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Pages\Concerns\ExposesTableToWidgets;
 use Filament\Resources\Components\Tab;
@@ -27,6 +28,7 @@ class ManageBackups extends ManageRecords
         }
 
         return [
+
 
             Actions\Action::make('restore')
                 ->hidden($restoringBackup)
@@ -52,6 +54,43 @@ class ManageBackups extends ManageRecords
             Actions\CreateAction::make()
                 ->icon('heroicon-o-clock')
                 ->slideOver(),
+
+
+            Actions\Action::make('settings')
+                ->icon('heroicon-o-cog')
+                ->slideOver()
+                ->modalHeading('Backup Settings')
+                ->form(function () {
+                    return [
+                        Select::make('backup_frequency')
+                            ->options([
+                                'daily' => 'Daily',
+                                'weekly' => 'Weekly',
+                                'monthly' => 'Monthly',
+                            ])
+                            ->default('daily')
+                            ->required()
+                            ->columnSpanFull(),
+
+                        Select::make('backup_retention_days')
+                            ->options([
+                                '1' => '1 Day',
+                                '7' => '1 Week',
+                                '30' => '1 Month',
+                                '90' => '3 Months',
+                                '180' => '6 Months',
+                                '365' => '1 Year',
+                            ])
+                            ->default('7')
+                            ->required()
+                            ->columnSpanFull(),
+                    ];
+                })->afterFormValidated(function (array $data) {
+
+                    // Update backup settings
+                    setting($data);
+
+                }),
         ];
     }
 

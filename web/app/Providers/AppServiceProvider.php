@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Backup\BackupManager;
 use App\BackupStorage;
 use App\Events\ModelDomainCreated;
 use App\Events\ModelDomainDeleting;
@@ -18,6 +19,7 @@ use App\Livewire\JobQueueNotifications;
 use App\Models\Domain;
 use App\Models\HostingSubscription;
 use App\Policies\CustomerPolicy;
+use App\VirtualHosts\ApacheVirtualHostManager;
 use BladeUI\Icons\Factory;
 use Filament\Facades\Filament;
 use Illuminate\Filesystem\Filesystem;
@@ -47,8 +49,13 @@ class AppServiceProvider extends ServiceProvider
         });
 
         App::singleton('virtualHostManager', function () {
-            return new \App\VirtualHosts\ApacheVirtualHostManager();
+            return new ApacheVirtualHostManager();
         });
+
+        App::singleton('backupManager', function () {
+            return new BackupManager();
+        });
+
     }
 
     /**
