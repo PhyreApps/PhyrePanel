@@ -35,7 +35,7 @@ DEPENDENCIES_LIST=(
 )
 # Check if the dependencies are installed
 for DEPENDENCY in "${DEPENDENCIES_LIST[@]}"; do
-    apt install -y $DEPENDENCY
+    apt install -yq $DEPENDENCY
 done
 
 # Start MySQL

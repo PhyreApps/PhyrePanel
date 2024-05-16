@@ -19,13 +19,13 @@ class DovecotInstaller
         $commands[] = 'echo "Installing dovecot..."';
 
         // postfix - internet site
-        $commands[] = 'apt-get install -y telnet exim4 dovecot-core dovecot-imapd dovecot-pop3d dovecot-lmtpd';
+        $commands[] = 'apt-get install -yq telnet exim4 dovecot-core dovecot-imapd dovecot-pop3d dovecot-lmtpd';
 
 
 
         // /var/lib/roundcube
        // wget https://github.com/roundcube/roundcubemail/releases/download/1.6.0/roundcubemail-1.6.0-complete.tar.gz
-       // $commands[] = 'apt-get install -y roundcube roundcube-core roundcube-mysql roundcube-plugins';
+       // $commands[] = 'apt-get install -yq roundcube roundcube-core roundcube-mysql roundcube-plugins';
 
         $shellFileContent = '';
         foreach ($commands as $command) {

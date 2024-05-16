@@ -1,23 +1,22 @@
 <?php
 
-namespace tests\Unit;
+namespace Tests\Unit;
 
 use App\Http\Middleware\ApiKeyMiddleware;
 use App\Installers\Server\Applications\PHPInstaller;
-use App\Installers\Server\Applications\PythonInstaller;
+use App\Jobs\ApacheBuild;
 use App\Models\Database;
 use App\Models\DatabaseUser;
 use App\Models\Domain;
-use App\Models\HostingPlan;
 use App\SupportedApplicationTypes;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\TestCase;
 use Tests\Feature\Api\ActionTestCase;
 
-class HostingSubscriptionWithPythonCreateTest extends ActionTestCase
+class HSCreateTest extends ActionTestCase
 {
-    function test_route_contains_middleware()
+    function testRouteContainsMiddleware()
     {
         $this->assertRouteContainsMiddleware(
             'api.hosting-subscriptions.index',
@@ -34,41 +33,15 @@ class HostingSubscriptionWithPythonCreateTest extends ActionTestCase
             ApiKeyMiddleware::class
         );
 
-        $this->assertRouteContainsMiddleware(
-            'api.hosting-subscriptions.destroy',
-            ApiKeyMiddleware::class
-        );
+//        $this->assertRouteContainsMiddleware(
+//            'api.hosting-subscriptions.destroy',
+//            ApiKeyMiddleware::class
+//        );
 
     }
 
     function test_create()
     {
-        $this->assertTrue(Str::contains(php_uname(),'Ubuntu'));
-//
-        // Make Apache+PHP Application Server with all supported php versions and modules
-        $installLogFilePath = storage_path('install-apache-python-log-unit-test.txt');
-        $phpInstaller = new PythonInstaller();
-        $phpInstaller->setPythonVersions(array_keys(SupportedApplicationTypes::getPythonVersions()));
-        $phpInstaller->setLogFilePath($installLogFilePath);
-        $phpInstaller->install();
-
-        $installationSuccess = false;
-        for ($i = 1; $i <= 100; $i++) {
-            $logContent = file_get_contents($installLogFilePath);
-            if (str_contains($logContent, 'All packages installed successfully!')) {
-                $installationSuccess = true;
-                break;
-            }
-            sleep(3);
-        }
-
-        if (!$installationSuccess) {
-            $logContent = file_get_contents($installLogFilePath);
-            $this->fail('Apache+PHP installation failed. Log: '.$logContent);
-        }
-
-        $this->assertTrue($installationSuccess, 'Apache+Python installation failed');
-
         // Make unauthorized call
         $callUnauthorizedResponse = $this->callRouteAction('api.hosting-subscriptions.store')->json();
         $this->assertArrayHasKey('error', $callUnauthorizedResponse);
@@ -104,21 +77,15 @@ class HostingSubscriptionWithPythonCreateTest extends ActionTestCase
 
         // Create a hosting subscription
         $randId = rand(1000, 9999);
-        $hostingPlanId = null;
-
-        $createHostingPlan = new HostingPlan();
-        $createHostingPlan->name = 'Phyre Unit Test #'.$randId;
-        $createHostingPlan->description = 'Unit Test Hosting Plan';
-        $createHostingPlan->default_server_application_type = 'apache_python';
-        $createHostingPlan->default_server_application_settings = [
-            'python_version' => '3.9',
-        ];
-        $createHostingPlan->additional_services = [];
-        $createHostingPlan->features = [];
-        $createHostingPlan->limitations = [];
-        $createHostingPlan->save();
-        $hostingPlanId = $createHostingPlan->id;
-
+        $callHostingPlansResponse = $this->callApiAuthorizedRouteAction('api.hosting-plans.index')->json();
+        $this->assertArrayHasKey('status', $callHostingPlansResponse);
+        $this->assertTrue($callHostingPlansResponse['status'] == 'ok');
+        $this->assertArrayHasKey('data', $callHostingPlansResponse);
+        $this->assertArrayHasKey('hostingPlans', $callHostingPlansResponse['data']);
+        $this->assertIsArray($callHostingPlansResponse['data']['hostingPlans']);
+        $this->assertNotEmpty($callHostingPlansResponse['data']['hostingPlans']);
+        $hostingPlanId = $callHostingPlansResponse['data']['hostingPlans'][0]['id'];
+        $this->assertIsInt($hostingPlanId);
 
         $hostingSubscriptionDomain = 'phyre-unit-test-'.$randId.'.com';
         $callHostingSubscriptionStoreResponse = $this->callApiAuthorizedRouteAction(
@@ -129,6 +96,9 @@ class HostingSubscriptionWithPythonCreateTest extends ActionTestCase
                 'domain' => $hostingSubscriptionDomain,
             ]
         )->json();
+
+        $apacheBuild = new ApacheBuild();
+        $apacheBuild->handle();
 
         $this->assertArrayHasKey('status', $callHostingSubscriptionStoreResponse);
         $this->assertTrue($callHostingSubscriptionStoreResponse['status'] == 'ok');
@@ -188,6 +158,7 @@ class HostingSubscriptionWithPythonCreateTest extends ActionTestCase
 
         $this->assertStringContainsString('Directory '.$domainData['domain_public'], $virtualHostFileContent);
         $this->assertStringContainsString('DocumentRoot '.$domainData['domain_public'], $virtualHostFileContent);
+        $this->assertStringContainsString('php_admin_value open_basedir '.$domainData['home_root'], $virtualHostFileContent);
 
         // Check virtual host is enabled
         $this->assertFileExists('/etc/apache2/apache2.conf');

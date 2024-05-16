@@ -4,6 +4,7 @@
     "description": "",
     "keywords": [],
     "priority": 0,
+    "hidden": true,
     "logoIcon": "minecraft-logo",
     "category": "Game Servers",
     "adminUrl": "/admin/minecraft/servers",

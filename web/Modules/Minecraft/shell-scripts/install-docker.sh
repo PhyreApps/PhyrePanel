@@ -21,7 +21,7 @@ DEPENDENCIES_LIST=(
 )
 
 for DEPENDENCY in "${DEPENDENCIES_LIST[@]}"; do
-    sudo apt install -y $DEPENDENCY
+    sudo apt install -yq $DEPENDENCY
 done
 
 echo "Done!"

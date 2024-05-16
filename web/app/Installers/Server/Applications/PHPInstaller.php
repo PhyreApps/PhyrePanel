@@ -27,7 +27,8 @@ class PHPInstaller
     {
         $commands = [];
         $commands[] = 'echo "Starting PHP Installation..."';
-        $commands[] = 'apt-get install -y sudo';
+        $commands[] = 'export DEBIAN_FRONTEND=noninteractive';
+        $commands[] = 'apt-get install -yq sudo';
         $commands[] = 'add-apt-repository -y ppa:ondrej/php';
         $commands[] = 'add-apt-repository -y ppa:ondrej/apache2';
 
@@ -51,7 +52,7 @@ class PHPInstaller
 
 
         $dependencies = implode(' ', $dependenciesList);
-        $commands[] = 'apt-get install -y ' . $dependencies;
+        $commands[] = 'apt-get install -yq ' . $dependencies;
 
         $lastItem = end($this->phpVersions);
         foreach ($this->phpVersions as $phpVersion) {

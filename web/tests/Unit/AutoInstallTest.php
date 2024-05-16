@@ -1,13 +1,13 @@
 <?php
 
-namespace tests\Unit;
+namespace Tests\Unit;
 
 use App\Installers\Server\Applications\PHPInstaller;
 use App\SupportedApplicationTypes;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
-class AutoInstallPanelTest extends TestCase
+class AutoInstallTest extends TestCase
 {
     public function testInstall()
     {

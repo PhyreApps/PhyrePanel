@@ -4,7 +4,7 @@ namespace App\Filament\Pages;
 
 use Filament\Pages\Page;
 
-class Updates extends Page
+class PhyreUpdates extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-arrow-path';
 
@@ -15,6 +15,8 @@ class Updates extends Page
     protected static ?string $navigationLabel = 'Updates';
 
     protected static ?int $navigationSort = 1;
+
+    protected static bool $shouldRegisterNavigation = false;
 
     public $logFilePath = '/usr/local/phyre/update/update.log';
 

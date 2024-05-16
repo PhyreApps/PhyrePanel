@@ -1,7 +1,8 @@
 <?php
 
-namespace tests\Unit;
+namespace Tests\Unit;
 
+use App\Jobs\ApacheBuild;
 use Faker\Factory;
 use Tests\Feature\Api\ActionTestCase;
 
@@ -110,6 +111,10 @@ class SecurityTest extends ActionTestCase
                 'domain' => 'phyre-unit-test-'.$randId.'.com',
             ]
         )->json();
+
+        $apacheBuild = new ApacheBuild();
+        $apacheBuild->handle();
+
         $this->assertArrayHasKey('status', $callHostingSubscriptionStoreResponse);
         $this->assertTrue($callHostingSubscriptionStoreResponse['status'] == 'ok');
         $secondHostingSubscription = $callHostingSubscriptionStoreResponse['data']['hostingSubscription'];

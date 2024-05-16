@@ -21,17 +21,18 @@ class RubyInstaller
     public function install()
     {
         $commands = [];
+        $commands[] = 'export DEBIAN_FRONTEND=noninteractive';
         foreach ($this->rubyVersions as $rubyVersion) {
-            $commands[] = 'apt-get install -y ruby' . $rubyVersion;
-            $commands[] = 'apt-get install -y ruby' . $rubyVersion . '-dev';
-            $commands[] = 'apt-get install -y ruby' . $rubyVersion . '-bundler';
+            $commands[] = 'apt-get install -yq ruby' . $rubyVersion;
+            $commands[] = 'apt-get install -yq ruby' . $rubyVersion . '-dev';
+            $commands[] = 'apt-get install -yq ruby' . $rubyVersion . '-bundler';
         }
 
         // Install Apache Passenger
         $commands[] = 'curl https://oss-binaries.phusionpassenger.com/auto-software-signing-gpg-key.txt | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/phusion.gpg >/dev/null';
         $commands[] = "sudo sh -c 'echo deb https://oss-binaries.phusionpassenger.com/apt/passenger jammy main > /etc/apt/sources.list.d/passenger.list'";
         $commands[] = 'apt-get update';
-        $commands[] = 'sudo apt-get install -y libapache2-mod-passenger';
+        $commands[] = 'sudo apt-get install -yq libapache2-mod-passenger';
         $commands[] = 'sudo a2enmod passenger';
         $commands[] = 'sudo service apache2 restart';
 

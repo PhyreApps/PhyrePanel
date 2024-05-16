@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\Unit;
+namespace Tests\Unit;
 
 use App\Filament\Enums\BackupStatus;
 use App\Helpers;
@@ -21,14 +21,15 @@ use Illuminate\Support\Str;
 use Tests\Feature\Api\ActionTestCase;
 use Illuminate\Support\Facades\Queue;
 
-class HostingSubscriptionBackupTest extends ActionTestCase
+class HSBackupTest extends ActionTestCase
 {
     public function testFullBackup()
     {
+
         ini_set('memory_limit', '-1');
         ini_set('max_execution_time', 0);
 
-        Queue::fake();
+     //   Queue::fake();
 
         $chs = $this->_createHostingSubscription();
 
@@ -36,6 +37,7 @@ class HostingSubscriptionBackupTest extends ActionTestCase
         $newBackup->backup_type = 'full';
         $newBackup->hosting_subscription_id = $chs['hostingSubscriptionId'];
         $newBackup->save();
+
 
         $phsb = new ProcessHostingSubscriptionBackup($newBackup->id);
         $phsb->handle();

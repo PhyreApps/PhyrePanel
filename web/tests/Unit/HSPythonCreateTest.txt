@@ -1,9 +1,8 @@
 <?php
 
-namespace tests\Unit;
+namespace Tests\Unit;
 
 use App\Http\Middleware\ApiKeyMiddleware;
-use App\Installers\Server\Applications\NodeJsInstaller;
 use App\Installers\Server\Applications\PHPInstaller;
 use App\Installers\Server\Applications\PythonInstaller;
 use App\Models\Database;
@@ -16,9 +15,9 @@ use Illuminate\Support\Str;
 use PHPUnit\Framework\TestCase;
 use Tests\Feature\Api\ActionTestCase;
 
-class HostingSubscriptionWithNodeJSCreateTest extends ActionTestCase
+class HostingSubscriptionWithPythonCreateTest extends ActionTestCase
 {
-    function test_route_contains_middleware()
+    function testRouteContainsMiddleware()
     {
         $this->assertRouteContainsMiddleware(
             'api.hosting-subscriptions.index',
@@ -46,38 +45,29 @@ class HostingSubscriptionWithNodeJSCreateTest extends ActionTestCase
     {
         $this->assertTrue(Str::contains(php_uname(),'Ubuntu'));
 //
+        // Make Apache+PHP Application Server with all supported php versions and modules
+        $installLogFilePath = storage_path('install-apache-python-log-unit-test.txt');
+        $phpInstaller = new PythonInstaller();
+        $phpInstaller->setPythonVersions(array_keys(SupportedApplicationTypes::getPythonVersions()));
+        $phpInstaller->setLogFilePath($installLogFilePath);
+        $phpInstaller->install();
 
-        $isNodeJsInstalled = false;
-
-        if (!$isNodeJsInstalled) {
-            // Make Apache+NodeJS Application Server with all supported php versions and modules
-            $installLogFilePath = storage_path('install-apache-nodejs-log-unit-test.txt');
-            if (is_file($installLogFilePath)) {
-                unlink($installLogFilePath);
+        $installationSuccess = false;
+        for ($i = 1; $i <= 100; $i++) {
+            $logContent = file_get_contents($installLogFilePath);
+            if (str_contains($logContent, 'All packages installed successfully!')) {
+                $installationSuccess = true;
+                break;
             }
-
-            $nodeJSInstaller = new NodeJsInstaller();
-            $nodeJSInstaller->setNodeJsVersions(array_keys(SupportedApplicationTypes::getNodeJsVersions()));
-            $nodeJSInstaller->setLogFilePath($installLogFilePath);
-            $nodeJSInstaller->install();
-
-            $installationSuccess = false;
-            for ($i = 1; $i <= 100; $i++) {
-                $logContent = file_get_contents($installLogFilePath);
-                if (str_contains($logContent, 'All packages installed successfully!')) {
-                    $installationSuccess = true;
-                    break;
-                }
-                sleep(3);
-            }
-
-            if (!$installationSuccess) {
-                $logContent = file_get_contents($installLogFilePath);
-                $this->fail('Apache+NodeJS installation failed. Log: ' . $logContent);
-            }
-
-            $this->assertTrue($installationSuccess, 'Apache+NodeJS installation failed');
+            sleep(3);
         }
+
+        if (!$installationSuccess) {
+            $logContent = file_get_contents($installLogFilePath);
+            $this->fail('Apache+PHP installation failed. Log: '.$logContent);
+        }
+
+        $this->assertTrue($installationSuccess, 'Apache+Python installation failed');
 
         // Make unauthorized call
         $callUnauthorizedResponse = $this->callRouteAction('api.hosting-subscriptions.store')->json();
@@ -94,7 +84,7 @@ class HostingSubscriptionWithNodeJSCreateTest extends ActionTestCase
         $this->assertIsArray($callStoreResponse['errors']);
 
         // Create a customer
-        $randId = rand(10000, 99999);
+        $randId = rand(1000, 9999);
         $callCustomerStoreResponse = $this->callApiAuthorizedRouteAction(
             'api.customers.store',
             [
@@ -113,22 +103,22 @@ class HostingSubscriptionWithNodeJSCreateTest extends ActionTestCase
         $customerId = $callCustomerStoreResponse['data']['customer']['id'];
 
         // Create a hosting subscription
-        $randId = rand(10000, 99999);
+        $randId = rand(1000, 9999);
         $hostingPlanId = null;
 
         $createHostingPlan = new HostingPlan();
         $createHostingPlan->name = 'Phyre Unit Test #'.$randId;
         $createHostingPlan->description = 'Unit Test Hosting Plan';
-        $createHostingPlan->default_server_application_type = 'apache_nodejs';
+        $createHostingPlan->default_server_application_type = 'apache_python';
         $createHostingPlan->default_server_application_settings = [
-            'nodejs_version' => '20',
+            'python_version' => '3.9',
         ];
         $createHostingPlan->additional_services = [];
         $createHostingPlan->features = [];
         $createHostingPlan->limitations = [];
         $createHostingPlan->save();
-
         $hostingPlanId = $createHostingPlan->id;
+
 
         $hostingSubscriptionDomain = 'phyre-unit-test-'.$randId.'.com';
         $callHostingSubscriptionStoreResponse = $this->callApiAuthorizedRouteAction(
@@ -139,6 +129,9 @@ class HostingSubscriptionWithNodeJSCreateTest extends ActionTestCase
                 'domain' => $hostingSubscriptionDomain,
             ]
         )->json();
+
+        $apacheBuild = new ApacheBuild();
+        $apacheBuild->handle();
 
         $this->assertArrayHasKey('status', $callHostingSubscriptionStoreResponse);
         $this->assertTrue($callHostingSubscriptionStoreResponse['status'] == 'ok');

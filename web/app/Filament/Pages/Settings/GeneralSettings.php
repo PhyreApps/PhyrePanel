@@ -17,11 +17,10 @@ use Monarobase\CountryList\CountryList;
 use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
 use Symfony\Component\Console\Input\Input;
 
-class Settings extends BaseSettings
+class GeneralSettings extends BaseSettings
 {
-    protected static ?string $navigationGroup = 'Server Management';
 
-    protected static ?int $navigationSort = 4;
+    protected static bool $shouldRegisterNavigation = false;
 
     public function save() : void
     {
