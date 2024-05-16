@@ -8,8 +8,7 @@
     "category": "Security",
     "adminUrl": "/admin/lets-encrypt/lets-encrypt-certificates",
     "providers": [
-        "Modules\\LetsEncrypt\\App\\Providers\\LetsEncryptServiceProvider",
-        "Modules\\LetsEncrypt\\Providers\\Filament\\AdminPanelProvider"
+        "Modules\\LetsEncrypt\\App\\Providers\\LetsEncryptServiceProvider"
     ],
     "files": []
 }

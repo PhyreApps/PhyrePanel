@@ -8,8 +8,7 @@
     "category": "Content Management",
     "adminUrl": "/admin/microweber/installations",
     "providers": [
-        "Modules\\Microweber\\App\\Providers\\MicroweberServiceProvider",
-        "Modules\\Microweber\\Providers\\Filament\\AdminPanelProvider"
+        "Modules\\Microweber\\App\\Providers\\MicroweberServiceProvider"
     ],
     "files": []
 }

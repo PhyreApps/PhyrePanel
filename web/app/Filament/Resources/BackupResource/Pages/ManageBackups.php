@@ -68,7 +68,7 @@ class ManageBackups extends ManageRecords
                                 'weekly' => 'Weekly',
                                 'monthly' => 'Monthly',
                             ])
-                            ->default('daily')
+                            ->default(setting('backup_frequency', 'daily'))
                             ->required()
                             ->columnSpanFull(),
 
@@ -81,7 +81,7 @@ class ManageBackups extends ManageRecords
                                 '180' => '6 Months',
                                 '365' => '1 Year',
                             ])
-                            ->default('7')
+                            ->default(setting('backup_retention_days', '7'))
                             ->required()
                             ->columnSpanFull(),
                     ];

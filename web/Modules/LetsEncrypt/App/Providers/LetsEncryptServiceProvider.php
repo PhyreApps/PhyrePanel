@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Modules\LetsEncrypt\LetsEncryptApacheVirtualHostConfig;
 use Modules\LetsEncrypt\Listeners\DomainIsCreatedListener;
-use Modules\LetsEncrypt\Providers\Filament\AdminPanelProvider;
 
 class LetsEncryptServiceProvider extends ServiceProvider
 {
@@ -46,7 +45,6 @@ class LetsEncryptServiceProvider extends ServiceProvider
         });
 
         $this->app->register(RouteServiceProvider::class);
-        $this->app->register(AdminPanelProvider::class);
 
         app()->virtualHostManager->registerConfig(LetsEncryptApacheVirtualHostConfig::class, $this->moduleNameLower);
     }
