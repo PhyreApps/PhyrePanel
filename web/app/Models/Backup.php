@@ -265,7 +265,7 @@ class Backup extends Model
 
                     // cp -r (copy recursively, also copy hidden files)
                   //  $shellFileContent .= 'cp -r /home/' . $hostingSubscription->system_username . '/ ' . $hostingSubscriptionsMainPath . PHP_EOL;
-                    $shellFileContent .= "rsync -av --exclude-from='$excludeListPath' /home/$hostingSubscription->system_username/ " . $hostingSubscriptionPath . PHP_EOL;
+                    $shellFileContent .= "rsync -av --exclude-from='$excludeListPath' /home/$hostingSubscription->system_username/ " . $hostingSubscriptionPath .'/'. PHP_EOL;
 
                     $shellFileContent .= 'mkdir -p ' . $hostingSubscriptionPath . '/databases' . PHP_EOL;
 
@@ -286,6 +286,7 @@ class Backup extends Model
                     }
 
                     $shellFileContent .= PHP_EOL;
+                    break;
                 }
             }
 
@@ -298,7 +299,7 @@ class Backup extends Model
         $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;
         $shellFileContent .= 'touch ' . $backupPath. '/backup.done' . PHP_EOL;
         $shellFileContent .= 'rm -rf ' . $backupTempScript;
-
+        
         file_put_contents($backupTempScript, $shellFileContent);
 
         // chmod read and delete by owner only
