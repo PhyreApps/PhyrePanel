@@ -286,7 +286,7 @@ class Backup extends Model
                     }
 
                     $shellFileContent .= PHP_EOL;
-                    break;
+                    
                 }
             }
 
@@ -299,7 +299,7 @@ class Backup extends Model
         $shellFileContent .= 'echo "Backup complete"' . PHP_EOL;
         $shellFileContent .= 'touch ' . $backupPath. '/backup.done' . PHP_EOL;
         $shellFileContent .= 'rm -rf ' . $backupTempScript;
-        
+
         file_put_contents($backupTempScript, $shellFileContent);
 
         // chmod read and delete by owner only
