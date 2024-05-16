@@ -39,5 +39,16 @@ class HealthCheck extends Command
             shell_exec('service supervisor start');
         }
 
+        // Check Apache2
+        $this->info('Checking Apache2...');
+        $apache2Status = shell_exec('service apache2 status');
+        if (Str::contains($apache2Status, 'active (running)')) {
+            $this->info('Apache2 is running');
+        } else {
+            $this->error('Apache2 is not running');
+            $this->info('Starting Apache2...');
+            shell_exec('service apache2 start');
+        }
+
     }
 }
