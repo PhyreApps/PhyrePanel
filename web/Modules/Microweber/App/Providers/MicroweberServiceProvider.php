@@ -10,6 +10,7 @@ use Illuminate\Support\ServiceProvider;
 use Modules\Microweber\App\Console\Commands\RunDomainRepair;
 use Modules\Microweber\Listeners\DomainIsCreatedListener;
 use Modules\Microweber\MicroweberApacheVirtualHostConfig;
+use Modules\Microweber\MicroweberBackupConfig;
 
 class MicroweberServiceProvider extends ServiceProvider
 {
@@ -47,6 +48,7 @@ class MicroweberServiceProvider extends ServiceProvider
 
         $this->app->register(RouteServiceProvider::class);
 
+        app()->backupManager->registerConfig(MicroweberBackupConfig::class, $this->moduleNameLower);
         app()->virtualHostManager->registerConfig(MicroweberApacheVirtualHostConfig::class, $this->moduleNameLower);
     }
 
