@@ -64,7 +64,7 @@ phyre-php artisan phyre:set-ini-settings APP_ENV "production"
 chmod -R o+w /usr/local/phyre/web/storage/
 chmod -R o+w /usr/local/phyre/web/bootstrap/cache/
 
-CURRENT_IP=$(curl -s ipinfo.io/ip)
+CURRENT_IP=$(hostname -I | awk '{print $1}')
 
 echo "PhyrePanel downloaded successfully."
 echo "Please visit http://$CURRENT_IP:8443 to continue installation of the panel."

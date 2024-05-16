@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CURRENT_IP=$(curl -s ipinfo.io/ip)
+CURRENT_IP=$(hostname -I | awk '{print $1}')
 
 echo " \
   ____  _   ___   ______  _____   ____   _    _   _ _____ _
