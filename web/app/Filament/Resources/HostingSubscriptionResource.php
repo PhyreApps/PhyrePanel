@@ -149,6 +149,8 @@ class HostingSubscriptionResource extends Resource
 //                    ->searchable()
 //                    ->sortable(),
 
+            Tables\Columns\TextColumn::make('created_at')
+
 
             ])
             ->defaultSort('id', 'desc')
