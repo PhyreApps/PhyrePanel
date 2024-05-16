@@ -106,12 +106,26 @@ class BackupResource extends Resource
 
                 Tables\Actions\Action::make('cancel')
                     ->icon('heroicon-o-x-mark')
-                    ->hidden(function (Backup $backup) {
-                        return $backup->status !== BackupStatus::Processing;
-                    })
+//                    ->hidden(function (Backup $backup) {
+//                        return $backup->status !== BackupStatus::Processing;
+//                    })
                     ->action(function (Backup $backup) {
 
-                        shell_exec('kill -9 ' . $backup->process_id);
+                        try {
+                            $processIds = shell_exec('ps aux | grep -i ' . $backup->file_name . ' | grep -v grep | awk \'{print $2}\'');
+                            if (!empty($processIds)) {
+                                $processIds = explode("\n", $processIds);
+                                foreach ($processIds as $processId) {
+                                    $processId = trim($processId);
+                                    if (!empty($processId)) {
+                                        shell_exec('kill -9 ' . $processId);
+                                    }
+                                }
+                            }
+                            shell_exec('kill -9 ' . $backup->process_id);
+                        } catch (\Exception $e) {
+                            // do nothing
+                        }
 
                         $backup->update([
                             'status' => BackupStatus::Cancelled,
