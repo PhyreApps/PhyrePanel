@@ -36,8 +36,8 @@ jobs:
       # - uses: oven-sh/setup-bun@v1 # Uncomment this if you're using Bun
       - name: Setup Node
         uses: actions/setup-node@v4
-        working-directory: docs
         with:
+          cache-dependency-path: /docs/package-lock.json
           node-version: 20
           cache: npm # or pnpm / yarn
       - name: Setup Pages
