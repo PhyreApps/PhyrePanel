@@ -6,11 +6,11 @@ Phyre must be installed on top of a fresh operating system installation to ensur
 If on a VPS/KVM, and there is already an admin account, either delete that default admin ID, or use `--force` to continue with the installation. See custom installation below for further details.
 :::
 
-|                      | Minimum                                        | Recommended                          |
-| -------------------- | ---------------------------------------------- | ------------------------------------ |
-| **CPU**              | 1 core, 64-bit                                 | 4 cores                              |
-| **Memory**           | 1 GB (no SpamAssassin and ClamAV)              | 4 GB                                 |
-| **Disk**             | 10 GB HDD                                      | 40 GB SSD                            |
+|                      | Minimum               | Recommended                          |
+| -------------------- |-----------------------| ------------------------------------ |
+| **CPU**              | 1 core, 64-bit        | 4 cores                              |
+| **Memory**           | 1 GB (without Docker) | 4 GB                                 |
+| **Disk**             | 10 GB HDD             | 40 GB SSD                            |
 | **Operating System** | Ubuntu 20.04, 22.04 LTS |  Latest Ubuntu LTS |
 
 ::: warning

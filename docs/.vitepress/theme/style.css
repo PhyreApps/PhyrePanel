@@ -135,6 +135,14 @@
   --vp-custom-block-tip-code-bg: var(--vp-c-brand-soft);
 }
 
+.custom-block.warning {
+  --vp-custom-block-warning-bg: none;
+  --vp-custom-block-warning-border: 1px solid var(--vp-c-warning-1);
+  --vp-custom-block-warning-text: var(--vp-c-warning-1);
+}
+.custom-block.warning code {
+    --vp-custom-block-warning-code-bg: var(--vp-c-gray-2);
+}
 /**
  * Component: Algolia
  * -------------------------------------------------------------------------- */
