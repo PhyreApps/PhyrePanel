@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress'
+import { version } from '../package.json';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -27,27 +28,46 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
+      { text: 'Introduction', link: '/introduction/markdown-examples' },
+
+      {
+        text: `v${version}`,
+        items: [
+          {
+            text: 'Changelog',
+            link: 'https://github.com/PhyreApps/PhyrePanel/blob/main/CHANGELOG.md',
+          },
+          {
+            text: 'Contributing',
+            link: 'https://github.com/PhyreApps/PhyrePanel/blob/main/CONTRIBUTING.md',
+          },
+          {
+            text: 'Security policy',
+            link: 'https://github.com/PhyreApps/PhyrePanel/blob/main/SECURITY.md',
+          },
+        ],
+      },
     ],
 
     sidebar: [
       {
-        text: 'Examples',
+        text: 'Introduction',
         items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
+          { text: 'Markdown Examples', link: '/introduction/markdown-examples' },
+          { text: 'Runtime API Examples', link: '/introduction/api-examples' }
         ]
       }
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
+      { icon: 'github', link: 'https://github.com/PhyreApps/PhyrePanel' }
     ],
 
     footer: {
       message: 'Released under the GNU License.',
-      copyright: 'Copyright © 2024 Cloud Vision Ltd.'
-    }
+      copyright: 'Copyright © 2024-present Phyre Control Panel',
+    },
+
 
   }
 })
