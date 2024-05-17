@@ -1,5 +1,6 @@
 ---
-layout: clean
+layout: page
+sidebar: false
 title: The Team
 ---
 <script setup>
@@ -7,7 +8,14 @@ title: The Team
   import { teamMembers } from "./_data/team";
 </script>
 
-<VPTeamPage>
+
+<style scoped>
+.VPTeamPage {
+  margin-bottom: 96px;
+}
+</style>
+
+ <div class="VPTeamPage">
   <VPTeamPageTitle>
     <template #title>The Team</template>
     <template #lead>
@@ -26,4 +34,4 @@ title: The Team
       <VPTeamMembers size="small" :members="featuredContributors" />
     </template>
   </VPTeamPageSection> -->
-</VPTeamPage>
+</div>
