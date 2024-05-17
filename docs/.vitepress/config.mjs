@@ -9,10 +9,10 @@ export default defineConfig({
       label: 'English',
       lang: 'en'
     },
-    bg: {
-      label: 'Български',
-      lang: 'bg',
-    }
+    // bg: {
+    //   label: 'Български',
+    //   lang: 'bg',
+    // }
   },
 
   lang: 'en-US',
