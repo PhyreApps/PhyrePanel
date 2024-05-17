@@ -33,7 +33,8 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Introduction', link: '/introduction/markdown-examples' },
+      { text: 'Install', link: '/install' },
+      { text: 'Introduction', link: '/introduction/getting-started' },
       { text: 'Team', link: '/team' },
 
       {
@@ -59,8 +60,16 @@ export default defineConfig({
       {
         text: 'Introduction',
         items: [
-          { text: 'Markdown Examples', link: '/introduction/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/introduction/api-examples' }
+          { text: 'Getting Started', link: '/introduction/getting-started' },
+          { text: 'Installation', link: '/install' },
+          { text: 'Requirements', link: '/introduction/requirements' },
+          { text: 'Features', link: '/introduction/features' },
+        ]
+      },
+      {
+        text: 'Integrations',
+        items: [
+          { text: 'WHMCS', link: '/integrations/whmcs' },
         ]
       }
     ],
