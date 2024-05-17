@@ -48,7 +48,7 @@ steps:
       - chmod +x /phyre-panel/install_base.sh
       - /phyre-panel/install_base.sh
 
-      - cp installers/ubuntu-22.04/install-partial/install_web.sh /phyre-panel/install_web.sh
+      - cp installers/ubuntu-20.04/install-partial/install_web.sh /phyre-panel/install_web.sh
       - chmod +x /phyre-panel/install_web.sh
 
       - cp -r web /usr/local/phyre/web/
