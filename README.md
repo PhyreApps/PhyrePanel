@@ -31,6 +31,8 @@ wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/main/installers/inst
 ```
 The admin panel can be opened on port: yourserver.com:8443
 
+## Documentation
+For more information, please refer to the [documentation](https://docs.phyrepanel.com/introduction/getting-started.html).
 
 ## Build Status
 
