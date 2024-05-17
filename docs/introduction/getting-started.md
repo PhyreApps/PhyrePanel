@@ -28,4 +28,4 @@ We welcome contributions from the community to help improve PHYRE PANEL. If you 
 For support and assistance with PHYRE PANEL, please visit our [documentation](https://phyrepanel.com/docs) or reach out to our [support team](mailto:support@phyrepanel.com).
 
 ## License
-PHYRE PANEL is licensed under the [GNU General Public License (GPL) version 3](https://www.gnu.org/licenses/gpl-3.0.en.html). See the [LICENSE](LICENSE) file for details.
+PHYRE PANEL is licensed under the [GNU General Public License (GPL) version 3](https://www.gnu.org/licenses/gpl-3.0.en.html). You are free to use, modify, and distribute PHYRE PANEL under the terms of the GPL-3.0 license.
