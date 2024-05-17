@@ -1,4 +1,9 @@
 web/storage/installed
-/docker/e2e-tests/node_modules/
+
 web/config.php
 web/phyre-config.ini
+
+
+# vitepress build output
+**/.vitepress/dist/
+**/.vitepress/cache/
