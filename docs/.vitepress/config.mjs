@@ -71,6 +71,12 @@ export default defineConfig({
         items: [
           { text: 'WHMCS', link: '/integrations/whmcs' },
         ]
+      },
+      {
+        text: 'Contributing',
+        items: [
+          { text: 'Documentation', link: '/contributing/documentation' },
+        ]
       }
     ],
 
