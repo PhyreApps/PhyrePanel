@@ -13,7 +13,7 @@ title: The Team
   <VPTeamPageTitle>
     <template #title>The Team</template>
     <template #lead>
-      The development of Phyre Panel is guided by an international team, some of whom have chosen to be featured below.
+        The team behind PhyrePanel is a small group of passionate developers who are dedicated to making the best open source web control panel for Linux servers.
     </template>
   </VPTeamPageTitle>
   <VPTeamPageSection>

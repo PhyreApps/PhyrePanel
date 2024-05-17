@@ -34,6 +34,7 @@ export default defineConfig({
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Introduction', link: '/introduction/markdown-examples' },
+      { text: 'Team', link: '/team' },
 
       {
         text: `v${version}`,
