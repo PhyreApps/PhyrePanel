@@ -45,10 +45,10 @@
 
  :root {
 
-     --vp-c-yellow-1: #fcd535;
-     --vp-c-yellow-2: #fcd535;
-     --vp-c-yellow-3: #f8bd20;
-     --vp-c-yellow-soft: #fcd535;
+     --vp-c-yellow-1: #deb81c;
+     --vp-c-yellow-2: #deb81c;
+     --vp-c-yellow-3: #deb81c;
+     --vp-c-yellow-soft: #deb81c;
 
   --vp-c-default-1: var(--vp-c-gray-1);
   --vp-c-default-2: var(--vp-c-gray-2);

@@ -1,9 +1,7 @@
 ---
-layout: page
-
+layout: clean
 title: The Team
 ---
-
 <script setup>
   import { VPTeamPage, VPTeamPageTitle, VPTeamPageSection, VPTeamMembers } from "vitepress/theme";
   import { teamMembers } from "./_data/team";
