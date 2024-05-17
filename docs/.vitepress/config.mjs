@@ -15,6 +15,11 @@ export default defineConfig({
     // }
   },
 
+  sitemap: {
+    hostname: 'https://docs.phyrepanel.com',
+    lastmodDateOnly: false
+  },
+
   lang: 'en-US',
   title: "Phyre Panel",
   description: "Phyre Panel - Documentation",
@@ -24,7 +29,7 @@ export default defineConfig({
       provider: 'local'
     },
 
-    logo: 'phyre-logo-icon.svg',
+    logo: '/phyre-logo-icon.svg',
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },
