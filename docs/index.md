@@ -3,9 +3,9 @@
 layout: home
 
 hero:
-  name: "Phyre Panel Documentation"
-  text: "Phyre Panel Documentation"
-  tagline: My great project tagline
+  name: "PhyrePanel"
+  text: "Open Source Web Control Panel for Linux Servers"
+  tagline: "Don't waste time setting up your server, use Phyre Control Panel to get started quickly."
   actions:
     - theme: brand
       text: Markdown Examples
