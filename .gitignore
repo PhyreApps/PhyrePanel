@@ -10,4 +10,12 @@ web/phyre-config.ini
 /docs/node_modules/
 
 
-./idea
+./idea/*
+.idea/webServers.xml
+.idea/vcs.xml
+.idea/sshConfigs.xml
+.idea/PhyrePanel.iml
+.idea/phpunit.xml
+.idea/php.xml
+.idea/modules.xml
+.idea/deployment.xml
