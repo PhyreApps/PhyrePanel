@@ -48,9 +48,9 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
         $this->callAfterResolving(Factory::class, function (Factory $factory) {
-            $factory->add('phyre-customer', [
+            $factory->add('phyre_customer', [
                 'path' => __DIR__ . '/../../resources/phyre-customer-svg',
-                'prefix' => 'phyre-customer',
+                'prefix' => 'phyre_customer',
             ]);
         });
 
