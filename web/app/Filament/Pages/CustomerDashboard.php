@@ -24,16 +24,16 @@ class CustomerDashboard extends Page
 
                 'email'=>[
                     'title'=>'Email',
-                    'icon'=>'heroicon-o-start',
+                    'icon'=>'heroicon-o-star',
                     'menu'=>[
                         [
                             'title'=>'Email Accounts',
-                            'icon'=>'heroicon-o-start',
+                            'icon'=>'heroicon-o-star',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Forwarders',
-                            'icon'=>'heroicon-o-start',
+                            'icon'=>'heroicon-o-star',
                             'link'=>'#'
                         ]
                     ]
@@ -41,16 +41,16 @@ class CustomerDashboard extends Page
 
                 'billing_and_support'=>[
                     'title'=>'Billing & Support',
-                    'icon'=>'heroicon-o-start',
+                    'icon'=>'heroicon-o-star',
                     'menu'=>[
                         [
                             'title'=>'News & Announcemnets',
-                            'icon'=>'heroicon-o-start',
+                            'icon'=>'heroicon-o-star',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Manage Biling Information',
-                            'icon'=>'heroicon-o-start',
+                            'icon'=>'heroicon-o-star',
                             'link'=>'#'
                         ]
                     ]
