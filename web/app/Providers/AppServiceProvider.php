@@ -47,6 +47,12 @@ class AppServiceProvider extends ServiceProvider
                 'prefix' => 'phyre',
             ]);
         });
+        $this->callAfterResolving(Factory::class, function (Factory $factory) {
+            $factory->add('phyre-customer', [
+                'path' => __DIR__ . '/../../resources/phyre-customer-svg',
+                'prefix' => 'phyre-customer',
+            ]);
+        });
 
         App::singleton('virtualHostManager', function () {
             return new ApacheVirtualHostManager();

@@ -9,7 +9,7 @@ class CustomerDashboard extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-star';
 
-    protected static string $view = 'filament.pages.customer-dashboard';
+    protected static string $view = 'filament.pages.phyre-customer-svg';
 
     protected static ?string $navigationGroup = 'Server Management';
 
@@ -24,7 +24,7 @@ class CustomerDashboard extends Page
 
                 'email'=>[
                     'title'=>'Email',
-                    'icon'=>'heroicon-o-star',
+                    'icon'=>'phyre-customer-php',
                     'menu'=>[
                         [
                             'title'=>'Email Accounts',
