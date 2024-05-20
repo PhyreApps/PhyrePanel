@@ -256,6 +256,275 @@ class CustomerDashboard extends Page
                             'link'=>'#'
                         ],
                     ]
+                ],
+
+                'database'=>[
+                    'title'=>'Database',
+                    'icon'=>'heroicon-o-star',
+                    'menu'=>[
+                        [
+                            'title'=>'phpMyAdmin',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Manage My Database',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Database Wizard',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Remote Database Access',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ]
+                    ]
+                ],
+
+                'domains'=>[
+                    'title'=>'Domains',
+                    'icon'=>'heroicon-o-star',
+                    'menu'=>[
+                        [
+                            'title'=>'WP Toolkit',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Site Publisher',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Sitejet Builder',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Domains',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Redirects',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Zone Editor',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Dynamic DNS',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ]
+                    ]
+                ],
+
+                'metrics'=>[
+                    'title'=>'Metrics',
+                    'icon'=>'heroicon-o-star',
+                    'menu'=>[
+                        [
+                            'title'=>'Visitors',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Site Quality Monitoring',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Errors',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Bandwidth',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Raw Access',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Awstats',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Analog Stats',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Webalizer',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Webalizer FTP',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Metrics Editor',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ]
+                    ]
+                ],
+
+                'security'=>[
+                    'title'=>'Security',
+                    'icon'=>'heroicon-o-star',
+                    'menu'=>[
+                        [
+                            'title'=>'SSH Access',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'IP Blockers',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'SSL/TLS',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Manage API Tokens',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Hotlink Protection',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Leech Protection',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'SSL/TSL Status',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ]
+                    ]
+                ],
+
+                'software'=>[
+                    'title'=>'Software',
+                    'icon'=>'heroicon-o-star',
+                    'menu'=>[
+                        [
+                            'title'=>'PHP PEAR Packages',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Perl Modules',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Site Software',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Optimaze Website',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'MultiPHP Manager',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'MultiPHP INI Editor',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ]
+                    ]
+                ],
+
+                'advanced'=>[
+                    'title'=>'Advanced',
+                    'icon'=>'heroicon-o-star',
+                    'menu'=>[
+                        [
+                            'title'=>'Cron Jobs',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Track DNS',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Indexes',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Error Pages',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Apache Handlers',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'MIME Types',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ]
+                    ]
+                ],
+
+                'preferences'=>[
+                    'title'=>'Preferences',
+                    'icon'=>'heroicon-o-star',
+                    'menu'=>[
+                        [
+                            'title'=>'Password & Security',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Change Language',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'Contact Information',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ],
+                        [
+                            'title'=>'User Manager',
+                            'icon'=>'heroicon-o-star',
+                            'link'=>'#'
+                        ]
+                    ]
                 ]
 
 

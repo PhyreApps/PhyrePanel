@@ -38,8 +38,10 @@
                     @endforeach
                 </div>
             </div>
-
         @endforeach
+            <div class="py-4">
+                <p class="text-white/50  ">&copy; 2024 Phyre Hosting Panel. All rights reserved.</p>
+            </div>
     </div>
 
 </div>
