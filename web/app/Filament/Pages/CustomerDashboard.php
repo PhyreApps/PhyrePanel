@@ -73,7 +73,7 @@ class CustomerDashboard extends Page
                         ],
                         [
                             'title'=>'Email Deliverability',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-email-deliverability',
                             'link'=>'#'
                         ],
                         [
