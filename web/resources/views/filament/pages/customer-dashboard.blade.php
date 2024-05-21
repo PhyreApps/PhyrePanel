@@ -30,7 +30,9 @@
 
                         <div class="text-blue-400 hover:text-yellow-500 px-2">
                             <a href="{{$menuItemLink['link']}}" class="flex px-2 py-2">
-                                <x-filament::icon-button size="xl" icon="{{$menuItemLink['icon']}}" />
+                                <div class="text-white">
+                                    <x-filament::icon-button size="xl" icon="{{$menuItemLink['icon']}}" />
+                                </div>
                                 <div class="ml-2">{{$menuItemLink['title']}}</div>
                             </a>
                         </div>

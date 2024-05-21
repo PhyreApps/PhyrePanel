@@ -24,51 +24,51 @@ class CustomerDashboard extends Page
 
                 'email'=>[
                     'title'=>'Email',
-                    'icon'=>'phyre_customer-php',
+                    'icon'=>'phyre_customer-email',
                     'menu'=>[
                         [
                             'title'=>'Email Accounts',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-email-account',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Forwarders',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-email-forwarders',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Email Routing',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-email-routing',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Autoresponders',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-email-autoresponders',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Default Address',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-email-default',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Mailing Lists',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-email-list',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Track Delivery',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-email-track',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Global Email Filters',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-email-global-filter',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Email Filters',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-email-filter',
                             'link'=>'#'
                         ],
                         [
@@ -78,42 +78,42 @@ class CustomerDashboard extends Page
                         ],
                         [
                             'title'=>'Address Importer',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-email-importer',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Spam Filters',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-email-spam-filters',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Encryption',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-email-encryption',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'BoxTrapper',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-email-box-trap',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Calendars and Contacts Configuration',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-email-calendars-configuration',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Calendars and Contacts Sharing',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-email-calendar-share',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Calendars and Contacts Management',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-email-calendar-management',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Email Disk Usage',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-email-disk',
                             'link'=>'#'
                         ]
                     ]
@@ -121,76 +121,76 @@ class CustomerDashboard extends Page
 
                 'billing_and_support'=>[
                     'title'=>'Billing & Support',
-                    'icon'=>'heroicon-o-star',
+                    'icon'=>'phyre_customer-billing',
                     'menu'=>[
                         [
                             'title'=>'News & Announcemnets',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-billing-news-announcement',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Manage Biling Information',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-billing-manage-information',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Download Resources',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-billing-download-resources',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'View Email History',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-billing-history',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'View Invoice History',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-billing-invoice-history',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Search our Knowledgebase',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-billing-search-knowledgebase',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Check Network Status',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-billing-network-status',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'View Billing Information',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-billing-information',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Manage Profile',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-billing-manage-profile',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Register New Domain',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-billing-register-domain',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Transfer a Domain',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-billing-transfer-domain',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Open Ticket',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-billing-open-ticket',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'View Support Tickets',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-billing-support-ticket',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Upgrade/Downgrade',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-billing-update',
                             'link'=>'#'
                         ]
                     ]
@@ -198,61 +198,61 @@ class CustomerDashboard extends Page
 
                 'files'=>[
                     'title'=>'Files',
-                    'icon'=>'heroicon-o-star',
+                    'icon'=>'phyre_customer-files',
                     'menu'=>[
                         [
                             'title'=>'File Manager',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-file-manager',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Images',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-file-images',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Directory Privacy',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-files-directory-privacy',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Disk Usage',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-file-disk',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Web Disk',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-file-web-disk',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'FTP Accounts',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-file-ftp',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'FTP Connections',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-file-connection',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Backup',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-file-backup',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Backup Wizard',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-file-backup-wizard',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Git Version Control',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-file-git',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'File and Directory Restoration',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-file-directory-restoration',
                             'link'=>'#'
                         ],
                     ]
@@ -260,26 +260,26 @@ class CustomerDashboard extends Page
 
                 'database'=>[
                     'title'=>'Database',
-                    'icon'=>'heroicon-o-star',
+                    'icon'=>'phyre_customer-database',
                     'menu'=>[
                         [
                             'title'=>'phpMyAdmin',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-database-php',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Manage My Database',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-database-manage',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Database Wizard',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-database-wizard',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Remote Database Access',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-database-remote',
                             'link'=>'#'
                         ]
                     ]
@@ -287,7 +287,7 @@ class CustomerDashboard extends Page
 
                 'domains'=>[
                     'title'=>'Domains',
-                    'icon'=>'heroicon-o-star',
+                    'icon'=>'phyre_customer-domains',
                     'menu'=>[
                         [
                             'title'=>'WP Toolkit',
@@ -329,56 +329,56 @@ class CustomerDashboard extends Page
 
                 'metrics'=>[
                     'title'=>'Metrics',
-                    'icon'=>'heroicon-o-star',
+                    'icon'=>'phyre_customer-metrics',
                     'menu'=>[
                         [
                             'title'=>'Visitors',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-metrics-visitors',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Site Quality Monitoring',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-metrics-site-quality',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Errors',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-metrics-errors',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Bandwidth',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-metrics-visitors',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Raw Access',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-metrics-raw',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Awstats',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-metrics-awstats',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Analog Stats',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-metrics-analog',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Webalizer',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-metrics-webalizer',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Webalizer FTP',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-metrics-webalizer-ftp',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Metrics Editor',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-metrics-editor',
                             'link'=>'#'
                         ]
                     ]
@@ -386,41 +386,41 @@ class CustomerDashboard extends Page
 
                 'security'=>[
                     'title'=>'Security',
-                    'icon'=>'heroicon-o-star',
+                    'icon'=>'phyre_customer-security',
                     'menu'=>[
                         [
                             'title'=>'SSH Access',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-security-ssh',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'IP Blockers',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-security-block',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'SSL/TLS',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-security-ssl-tls',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Manage API Tokens',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-security-api',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Hotlink Protection',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-security-hotlink',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Leech Protection',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-security',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'SSL/TSL Status',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-security',
                             'link'=>'#'
                         ]
                     ]
@@ -428,36 +428,36 @@ class CustomerDashboard extends Page
 
                 'software'=>[
                     'title'=>'Software',
-                    'icon'=>'heroicon-o-star',
+                    'icon'=>'phyre_customer-software',
                     'menu'=>[
                         [
                             'title'=>'PHP PEAR Packages',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-software-packages',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Perl Modules',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-software-perl',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Site Software',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-software-site',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Optimaze Website',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-software-optimaze',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'MultiPHP Manager',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-software-manager',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'MultiPHP INI Editor',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-software-editor',
                             'link'=>'#'
                         ]
                     ]
@@ -465,36 +465,36 @@ class CustomerDashboard extends Page
 
                 'advanced'=>[
                     'title'=>'Advanced',
-                    'icon'=>'heroicon-o-star',
+                    'icon'=>'phyre_customer-advanced',
                     'menu'=>[
                         [
                             'title'=>'Cron Jobs',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-advanced-cron',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Track DNS',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-advanced-dns',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Indexes',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-advanced-indexes',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Error Pages',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-advanced-error',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Apache Handlers',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-advanced-apache',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'MIME Types',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-advanced-mime',
                             'link'=>'#'
                         ]
                     ]
@@ -502,26 +502,26 @@ class CustomerDashboard extends Page
 
                 'preferences'=>[
                     'title'=>'Preferences',
-                    'icon'=>'heroicon-o-star',
+                    'icon'=>'phyre_customer-preferences',
                     'menu'=>[
                         [
                             'title'=>'Password & Security',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-preferences-pass',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Change Language',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-preferences-language',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Contact Information',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-preferences-contact',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'User Manager',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-preferences-user',
                             'link'=>'#'
                         ]
                     ]
