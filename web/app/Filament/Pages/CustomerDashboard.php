@@ -291,37 +291,37 @@ class CustomerDashboard extends Page
                     'menu'=>[
                         [
                             'title'=>'WP Toolkit',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-domains-wp',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Site Publisher',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-domains-site',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Sitejet Builder',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-domains-sitejet',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Domains',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-domains-domain',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Redirects',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-domains-redirect',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Zone Editor',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-domains-zone',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'Dynamic DNS',
-                            'icon'=>'heroicon-o-star',
+                            'icon'=>'phyre_customer-domains-dynamic',
                             'link'=>'#'
                         ]
                     ]
@@ -348,7 +348,7 @@ class CustomerDashboard extends Page
                         ],
                         [
                             'title'=>'Bandwidth',
-                            'icon'=>'phyre_customer-metrics-visitors',
+                            'icon'=>'phyre_customer-metrics-bandwidth',
                             'link'=>'#'
                         ],
                         [
@@ -415,12 +415,12 @@ class CustomerDashboard extends Page
                         ],
                         [
                             'title'=>'Leech Protection',
-                            'icon'=>'phyre_customer-security',
+                            'icon'=>'phyre_customer-security-leech',
                             'link'=>'#'
                         ],
                         [
                             'title'=>'SSL/TSL Status',
-                            'icon'=>'phyre_customer-security',
+                            'icon'=>'phyre_customer-security-status',
                             'link'=>'#'
                         ]
                     ]
