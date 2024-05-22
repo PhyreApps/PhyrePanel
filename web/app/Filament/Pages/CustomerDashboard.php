@@ -135,7 +135,7 @@ class CustomerDashboard extends Page
                         ],
                         [
                             'title'=>'Download Resources',
-                            'icon'=>'phyre_customer-billing-download-resources',
+                            'icon'=>'phyre_customer-billing-download',
                             'link'=>'#'
                         ],
                         [

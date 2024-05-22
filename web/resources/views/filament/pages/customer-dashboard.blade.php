@@ -14,7 +14,9 @@
             <div class="bg-white/10 mt-[2rem] rounded px-2 shadow-xl">
                 <div class="flex justify-between py-4">
                     <div class="flex gap-2 px-4">
-                        <div class=""><x-filament::icon-button size="xl" icon="{{$menuItem['icon']}}" /></div>
+                        <div class="">
+                            <x-filament::icon-button size="xl" icon="{{$menuItem['icon']}}" />
+                        </div>
                         <div class="">{{$menuItem['title']}}</div>
                     </div>
                     <div>
@@ -30,7 +32,7 @@
 
                         <div class="text-blue-400 hover:text-yellow-500 px-2">
                             <a href="{{$menuItemLink['link']}}" class="flex px-2 py-2">
-                                <div class="text-white">
+                                <div class="">
                                     <x-filament::icon-button size="xl" icon="{{$menuItemLink['icon']}}" />
                                 </div>
                                 <div class="ml-2">{{$menuItemLink['title']}}</div>

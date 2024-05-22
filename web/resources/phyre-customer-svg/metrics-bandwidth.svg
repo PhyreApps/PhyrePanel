@@ -1,18 +1,24 @@
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
-<svg width="800px" height="800px" viewBox="-4.8 -4.8 57.60 57.60" xmlns="http://www.w3.org/2000/svg" fill="#000000" stroke="#000000" stroke-width="2.448">
-<g id="SVGRepo_bgCarrier" stroke-width="0" transform="translate(0,0), scale(1)">
-<rect x="-4.8" y="-4.8" width="57.60" height="57.60" rx="28.8" fill="#82bae8" strokewidth="0"/>
-</g>
-<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="1.248"/>
-<g id="SVGRepo_iconCarrier">
-<defs>
-<style>.a{fill:none;stroke:#ffffff;stroke-linecap:round;stroke-linejoin:round;}</style>
-</defs>
-<path class="a" d="M40.1925,32.609H43.5a19.5,19.5,0,0,0-39,0H7.8075"/>
-<path class="a" d="M37.9144,32.609A13.9144,13.9144,0,0,0,24,18.6946"/>
-<path class="a" d="M31.6329,32.609A7.6329,7.6329,0,0,0,24,24.9762"/>
-<circle class="a" cx="24" cy="32.609" r="2.2819"/>
-<line class="a" x1="24" y1="30.3271" x2="24" y2="14.7861"/>
-</g>
-</svg>
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 505 505" xml:space="preserve">
+<circle style="fill:#54C0EB;" cx="252.5" cy="252.5" r="252.5"/>
+<path style="fill:#324A5E;" d="M404.1,122.9H100.9c-12.5,0-22.6,10.1-22.6,22.6v48.2h348.3v-48.2C426.7,133,416.6,122.9,404.1,122.9
+	z"/>
+<path style="fill:#FFFFFF;" d="M426.7,169.8v189.8c0,12.5-10.1,22.6-22.6,22.6H100.9c-12.5,0-22.6-10.1-22.6-22.6V169.8h117.8
+	l11.4-17h62.9l11.3,17H426.7z"/>
+<polygon style="fill:#84DBFF;" points="110.6,169.8 196.1,169.8 184.8,152.8 121.9,152.8 "/>
+<circle style="fill:#54C0EB;" cx="394.4" cy="147.7" r="10.1"/>
+<circle style="fill:#E6E9EE;" cx="355.6" cy="147.7" r="10.1"/>
+<path style="fill:#FFD05B;" d="M272.2,348.8c-6.7,11-21,14.4-32,7.8c-11-6.7-14.4-21-7.8-32c6.7-11,57.6-49.9,57.6-49.9
+	S278.9,337.8,272.2,348.8z"/>
+<g>
+	<path style="fill:#E6E9EE;" d="M188.2,265.8c-14.4,15.6-23.2,36.5-23.2,59.4c0,21.7,8,41.6,21.1,56.9h-32.2
+		c-9.7-16.7-15.3-36.2-15.3-56.9c0-30.2,11.8-57.6,30.9-78L188.2,265.8z"/>
+	<path style="fill:#E6E9EE;" d="M252.5,211.4v26.3l0,0c-12.5,0-24.4,2.6-35.2,7.4l-10.1-24.3C221.1,214.7,236.4,211.4,252.5,211.4
+		L252.5,211.4z"/>
+	<path style="fill:#E6E9EE;" d="M335.4,247.3l-18.6,18.6c-8.1-8.8-18-15.9-29-20.8l10.1-24.3C312.1,227,324.9,236.1,335.4,247.3z"/>
+	<path style="fill:#E6E9EE;" d="M366.3,325.2c0,20.8-5.6,40.2-15.3,56.9h-32.1c13.1-15.3,21.1-35.2,21.1-56.9
+		c0-10.3-1.8-20.1-5-29.2l24.4-10.1C363.9,298.2,366.3,311.4,366.3,325.2z"/>
+</g>
+</svg>
