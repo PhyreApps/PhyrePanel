@@ -1,9 +1,5 @@
 <div>
 
-
-    <meta http-equiv="refresh" content="60">
-
-
     <div>
         <h1>Tools</h1>
     </div>
