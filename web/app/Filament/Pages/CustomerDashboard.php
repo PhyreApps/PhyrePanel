@@ -98,7 +98,7 @@ class CustomerDashboard extends Page
                         ],
                         [
                             'title'=>'Calendars and Contacts Configuration',
-                            'icon'=>'phyre_customer-email-calendars-configuration',
+                            'icon'=>'phyre_customer-email-calendar-configuration',
                             'link'=>'#'
                         ],
                         [
@@ -212,7 +212,7 @@ class CustomerDashboard extends Page
                         ],
                         [
                             'title'=>'Directory Privacy',
-                            'icon'=>'phyre_customer-files-directory-privacy',
+                            'icon'=>'phyre_customer-file-directory-privacy',
                             'link'=>'#'
                         ],
                         [
@@ -222,7 +222,7 @@ class CustomerDashboard extends Page
                         ],
                         [
                             'title'=>'Web Disk',
-                            'icon'=>'phyre_customer-file-web-disk',
+                            'icon'=>'phyre_customer-file-web',
                             'link'=>'#'
                         ],
                         [

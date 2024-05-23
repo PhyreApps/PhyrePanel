@@ -1,14 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-<svg fill="#000000" width="800px" height="800px" viewBox="0 0 32 32" id="icon" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <style>
-      .cls-1 {
-        fill: none;
-      }
-    </style>
-  </defs>
-  <path d="M16,2a8,8,0,1,0,8,8A8.0092,8.0092,0,0,0,16,2Zm5.91,7H19.4724a15.2457,15.2457,0,0,0-.7917-4.36A6.0088,6.0088,0,0,1,21.91,9ZM16.022,15.999h-.0076c-.3813-.1206-1.3091-1.8213-1.479-4.999h2.9292C17.2952,14.1763,16.3711,15.877,16.022,15.999ZM14.5354,9c.1694-3.1763,1.0935-4.877,1.4426-4.999h.0076c.3813.1206,1.3091,1.8213,1.479,4.999ZM13.3193,4.64A15.2457,15.2457,0,0,0,12.5276,9H10.09A6.0088,6.0088,0,0,1,13.3193,4.64ZM10.09,11h2.4373a15.2457,15.2457,0,0,0,.7917,4.36A6.0088,6.0088,0,0,1,10.09,11Zm8.59,4.36A15.2457,15.2457,0,0,0,19.4724,11H21.91A6.0088,6.0088,0,0,1,18.6807,15.36Z" transform="translate(0 0)"/>
-  <path d="M28,30H4a2.0021,2.0021,0,0,1-2-2V22a2.0021,2.0021,0,0,1,2-2H28a2.0021,2.0021,0,0,1,2,2v6A2.0021,2.0021,0,0,1,28,30ZM4,22v6H28V22Z" transform="translate(0 0)"/>
-  <circle cx="7" cy="25" r="1"/>
-  <rect id="_Transparent_Rectangle_" data-name="&lt;Transparent Rectangle&gt;" class="cls-1" width="32" height="32"/>
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 504 504" xml:space="preserve">
+<circle style="fill:#90DFAA;" cx="252" cy="252" r="252"/>
+<path style="fill:#324A5E;" d="M336.1,306.4l-39.6-39.6c29.1-43,24.7-101.9-13.4-139.9c-43.1-43.1-113-43.1-156.2,0
+	c-43.1,43.1-43.1,113,0,156.2c38.1,38.1,97,42.5,139.9,13.4l39.6,39.6L336.1,306.4z"/>
+<circle style="fill:#FFFFFF;" cx="204.9" cy="204.9" r="84"/>
+<path style="fill:#2B3B4E;" d="M334.4,290.1l-44.3,44.3l82.5,82.5c3.1,3.1,8.1,3.1,11.2,0l33-33c3.1-3.1,3.1-8.1,0-11.2L334.4,290.1
+	z"/>
+<g>
+	<path style="fill:#F1543F;" d="M145.4,207.5l6-19.5h7.9l6,19.5l6.8-19.5h8.2l-11.9,34h-5.6l-7.4-23.6L148,222h-5.6l-11.9-34h8.2
+		L145.4,207.5z"/>
+	<path style="fill:#F1543F;" d="M194.9,207.5l6-19.5h7.9l6,19.5l6.8-19.5h8.2l-11.9,34h-5.6l-7.4-23.6l-7.4,23.6h-5.6L180,188h8.2
+		L194.9,207.5z"/>
+	<path style="fill:#F1543F;" d="M244.5,207.5l6-19.5h7.9l6,19.5l6.8-19.5h8.2l-11.9,34h-5.6l-7.4-23.6l-7.4,23.6h-5.6l-11.9-34h8.2
+		L244.5,207.5z"/>
+</g>
 </svg>

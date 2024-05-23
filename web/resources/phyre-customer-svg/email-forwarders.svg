@@ -1,7 +1,19 @@
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
-<svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="SVGRepo_bgCarrier" stroke-width="0"/>
-<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
-<g id="SVGRepo_iconCarrier"> <circle cx="12" cy="6" r="4" stroke="#000000" stroke-width="1.5"/> <path d="M18 9C19.6569 9 21 7.88071 21 6.5C21 5.11929 19.6569 4 18 4" stroke="#000000" stroke-width="1.5" stroke-linecap="round"/> <path d="M6 9C4.34315 9 3 7.88071 3 6.5C3 5.11929 4.34315 4 6 4" stroke="#000000" stroke-width="1.5" stroke-linecap="round"/> <path d="M17.1973 15C17.7078 15.5883 18 16.2714 18 17C18 19.2091 15.3137 21 12 21C8.68629 21 6 19.2091 6 17C6 14.7909 8.68629 13 12 13C12.3407 13 12.6748 13.0189 13 13.0553" stroke="#000000" stroke-width="1.5" stroke-linecap="round"/> <path d="M20 19C21.7542 18.6153 23 17.6411 23 16.5C23 15.3589 21.7542 14.3847 20 14" stroke="#000000" stroke-width="1.5" stroke-linecap="round"/> <path d="M4 19C2.24575 18.6153 1 17.6411 1 16.5C1 15.3589 2.24575 14.3847 4 14" stroke="#000000" stroke-width="1.5" stroke-linecap="round"/> </g>
-</svg>
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 512 512" xml:space="preserve">
+<circle style="fill:#232323;" cx="256" cy="256" r="256"/>
+<g>
+	<rect x="113.424" y="376" style="fill:#E6E5E5;" width="285.144" height="8"/>
+	<rect x="157.296" y="400" style="fill:#E6E5E5;" width="197.408" height="8"/>
+</g>
+<circle style="fill:#FFFFFF;" cx="193.36" cy="224.8" r="27.4"/>
+<path style="fill:#DB2B42;" d="M240.656,312.952c0,0,0,1.28,0-24.256s-27.864-26-27.864-26H174c0,0-27.864,0.312-27.864,26
+	c0,25.536,0,24.256,0,24.256H240.656z"/>
+<circle style="fill:#FFFFFF;" cx="318.608" cy="224.8" r="27.4"/>
+<path style="fill:#DB2B42;" d="M365.88,312.952c0,0,0,1.28,0-24.256s-27.864-26-27.864-26h-38.792c0,0-27.864,0.312-27.864,26
+	c0,25.536,0,24.256,0,24.256H365.88z"/>
+<circle style="fill:#FFFFFF;" cx="256" cy="94.8" r="27.4"/>
+<path style="fill:#DB2B42;" d="M303.264,182.944c0,0,0,1.28,0-24.256s-27.864-26-27.864-26h-38.792c0,0-27.864,0.312-27.864,26
+	c0,25.536,0,24.256,0,24.256H303.264z"/>
+</svg>

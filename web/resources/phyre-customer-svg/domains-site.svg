@@ -1,4 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-<svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M10.3009 13.6949L20.102 3.89742M10.5795 14.1355L12.8019 18.5804C13.339 19.6545 13.6075 20.1916 13.9458 20.3356C14.2394 20.4606 14.575 20.4379 14.8492 20.2747C15.1651 20.0866 15.3591 19.5183 15.7472 18.3818L19.9463 6.08434C20.2845 5.09409 20.4535 4.59896 20.3378 4.27142C20.2371 3.98648 20.013 3.76234 19.7281 3.66167C19.4005 3.54595 18.9054 3.71502 17.9151 4.05315L5.61763 8.2523C4.48114 8.64037 3.91289 8.83441 3.72478 9.15032C3.56153 9.42447 3.53891 9.76007 3.66389 10.0536C3.80791 10.3919 4.34498 10.6605 5.41912 11.1975L9.86397 13.42C10.041 13.5085 10.1295 13.5527 10.2061 13.6118C10.2742 13.6643 10.3352 13.7253 10.3876 13.7933C10.4468 13.87 10.491 13.9585 10.5795 14.1355Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 505 505" xml:space="preserve">
+<circle style="fill:#FFD05B;" cx="252.5" cy="252.5" r="252.5"/>
+<path style="fill:#324A5E;" d="M404.1,122.9H100.9c-12.5,0-22.6,10.1-22.6,22.6v207h348.3V145.4C426.7,133,416.6,122.9,404.1,122.9z
+	"/>
+<path style="fill:#FFFFFF;" d="M281.7,169.8l-11.3-17h-62.9l-11.4,17H78.3v189.8c0,12.5,10.1,22.6,22.6,22.6h303.2
+	c12.5,0,22.6-10.1,22.6-22.6V169.8H281.7z"/>
+<polygon style="fill:#84DBFF;" points="110.6,169.8 196.1,169.8 184.8,152.8 121.9,152.8 "/>
+<circle style="fill:#FF7058;" cx="394.4" cy="147.7" r="10.1"/>
+<circle style="fill:#84DBFF;" cx="355.6" cy="147.7" r="10.1"/>
+<g>
+	<rect x="146.2" y="201.3" style="fill:#CED5E0;" width="38.1" height="38.1"/>
+	<rect x="146.2" y="258" style="fill:#CED5E0;" width="38.1" height="38.1"/>
+	<rect x="146.2" y="314.7" style="fill:#CED5E0;" width="38.1" height="38.1"/>
+</g>
+<rect x="240.1" y="231.9" style="fill:none;stroke:#E6E9EE;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" width="78.6" height="78.6"/>
+<path style="fill:#FF7058;" d="M285.2,294.1c-2,0-4-0.8-5.6-2.3l-20.9-20.9c-3.1-3.1-3.1-8.1,0-11.2s8.1-3.1,11.2,0l15.3,15.3
+	l61.8-61.8c3.1-3.1,8.1-3.1,11.2,0s3.1,8.1,0,11.2l-67.4,67.4C289.3,293.3,287.2,294.1,285.2,294.1z"/>
 </svg>

@@ -1,2 +1,32 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-<svg width="800px" height="800px" viewBox="0 0 24 24" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg"><defs><style>.cls-1{fill:none;stroke:#020202;stroke-miterlimit:10;stroke-width:1.91px;}</style></defs><rect class="cls-1" x="2.45" y="11.05" width="19.09" height="11.45"/><path class="cls-1" d="M12,1.5h0a6.68,6.68,0,0,1,6.68,6.68V11a0,0,0,0,1,0,0H5.32a0,0,0,0,1,0,0V8.18A6.68,6.68,0,0,1,12,1.5Z"/><line class="cls-1" x1="9.14" y1="16.77" x2="11.05" y2="16.77"/><line class="cls-1" x1="5.32" y1="16.77" x2="7.23" y2="16.77"/><line class="cls-1" x1="12.95" y1="16.77" x2="14.86" y2="16.77"/><line class="cls-1" x1="16.77" y1="16.77" x2="18.68" y2="16.77"/></svg>
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 505 505" xml:space="preserve">
+<circle style="fill:#324A5E;" cx="252.5" cy="252.5" r="252.5"/>
+<rect x="108.5" y="131.5" style="fill:#395767;" width="229.2" height="202.9"/>
+<g>
+	<path style="fill:#EDF2F2;" d="M350.7,105.1H95.5c-5.3,0-9.7,4.3-9.7,9.7V170c0,5.3,4.3,9.7,9.7,9.7h255.2c5.3,0,9.7-4.3,9.7-9.7
+		v-55.2C360.4,109.4,356,105.1,350.7,105.1z"/>
+	<path style="fill:#EDF2F2;" d="M350.7,196.1H95.5c-5.3,0-9.7,4.3-9.7,9.7V261c0,5.3,4.3,9.7,9.7,9.7h255.2c5.3,0,9.7-4.3,9.7-9.7
+		v-55.2C360.4,200.5,356,196.1,350.7,196.1z"/>
+	<path style="fill:#EDF2F2;" d="M350.7,287.2H95.5c-5.3,0-9.7,4.3-9.7,9.7v55.2c0,5.3,4.3,9.7,9.7,9.7h255.2c5.3,0,9.7-4.3,9.7-9.7
+		v-55.2C360.4,291.5,356,287.2,350.7,287.2z"/>
+</g>
+<path style="fill:#FFFFFF;" d="M417,235.8c-38,6.2-72.8-16.3-83.9-24.5c-0.7-0.5-1.7-0.5-2.5,0c-11.1,8.2-45.9,30.7-83.9,24.5
+	c-1.1-0.2-2.2,0.6-2.2,1.6v61.1c0,0,1.8,87.3,86.5,124.9c0.5,0.2,1.2,0.2,1.7,0c84.7-37.6,86.5-124.9,86.5-124.9v-61.1
+	C419.2,236.4,418.1,235.6,417,235.8z"/>
+<path style="fill:#EDF2F2;" d="M400.3,320.1c2.7-11.6,3-19.6,3.1-20.5v-47.7c-1.5,0.1-3,0.1-4.4,0.1c-29,0-54.2-13.8-67.1-22.5l0,0
+	V320h68.4V320.1z"/>
+<path style="fill:#FF7058;" d="M331.8,229.6c-12.9,8.7-38.1,22.5-67.1,22.5l0,0c-1.5,0-3,0-4.4-0.1v47.4c0,0.2,0.3,8.5,3.2,20.7
+	h68.4v-90.5H331.8z"/>
+<path style="fill:#EDF2F2;" d="M263.4,320.1c5.8,24.2,22.2,63.9,68.4,85.7v-85.7L263.4,320.1L263.4,320.1z"/>
+<path style="fill:#FF7058;" d="M331.8,320.1v85.7l0,0c46.6-22.1,62.8-61.6,68.5-85.7L331.8,320.1L331.8,320.1z"/>
+<g>
+	<circle style="fill:#54C0EB;" cx="119.8" cy="141.4" r="12.4"/>
+	<circle style="fill:#54C0EB;" cx="160.1" cy="141.4" r="12.4"/>
+	<circle style="fill:#54C0EB;" cx="119.8" cy="235.9" r="12.4"/>
+	<circle style="fill:#54C0EB;" cx="160.1" cy="235.9" r="12.4"/>
+	<circle style="fill:#54C0EB;" cx="119.8" cy="330.3" r="12.4"/>
+	<circle style="fill:#54C0EB;" cx="160.1" cy="330.3" r="12.4"/>
+</g>
+</svg>
