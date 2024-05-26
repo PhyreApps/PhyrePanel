@@ -25,6 +25,7 @@
                 </div>
 
                 <div class="border-t dark:border-white/10 border-black/40 pt-2"></div>
+
                 <div class="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1">
                     @foreach($menuItem['menu'] as $menuItemLink)
 
@@ -41,7 +42,7 @@
                 </div>
             </div>
         @endforeach
-    </div>
+        </div>
 
 
         <div class="dark:bg-white/10 bg-white/50 ml-[2rem] mt-[2rem] rounded">
@@ -160,13 +161,8 @@
                 <p class="pt-[1rem] dark:text-white/80 text-black/50">Databases</p>
                 <p class="">1 / ∞ </p>
                 <div class="border-b dark:border-white/10 border-black/40 pt-[1rem]"></div>
-
-
             </div>
-
         </div>
-
-
     </div>
 
 
