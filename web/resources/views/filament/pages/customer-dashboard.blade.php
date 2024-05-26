@@ -108,7 +108,7 @@
             </div>
 
 
-            <div class="p-[1rem]">
+            <div class="p-[1rem] mt-[2rem]">
                 <h1 class="font-bold">Statistic</h1>
 
                 <p class="mt-[2rem] dark:text-white/80 text-black/50">Disk Usage</p>
