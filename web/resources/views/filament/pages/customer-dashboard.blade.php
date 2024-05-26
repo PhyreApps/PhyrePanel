@@ -13,7 +13,7 @@
                 <div class="flex justify-between">
                     <div class="flex gap-2 p-[2rem]">
                         <div class="">
-                            <x-filament::icon-button size="xl" icon="{{$menuItem['icon']}}" />
+                            <x-filament::icon-button size="xl" icon="{{$menuItem['icon']}}"/>
                         </div>
                         <div class="">{{$menuItem['title']}}</div>
                     </div>
@@ -31,7 +31,7 @@
                         <div class="text-blue-400 hover:text-yellow-500  px-[2rem] py-2">
                             <a href="{{$menuItemLink['link']}}" class="flex">
                                 <div class="">
-                                    <x-filament::icon-button size="xl" icon="{{$menuItemLink['icon']}}" />
+                                    <x-filament::icon-button size="xl" icon="{{$menuItemLink['icon']}}"/>
                                 </div>
                                 <div class="ml-2">{{$menuItemLink['title']}}</div>
                             </a>
