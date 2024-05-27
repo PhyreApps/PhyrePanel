@@ -89,7 +89,7 @@ class Domain extends Model
 
             $model->configureVirtualHost(true);
 
-            ApacheBuild::dispatch();
+            ApacheBuild::dispatchSync();
 
         });
 
