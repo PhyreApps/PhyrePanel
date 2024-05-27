@@ -4,28 +4,63 @@
         <h1>Tools</h1>
     </div>
 
-    <div>
-        <div class="grid grid-cols-3 dark:bg-white/10 shadow-md rounded-xl">
-            <div>
-                <img class="h-[16rem] w-full rounded-xl" src="{{asset('images/banner/wordpress-pattern.png')}}" alt="wordpress">
+    <div class="py-[2rem]">
+        <div class="dark:bg-white/10 bg-black/5 rounded-xl">
+            <div class="max-w-7xl mx-auto py-3 px-2 sm:px-4">
+                <div class="flex items-center justify-between flex-wrap">
+                    <div class="w-0 flex-1 flex items-center">
+                        <span class="flex p-2 rounded-lg dark:bg-white/20 bg-white">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 ">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                          </svg>
+                        </span>
+                        <p class="ml-3 font-medium dark:text-white text-black truncate">
+                            <span class="hidden md:inline"> <span class="font-bold">DEVELOPMENT LICENSE:</span> This server is running on a development license. If this server is being used in a production environment, please notify <span class="text-blue-500 underline">phyre@cpanel.net</span></span>
+                        </p>
+                    </div>
+                    <div class="order-3 mt-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
+                        <a href="#" class="flex items-center justify-center px-4 py-2 rounded-md shadow-sm text-sm font-medium
+                         dark:text-white dark:bg-white/20 bg-white dark:hover:bg-blue-500 hover:bg-blue-500
+                         dark:hover:text-white transition duration-200">
+                            Learn more
+                        </a>
+                    </div>
+                    <div class="order-2 flex-shrink-0 sm:order-3 sm:ml-3">
+                        <button type="button" class="-mr-1 flex p-2 rounded-md hover:bg-blue-500 sm:-mr-2">
+                            <span class="sr-only">Dismiss</span>
+                            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div class="py-[1rem] ml-[5rem]">
-                <h1 class="font-bold mt-2">Create your website with</h1>
-                <div class="py-2">
+        </div>
+    </div>
+
+    <div>
+        <div class="grid grid-cols-3 dark:bg-[#1d2327] flex justify-between shadow-md rounded-xl">
+            <div>
+                <img class="lg:h-[16rem] w-full rounded-tl-xl rounded-bl-xl" src="{{asset('images/banner/wordpress-pattern.png')}}" alt="wordpress">
+            </div>
+
+            <div class="py-2 ml-[2rem] ">
+                <h1 class="font-bold mt-2 mb-2">Create your website with</h1>
+                <div class="py-2 dark:bg-white w-[14rem]">
                     <img class="h-[2rem] max-w-full rounded-xl" src="{{asset('images/banner/wordpress-logo.png')}}" alt="wordpress">
                 </div>
 
-                <ul class="list-disc">
+                <ul class="list-disc mt-2">
                     <li>Lightning-fast hosting</li>
                     <li>Drag-and-drop functionality</li>
                     <li>Customize everything</li>
                 </ul>
                 <div class="mt-[1rem]">
-                    <button class="dark:bg-white/10 bg-black/5  p-3 rounded-xl dark:hover:bg-blue-500 hover:bg-blue-500  transition duration-110"> Click to get started</button>
+                    <button class="dark:bg-white/10 bg-black/5  p-3 rounded-xl dark:hover:bg-blue-500 hover:bg-blue-500  transition duration-200"> Click to get started</button>
                 </div>
             </div>
             <div>
-                <img class="h-[16rem] max-w-full rounded-xl" src="{{asset('images/banner/wordpress.png')}}" alt="wordpress">
+                <img class="lg:h-[16rem] max-w-full rounded-tr-xl rounded-br-xl" src="{{asset('images/banner/wordpress.png')}}" alt="wordpress">
             </div>
 
         </div>
