@@ -111,7 +111,7 @@ class Domain extends Model
 
         static::deleted(function ($model) {
 
-            ApacheBuild::dispatch();
+            ApacheBuild::dispatchSync();
 
         });
 
