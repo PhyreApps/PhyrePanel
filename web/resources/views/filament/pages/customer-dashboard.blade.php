@@ -48,16 +48,16 @@
                 <div>
                     <div class="grid grid-cols-3 dark:bg-[#1d2327] flex justify-between shadow-md rounded-xl">
                         <div>
-                            <img class="lg:h-[14rem] w-full rounded-tl-xl rounded-bl-xl" src="{{asset('images/banner/wordpress-pattern.png')}}" alt="wordpress">
+                            <img class="lg:h-[14rem] w-full rounded-tl-xl rounded-bl-xl" src="{{asset('images/banner/wordpress-pattern1.png')}}" alt="wordpress">
                         </div>
 
-                        <div class="py-2 ">
-                            <h1 class="font-bold mt-2 mb-2">Create your website with</h1>т
+                        <div class="py-2 ml-[2rem]">
+                            <h1 class="font-bold mt-2 mb-2">Create your website with</h1>
                             <div class="py-2 dark:bg-white rounded-md w-[14rem]">
                                 <img class="h-[1rem] max-w-full rounded-xl" src="{{asset('images/banner/wordpress-logo.png')}}" alt="wordpress">
                             </div>
 
-                            <ul class="list-disc mt-2">
+                            <ul class="list-disc  mt-2">
                                 <li>Lightning-fast hosting</li>
                                 <li>Customize everything</li>
                             </ul>
@@ -66,7 +66,7 @@
                             </div>
                         </div>
                         <div>
-                            <img class="lg:h-[14rem] max-w-full rounded-tr-xl rounded-br-xl" src="{{asset('images/banner/wordpress.png')}}" alt="wordpress">
+                            <img class="lg:h-[14rem] max-w-full rounded-tr-xl rounded-br-xl opacity-40" src="{{asset('images/banner/wordpress1.png')}}" alt="wordpress">
                         </div>
 
                     </div>
@@ -164,11 +164,6 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                         </svg>
                     </div>
-
-                    <div class="border-b dark:border-white/10 border-black/40 pt-[1rem]"></div>
-
-
-
                 </div>
 
 
@@ -225,7 +220,6 @@
 
                     <p class="pt-[1rem] dark:text-white/80 text-black/50">Databases</p>
                     <p class="">1 / ∞ </p>
-                    <div class="border-b dark:border-white/10 border-black/40 pt-[1rem]"></div>
                 </div>
             </div>
         </div>
