@@ -4,6 +4,33 @@
         <h1>Tools</h1>
     </div>
 
+    <div>
+        <div class="grid grid-cols-3 dark:bg-white/10 shadow-md rounded-xl">
+            <div>
+                <img class="h-[16rem] w-full rounded-xl" src="{{asset('images/banner/wordpress-pattern.png')}}" alt="wordpress">
+            </div>
+            <div class="py-[1rem] ml-[5rem]">
+                <h1 class="font-bold mt-2">Create your website with</h1>
+                <div class="py-2">
+                    <img class="h-[2rem] max-w-full rounded-xl" src="{{asset('images/banner/wordpress-logo.png')}}" alt="wordpress">
+                </div>
+
+                <ul class="list-disc">
+                    <li>Lightning-fast hosting</li>
+                    <li>Drag-and-drop functionality</li>
+                    <li>Customize everything</li>
+                </ul>
+                <div class="mt-[1rem]">
+                    <button class="dark:bg-white/10 bg-black/5  p-3 rounded-xl dark:hover:bg-blue-500 hover:bg-blue-500  transition duration-110"> Click to get started</button>
+                </div>
+            </div>
+            <div>
+                <img class="h-[16rem] max-w-full rounded-xl" src="{{asset('images/banner/wordpress.png')}}" alt="wordpress">
+            </div>
+
+        </div>
+    </div>
+
     <div class="grid grid-cols-3">
 
         <div class="col-span-2">
@@ -45,8 +72,8 @@
         </div>
 
 
-        <div class="dark:bg-white/10 bg-white/50 ml-[2rem] mt-[2rem] rounded-xl">
-            <div class="p-[1rem]">
+        <div class="">
+            <div class="p-[1rem] dark:bg-white/10 bg-white/50 ml-[2rem] mt-[2rem] rounded-xl">
                 <h1 class="font-bold mt-[1.5rem]">General Information</h1>
 
                 <p class="mt-[2rem] dark:text-white/80 text-black/50">Current User</p>
@@ -108,7 +135,7 @@
             </div>
 
 
-            <div class="p-[1rem] mt-[2rem]">
+            <div class="p-[1rem] mt-[2rem] dark:bg-white/10 bg-white/50 ml-[2rem] mt-[2rem] rounded-xl">
                 <h1 class="font-bold">Statistic</h1>
 
                 <p class="mt-[2rem] dark:text-white/80 text-black/50">Disk Usage</p>
