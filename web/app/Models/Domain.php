@@ -109,11 +109,11 @@ class Domain extends Model
 
         });
 
-//        static::deleted(function ($model) {
-//
-//            ApacheBuild::dispatch();
-//
-//        });
+        static::deleted(function ($model) {
+
+            ApacheBuild::dispatch();
+
+        });
 
     }
 
