@@ -51,8 +51,8 @@
                             <img class="lg:h-[14rem] w-full rounded-tl-xl rounded-bl-xl" src="{{asset('images/banner/wordpress-pattern.png')}}" alt="wordpress">
                         </div>
 
-                        <div class="py-2 ml-[2rem] ">
-                            <h1 class="font-bold mt-2 mb-2">Create your website with</h1>
+                        <div class="py-2 ">
+                            <h1 class="font-bold mt-2 mb-2">Create your website with</h1>т
                             <div class="py-2 dark:bg-white rounded-md w-[14rem]">
                                 <img class="h-[1rem] max-w-full rounded-xl" src="{{asset('images/banner/wordpress-logo.png')}}" alt="wordpress">
                             </div>
