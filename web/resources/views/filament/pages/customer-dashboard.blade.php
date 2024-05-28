@@ -46,27 +46,20 @@
 
             <div class="col-span-2">
                 <div>
-                    <div class="grid grid-cols-3 dark:bg-[#1d2327] flex justify-between shadow-md rounded-xl">
+                    <div class="grid grid-cols-3 dark:bg-gradient-to-b from-[#3a1dc8] from-40% to-[#010afc]/40 flex justify-between shadow-md rounded-xl">
                         <div>
-                            <img class="lg:h-[14rem] w-full rounded-tl-xl rounded-bl-xl" src="{{asset('images/banner/wordpress-pattern1.png')}}" alt="wordpress">
+                            <img class="lg:h-[10rem] w-full rounded-tl-xl rounded-bl-xl" src="{{asset('images/banner/wordpress.jpg')}}" alt="wordpress">
                         </div>
 
                         <div class="py-2 ml-[2rem]">
-                            <h1 class="font-bold mt-2 mb-2">Create your website with</h1>
-                            <div class="py-2 dark:bg-white rounded-md w-[14rem]">
-                                <img class="h-[1rem] max-w-full rounded-xl" src="{{asset('images/banner/wordpress-logo.png')}}" alt="wordpress">
-                            </div>
+                            <h1 class="font-bold mt-2 mb-2 text-center">Create your website with WordPress</h1>
 
-                            <ul class="list-disc  mt-2">
-                                <li>Lightning-fast hosting</li>
-                                <li>Customize everything</li>
-                            </ul>
-                            <div class="mt-[1rem]">
-                                <button class="dark:bg-white/10 bg-black/5  p-3 rounded-xl dark:hover:bg-blue-500 hover:bg-blue-500  transition duration-200"> Click to get started</button>
+                            <div class="mt-[1rem] ml-[2rem]">
+                                <button class="dark:bg-white/10 bg-black/5  p-3 rounded-xl dark:hover:bg-white dark:hover:text-black hover:bg-blue-500  transition duration-500"> Click to get started</button>
                             </div>
                         </div>
                         <div>
-                            <img class="lg:h-[14rem] max-w-full rounded-tr-xl rounded-br-xl opacity-40" src="{{asset('images/banner/wordpress1.png')}}" alt="wordpress">
+                            <img class="lg:h-[10rem] max-w-full rounded-tr-xl rounded-br-xl ml-[1rem]" src="{{asset('images/banner/wordpress-themes.png')}}" alt="wordpress">
                         </div>
 
                     </div>
@@ -159,7 +152,7 @@
 
 
                     <div class="flex justify-between pt-[1rem]">
-                        <p class="text-blue-400">Server Information</p>
+                        <p class="text-blue-400 mb-2">Server Information</p>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                         </svg>
@@ -168,7 +161,7 @@
 
 
                 <div class="p-[1rem] mt-[2rem] dark:bg-white/10 bg-white/50 ml-[2rem] mt-[2rem] rounded-xl">
-                    <h1 class="font-bold">Statistic</h1>
+                    <h1 class="font-bold mt-[1.5rem]">Statistic</h1>
 
                     <p class="mt-[2rem] dark:text-white/80 text-black/50">Disk Usage</p>
                     <p class="">718.43 MB / ∞ </p>
