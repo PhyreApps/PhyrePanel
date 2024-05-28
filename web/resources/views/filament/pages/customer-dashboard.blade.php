@@ -1,10 +1,6 @@
 <div>
 
     <div class="mt-[2rem]">
-        <h1>Tools</h1>
-    </div>
-
-    <div class="py-[2rem]">
         <div class="dark:bg-white/10 bg-black/5 rounded-xl">
             <div class="max-w-7xl mx-auto py-3 px-2 sm:px-4">
                 <div class="flex items-center justify-between flex-wrap">
@@ -15,7 +11,7 @@
                           </svg>
                         </span>
                         <p class="ml-3 font-medium dark:text-white text-black truncate">
-                            <span class="hidden md:inline"> <span class="font-bold">DEVELOPMENT LICENSE:</span> If this server is being used in a production environment, notify <span class="text-blue-500 underline cursor-pointer">phyre@cpanel.net</span></span>
+                            <span class="hidden md:inline"> <span class="font-bold">DEVELOPMENT LICENSE:</span> If this server is being used in a production environment, notify <span class="text-blue-500 underline cursor-pointer">phyre@panel.net</span></span>
                         </p>
                     </div>
                     <div class="order-3 mt-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
@@ -38,24 +34,27 @@
         </div>
     </div>
 
+    <div class="py-[1.5rem] text-2xl">
+        <h1>Tools</h1>
+    </div>
+
+
     <div>
-
-
         <div class="grid grid-cols-3">
 
 
             <div class="col-span-2">
                 <div>
-                    <div class="grid grid-cols-3 dark:bg-gradient-to-b from-[#3a1dc8] from-40% to-[#010afc]/40 flex justify-between shadow-md rounded-xl">
+                    <div class="grid grid-cols-3 bg-gradient-to-l from-[#3a1dc8]/80 from-40% to-[#010afc]/40 flex justify-between shadow-md rounded-xl">
                         <div>
                             <img class="lg:h-[10rem] w-full rounded-tl-xl rounded-bl-xl" src="{{asset('images/banner/wordpress.jpg')}}" alt="wordpress">
                         </div>
 
-                        <div class="py-2 ml-[2rem]">
-                            <h1 class="font-bold mt-2 mb-2 text-center">Create your website with WordPress</h1>
+                        <div class="py-2 ml-[2rem] dark:bg-none ">
+                            <h1 class="font-bold mt-2 mb-2 text-center text-white text-lg">Create your website with WordPress</h1>
 
                             <div class="mt-[1rem] ml-[2rem]">
-                                <button class="dark:bg-white/10 bg-black/5  p-3 rounded-xl dark:hover:bg-white dark:hover:text-black hover:bg-blue-500  transition duration-500"> Click to get started</button>
+                                <button class="bg-white/10 p-3 rounded-xl text-white hover:bg-white hover:text-black transition duration-500"> Click to get started</button>
                             </div>
                         </div>
                         <div>
@@ -108,7 +107,7 @@
 
                     <p class="mt-[2rem] dark:text-white/80 text-black/50">Current User</p>
                     <p class="">bochko</p>
-                    <div class="border-b dark:border-white/10 border-black/10 pt-[1rem]"></div>
+                    <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
                     <p class="pt-[1rem] dark:text-white/80 text-black/50">Primary Domain</p>
                     <div class="flex gap-2">
@@ -117,19 +116,19 @@
                         </svg>
                         <p class="text-blue-400"> 10iskata.microweber.me </p>
                     </div>
-                    <div class="border-b dark:border-white/10 border-black/10 pt-[1rem]"></div>
+                    <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
                     <p class="pt-[1rem] dark:text-white/80 text-black/50">Shared IP Address</p>
                     <p class="">88.99.25.96</p>
-                    <div class="border-b dark:border-white/10 border-black/10 pt-[1rem]"></div>
+                    <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
                     <p class="pt-[1rem] dark:text-white/80 text-black/50">Home Directory</p>
                     <p class="">/home/iskatami </p>
-                    <div class="border-b dark:border-white/10 border-black/10 pt-[1rem]"></div>
+                    <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
                     <p class="pt-[1rem] dark:text-white/80 text-black/50">Last Login IP Address</p>
                     <p class="">46.55.227.119</p>
-                    <div class="border-b dark:border-white/10 border-black/10 pt-[1rem]"></div>
+                    <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
                     <p class="pt-[1rem] dark:text-white/80 text-black/50">Primary Domain</p>
                     <div class="flex gap-2">
@@ -139,7 +138,7 @@
                         </svg>
                         <p class="text-blue-400">3d4e7dd6-251c-4c8d..</p>
                     </div>
-                    <div class="border-b dark:border-white/10 border-black/10 pt-[1rem]"></div>
+                    <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
 
                     <p class="pt-[1rem] dark:text-white/80 text-black/50">Theme</p>
@@ -148,7 +147,7 @@
                             <input type="email" name="email" id="email" class="bg-white/10 shadow-sm focus:ring-none focus:border-none block w-full sm:text-sm border-none rounded-md" placeholder="your theme">
                         </div>
                     </div>
-                    <div class="border-b dark:border-white/10 border-black/10 pt-[1rem]"></div>
+                    <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
 
                     <div class="flex justify-between pt-[1rem]">
@@ -165,51 +164,51 @@
 
                     <p class="mt-[2rem] dark:text-white/80 text-black/50">Disk Usage</p>
                     <p class="">718.43 MB / ∞ </p>
-                    <div class="border-b dark:border-white/10 border-black/10 pt-[1rem]"></div>
+                    <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
                     <p class="pt-[1rem] dark:text-white/80 text-black/50">Database Disk Usage</p>
                     <p class="">2.36 MB / ∞ </p>
-                    <div class="border-b dark:border-white/10 border-black/10 pt-[1rem]"></div>
+                    <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
                     <p class="pt-[1rem] dark:text-white/80 text-black/50">Bandwidth</p>
                     <p class="">3.97 MB / ∞ </p>
-                    <div class="border-b dark:border-white/10 border-black/10 pt-[1rem]"></div>
+                    <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
                     <p class="pt-[1rem] dark:text-white/80 text-black/50">Addon Domains</p>
                     <p class="">0 / ∞ </p>
-                    <div class="border-b dark:border-white/10 border-black/10 pt-[1rem]"></div>
+                    <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
                     <p class="pt-[1rem] dark:text-white/80 text-black/50">Subdomains</p>
                     <p class="">0 / ∞ </p>
-                    <div class="border-b dark:border-white/10 border-black/10 pt-[1rem]"></div>
+                    <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
                     <p class="pt-[1rem] dark:text-white/80 text-black/50">Alias Domains</p>
                     <p class="">1 / ∞  </p>
-                    <div class="border-b dark:border-white/10 border-black/10 pt-[1rem]"></div>
+                    <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
                     <p class="pt-[1rem] dark:text-white/80 text-black/50">Email Accounts</p>
                     <p class="">0 / ∞ </p>
-                    <div class="border-b dark:border-white/10 border-black/10 pt-[1rem]"></div>
+                    <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
                     <p class="pt-[1rem] dark:text-white/80 text-black/50">Mailing Lists</p>
                     <p class="">0 / ∞ </p>
-                    <div class="border-b dark:border-white/10 border-black/10 pt-[1rem]"></div>
+                    <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
                     <p class="pt-[1rem] dark:text-white/80 text-black/50">Autoresponders</p>
                     <p class="">0 / ∞ </p>
-                    <div class="border-b dark:border-white/10 border-black/10 pt-[1rem]"></div>
+                    <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
                     <p class="pt-[1rem] dark:text-white/80 text-black/50">Forwarders</p>
                     <p class="">0 / ∞ </p>
-                    <div class="border-b dark:border-white/10 border-black/10 pt-[1rem]"></div>
+                    <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
                     <p class="pt-[1rem] dark:text-white/80 text-black/50">Email Filters</p>
                     <p class="">0 / ∞ </p>
-                    <div class="border-b dark:border-white/10 border-black/10 pt-[1rem]"></div>
+                    <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
                     <p class="pt-[1rem] dark:text-white/80 text-black/50">FTP Accounts</p>
                     <p class="">0 / ∞ </p>
-                    <div class="border-b dark:border-white/10 border-black/10 pt-[1rem]"></div>
+                    <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
                     <p class="pt-[1rem] dark:text-white/80 text-black/50">Databases</p>
                     <p class="">1 / ∞ </p>
