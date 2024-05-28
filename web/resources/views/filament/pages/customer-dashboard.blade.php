@@ -10,8 +10,8 @@
                 <div class="flex items-center justify-between flex-wrap">
                     <div class="w-0 flex-1 flex items-center">
                         <span class="flex p-2 rounded-lg dark:bg-white/20 bg-white">
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 ">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 ml-1">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
                           </svg>
                         </span>
                         <p class="ml-3 font-medium dark:text-white text-black truncate">
@@ -66,7 +66,7 @@
                 </div>
                 @foreach($menu as $menuItem)
 
-                    <div class="bg-white/10 mt-[2rem] rounded-xl px-2 shadow-md">
+                    <div class="bg-white/10 mt-[2rem] rounded-xl px-2 shadow-sm hover:shadow-lg transition duration-300">
                         <div class="flex justify-between">
                             <div class="flex gap-4 p-[1rem]">
                                 <div class="mt-1">
@@ -103,7 +103,7 @@
 
 
             <div class="">
-                <div class="p-[1rem] dark:bg-white/10 bg-white/50 ml-[2rem]  rounded-xl">
+                <div class="p-[1rem] dark:bg-white/10 bg-white/50 ml-[2rem] shadow-md rounded-xl">
                     <h1 class="font-bold mt-[1.5rem]">General Information</h1>
 
                     <p class="mt-[2rem] dark:text-white/80 text-black/50">Current User</p>
@@ -160,7 +160,7 @@
                 </div>
 
 
-                <div class="p-[1rem] mt-[2rem] dark:bg-white/10 bg-white/50 ml-[2rem] mt-[2rem] rounded-xl">
+                <div class="p-[1rem] mt-[2rem] dark:bg-white/10 bg-white/50 ml-[2rem] mt-[2rem] shadow-md rounded-xl">
                     <h1 class="font-bold mt-[1.5rem]">Statistic</h1>
 
                     <p class="mt-[2rem] dark:text-white/80 text-black/50">Disk Usage</p>
