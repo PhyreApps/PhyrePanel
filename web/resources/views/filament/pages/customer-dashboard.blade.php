@@ -45,7 +45,7 @@
 
             <div class="col-span-2">
                 <div>
-                    <div class="grid grid-cols-3 bg-gradient-to-l from-[#3a1dc8]/80 from-40% to-[#010afc]/40 flex justify-between shadow-md rounded-xl">
+                    <div class="grid grid-cols-3 bg-gradient-to-l from-[#3a1dc8]/50 from-40% to-[#010afc]/40 flex justify-between shadow-md rounded-xl">
                         <div>
                             <img class="lg:h-[10rem] w-full rounded-tl-xl rounded-bl-xl" src="{{asset('images/banner/wordpress.jpg')}}" alt="wordpress">
                         </div>
@@ -57,14 +57,13 @@
                                 <button class="bg-white/10 p-3 rounded-xl text-white hover:bg-white hover:text-black transition duration-500"> Click to get started</button>
                             </div>
                         </div>
-                        <div>
+                        <div class="">
                             <img class="lg:h-[10rem] max-w-full rounded-tr-xl rounded-br-xl ml-[1rem]" src="{{asset('images/banner/wordpress-themes.png')}}" alt="wordpress">
                         </div>
 
                     </div>
                 </div>
                 @foreach($menu as $menuItem)
-
                     <div class="bg-white/10 mt-[2rem] rounded-xl px-2 shadow-sm hover:shadow-lg transition duration-300">
                         <div class="flex justify-between">
                             <div class="flex gap-4 p-[1rem]">
@@ -85,7 +84,7 @@
                         <div class="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1">
                             @foreach($menuItem['menu'] as $menuItemLink)
 
-                                <div class="dark:text-white text-black hover:text-blue-500 px-[1rem] py-4 mt-2">
+                                <div class="dark:text-white text-black dark:hover:text-blue-400 hover:text-blue-500 px-[1rem] py-4 mt-2">
                                     <a href="{{$menuItemLink['link']}}" class="flex">
                                         <div class="">
                                             @svg($menuItemLink['icon'], "h-12 w-12 text-red-600")
