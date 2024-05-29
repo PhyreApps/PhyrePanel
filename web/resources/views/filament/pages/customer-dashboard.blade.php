@@ -10,7 +10,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
                           </svg>
                         </span>
-                        <p class="ml-3 font-medium dark:text-white text-black truncate">
+                        <p class="px-2 font-medium dark:text-white text-black truncate">
                             <span class="hidden md:inline"> <span class="font-bold">DEVELOPMENT LICENSE:</span> If this server is being used in a production environment, notify <span class="text-blue-500 underline cursor-pointer">phyre@panel.net</span></span>
                         </p>
                     </div>
@@ -40,32 +40,33 @@
 
 
     <div>
-        <div class="grid grid-cols-3">
+        <div class="grid sm:grid-cols-3">
 
 
             <div class="col-span-2">
-                <div>
+                <div class=" sm:block hidden">
                     <div class="grid grid-cols-3 bg-gradient-to-l from-[#3a1dc8]/50 from-40% to-[#010afc]/40 flex justify-between shadow-md rounded-xl">
                         <div>
-                            <img class="lg:h-[10rem] w-full rounded-tl-xl rounded-bl-xl" src="{{asset('images/banner/wordpress.jpg')}}" alt="wordpress">
+                            <img class="lg:h-[10rem] sm:h-[7.5rem]  w-full rounded-tl-xl rounded-bl-xl" src="{{asset('images/banner/wordpress.jpg')}}" alt="wordpress">
                         </div>
 
-                        <div class="py-2 ml-[2rem] dark:bg-none ">
-                            <h1 class="font-bold mt-2 mb-2 text-center text-white text-lg">Create your website with WordPress</h1>
+                        <div class="lg:py-4 px-4 dark:bg-none">
+                            <h1 class="font-bold lg:py-2 py-1 text-center text-white xl:text-lg md:text-md sm:text-sm">Create your website with WordPress</h1>
 
-                            <div class="mt-[1rem] ml-[2rem]">
-                                <button class="bg-white/10 p-3 rounded-xl text-white hover:bg-white hover:text-black transition duration-500"> Click to get started</button>
+                            <div class="px-[1rem] ml-4">
+                                <button class="bg-white/10 p-2 xl:text-lg md:text-md sm:text-sm rounded-xl text-white hover:bg-white hover:text-black transition duration-500"> Click to get started</button>
                             </div>
                         </div>
                         <div class="">
-                            <img class="lg:h-[10rem] max-w-full rounded-tr-xl rounded-br-xl ml-[1rem]" src="{{asset('images/banner/wordpress-themes.png')}}" alt="wordpress">
+                            <img class="lg:h-[10rem] sm:h-[7.5rem] w-[17rem] rounded-tr-xl rounded-br-xl" src="{{asset('images/banner/wordpress-themes.png')}}" alt="wordpress">
                         </div>
 
                     </div>
                 </div>
+
                 @foreach($menu as $menuItem)
-                    <div class="bg-white/10 mt-[2rem] rounded-xl px-2 shadow-sm hover:shadow-lg transition duration-300">
-                        <div class="flex justify-between">
+                    <div x-data="{ open: false }" class="bg-white/10 mt-[2rem] rounded-xl px-2 shadow-sm hover:shadow-lg transition duration-300">
+                        <div  x-on:click="open = ! open" class="flex justify-between">
                             <div class="flex gap-4 p-[1rem]">
                                 <div class="mt-1">
                                     @svg($menuItem['icon'], "h-12 w-12 text-red-600")
@@ -73,23 +74,30 @@
                                 <div class="mt-[1rem]">{{$menuItem['title']}}</div>
                             </div>
                             <div class="p-[2rem]">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                                </svg>
+                                <button>
+                                    <svg x-show="open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                    </svg>
+                                    <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
+                                    </svg>
+
+                                </button>
+
                             </div>
                         </div>
 
                         <div class="border-t dark:border-white/10 border-black/10"></div>
 
-                        <div class="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1">
+                        <div x-show="open" x-transition.duration.500ms class="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1">
                             @foreach($menuItem['menu'] as $menuItemLink)
 
                                 <div class="dark:text-white text-black dark:hover:text-blue-400 hover:text-blue-500 px-[1rem] py-4 mt-2">
-                                    <a href="{{$menuItemLink['link']}}" class="flex">
+                                    <a href="{{$menuItemLink['link']}}" class="flex gap-[1rem] items-center">
                                         <div class="">
                                             @svg($menuItemLink['icon'], "h-12 w-12 text-red-600")
                                         </div>
-                                        <div class="ml-2 mt-2.5">{{$menuItemLink['title']}}</div>
+                                        <div class="items-center">{{$menuItemLink['title']}}</div>
                                     </a>
                                 </div>
 
@@ -97,10 +105,11 @@
                         </div>
                     </div>
                 @endforeach
+
             </div>
 
 
-            <div class="">
+            <div class="sm:mt-0 mt-[2rem]">
                 <div class="p-[1rem] dark:bg-white/10 bg-white/50 ml-[2rem] shadow-md rounded-xl">
                     <h1 class="font-bold mt-[1.5rem]">General Information</h1>
 
@@ -143,7 +152,10 @@
                     <p class="pt-[1rem] dark:text-white/80 text-black/50">Theme</p>
                     <div>
                         <div class="mt-1">
-                            <input type="email" name="email" id="email" class="bg-white/10 shadow-sm focus:ring-none focus:border-none block w-full sm:text-sm border-none rounded-md" placeholder="your theme">
+                            <input type="email" name="email" id="email" placeholder="your theme"
+                            class="bg-white/10 shadow-sm focus:ring-none focus:border-none
+                            block w-full sm:text-sm border-none rounded-md
+                             dark:focus-ring dark:focus:ring-yellow-300">
                         </div>
                     </div>
                     <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
@@ -158,7 +170,7 @@
                 </div>
 
 
-                <div class="p-[1rem] mt-[2rem] dark:bg-white/10 bg-white/50 ml-[2rem] mt-[2rem] shadow-md rounded-xl">
+                <div class="p-[1rem] mt-[2rem] dark:bg-white/10 bg-white/50 ml-[2rem]  shadow-md rounded-xl">
                     <h1 class="font-bold mt-[1.5rem]">Statistic</h1>
 
                     <p class="mt-[2rem] dark:text-white/80 text-black/50">Disk Usage</p>

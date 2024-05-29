@@ -1,23 +1,2 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
-	 viewBox="0 0 505 505" xml:space="preserve">
-<circle style="fill:#324A5E;" cx="252.5" cy="252.5" r="252.5"/>
-<path style="fill:#EDF2F2;" d="M198.9,204.1v-60c0-29.8,24.3-54.1,54.1-54.1s54.1,24.3,54.1,54.1v60h24v-60c0-43-35-78-78-78
-	s-78,35-78,78v60H198.9z"/>
-<path style="fill:#2DB39A;" d="M347,198.1H158c-7.1,0-12.8,5.4-12.8,12.1v170.2c0,6.7,5.7,12.1,12.8,12.1h189
-	c7.1,0,12.8-5.4,12.8-12.1V210.2C359.9,203.5,354.1,198.1,347,198.1z"/>
-<rect x="164.9" y="266" style="fill:#EDF2F2;" width="175.3" height="58.7"/>
-<g>
-	<path style="fill:#395767;" d="M213,295.4l-7.4,1l5.3,5.7l-4.9,3.4l-3.7-6.8l-3.7,6.8l-4.9-3.4l5.3-5.7l-7.4-1l1.9-5.4l6.8,2.9
-		l-1.2-7.7h6.3l-1.2,7.7l6.7-2.9L213,295.4z"/>
-	<path style="fill:#395767;" d="M238.1,295.4l-7.4,1l5.3,5.7l-4.9,3.4l-3.7-6.8l-3.7,6.8l-4.9-3.4l5.3-5.7l-7.4-1l1.9-5.4l6.8,2.9
-		l-1.2-7.7h6.3l-1.2,7.7l6.7-2.9L238.1,295.4z"/>
-	<path style="fill:#395767;" d="M263.2,295.4l-7.4,1l5.3,5.7l-4.9,3.4l-3.7-6.8l-3.7,6.8l-4.9-3.4l5.3-5.7l-7.4-1l1.9-5.4l6.8,2.9
-		l-1.2-7.7h6.3l-1.2,7.7l6.7-2.9L263.2,295.4z"/>
-	<path style="fill:#395767;" d="M288.2,295.4l-7.4,1l5.3,5.7l-4.9,3.4l-3.7-6.8l-3.7,6.8l-4.9-3.4l5.3-5.7l-7.4-1l1.9-5.4l6.8,2.9
-		l-1.2-7.7h6.3l-1.2,7.7l6.7-2.9L288.2,295.4z"/>
-	<path style="fill:#395767;" d="M313.3,295.4l-7.4,1l5.3,5.7l-4.9,3.4l-3.7-6.8l-3.7,6.8l-4.9-3.4l5.3-5.7l-7.4-1l1.9-5.4l6.8,2.9
-		l-1.2-7.7h6.3l-1.2,7.7l6.7-2.9L313.3,295.4z"/>
-</g>
-</svg>
+<?xml version="1.0" ?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg fill="#fff" width="800px" height="800px" viewBox="0 0 64 64" data-name="Material Expand" id="Material_Expand" xmlns="http://www.w3.org/2000/svg"><path d="M60,33H54V26a2,2,0,0,0-2-2H19V19a13,13,0,0,1,26,0h4a17,17,0,0,0-34,0v5H12a2,2,0,0,0-2,2v7H4a2,2,0,0,0-2,2V51a2,2,0,0,0,2,2h6v7a2,2,0,0,0,2,2H52a2,2,0,0,0,2-2V53h6a2,2,0,0,0,2-2V35A2,2,0,0,0,60,33ZM14,28H50v5H14ZM50,58H14V53H50Zm8-9H6V37H58Z"/><rect height="4" width="4" x="10" y="41"/><rect height="4" width="4" x="18" y="41"/><rect height="4" width="4" x="26" y="41"/><rect height="4" width="4" x="34" y="41"/><rect height="4" width="4" x="42" y="41"/><rect height="4" width="4" x="50" y="41"/></svg>

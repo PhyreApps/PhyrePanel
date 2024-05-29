@@ -1,27 +1,9 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
-	 viewBox="0 0 504 504" xml:space="preserve">
-<circle style="fill:#324A5E;" cx="252" cy="252" r="252"/>
-<rect x="94.5" y="104.3" style="fill:#ACB3BA;" width="315" height="295.3"/>
-<rect x="122.1" y="170.6" style="fill:#FFFFFF;" width="259.9" height="201.5"/>
-<rect x="122.1" y="127.9" style="fill:#324A5E;" width="32.5" height="19.2"/>
-<rect x="175.7" y="127.9" style="fill:#F1543F;" width="32.5" height="19.2"/>
-<rect x="229.4" y="127.9" style="fill:#FFFFFF;" width="32.5" height="19.2"/>
-<polygon style="fill:#FF7058;" points="381.9,372.1 319.9,272 271.8,349.6 202.7,215.2 122.1,372.1 "/>
-<g>
-	<circle style="fill:#FFD05B;" cx="280.4" cy="226.6" r="25.2"/>
-	<rect x="276" y="185.1" style="fill:#FFD05B;" width="8.8" height="11.8"/>
-	<rect x="276" y="256.2" style="fill:#FFD05B;" width="8.8" height="11.8"/>
-	<rect x="310.1" y="222.2" style="fill:#FFD05B;" width="11.8" height="8.8"/>
-	<rect x="238.9" y="222.2" style="fill:#FFD05B;" width="11.8" height="8.8"/>
-	
-		<rect x="301.19" y="195.537" transform="matrix(-0.7071 -0.7071 0.7071 -0.7071 379.2374 559.9583)" style="fill:#FFD05B;" width="8.8" height="11.8"/>
-	
-		<rect x="250.795" y="245.884" transform="matrix(0.7071 0.7071 -0.7071 0.7071 252.7833 -106.7043)" style="fill:#FFD05B;" width="8.8" height="11.8"/>
-	
-		<rect x="299.658" y="247.407" transform="matrix(0.7071 0.7071 -0.7071 0.7071 267.5504 -142.3096)" style="fill:#FFD05B;" width="11.8" height="8.8"/>
-	
-		<rect x="249.328" y="197.021" transform="matrix(0.7071 0.7071 -0.7071 0.7071 217.181 -121.4785)" style="fill:#FFD05B;" width="11.8" height="8.8"/>
-</g>
-</svg>
+<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="800px" height="800px" viewBox="0 0 512 512"
+     xmlns="http://www.w3.org/2000/svg">
+    <title>ionicons-v5-e</title><path d="M432,112V96a48.14,48.14,0,0,0-48-48H64A48.14,48.14,0,0,0,16,96V352a48.14,48.14,0,0,0,48,48H80"
+   style="fill:none;stroke:#fff;stroke-linejoin:round;stroke-width:32px"/><rect x="96" y="128" width="400" height="336" rx="45.99" ry="45.99"
+   style="fill:none;stroke:#fff;stroke-linejoin:round;stroke-width:32px"/><ellipse cx="372.92" cy="219.64" rx="30.77" ry="30.55"
+   style="fill:none;stroke:#fff;stroke-miterlimit:10;stroke-width:32px"/><path d="M342.15,372.17,255,285.78a30.93,30.93,0,0,0-42.18-1.21L96,387.64"
+   style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><path d="M265.23,464,383.82,346.27a31,31,0,0,1,41.46-1.87L496,402.91"
+   style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/></svg>

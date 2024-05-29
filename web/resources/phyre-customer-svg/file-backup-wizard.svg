@@ -1,11 +1,7 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
-	 viewBox="0 0 505 505" xml:space="preserve">
-<circle style="fill:#FD8469;" cx="252.5" cy="252.5" r="252.5"/>
-<path style="fill:#FFFFFF;" d="M382.7,208h-3.2c0.1-1.5,0.2-3,0.2-4.5c0-40.1-32.5-72.7-72.7-72.7c-15.8,0-30.3,5.1-42.2,13.6
-	c-14.9-30.2-45.9-50.9-81.8-50.9c-50.4,0-91.3,40.9-91.3,91.3c0,10.2,1.7,19.9,4.8,29c-20.5,9.7-34.8,30.6-34.8,54.8l0,0
-	c0,33.5,27.2,60.7,60.7,60.7h260.3c33.5,0,60.7-27.2,60.7-60.7l0,0C443.3,235.2,416.2,208,382.7,208z"/>
-<polygon style="fill:#324A5E;" points="210.2,353.8 210.2,277.8 159.4,277.8 159.4,353.8 139.4,353.8 184.8,399.1 230.1,353.8 "/>
-<polygon style="fill:#84DBFF;" points="345.6,293.5 345.6,369.5 294.8,369.5 294.8,293.5 274.9,293.5 320.2,248.2 365.6,293.5 "/>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32">
+	<circle cx="7" cy="7" r="1" fill="white" />
+	<circle cx="7" cy="15" r="1" fill="white" />
+	<circle cx="7" cy="23" r="1" fill="white" />
+	<path fill="white" d="M12 26H4v-6h8v-2H4v-6h18V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v22a2 2 0 0 0 2 2h8ZM4 4h16v6H4Z" />
+	<path fill="white" d="M28 17v2.413A6.996 6.996 0 1 0 22 30v-2a5 5 0 1 1 4.576-7H24v2h6v-6Z" />
 </svg>

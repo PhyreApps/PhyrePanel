@@ -1,7 +1,14 @@
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" width="800px" height="800px" fill="#000000">
-<g id="SVGRepo_bgCarrier" stroke-width="0"/>
-<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
-<g id="SVGRepo_iconCarrier"> <circle style="fill:#EA8953;" cx="256" cy="256" r="256"/> <path style="opacity:0.1;enable-background:new ;" d="M505.056,315.152L376.592,186.688v-0.053l-48-47.947l-32-32H135.419 v266.667l137.989,137.989C386.64,503.733,479.643,422.539,505.056,315.152z"/> <polygon style="fill:#EBF0F3;" points="296.613,106.667 135.397,106.667 135.397,373.333 344.603,373.333 344.603,154.656 "/> <g> <polygon style="fill:#D5D6DB;" points="296.613,154.656 344.603,154.656 296.613,106.667 "/> <rect x="156.672" y="180.779" style="fill:#D5D6DB;" width="166.667" height="5.333"/> <rect x="156.672" y="205.333" style="fill:#D5D6DB;" width="166.667" height="5.333"/> <rect x="156.672" y="229.867" style="fill:#D5D6DB;" width="166.667" height="5.333"/> <rect x="156.672" y="254.453" style="fill:#D5D6DB;" width="112" height="5.333"/> <rect x="156.672" y="278.987" style="fill:#D5D6DB;" width="166.667" height="5.333"/> <rect x="156.672" y="303.573" style="fill:#D5D6DB;" width="166.667" height="5.333"/> <rect x="156.672" y="328.107" style="fill:#D5D6DB;" width="166.667" height="5.333"/> <rect x="156.672" y="352.693" style="fill:#D5D6DB;" width="83.328" height="5.333"/> </g> <polygon style="fill:#FFFFFF;" points="328.613,138.667 167.397,138.667 167.397,405.333 376.603,405.333 376.603,186.656 "/> <g> <polygon style="fill:#EBF0F3;" points="328.613,186.656 376.603,186.656 328.613,138.667 "/> <rect x="188.693" y="212.779" style="fill:#EBF0F3;" width="166.667" height="5.333"/> <rect x="188.693" y="237.333" style="fill:#EBF0F3;" width="166.667" height="5.333"/> <rect x="188.693" y="261.867" style="fill:#EBF0F3;" width="166.667" height="5.333"/> <rect x="188.693" y="286.453" style="fill:#EBF0F3;" width="112" height="5.333"/> <rect x="188.693" y="310.987" style="fill:#EBF0F3;" width="166.667" height="5.333"/> <rect x="188.693" y="335.573" style="fill:#EBF0F3;" width="166.667" height="5.333"/> <rect x="188.693" y="360.107" style="fill:#EBF0F3;" width="166.667" height="5.333"/> <rect x="188.693" y="384.693" style="fill:#EBF0F3;" width="83.328" height="5.333"/> </g> </g>
-</svg>
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg version="1.1" id="Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	 viewBox="0 0 32 32" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st1{fill:none;stroke:#fff;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10;}
+</style>
+<polyline class="st0" points="3,8 16,16 29,8 "/>
+<circle class="st0" cx="24" cy="24" r="7"/>
+<path class="st0" d="M17.1,25H7c-2.2,0-4-1.8-4-4V7c0-2.2,1.8-4,4-4h18c2.2,0,4,1.8,4,4v12.1"/>
+<polyline class="st0" points="24,20 24,24 27,22 "/>
+</svg>

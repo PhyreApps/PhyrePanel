@@ -1,17 +1,15 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
+
 <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
-	 viewBox="0 0 505 505" xml:space="preserve">
-<circle style="fill:#324A5E;" cx="252.5" cy="252.5" r="252.5"/>
-<path style="fill:#FFD05B;" d="M242.4,306.7V505c-14-0.6-27.7-2.3-41.1-5c-10.9-2.2-21.5-5.2-31.8-8.8V306.7H242.4z"/>
-<path style="fill:#F9B54C;" d="M242.4,306.7V505c-14-0.6-27.7-2.3-41.1-5V306.7H242.4z"/>
-<path style="fill:#FF7058;" d="M307.2,125v204H61.6V208.8c0-46.2,37.5-83.8,83.8-83.8H307.2z"/>
-<path style="fill:#F1543F;" d="M391,329H223.5V208.8c0-46.3,37.5-83.8,83.8-83.8l0,0c46.3,0,83.8,37.5,83.8,83.8V329H391z"/>
-<path style="fill:#E6E9EE;" d="M443.4,185v84.1c0,4.4-1.8,8.4-4.8,11.2c-2.8,2.7-6.7,4.4-10.8,4.4H281.9c-4.2,0-8-1.7-10.8-4.4
-	c-3-2.8-4.8-6.8-4.8-11.2V185c0-4.4,1.8-8.4,4.8-11.2c2.8-2.7,6.6-4.4,10.8-4.4h145.9c4.2,0,8,1.7,10.8,4.4
-	C441.6,176.6,443.4,180.6,443.4,185z"/>
-<path style="fill:#CED5E0;" d="M438.6,280.3c-2.8,2.7-6.7,4.4-10.8,4.4H281.9c-4.2,0-8-1.7-10.8-4.4l83.8-76.9L438.6,280.3z"/>
-<path style="fill:#FFFFFF;" d="M438.6,173.7l-83.8,76.8L271,173.7c2.8-2.7,6.6-4.4,10.8-4.4h145.9C432,169.4,435.8,171,438.6,173.7z
-	"/>
-<rect x="107.3" y="210" style="fill:#E6E9EE;" width="94.1" height="27.6"/>
+<svg version="1.1" id="Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	 viewBox="0 0 32 32" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st1{fill:none;stroke:#fff;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10;}
+</style>
+<path class="st0" d="M16,25H2v-8c0-3.9,3.1-7,7-7h0c3.9,0,7,3.1,7,7V25z"/>
+<path class="st0" d="M23,10L23,10c3.9,0,7,3.1,7,7v8H16"/>
+<line class="st0" x1="9" y1="10" x2="23" y2="10"/>
+<rect x="13" y="25" class="st0" width="6" height="6"/>
+<polyline class="st0" points="22,18 22,4.9 22,1 30,1 30,5 24,5 "/>
 </svg>

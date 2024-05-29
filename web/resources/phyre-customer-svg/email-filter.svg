@@ -1,7 +1,3 @@
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
-<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 508 508" xml:space="preserve" fill="#000000">
-<g id="SVGRepo_bgCarrier" stroke-width="0"/>
-<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
-<g id="SVGRepo_iconCarrier"> <circle style="fill:#9ae2b1;" cx="254" cy="254" r="254"/> <circle style="fill:#9ae2b1;" cx="254" cy="116.4" r="53.6"/> <path style="fill:#9ae2b1;" d="M254,155.6c-21.6,0-39.2-17.6-39.2-39.2s17.6-39.2,39.2-39.2s39.2,17.6,39.2,39.2 S275.6,155.6,254,155.6z"/> <path style="fill:#9ae2b1;" d="M256,136v6h-4v-6c-3.6,0-7.2-0.8-10.4-2.4V126c1.2,0.8,2.8,1.6,4.8,2.4c2,0.8,4,1.2,5.6,1.2v-10 c-4.4-1.6-7.2-3.2-8.8-5.2s-2.4-4-2.4-6.8s1.2-5.6,3.2-7.6s4.8-3.2,8-3.6v-5.2h4v5.2c4,0,6.8,0.8,8.8,2v7.6 c-2.8-1.6-5.6-2.4-8.8-2.8v10.4c4,1.6,6.8,3.2,8.8,5.2c1.6,2,2.8,4,2.8,6.8c0,3.2-0.8,5.6-2.8,7.6C262.4,134.4,259.6,135.6,256,136z M252,111.6v-8.8c-2.4,0.4-4,2-4,4C248,108.8,249.2,110.4,252,111.6z M256,120.8v8.4c2.8-0.4,4-1.6,4-4 C260,123.6,258.8,122,256,120.8z"/> <polygon style="fill:#FF7058;" points="384.4,237.2 384.4,197.6 123.6,197.6 123.6,237.2 123.6,237.2 216,344.4 292,344.4 "/> <polygon style="fill:#F1543F;" points="216,344.4 216,344.8 216,445.2 292,413.6 292,344.8 292,344.4 "/> </g>
-</svg>
+<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="fill:#fff">
+    <path d="M22 2H2v2.73l7.02 6.017L10.043 22h3.914l1.023-11.253L22 4.73zm-1 1v1H3V3zm-.852 2l-5.833 5h-4.63L3.852 5zm-7.105 16h-2.086l-.91-10h3.905z"/><path fill="none" d="M0 0h24v24H0z"/></svg>
