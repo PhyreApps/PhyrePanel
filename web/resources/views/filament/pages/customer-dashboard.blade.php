@@ -67,10 +67,10 @@
                 @foreach($menu as $menuItem)
                     <div x-data="{ open: false }" class="bg-white/10 mt-[2rem] rounded-xl px-2 shadow-sm  transition duration-500
                     hover:shadow-lg cursor-pointer">
-                        <div  x-on:click="open = ! open" class="flex hover:scale-105 transition duration-500 justify-between items-center">
+                        <div  x-on:click="open = ! open" class="flex justify-between items-center">
                             <div class="flex gap-4 p-[1rem]">
                                 <div class="mt-1">
-                                    @svg($menuItem['icon'], "h-12 w-12 text-red-600")
+                                    @svg($menuItem['icon'], "h-12 w-12 text-black dark:text-white")
                                 </div>
                                 <div class="mt-[1rem]">{{$menuItem['title']}}</div>
                             </div>
@@ -93,10 +93,11 @@
                         <div x-show="open" x-transition.duration.500ms class="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1">
                             @foreach($menuItem['menu'] as $menuItemLink)
 
-                                <div class="dark:text-white text-black hover:scale-105 transition duration-500 dark:hover:text-blue-400 hover:text-blue-500 px-[1rem] py-4 mt-2">
+                                <div class="dark:text-white text-black hover:scale-105 hover:bg-white/5 hover:rounded-xl
+                                 transition duration-500 dark:hover:text-blue-400 hover:text-blue-500 px-[1rem] py-4 mt-2">
                                     <a href="{{$menuItemLink['link']}}" class="flex gap-[1rem] items-center">
                                         <div class="">
-                                            @svg($menuItemLink['icon'], "h-12 w-12 text-blue-500 dark:text-red-600")
+                                            @svg($menuItemLink['icon'], "h-12 w-12 text-blue dark:text-white")
                                         </div>
                                         <div class="items-center">{{$menuItemLink['title']}}</div>
                                     </a>
