@@ -10,7 +10,7 @@
 
 <style type="text/css">
    <![CDATA[
-    .fil0 {fill:white;fill-rule:nonzero}
+    .fil0 {fill:currentColor;fill-rule:nonzero}
    ]]>
   </style>
 

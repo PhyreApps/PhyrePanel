@@ -4,8 +4,8 @@
 <svg version="1.1" id="Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
 	 viewBox="0 0 32 32" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
-	.st1{fill:none;stroke:#fff;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st0{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st1{fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10;}
 </style>
 <path class="st0" d="M16,25H2v-8c0-3.9,3.1-7,7-7h0c3.9,0,7,3.1,7,7V25z"/>
 <path class="st0" d="M23,10L23,10c3.9,0,7,3.1,7,7v8H16"/>
