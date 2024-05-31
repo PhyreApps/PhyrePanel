@@ -1,7 +1,7 @@
 <div>
 
     <div class="mt-[2rem]">
-        <div class="dark:bg-white/10 bg-black/5 rounded-xl">
+        <div class="dark:bg-white/10 bg-gray-100 rounded-xl">
             <div class="max-w-7xl mx-auto py-3 px-2 sm:px-4">
                 <div class="flex items-center justify-between flex-wrap">
                     <div class="w-0 flex-1 flex items-center">
@@ -90,14 +90,16 @@
 
                         <div class="border-t dark:border-white/10 border-black/10"></div>
 
-                        <div x-show="open" x-transition.duration.500ms class="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1">
+                        <div x-show="open" x-transition.duration.500ms class="grid xl:grid-cols-3 sm:grid-cols-2 grid-cols-1">
                             @foreach($menuItem['menu'] as $menuItemLink)
 
-                                <div class="dark:text-white text-black hover:scale-105 hover:bg-white/5 hover:rounded-xl
-                                 transition duration-500 dark:hover:text-blue-400 hover:text-blue-500 px-[1rem] py-4 mt-2">
+                                <div class="dark:text-white text-black transition duration-500
+                                dark:hover:bg-white/5 hover:bg-gray-100 rounded-xl group transform hover:-translate-x-1 motion-reduce:transition-none motion-reduce:hover:transform-none
+                                 dark:hover:text-primary-400 hover:text-primary-600 px-[1rem] py-3 mt-2">
                                     <a href="{{$menuItemLink['link']}}" class="flex gap-[1rem] items-center">
                                         <div class="">
-                                            @svg($menuItemLink['icon'], "h-12 w-12 text-blue dark:text-white")
+                                            @svg($menuItemLink['icon'], "h-12 w-12 text-black dark:text-white
+                                            dark:group-hover:text-primary-400 transition duration-500 group-hover:text-primary-600")
                                         </div>
                                         <div class="items-center">{{$menuItemLink['title']}}</div>
                                     </a>
@@ -112,7 +114,7 @@
 
 
             <div class="sm:mt-0 mt-[2rem]">
-                <div class="p-[1rem] dark:bg-white/10 bg-white/50 ml-[2rem] shadow-md rounded-xl">
+                <div class="p-[1rem] bg-white-10 ml-[2rem] shadow-md rounded-xl">
                     <h1 class="font-bold mt-[1.5rem]">General Information</h1>
 
                     <p class="mt-[2rem] dark:text-white/80 text-black/50">Current User</p>
@@ -124,7 +126,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
                         </svg>
-                        <p class="text-blue-400"> 10iskata.microweber.me </p>
+                        <p class="dark:text-primary-400 text-primary-500"> 10iskata.microweber.me </p>
                     </div>
                     <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
@@ -146,7 +148,7 @@
                              class="size-6 cursor-pointer hover:text-blue-500">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
                         </svg>
-                        <p class="text-blue-400">3d4e7dd6-251c-4c8d..</p>
+                        <p class="dark:text-primary-400 text-primary-500">3d4e7dd6-251c-4c8d..</p>
                     </div>
                     <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
@@ -164,7 +166,7 @@
 
 
                     <div class="flex justify-between pt-[1rem]">
-                        <p class="text-blue-400 mb-2">Server Information</p>
+                        <p class="dark:text-primary-400 text-primary-500 mb-2">Server Information</p>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                         </svg>
@@ -172,7 +174,7 @@
                 </div>
 
 
-                <div class="p-[1rem] mt-[2rem] dark:bg-white/10 bg-white/50 ml-[2rem]  shadow-md rounded-xl">
+                <div class="p-[1rem] mt-[2rem] bg-white/10 ml-[2rem]  shadow-md rounded-xl">
                     <h1 class="font-bold mt-[1.5rem]">Statistic</h1>
 
                     <p class="mt-[2rem] dark:text-white/80 text-black/50">Disk Usage</p>
