@@ -5,7 +5,7 @@
             <div class="max-w-7xl mx-auto py-3 px-2 sm:px-4">
                 <div class="flex items-center justify-between flex-wrap">
                     <div class="w-0 flex-1 flex items-center">
-                        <span class="flex p-2 rounded-lg dark:bg-white/20 bg-white">
+                        <span class="flex p-2 rounded-lg dark:bg-white/10 bg-white">
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 ml-1">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
                           </svg>
@@ -16,15 +16,15 @@
                     </div>
                     <div class="order-3 mt-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
                         <a href="#" class="flex items-center justify-center px-4 py-2 rounded-md shadow-sm text-sm font-medium
-                         dark:text-white dark:bg-white/20 bg-white dark:hover:bg-blue-500 hover:bg-blue-500
-                         dark:hover:text-white transition duration-200">
+                         dark:text-white dark:bg-white/10 bg-white dark:hover:bg-primary-400 hover:bg-primary-500
+                         dark:hover:text-white transition duration-500">
                             Learn more
                         </a>
                     </div>
                     <div class="order-2 flex-shrink-0 sm:order-3 sm:ml-3">
-                        <button type="button" class="-mr-1 flex p-2 rounded-md hover:bg-blue-500 sm:-mr-2">
+                        <button type="button" class="-mr-1 flex p-2 rounded-md bg-white dark:bg-white/10 hover:bg-primary-500 hover:bg-primary-400 transition duration-500  sm:-mr-2">
                             <span class="sr-only">Dismiss</span>
-                            <svg class="h-6 w-6 text-white ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <svg class="h-6 w-6 text-black dark:text-white  ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
@@ -114,7 +114,7 @@
 
 
             <div class="sm:mt-0 mt-[2rem]">
-                <div class="p-[1rem] bg-white-10 ml-[2rem] shadow-md rounded-xl">
+                <div class="p-[1rem] bg-white/10 ml-[2rem] shadow-md rounded-xl">
                     <h1 class="font-bold mt-[1.5rem]">General Information</h1>
 
                     <p class="mt-[2rem] dark:text-white/80 text-black/50">Current User</p>
