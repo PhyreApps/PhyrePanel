@@ -10,25 +10,12 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
                           </svg>
                         </span>
-                        <p class="px-2 font-medium dark:text-white text-black truncate">
-                            <span class="hidden md:inline"> <span class="font-bold">DEVELOPMENT LICENSE:</span> If this server is being used in a production environment, notify <span class="text-blue-500 underline cursor-pointer">phyre@panel.net</span></span>
+                        <p class="px-2 font-medium dark:text-white text-black text-md">
+                            <span class="hidden md:inline"> <span class="font-bold">DEVELOPMENT LICENSE:</span> This server is running on a development license. If this server is being used in a production environment, notify
+                                <span class="text-primary-500 dark:text-primary-400 underline cursor-pointer">phyre@panel.net</span></span>
                         </p>
                     </div>
-                    <div class="order-3 mt-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
-                        <a href="#" class="flex items-center justify-center px-4 py-2 rounded-md shadow-sm text-sm font-medium
-                         dark:text-white dark:bg-white/10 bg-white dark:hover:bg-primary-400 hover:bg-primary-500
-                         dark:hover:text-white transition duration-500">
-                            Learn more
-                        </a>
-                    </div>
-                    <div class="order-2 flex-shrink-0 sm:order-3 sm:ml-3">
-                        <button type="button" class="-mr-1 flex p-2 rounded-md bg-white dark:bg-white/10 hover:bg-primary-500 hover:bg-primary-400 transition duration-500  sm:-mr-2">
-                            <span class="sr-only">Dismiss</span>
-                            <svg class="h-6 w-6 text-black dark:text-white  ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -94,7 +81,7 @@
                             @foreach($menuItem['menu'] as $menuItemLink)
 
                                 <div class="dark:text-white text-black transition duration-500
-                                dark:hover:bg-white/5 hover:bg-gray-100 rounded-xl group transform hover:-translate-x-1 motion-reduce:transition-none motion-reduce:hover:transform-none
+                                dark:hover:bg-white/5 hover:bg-gray-100 rounded-lg group transform hover:-translate-x-1 motion-reduce:transition-none motion-reduce:hover:transform-none
                                  dark:hover:text-primary-400 hover:text-primary-600 px-[1rem] py-3 mt-2">
                                     <a href="{{$menuItemLink['link']}}" class="flex gap-[1rem] items-center">
                                         <div class="">
@@ -118,7 +105,7 @@
                     <h1 class="font-bold mt-[1.5rem]">General Information</h1>
 
                     <p class="mt-[2rem] dark:text-white/80 text-black/50">Current User</p>
-                    <p class="">bochko</p>
+                    <p class="">iskata</p>
                     <div class="border-b dark:border-white/10 border-black/5 pt-[1rem]"></div>
 
                     <p class="pt-[1rem] dark:text-white/80 text-black/50">Primary Domain</p>
