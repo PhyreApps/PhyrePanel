@@ -77,12 +77,12 @@
 
                         <div class="border-t dark:border-white/10 border-black/10"></div>
 
-                        <div x-show="open" x-transition.duration.500ms class="grid xl:grid-cols-3 sm:grid-cols-2 grid-cols-1">
+                        <div x-show="open" x-transition.duration.500ms class="grid xl:grid-cols-3 sm:grid-cols-2 grid-cols-1 py-2">
                             @foreach($menuItem['menu'] as $menuItemLink)
 
                                 <div class="dark:text-white text-black transition duration-500
                                 dark:hover:bg-white/5 hover:bg-gray-100 rounded-lg group transform hover:-translate-x-1 motion-reduce:transition-none motion-reduce:hover:transform-none
-                                 dark:hover:text-primary-400 hover:text-primary-600 px-[1rem] py-3 mt-2">
+                                 dark:hover:text-primary-400 hover:text-primary-600 px-[1rem] py-[1rem] mt-2">
                                     <a href="{{$menuItemLink['link']}}" class="flex gap-[1rem] items-center">
                                         <div class="">
                                             @svg($menuItemLink['icon'], "h-12 w-12 text-black dark:text-white

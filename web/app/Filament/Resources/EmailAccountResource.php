@@ -27,7 +27,6 @@ class EmailAccountResource extends Resource
     {
         return $form
             ->schema([
-
                 Select::make('domain_id')
                     ->label('Domain')
                     ->helperText('Missing a domain? Check the Missing a domain? section to find out how you can create one.')
@@ -43,7 +42,7 @@ class EmailAccountResource extends Resource
                     ->maxLength(20),
                 DatePicker::make('last_login')
                     ->format('d/m/Y'),
-            ]);
+            ])->columns(1);
     }
 
     public static function table(Table $table): Table
