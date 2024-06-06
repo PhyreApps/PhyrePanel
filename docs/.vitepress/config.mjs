@@ -16,7 +16,7 @@ export default defineConfig({
   },
 
   sitemap: {
-    hostname: 'https://docs.phyrepanel.com',
+    hostname: 'https://phyreapps.github.io/PhyrePanel/',
     lastmodDateOnly: false
   },
 
