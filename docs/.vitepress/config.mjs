@@ -14,7 +14,8 @@ export default defineConfig({
     //   lang: 'bg',
     // }
   },
-
+  base: 'https://phyreapps.github.io/PhyrePanel/',
+  
   sitemap: {
     hostname: 'https://phyreapps.github.io/PhyrePanel/',
     lastmodDateOnly: false
