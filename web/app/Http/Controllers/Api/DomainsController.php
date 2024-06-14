@@ -83,7 +83,26 @@ class DomainsController extends ApiController
         $findDomain = Domain::where('id', $id)->first();
         if ($findDomain) {
 
-            if (!empty($request->domain)) {
+            if (!empty($request->domain) && $request->domain != $findDomain->domain) {
+
+                $findNewDomainNameIfExist = Domain::where('domain', $request->domain)->first();
+                if ($findNewDomainNameIfExist) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Domain already exist',
+                    ], 400);
+                }
+                $findHostingSubscription = HostingSubscription::where('id', $findDomain->hosting_subscription_id)->first();
+                if (!$findHostingSubscription) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Hosting subscription not found',
+                    ], 404);
+                }
+
+                $findHostingSubscription->domain = $request->domain;
+                $findHostingSubscription->save();
+
                 $findDomain->domain = $request->domain;
             }
 
