@@ -10,6 +10,8 @@ defaults:
 certificates:
   - domain: {{ $domain }}
     solver:
+      subject_alternative_names:
+        - '*.{{ $domain }}'
       name: http-file
       adapter: local
       root: {{ $domainPublic }}

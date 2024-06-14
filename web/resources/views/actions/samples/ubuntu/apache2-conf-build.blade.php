@@ -74,6 +74,8 @@ IncludeOptional conf-enabled/*.conf
 
     ServerName {{$virtualHost['domain']}}
 
+    ServerAlias www.{{$virtualHost['domain']}}
+
     @if(!empty($virtualHost['domainAlias']))
 
         ServerAlias {{$virtualHost['domainAlias']}}
