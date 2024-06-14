@@ -1,6 +1,7 @@
 <?php
 
 use App\ApiClient;
+use App\Jobs\ApacheBuild;
 use App\Models\DomainSslCertificate;
 use App\Settings;
 use Illuminate\Http\Request;
@@ -99,7 +100,9 @@ Route::post('letsencrypt/secure', function () {
     $websiteSslCertificate->provider = 'letsencrypt';
     $websiteSslCertificate->save();
 
-    $findDomain->configureVirtualHost();
+    $findDomain->configureVirtualHost(true);
+
+    ApacheBuild::dispatchSync();
 
     return [
         'success' => 'Domain secured successfully'
