@@ -39,28 +39,28 @@ Route::post('letsencrypt/secure', function () {
     $generalSettings = Settings::general();
 
     $acmeConfigYaml = view('letsencrypt::actions.acme-config-yaml', [
-        'domain' => $event->model->domain,
-        'domainRoot' => $event->model->domain_root,
-        'domainPublic' => $event->model->domain_public,
+        'domain' => $findDomain->domain,
+        'domainRoot' => $findDomain->domain_root,
+        'domainPublic' => $findDomain->domain_public,
         'email' => $generalSettings['master_email'],
         'country' => $generalSettings['master_country'],
         'locality' => $generalSettings['master_locality'],
         'organization' => $generalSettings['organization_name'],
     ])->render();
 
-    file_put_contents($event->model->domain_root.'/acme-config.yaml', $acmeConfigYaml);
+    file_put_contents($findDomain->domain_root.'/acme-config.yaml', $acmeConfigYaml);
 
     $amePHPPharFile = base_path().'/Modules/LetsEncrypt/Actions/acmephp.phar';
 
     $phyrePHP = ApiClient::getPhyrePHP();
 
-    $command = $phyrePHP.' '.$amePHPPharFile.' run '.$event->model->domain_root.'/acme-config.yaml';
+    $command = $phyrePHP.' '.$amePHPPharFile.' run '.$findDomain->domain_root.'/acme-config.yaml';
     $execSSL = shell_exec($command);
 
     $validateCertificates = [];
-    $sslCertificateFilePath = '/root/.acmephp/master/certs/'.$event->model->domain.'/public/cert.pem';
-    $sslCertificateKeyFilePath = '/root/.acmephp/master/certs/'.$event->model->domain.'/private/key.private.pem';
-    $sslCertificateChainFilePath = '/root/.acmephp/master/certs/'.$event->model->domain.'/public/fullchain.pem';
+    $sslCertificateFilePath = '/root/.acmephp/master/certs/'.$findDomain->domain.'/public/cert.pem';
+    $sslCertificateKeyFilePath = '/root/.acmephp/master/certs/'.$findDomain->domain.'/private/key.private.pem';
+    $sslCertificateChainFilePath = '/root/.acmephp/master/certs/'.$findDomain->domain.'/public/fullchain.pem';
 
     if (! file_exists($sslCertificateFilePath)
         || ! file_exists($sslCertificateKeyFilePath)
@@ -88,11 +88,11 @@ Route::post('letsencrypt/secure', function () {
     }
 
     $websiteSslCertificate = new DomainSslCertificate();
-    $websiteSslCertificate->domain = $event->model->domain;
+    $websiteSslCertificate->domain = $findDomain->domain;
     $websiteSslCertificate->certificate = $validateCertificates['certificate'];
     $websiteSslCertificate->private_key = $validateCertificates['private_key'];
     $websiteSslCertificate->certificate_chain = $validateCertificates['certificate_chain'];
-    $websiteSslCertificate->customer_id = $event->model->customer_id;
+    $websiteSslCertificate->customer_id = $findDomain->customer_id;
     $websiteSslCertificate->is_active = 1;
     $websiteSslCertificate->is_wildcard = 0;
     $websiteSslCertificate->is_auto_renew = 1;
