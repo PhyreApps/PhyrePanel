@@ -11,7 +11,7 @@ certificates:
   - domain: {{ $domain }}
     solver:
       subject_alternative_names:
-        - '*.{{ $domain }}'
+        - 'www.{{ $domain }}'
       name: http-file
       adapter: local
       root: {{ $domainPublic }}
