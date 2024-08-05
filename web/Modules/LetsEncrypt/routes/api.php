@@ -56,6 +56,7 @@ Route::post('letsencrypt/secure', function () {
     $phyrePHP = ApiClient::getPhyrePHP();
 
     $command = $phyrePHP.' '.$amePHPPharFile.' run '.$findDomain->domain_root.'/acme-config.yaml';
+
     $execSSL = shell_exec($command);
 
     $validateCertificates = [];

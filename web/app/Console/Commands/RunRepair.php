@@ -62,11 +62,10 @@ class RunRepair extends Command
     public function fixApacheErrors()
     {
         // Rebuild apache config
-        $apacheBuild = new ApacheBuild();
-        $apacheBuild->handle();
+//        $apacheBuild = new ApacheBuild();
+//        $apacheBuild->handle();
 
         $checkApacheStatus = shell_exec('service apache2 status');
-
         if (strpos($checkApacheStatus, 'Syntax error on line') !== false) {
 
             $apacheErrorLine = null;

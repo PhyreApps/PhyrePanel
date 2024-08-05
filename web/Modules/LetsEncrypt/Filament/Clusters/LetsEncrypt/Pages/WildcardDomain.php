@@ -3,6 +3,7 @@
 namespace Modules\LetsEncrypt\Filament\Clusters\LetsEncrypt\Pages;
 
 use App\ApiClient;
+use App\Jobs\ApacheBuild;
 use App\MasterDomain;
 use App\Models\DomainSslCertificate;
 use App\Settings;
@@ -49,6 +50,13 @@ class WildcardDomain extends BaseSettings
         $masterDomain = new MasterDomain();
         $masterDomain->domain = setting('general.wildcard_domain');
 
+        $findWildcardSsl = DomainSslCertificate::where('domain', '*.'.$masterDomain->domain)->first();
+        if ($findWildcardSsl) {
+            return [
+                'error' => 'Domain already secured'
+            ];
+        }
+
         if (file_exists($this->installLogFilePath)) {
             unlink($this->installLogFilePath);
         }
@@ -62,7 +70,7 @@ class WildcardDomain extends BaseSettings
             'locality' => $masterDomain->locality,
             'organization' => $masterDomain->organization
         ])->render();
-        
+
         $acmeConfigYaml = preg_replace('~(*ANY)\A\s*\R|\s*(?!\r\n)\s$~mu', '', $acmeConfigYaml);
 
         file_put_contents($masterDomain->domainRoot.'/acme-wildcard-config.yaml', $acmeConfigYaml);
@@ -126,6 +134,8 @@ class WildcardDomain extends BaseSettings
 
         $mds = new MasterDomain();
         $mds->configureVirtualHost();
+
+        ApacheBuild::dispatchSync();
 
         return [
             'success' => 'SSL certificate installed successfully.'

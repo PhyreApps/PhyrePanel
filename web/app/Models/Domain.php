@@ -380,30 +380,30 @@ class Domain extends Model
             $sslCertificateChainFile = $this->home_root . '/certs/' . $this->domain . '/public/fullchain.pem';
 
             if (!empty($findDomainSSLCertificate->certificate)) {
-                if (!file_exists($sslCertificateFile)) {
+               // if (!file_exists($sslCertificateFile)) {
                     if (!is_dir($this->home_root . '/certs/' . $this->domain . '/public')) {
                         mkdir($this->home_root . '/certs/' . $this->domain . '/public', 0755, true);
                     }
                     file_put_contents($sslCertificateFile, $findDomainSSLCertificate->certificate);
-                }
+               // }
             }
 
             if (!empty($findDomainSSLCertificate->private_key)) {
-                if (!file_exists($sslCertificateKeyFile)) {
+              //  if (!file_exists($sslCertificateKeyFile)) {
                     if (!is_dir($this->home_root . '/certs/' . $this->domain . '/private')) {
                         mkdir($this->home_root . '/certs/' . $this->domain . '/private', 0755, true);
                     }
                     file_put_contents($sslCertificateKeyFile, $findDomainSSLCertificate->private_key);
-                }
+              //  }
             }
 
             if (!empty($findDomainSSLCertificate->certificate_chain)) {
-                if (!file_exists($sslCertificateChainFile)) {
+              //  if (!file_exists($sslCertificateChainFile)) {
                     if (!is_dir($this->home_root . '/certs/' . $this->domain . '/public')) {
                         mkdir($this->home_root . '/certs/' . $this->domain . '/public', 0755, true);
                     }
                     file_put_contents($sslCertificateChainFile, $findDomainSSLCertificate->certificate_chain);
-                }
+               // }
             }
 
             $apacheVirtualHostBuilder->setPort(443);

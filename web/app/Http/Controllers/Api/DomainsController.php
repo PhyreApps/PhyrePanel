@@ -3,6 +3,7 @@
 namespace app\Http\Controllers\Api;
 
 use App\Http\Controllers\ApiController;
+use App\Jobs\ApacheBuild;
 use App\Models\Domain;
 use App\Models\HostingSubscription;
 use Carbon\Carbon;
@@ -107,6 +108,8 @@ class DomainsController extends ApiController
             }
 
             $findDomain->save();
+
+            ApacheBuild::dispatchSync();
 
             return response()->json([
                 'status' => 'ok',
