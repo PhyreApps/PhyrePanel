@@ -314,7 +314,10 @@ class DomainResource extends Resource
                 //                Tables\Columns\TextColumn::make('customer.name')
                 //                    ->searchable()
                 //                    ->sortable(),
-
+                Tables\Columns\TextColumn::make('status')
+                    ->searchable()
+                    ->badge()
+                    ->sortable(),
             ])
             ->defaultSort('id', 'desc')
             ->filters([
@@ -330,6 +333,16 @@ class DomainResource extends Resource
 
                 Tables\Actions\EditAction::make(),
 
+            ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        Domain::STATUS_ACTIVE => 'Active',
+                        Domain::STATUS_BROKEN => 'Broken',
+                        Domain::STATUS_SUSPENDED => 'Suspended',
+                        Domain::STATUS_DEACTIVATED => 'Deactivated',
+                    ])
+                    ->label('Status'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
