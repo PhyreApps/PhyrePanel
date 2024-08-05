@@ -2,6 +2,7 @@
 
 namespace app\Console\Commands;
 
+use App\Actions\GetLinuxUser;
 use App\ApacheParser;
 use App\Jobs\ApacheBuild;
 use App\Models\Backup;
@@ -61,9 +62,30 @@ class RunRepair extends Command
 
     public function fixApacheErrors()
     {
+        $findHostingSubscriptions = HostingSubscription::get();
+        if ($findHostingSubscriptions) {
+            foreach ($findHostingSubscriptions as $hostingSubscription) {
+                $getLinuxUser = new GetLinuxUser();
+                $getLinuxUser->setUsername($hostingSubscription->system_username);
+                $getLinuxUserStatus = $getLinuxUser->handle();
+                if (!$getLinuxUserStatus) {
+                    $findDomains = Domain::where('hosting_subscription_id', $hostingSubscription->id)->get();
+                    if ($findDomains) {
+                        foreach ($findDomains as $domain) {
+                            $domain->status = Domain::STATUS_BROKEN;
+                            $domain->saveQuietly();
+                            $this->error('Turn on maintenance mode: ' . $domain->domain);
+                        }
+                    }
+                    $this->error('User not found: ' . $hostingSubscription->system_username);
+                    continue;
+                }
+            }
+        }
+
         // Rebuild apache config
-//        $apacheBuild = new ApacheBuild();
-//        $apacheBuild->handle();
+        $apacheBuild = new ApacheBuild();
+        $apacheBuild->handle();
 
         $checkApacheStatus = shell_exec('service apache2 status');
         if (strpos($checkApacheStatus, 'Syntax error on line') !== false) {
