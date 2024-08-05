@@ -37,9 +37,18 @@ Route::post('letsencrypt/secure', function () {
         return response()->json(['error' => 'Domain already secured'], 400);
     }
 
+    $findHostingSubscription = \App\Models\HostingSubscription::where('id', $findDomain->hosting_subscription_id)->first();
+    if (! $findHostingSubscription) {
+        return response()->json(['error' => 'Domain not hosted'], 400);
+    }
+
     $generalSettings = Settings::general();
 
-    $acmeConfigYaml = view('letsencrypt::actions.acme-config-yaml', [
+    $sslCertificateFilePath = '/etc/letsencrypt/live/'.$findDomain->domain.'/cert.pem';
+    $sslCertificateKeyFilePath = '/etc/letsencrypt/live/'.$findDomain->domain.'/privkey.pem';
+    $sslCertificateChainFilePath = '/etc/letsencrypt/live/'.$findDomain->domain.'/fullchain.pem';
+
+    $certbotHttpSecureCommand = view('letsencrypt::actions.certbot-http-secure-command', [
         'domain' => $findDomain->domain,
         'domainRoot' => $findDomain->domain_root,
         'domainPublic' => $findDomain->domain_public,
@@ -49,26 +58,15 @@ Route::post('letsencrypt/secure', function () {
         'organization' => $generalSettings['organization_name'],
     ])->render();
 
-    file_put_contents($findDomain->domain_root.'/acme-config.yaml', $acmeConfigYaml);
-
-    $amePHPPharFile = base_path().'/Modules/LetsEncrypt/Actions/acmephp.phar';
-
-    $phyrePHP = ApiClient::getPhyrePHP();
-
-    $command = $phyrePHP.' '.$amePHPPharFile.' run '.$findDomain->domain_root.'/acme-config.yaml';
-
-    $execSSL = shell_exec($command);
+    $exec = shell_exec($certbotHttpSecureCommand);
 
     $validateCertificates = [];
-    $sslCertificateFilePath = '/root/.acmephp/master/certs/'.$findDomain->domain.'/public/cert.pem';
-    $sslCertificateKeyFilePath = '/root/.acmephp/master/certs/'.$findDomain->domain.'/private/key.private.pem';
-    $sslCertificateChainFilePath = '/root/.acmephp/master/certs/'.$findDomain->domain.'/public/fullchain.pem';
 
     if (! file_exists($sslCertificateFilePath)
         || ! file_exists($sslCertificateKeyFilePath)
         || ! file_exists($sslCertificateChainFilePath)) {
         // Cant get all certificates
-        return;
+        return response()->json(['error' => 'Cant get all certificates'], 400);
     }
 
     $sslCertificateFileContent = file_get_contents($sslCertificateFilePath);
