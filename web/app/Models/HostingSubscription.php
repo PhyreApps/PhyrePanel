@@ -53,7 +53,7 @@ class HostingSubscription extends Model
                 $model->system_username = $create['system_username'];
                 $model->system_password = $create['system_password'];
             } else {
-                return false;
+                throw new \Exception('System username or password not created');
             }
         });
 
@@ -166,6 +166,17 @@ class HostingSubscription extends Model
         $createLinuxWebUserOutput = $createLinuxWebUser->handle();
 
         if (strpos($createLinuxWebUserOutput, 'Creating home directory') !== false) {
+
+            // Check user is created
+            $getLinuxUser = new GetLinuxUser();
+            $getLinuxUser->setUsername($systemUsername);
+            $linuxUser = $getLinuxUser->handle();
+            if (empty($linuxUser)) {
+                return [
+                    'error' => true,
+                    'message' => 'System username not created.'
+                ];
+            }
 
             return [
                 'system_username' => $systemUsername,
