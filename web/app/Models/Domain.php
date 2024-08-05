@@ -406,12 +406,14 @@ class Domain extends Model
                // }
             }
 
-            $apacheVirtualHostBuilder->setPort(443);
-            $apacheVirtualHostBuilder->setSSLCertificateFile($sslCertificateFile);
-            $apacheVirtualHostBuilder->setSSLCertificateKeyFile($sslCertificateKeyFile);
-            $apacheVirtualHostBuilder->setSSLCertificateChainFile($sslCertificateChainFile);
+            if (is_file($sslCertificateFile)) {
+                $apacheVirtualHostBuilder->setPort(443);
+                $apacheVirtualHostBuilder->setSSLCertificateFile($sslCertificateFile);
+                $apacheVirtualHostBuilder->setSSLCertificateKeyFile($sslCertificateKeyFile);
+                $apacheVirtualHostBuilder->setSSLCertificateChainFile($sslCertificateChainFile);
 
-            $virtualHostSettingsWithSSL = $apacheVirtualHostBuilder->getSettings();
+                $virtualHostSettingsWithSSL = $apacheVirtualHostBuilder->getSettings();
+            }
 
         }
 
