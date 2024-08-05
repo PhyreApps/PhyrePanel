@@ -7,6 +7,7 @@ use BladeUI\Icons\Factory;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Modules\LetsEncrypt\Console\Commands\LetsEncryptHttpAuthenticatorHook;
 use Modules\LetsEncrypt\LetsEncryptApacheVirtualHostConfig;
 use Modules\LetsEncrypt\Listeners\DomainIsCreatedListener;
 
@@ -54,7 +55,9 @@ class LetsEncryptServiceProvider extends ServiceProvider
      */
     protected function registerCommands(): void
     {
-        // $this->commands([]);
+         $this->commands([
+             LetsEncryptHttpAuthenticatorHook::class,
+         ]);
     }
 
     /**

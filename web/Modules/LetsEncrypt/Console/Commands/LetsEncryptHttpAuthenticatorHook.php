@@ -2,10 +2,11 @@
 
 namespace Modules\LetsEncrypt\Console\Commands;
 
+use App\Models\Domain;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
-class LetsencryptAuthenticatorHook extends Command
+class LetsEncryptHttpAuthenticatorHook extends Command
 {
     /**
      * The name and signature of the console command.
@@ -33,8 +34,24 @@ class LetsencryptAuthenticatorHook extends Command
         $certbotValidation = $this->option('certbot-validation');
         $certbotDomain = $this->option('certbot-domain');
 
+        $findDomain = Domain::where('domain', $certbotDomain)->first();
+        if (!$findDomain) {
+            $this->error('Domain not found');
+            return;
+        }
+        if (!is_dir($findDomain->domain_public)) {
+            $this->error('Domain public directory not found');
+            return;
+        }
 
-        // .well-known/acme-challenge
+        $acmeChallangePath = $findDomain->domain_public . '/.well-known/acme-challenge';
+        if (!is_dir($acmeChallangePath)) {
+            shell_exec('mkdir -p ' . $acmeChallangePath);
+        }
+        $authFilePath = $acmeChallangePath . '/' . $certbotToken;
+        file_put_contents($authFilePath, $certbotValidation);
+
+        $this->info('Auth file created: ' . $authFilePath);
 
     }
 }
