@@ -35,18 +35,21 @@ class DownloadMicroweber implements ShouldQueue
         ShellApi::exec('chmod +x ' . $shellPath . '/*');
 
         $mwComposerClientHelper = new MicroweberComposerClientHelper();
+        $instance = $mwComposerClientHelper->getComposerClientInstance();
+        $instance->prepareHeaders();
+
 
         // Download core app
         $status = $mwComposerClientHelper->getMicroweberDownloaderInstance()->download(config('microweber.sharedPaths.app'));
 
         // Download modules
         $modulesDownloader = new MicroweberModuleConnectorsDownloader();
-        $modulesDownloader->setComposerClient($mwComposerClientHelper->getComposerClientInstance());
+        $modulesDownloader->setComposerClient($instance);
         $status = $modulesDownloader->download(config('microweber.sharedPaths.modules'));
 
         // Download templates
         $templatesDownloader = new MicroweberTemplatesDownloader();
-        $templatesDownloader->setComposerClient($mwComposerClientHelper->getComposerLicensedInstance());
+        $templatesDownloader->setComposerClient($instance);
         $status = $templatesDownloader->download(config('microweber.sharedPaths.templates'));
 
     }

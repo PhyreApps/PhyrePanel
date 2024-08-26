@@ -13,9 +13,17 @@ class MicroweberComposerClientHelper
         $composerClient = new Client();
         $composerClient->packageServers = [
             'https://market.microweberapi.com/packages/microweberserverpackages/packages.json',
+            'https://packages.microweberapi.com/packages/microweber/packages.json',
         ];
 
-        return $composerClient;
+        $lic = setting('whitelabel_license_key');
+
+        if($lic) {
+            $composerClient->addLicense([
+                'local_key' => $lic
+            ]);
+        }
+          return $composerClient;
     }
 
     public function getComposerLicensedInstance()
