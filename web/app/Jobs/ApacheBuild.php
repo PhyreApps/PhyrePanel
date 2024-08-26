@@ -70,7 +70,8 @@ class ApacheBuild implements ShouldQueue
         }
 
         $apache2 = view('actions.samples.ubuntu.apache2-conf-build', [
-            'virtualHosts' => $virtualHosts
+            'virtualHosts' => $virtualHosts,
+            'serverName' => setting('general.master_domain') ?? 'localhost',
         ])->render();
 
         $apache2 = preg_replace('~(*ANY)\A\s*\R|\s*(?!\r\n)\s$~mu', '', $apache2);

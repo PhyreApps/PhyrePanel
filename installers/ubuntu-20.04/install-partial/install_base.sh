@@ -30,6 +30,9 @@ DEPENDENCIES_LIST=(
     "libcurl4-openssl-dev"
     "libsodium23"
     "libpq5"
+    "apache2"
+    "libapache2-mod-ruid2"
+    "libapache2-mod-php"
     "libssl-dev"
     "zlib1g-dev"
 )
@@ -40,6 +43,17 @@ done
 
 # Start MySQL
 service mysql start
+
+# Apache modules
+a2enmod actions
+a2enmod ssl
+a2enmod ruid2
+a2enmod env
+a2enmod deflate
+a2enmod expires
+a2enmod rewrite
+a2enmod cgi
+systemctl restart apache2
 
 wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/main/installers/ubuntu-20.04/greeting.sh
 mv greeting.sh /etc/profile.d/phyre-greeting.sh

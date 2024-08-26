@@ -11,6 +11,8 @@ KeepAlive On
 MaxKeepAliveRequests 100
 KeepAliveTimeout 5
 
+ServerName {{ $serverName }}
+
 User ${APACHE_RUN_USER}
 Group ${APACHE_RUN_GROUP}
 
