@@ -85,6 +85,7 @@ class PHPInstaller
 
        // $commands[] = 'ufw allow in "Apache Full"';
         $commands[] = 'systemctl restart apache2';
+        $commands[] = 'phyre-php /usr/local/phyre/web/artisan phyre:run-repair';
 
         $shellFileContent = '';
         foreach ($commands as $command) {
