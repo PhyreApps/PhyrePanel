@@ -64,6 +64,8 @@ class PHPInstaller
         }
 
         $commands[] = 'a2enmod cgi';
+        $commands[] = 'a2enmod deflate';
+        $commands[] = 'a2enmod expires';
         $commands[] = 'a2enmod mime';
         $commands[] = 'a2enmod rewrite';
         $commands[] = 'a2enmod env';
