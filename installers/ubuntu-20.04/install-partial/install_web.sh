@@ -61,6 +61,8 @@ phyre-php artisan db:seed
 
 phyre-php artisan phyre:set-ini-settings APP_ENV "production"
 
+phyre-php artisan phyre:run-repair
+
 chmod -R o+w /usr/local/phyre/web/storage/
 chmod -R o+w /usr/local/phyre/web/bootstrap/cache/
 

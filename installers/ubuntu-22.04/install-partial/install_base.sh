@@ -44,18 +44,6 @@ done
 # Start MySQL
 service mysql start
 
-# Apache modules
-a2enmod actions
-a2enmod ssl
-a2enmod ruid2
-a2enmod env
-a2enmod deflate
-a2enmod expires
-a2enmod rewrite
-a2enmod cgi
-
-systemctl restart apache2
-
 wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/main/installers/ubuntu-22.04/greeting.sh
 mv greeting.sh /etc/profile.d/phyre-greeting.sh
 

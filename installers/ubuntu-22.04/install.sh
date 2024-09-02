@@ -30,6 +30,9 @@ DEPENDENCIES_LIST=(
     "libcurl4-openssl-dev"
     "libsodium23"
     "libpq5"
+    "apache2"
+    "libapache2-mod-ruid2"
+    "libapache2-mod-php"
     "libssl-dev"
     "zlib1g-dev"
 )
@@ -143,6 +146,8 @@ phyre-php artisan migrate
 phyre-php artisan db:seed
 
 phyre-php artisan phyre:set-ini-settings APP_ENV "production"
+
+phyre-php artisan phyre:run-repair
 
 chmod -R o+w /usr/local/phyre/web/storage/
 chmod -R o+w /usr/local/phyre/web/bootstrap/cache/
