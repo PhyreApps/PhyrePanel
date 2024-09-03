@@ -35,12 +35,6 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        if (auth()->check()) {
-            $panel->renderHook(
-                name: PanelsRenderHook::BODY_START,
-                hook: fn (): string => Blade::render('@livewire(\'jobs-queue-notifications\')')
-            );
-        }
 
          $panel->default()
             ->darkMode(true)
@@ -136,6 +130,11 @@ class AdminPanelProvider extends PanelProvider
         ->colors([
             'primary'=>$defaultColor,
         ]);
+
+        $panel->renderHook(
+            name: PanelsRenderHook::BODY_START,
+            hook: fn (): string => Blade::render('@livewire(\'jobs-queue-notifications\')')
+        );
 
         return $panel;
     }

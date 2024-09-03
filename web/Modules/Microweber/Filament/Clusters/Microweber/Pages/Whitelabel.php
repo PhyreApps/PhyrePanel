@@ -8,6 +8,8 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use MicroweberPackages\ComposerClient\Client;
 use Modules\Microweber\Filament\Clusters\MicroweberCluster;
+use Modules\Microweber\Jobs\DownloadMicroweber;
+use Modules\Microweber\Jobs\UpdateWhitelabelToWebsites;
 use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
 
 class Whitelabel extends BaseSettings
@@ -32,6 +34,15 @@ class Whitelabel extends BaseSettings
         return self::$navigationLabel;
     }
 
+    public function save() : void
+    {
+        parent::save();
+
+        UpdateWhitelabelToWebsites::dispatch();
+
+        $this->redirect('/admin/microweber/whitelabel');
+    }
+
     public function schema(): array
     {
 
@@ -52,37 +63,43 @@ class Whitelabel extends BaseSettings
                 TextInput::make('microweber.whitelabel.brand_favicon')
                     ->label('Brand Favicon'),
 
-                TextInput::make('microweber.whitelabel.admin_login_white_label_url')
+                TextInput::make('microweber.whitelabel.admin_logo_login_link')
                     ->label('Admin login - White Label URL?'),
 
                 Checkbox::make('microweber.whitelabel.enable_support_links')
                     ->label('Enable support links?'),
 
-                TextInput::make('microweber.whitelabel.enable_support_links')
-                    ->label('Enable support links'),
+                TextInput::make('microweber.whitelabel.custom_support_url')
+                    ->label('Custom support URL'),
 
                 Textarea::make('microweber.whitelabel.powered_by_text')
                     ->label('Enter "Powered by" text'),
 
-                Checkbox::make('microweber.whitelabel.hide_powered_by_link')
+                Checkbox::make('microweber.whitelabel.powered_by_link')
                     ->label('Hide "Powered by" link'),
 
-                TextInput::make('microweber.whitelabel.logo_admin_panel')
+                Checkbox::make('microweber.whitelabel.enable_service_links')
+                    ->label('Enable service links'),
+
+                TextInput::make('microweber.whitelabel.logo_admin')
                     ->label('Logo for Admin panel (size: 180x35px)'),
 
-                TextInput::make('microweber.whitelabel.logo_live_edit_toolbar')
+                TextInput::make('microweber.whitelabel.logo_live_edit')
                     ->label('Logo for Live-Edit toolbar (size: 50x50px)'),
 
-                TextInput::make('microweber.whitelabel.logo_login_screen')
+                TextInput::make('microweber.whitelabel.logo_login')
                     ->label('Logo for Login screen (max width: 290px)'),
 
-                Checkbox::make('microweber.whitelabel.disable_microweber_marketplace')
+                Checkbox::make('microweber.whitelabel.disable_marketplace')
                     ->label('Disable Microweber Marketplace'),
+
+                Checkbox::make('microweber.whitelabel.disable_powered_by_link')
+                    ->label('Disable Powered by link'),
 
                 TextInput::make('microweber.whitelabel.external_login_server_button_text')
                     ->label('External Login Server Button Text'),
 
-                Checkbox::make('microweber.whitelabel.enable_external_login_server')
+                Checkbox::make('microweber.whitelabel.external_login_server_enable')
                     ->label('Enable External Login Server'),
 
                 Checkbox::make('microweber.whitelabel.enable_microweber_service_links')

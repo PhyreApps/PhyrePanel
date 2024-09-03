@@ -1,5 +1,7 @@
 <div>
 
+    @if(auth()->id())
+
     <script>
         let hiddenJobQueueNotifications = [];
         function hideJobQueueNotification(jobId) {
@@ -43,4 +45,6 @@
 
 @endforeach
     </div>
+
+    @endif
 </div>
