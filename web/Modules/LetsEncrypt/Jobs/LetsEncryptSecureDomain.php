@@ -39,7 +39,11 @@ class LetsEncryptSecureDomain
             'organization' => $generalSettings['organization_name'],
         ])->render();
 
-        $exec = shell_exec($certbotHttpSecureCommand);
+        $tmpFile = '/tmp/certbot-http-secure-command-'.$findDomain->id.'.sh';
+        file_put_contents($tmpFile, $certbotHttpSecureCommand);
+        $exec = dd("bash $tmpFile");
+
+        unlink($tmpFile);
 
         $validateCertificates = [];
 
