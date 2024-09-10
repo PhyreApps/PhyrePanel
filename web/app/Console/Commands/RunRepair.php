@@ -37,13 +37,13 @@ class RunRepair extends Command
     {
 
         // Find broken domains
-        $findBrokenDomains = Domain::where('status', Domain::STATUS_BROKEN)->get();
-        if ($findBrokenDomains) {
-            foreach ($findBrokenDomains as $brokenDomain) {
-                $brokenDomain->status = Domain::STATUS_ACTIVE;
-                $brokenDomain->saveQuietly();
-            }
-        }
+//        $findBrokenDomains = Domain::where('status', Domain::STATUS_BROKEN)->get();
+//        if ($findBrokenDomains) {
+//            foreach ($findBrokenDomains as $brokenDomain) {
+//                $brokenDomain->status = Domain::STATUS_ACTIVE;
+//                $brokenDomain->saveQuietly();
+//            }
+//        }
 
         // Overwrite supervisor config file
         $workersCount = (int) setting('general.supervisor_workers_count');
