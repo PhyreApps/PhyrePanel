@@ -27,7 +27,7 @@ class RunDomainRepair extends Command
      */
     public function handle()
     {
-        $apacheBuild = new ApacheBuild();
+        $apacheBuild = new ApacheBuild(true);
         $apacheBuild->handle();
     }
 }
