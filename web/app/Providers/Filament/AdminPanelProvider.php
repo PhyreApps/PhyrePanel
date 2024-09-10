@@ -110,6 +110,22 @@ class AdminPanelProvider extends PanelProvider
 
             if ($findModules->count() > 0) {
                 foreach ($findModules as $module) {
+
+                    // Search in main path
+                    $modulePathClusters = module_path($module->name, 'Filament/Clusters');
+                    if (is_dir($modulePathClusters)) {
+                        $panel->discoverClusters(in: $modulePathClusters, for: 'Modules\\' . $module->name . '\\Filament\\Clusters');
+                    }
+                    $modulePathPages = module_path($module->name, 'Filament/Pages');
+                    if (is_dir($modulePathPages)) {
+                        $panel->discoverPages(in: $modulePathPages, for: 'Modules\\' . $module->name . '\\Filament\\Pages');
+                    }
+                    $modulePathResources = module_path($module->name, 'Filament/Resources');
+                    if (is_dir($modulePathResources)) {
+                        $panel->discoverResources(in: $modulePathResources, for: 'Modules\\' . $module->name . '\\Filament\\Resources');
+                    }
+
+                    // Search in app path
                     $modulePathClusters = module_path($module->name, 'App/Filament/Clusters');
                     if (is_dir($modulePathClusters)) {
                         $panel->discoverClusters(in: $modulePathClusters, for: 'Modules\\' . $module->name . '\\App\\Filament\\Clusters');
