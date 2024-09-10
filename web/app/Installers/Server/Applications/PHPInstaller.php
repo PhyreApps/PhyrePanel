@@ -86,6 +86,7 @@ class PHPInstaller
        // $commands[] = 'ufw allow in "Apache Full"';
         $commands[] = 'systemctl restart apache2';
         $commands[] = 'phyre-php /usr/local/phyre/web/artisan phyre:run-repair';
+        $commands[] = 'apt-get autoremove -yq';
 
         $shellFileContent = '';
         foreach ($commands as $command) {
@@ -96,7 +97,7 @@ class PHPInstaller
         $shellFileContent .= 'rm -f /tmp/php-installer.sh';
 
         file_put_contents('/tmp/php-installer.sh', $shellFileContent);
-        shell_exec('bash /tmp/php-installer.sh >> ' . $this->logFilePath . ' &');
+        dd('bash /tmp/php-installer.sh >> ' . $this->logFilePath . ' &');
 
     }
 
