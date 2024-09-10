@@ -3,6 +3,7 @@
 namespace App\Filament\Pages\Settings;
 
 use App\Helpers;
+use App\Jobs\ApacheBuild;
 use App\MasterDomain;
 use Closure;
 use Filament\Forms\Components\Checkbox;
@@ -51,9 +52,8 @@ class GeneralSettings extends BaseSettings
             $rebuildApache = true;
         }
         if ($rebuildApache) {
-            $apacheBuild = new \App\VirtualHosts\ApacheBuild();
-            $apacheBuild->fixPermissions();
-            $apacheBuild->build();
+            $apacheBuild = new ApacheBuild(true);
+            $apacheBuild->handle();
         }
 
     }
