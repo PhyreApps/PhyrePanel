@@ -50,7 +50,6 @@ class LetsEncryptCertificate extends Model
                 $model->domain_ssl_certificate_id = $findSSL->id;
                 $model->certificate = $findSSL->certificate;
                 $model->private_key = $findSSL->private_key;
-                $model->certificate_chain = $findSSL->certificate_chain;
                 $model->expires_at = $findSSL->expiration_date;
             }
         });
