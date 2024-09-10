@@ -25,6 +25,10 @@ class PHPInstaller
 
     public function install()
     {
+
+        // Clear log file
+        file_put_contents($this->logFilePath, '');
+
         $commands = [];
         $commands[] = 'echo "Starting PHP Installation..."';
         $commands[] = 'export DEBIAN_FRONTEND=noninteractive';
@@ -97,7 +101,7 @@ class PHPInstaller
         $shellFileContent .= 'rm -f /tmp/php-installer.sh';
 
         file_put_contents('/tmp/php-installer.sh', $shellFileContent);
-        dd('bash /tmp/php-installer.sh >> ' . $this->logFilePath . ' &');
+        shell_exec('bash /tmp/php-installer.sh >> ' . $this->logFilePath . ' &');
 
     }
 
