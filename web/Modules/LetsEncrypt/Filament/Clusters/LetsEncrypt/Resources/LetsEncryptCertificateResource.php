@@ -33,7 +33,13 @@ class LetsEncryptCertificateResource extends Resource
                     ->searchable()
                     ->options(
                     Domain::get()->pluck('domain', 'id')->toArray()
-                ),
+                )->columnSpanFull(),
+
+                Forms\Components\TextInput::make('email')
+                    ->label('Email')
+                    ->required()
+                    ->email()
+                    ->columnSpanFull(),
             ]);
     }
 
