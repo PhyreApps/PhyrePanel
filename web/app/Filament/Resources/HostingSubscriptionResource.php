@@ -193,7 +193,7 @@ class HostingSubscriptionResource extends Resource
             Pages\EditHostingSubscription::class,
             Pages\ManageHostingSubscriptionDatabases::class,
             Pages\ManageHostingSubscriptionBackups::class,
-            Pages\ManageHostingSubscriptionFtpAccounts::class,
+//            Pages\ManageHostingSubscriptionFtpAccounts::class,
             Pages\ManageHostingSubscriptionFileManager::class
         ]);
     }
@@ -215,7 +215,7 @@ class HostingSubscriptionResource extends Resource
           //  'view' => Pages\ViewHostingSubscription::route('/{record}'),
             'databases' => Pages\ManageHostingSubscriptionDatabases::route('/{record}/databases'),
             'backups' => Pages\ManageHostingSubscriptionBackups::route('/{record}/backups'),
-            'ftp-accounts' => Pages\ManageHostingSubscriptionFtpAccounts::route('/{record}/ftp-accounts'),
+//            'ftp-accounts' => Pages\ManageHostingSubscriptionFtpAccounts::route('/{record}/ftp-accounts'),
             'file-manager' => Pages\ManageHostingSubscriptionFileManager::route('/{record}/file-manager'),
         ];
     }
