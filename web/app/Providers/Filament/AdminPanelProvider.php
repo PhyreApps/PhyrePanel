@@ -107,15 +107,16 @@ class AdminPanelProvider extends PanelProvider
                 $defaultColor = Color::hex(setting('general.brand_primary_color'));
             }
             $findModules = Module::where('installed', 1)->get();
+
             if ($findModules->count() > 0) {
                 foreach ($findModules as $module) {
-                    $modulePathClusters = module_path($module->name, 'Filament/Clusters');
+                    $modulePathClusters = module_path($module->name, 'App/Filament/Clusters');
                     if (is_dir($modulePathClusters)) {
-                        $panel->discoverClusters(in: $modulePathClusters, for: 'Modules\\' . $module->name . '\\Filament\\Clusters');
+                        $panel->discoverClusters(in: $modulePathClusters, for: 'Modules\\' . $module->name . '\\App\\Filament\\Clusters');
                     }
-                    $modulePathPages = module_path($module->name, 'Filament/Pages');
+                    $modulePathPages = module_path($module->name, 'App/Filament/Pages');
                     if (is_dir($modulePathPages)) {
-                        $panel->discoverPages(in: $modulePathPages, for: 'Modules\\' . $module->name . '\\Filament\\Pages');
+                        $panel->discoverPages(in: $modulePathPages, for: 'Modules\\' . $module->name . '\\App\\Filament\\Pages');
                     }
                     $modulePathResources = module_path($module->name, 'App/Filament/Resources');
                     if (is_dir($modulePathResources)) {
