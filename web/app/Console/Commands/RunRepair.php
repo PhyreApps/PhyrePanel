@@ -36,6 +36,15 @@ class RunRepair extends Command
     public function handle()
     {
 
+        // Find broken domains
+        $findBrokenDomains = Domain::where('status', Domain::STATUS_BROKEN)->get();
+        if ($findBrokenDomains) {
+            foreach ($findBrokenDomains as $brokenDomain) {
+                $brokenDomain->status = Domain::STATUS_ACTIVE;
+                $brokenDomain->saveQuietly();
+            }
+        }
+
         // Overwrite supervisor config file
         $workersCount = (int) setting('general.supervisor_workers_count');
         $supervisorConf = view('actions.samples.ubuntu.supervisor-conf', [
@@ -89,6 +98,9 @@ class RunRepair extends Command
 
         $checkApacheStatus = shell_exec('service apache2 status');
         if (strpos($checkApacheStatus, 'Syntax error on line') !== false) {
+
+            $this->error('Apache syntax error found');
+            $this->error($checkApacheStatus);
 
             $apacheErrorLine = null;
             preg_match('/Syntax error on line (\d+)/', $checkApacheStatus, $matchApacheErrorLine);
