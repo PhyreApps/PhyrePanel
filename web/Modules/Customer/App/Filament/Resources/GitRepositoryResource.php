@@ -32,6 +32,7 @@ class GitRepositoryResource extends Resource
                     ->label('Directory')
                     ->required()
                     ->columnSpanFull(),
+
             ]);
     }
 
@@ -66,6 +67,11 @@ class GitRepositoryResource extends Resource
                 Tables\Columns\TextColumn::make('dir')
                     ->searchable()
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('status')
+                    ->searchable()
+                    ->badge()
+                    ->sortable(),
             ])
             ->filters([
                 //
@@ -73,6 +79,7 @@ class GitRepositoryResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                     Tables\Actions\Action::make('pull')
+                        ->hidden(fn (GitRepository $record) => $record->status !== 'cloned')
                         ->icon('heroicon-o-arrow-down-tray')
                     ->action(function (GitRepository $record) {
 
