@@ -54,8 +54,7 @@ class CloneGitRepository extends Page
                                 ->label('SSH Key')
                                 ->options(\App\Models\GitSshKey::all()->pluck('name', 'id'))
                                 ->columnSpanFull()
-                                ->live()
-                                ->required(),
+                                ->live(),
 
                             TextInput::make('url')
                                 ->label('URL')
@@ -165,7 +164,7 @@ class CloneGitRepository extends Page
         $newGitRepository->dir = $this->state['dir'];
         $newGitRepository->clone_from = $this->state['clone_from'];
         $newGitRepository->domain_id = $this->state['domain_id'];
-        $newGitRepository->git_ssh_key_id = $this->state['git_ssh_key_id'];
+        $newGitRepository->git_ssh_key_id = (int) $this->state['git_ssh_key_id'];
         $newGitRepository->status = GitRepository::STATUS_PENDING;
         $newGitRepository->save();
 
