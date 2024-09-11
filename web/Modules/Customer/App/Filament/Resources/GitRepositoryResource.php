@@ -63,44 +63,8 @@ class GitRepositoryResource extends Resource
 
 
 
-                Forms\Components\TextInput::make('name')
-                    ->label('Name')
-                    ->required()
-                    ->columnSpanFull()
-                    ->placeholder('Enter the name of the repository'),
 
-                Forms\Components\Select::make('branch')
-                    ->label('Branch')
-                    ->required()
-                    ->options(function (Forms\Get $get) {
-                        $url = $get('url');
-                        $repoDetails = GitClient::getRepoDetailsByUrl($url);
-                        if (isset($repoDetails['name'])) {
-                            return $repoDetails['branches'];
-                        }
-                    })
-                    ->live()
-                    ->columnSpanFull()
-                    ->placeholder('Enter the branch of the repository'),
 
-                Forms\Components\Select::make('tag')
-                    ->label('Tag')
-                    ->live()
-                    ->options(function (Forms\Get $get) {
-                        $url = $get('url');
-                        $repoDetails = GitClient::getRepoDetailsByUrl($url);
-                        if (isset($repoDetails['name'])) {
-                            return $repoDetails['tags'];
-                        }
-                    })
-                    ->columnSpanFull()
-                    ->placeholder('Enter the tag of the repository'),
-
-                Forms\Components\TextInput::make('dir')
-                    ->label('Directory')
-                    ->columnSpanFull()
-                    ->required()
-                    ->placeholder('Enter the directory of the repository'),
             ]);
     }
 
