@@ -124,6 +124,8 @@ class GitRepository extends Model
             return;
         }
 
+        $gitProvider = $gitSSHUrl['provider'];
+
         $shellCommand = [];
         $shellCommand[] = 'echo "Cloning started at $(date)"';
 
@@ -133,7 +135,7 @@ class GitRepository extends Model
 
         if ($gitSSHKey) {
 
-            $shellCommand[] = "ssh-keyscan github.com >> /home/$findHostingSubscription->system_username/.ssh/known_hosts";
+            $shellCommand[] = "ssh-keyscan $gitProvider >> /home/$findHostingSubscription->system_username/.ssh/known_hosts";
             $shellCommand[] = 'chmod 0600 /home/'.$findHostingSubscription->system_username.'/.ssh/known_hosts';
             $shellCommand[] = 'chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' /home/'.$findHostingSubscription->system_username.'/.ssh/known_hosts';
 
@@ -161,7 +163,6 @@ class GitRepository extends Model
         file_put_contents($shellFile, $shellContent);
 
         shell_exec('chmod +x ' . $shellFile);
-        shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' ' . $shellFile);
 
         shell_exec('bash '.$shellFile.' >> ' . $shellLog . ' &');
 
