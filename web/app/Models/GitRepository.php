@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\GitClient;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,6 +17,8 @@ class GitRepository extends Model
     const STATUS_CLONING = 'cloning';
     const STATUS_CLONED = 'cloned';
     const STATUS_FAILED = 'failed';
+
+    const STATUS_PULLING = 'pulling';
 
     protected $fillable = [
         'name',
@@ -32,5 +35,82 @@ class GitRepository extends Model
         'domain_id',
         'git_ssh_key_id',
     ];
+
+
+    public function domain()
+    {
+        return $this->belongsTo(Domain::class);
+    }
+
+    public function clone()
+    {
+        $this->status = self::STATUS_CLONING;
+        $this->save();
+
+    }
+
+    public function pull()
+    {
+        $this->status = self::STATUS_PULLING;
+        $this->save();
+
+        $findDomain = Domain::find($this->domain_id);
+        if (!$findDomain) {
+            $this->status = self::STATUS_FAILED;
+            $this->status_message = 'Domain not found';
+            $this->save();
+            return;
+        }
+
+        $findHostingSubscription = HostingSubscription::find($findDomain->hosting_subscription_id);
+        if (!$findHostingSubscription) {
+            $this->status = self::STATUS_FAILED;
+            $this->status_message = 'Hosting Subscription not found';
+            $this->save();
+            return;
+        }
+
+
+        $projectDir = $findDomain->domain_root . '/' . $this->dir;
+
+        $gitSSHKey = GitSshKey::find($this->git_ssh_key_id);
+        if ($gitSSHKey) {
+            $sshPath = '/home/'.$findHostingSubscription->system_username .'/.git-ssh/'.$gitSSHKey->id;
+            $privateKeyFile = $sshPath.'/id_rsa';
+            $publicKeyFile = $sshPath.'/id_rsa.pub';
+
+            if (!is_dir($sshPath)) {
+                shell_exec('mkdir -p ' . $sshPath);
+                shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' -R ' . dirname($sshPath));
+                shell_exec('chmod 0700 ' . dirname($sshPath));
+            }
+
+            if (!file_exists($privateKeyFile)) {
+                file_put_contents($privateKeyFile, $gitSSHKey->private_key);
+                chown($privateKeyFile, $findHostingSubscription->system_username);
+                chmod($privateKeyFile, 0400);
+            }
+
+            if (!file_exists($publicKeyFile)) {
+                file_put_contents($publicKeyFile, $gitSSHKey->public_key);
+                chown($publicKeyFile, $findHostingSubscription->system_username);
+                chmod($publicKeyFile, 0400);
+            }
+        }
+
+        $gitSSHUrl = GitClient::parseGitUrl($this->url);
+        if (!isset($gitSSHUrl['provider'])) {
+            $this->status = self::STATUS_FAILED;
+            $this->status_message = 'Provider not found';
+            $this->save();
+            return;
+        }
+
+//        $cloneUrl = 'git@'.$gitSSHUrl['provider'].':'.$gitSSHUrl['owner'].'/'.$gitSSHUrl['name'].'.git';
+//        $clone = shell_exec('git -c core.sshCommand="ssh -i '.$privateKeyFile.'" clone ' . $cloneUrl . ' ' . $projectDir);
+
+//        dd($clone);
+
+    }
 
 }

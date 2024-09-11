@@ -28,62 +28,63 @@ class GitRepositoryResource extends Resource
     {
         return $form
             ->schema([
-
-                Forms\Components\Wizard::make([
-                    Forms\Components\Wizard\Step::make('Order')
-                        ->schema([
-                            // ...
-                        ]),
-                    Forms\Components\Wizard\Step::make('Delivery')
-                        ->schema([
-                            // ...
-                        ]),
-                    Forms\Components\Wizard\Step::make('Billing')
-                        ->schema([
-                            // ...
-                        ]),
-                ])->columnSpanFull()
-
+                Forms\Components\TextInput::make('dir')
+                    ->label('Directory')
+                    ->required()
+                    ->columnSpanFull(),
             ]);
     }
 
-    public static function ___form(Form $form): Form
-    {
-        $gitSSHKeys = \App\Models\GitSshKey::all()->pluck('name', 'id');
-        return $form
-            ->schema([
-
-                Forms\Components\Select::make('git_ssh_key_id')
-                    ->label('SSH Key')
-                    ->options($gitSSHKeys)
-                    ->columnSpanFull()
-                    ->live()
-                    ->required(),
-
-
-
-
-
-
-            ]);
-    }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                //
+
+                Tables\Columns\TextColumn::make('domain.domain'),
+
+//                Tables\Columns\TextColumn::make('name')
+//                    ->searchable()
+//                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('url')
+                    ->searchable()
+                    ->sortable(),
+//
+//                Tables\Columns\TextColumn::make('branch')
+//                    ->searchable()
+//                    ->sortable(),
+//
+//                Tables\Columns\TextColumn::make('tag')
+//                    ->searchable()
+//                    ->sortable(),
+//
+//                Tables\Columns\TextColumn::make('clone_from')
+//                    ->searchable()
+//                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('dir')
+                    ->searchable()
+                    ->sortable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                    Tables\Actions\Action::make('pull')
+                        ->icon('heroicon-o-arrow-down-tray')
+                    ->action(function (GitRepository $record) {
+
+                        $gitRepository = GitRepository::find($record->id);
+                        $gitRepository->pull();
+
+                    })
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+//                Tables\Actions\BulkActionGroup::make([
+//                    Tables\Actions\DeleteBulkAction::make(),
+//                ]),
             ]);
     }
 
@@ -98,7 +99,7 @@ class GitRepositoryResource extends Resource
     {
         return [
             'index' => Pages\ListGitRepositories::route('/'),
-            'edit' => Pages\EditGitRepository::route('/{record}/edit'),
+//            'edit' => Pages\EditGitRepository::route('/{record}/edit'),
         ];
     }
 }
