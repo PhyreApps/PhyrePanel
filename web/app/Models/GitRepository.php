@@ -125,18 +125,18 @@ class GitRepository extends Model
         $shellCommand = [];
         $shellCommand[] = 'echo "Cloning started at $(date)"';
 
-        $exportHomeCommand = 'export HOME=/home/'.$findHostingSubscription->system_username;
-        $shellCommand[] = 'su -m '.$findHostingSubscription->system_username.' -c "'.$exportHomeCommand.'"';
+        $exportCommand = 'export HOME=/home/'.$findHostingSubscription->system_username;
+        $shellCommand[] = 'su -m '.$findHostingSubscription->system_username.' -c "'.$exportCommand.'"';
 
 
         if ($gitSSHKey) {
             $cloneUrl = 'git@'.$gitSSHUrl['provider'].':'.$gitSSHUrl['owner'].'/'.$gitSSHUrl['name'].'.git';
-            $gitCloneCommand = 'git -c core.sshCommand="ssh -i '.$privateKeyFile .'" clone '.$cloneUrl.' '.$projectDir . ' 2>&1';
+            $cloneCommand = 'git -c core.sshCommand="ssh -i '.$privateKeyFile .'" clone '.$cloneUrl.' '.$projectDir . ' 2>&1';
         } else {
-            $gitCloneCommand = 'git clone '.$this->url.' '.$projectDir . ' 2>&1';
+            $cloneCommand = 'git clone '.$this->url.' '.$projectDir . ' 2>&1';
         }
 
-        $shellCommand[] = 'su -m '.$findHostingSubscription->system_username.' -c "'.$gitCloneCommand.'"';
+        $shellCommand[] = 'su -m '.$findHostingSubscription->system_username." -c '".$cloneCommand."'";
 
         $shellCommand[] = 'phyre-php /usr/local/phyre/web/artisan git-repository:mark-as-cloned '.$this->id;
 
@@ -150,9 +150,12 @@ class GitRepository extends Model
             $shellContent .= $command . "\n";
         }
 
+        shell_exec('rm -rf ' . $shellFile);
         file_put_contents($shellFile, $shellContent);
 
         shell_exec('chmod +x ' . $shellFile);
+        shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' ' . $shellFile);
+
         shell_exec('bash '.$shellFile.' >> ' . $shellLog . ' &');
 
     }
