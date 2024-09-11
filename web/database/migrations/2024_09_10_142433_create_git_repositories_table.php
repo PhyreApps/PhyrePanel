@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('dir')->nullable();
 
             $table->unsignedBigInteger('domain_id');
+            $table->unsignedBigInteger('git_ssh_key_id');
 
             $table->timestamps();
         });

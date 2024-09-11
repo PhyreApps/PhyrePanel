@@ -20,5 +20,7 @@ class GitRepository extends Model
         'status_message',
         'dir',
         'domain_id',
+        'git_ssh_key_id',
     ];
+
 }

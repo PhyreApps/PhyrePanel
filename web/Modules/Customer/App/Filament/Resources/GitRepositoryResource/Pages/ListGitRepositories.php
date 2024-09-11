@@ -13,7 +13,10 @@ class ListGitRepositories extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\Action::make('clone_new_repository')
+                ->label('Clone New Repository')
+                ->url('/customer/git-repositories/clone')
+                ->icon('heroicon-o-plus'),
         ];
     }
 }

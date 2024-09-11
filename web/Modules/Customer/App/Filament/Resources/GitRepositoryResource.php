@@ -23,23 +23,44 @@ class GitRepositoryResource extends Resource
 
     protected static ?string $navigationGroup = 'Git';
 
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
 
-                Forms\Components\TextInput::make('url')
-                    ->label('URL')
-                    ->required()
+                Forms\Components\Wizard::make([
+                    Forms\Components\Wizard\Step::make('Order')
+                        ->schema([
+                            // ...
+                        ]),
+                    Forms\Components\Wizard\Step::make('Delivery')
+                        ->schema([
+                            // ...
+                        ]),
+                    Forms\Components\Wizard\Step::make('Billing')
+                        ->schema([
+                            // ...
+                        ]),
+                ])->columnSpanFull()
+
+            ]);
+    }
+
+    public static function ___form(Form $form): Form
+    {
+        $gitSSHKeys = \App\Models\GitSshKey::all()->pluck('name', 'id');
+        return $form
+            ->schema([
+
+                Forms\Components\Select::make('git_ssh_key_id')
+                    ->label('SSH Key')
+                    ->options($gitSSHKeys)
                     ->columnSpanFull()
                     ->live()
-                    ->afterStateUpdated(function ($state, Forms\Set $set) use (&$branches, &$tags) {
-                        $repoDetails = GitClient::getRepoDetailsByUrl($state);
-                        if (isset($repoDetails['name'])) {
-                            $set('name', $repoDetails['owner'] .'/'. $repoDetails['name']);
-                        }
-                    })
-                    ->placeholder('Enter the URL of the repository'),
+                    ->required(),
+
+
 
 
                 Forms\Components\TextInput::make('name')
@@ -113,7 +134,6 @@ class GitRepositoryResource extends Resource
     {
         return [
             'index' => Pages\ListGitRepositories::route('/'),
-            'create' => Pages\CreateGitRepository::route('/create'),
             'edit' => Pages\EditGitRepository::route('/{record}/edit'),
         ];
     }
