@@ -58,6 +58,11 @@ class GitClient
 
     public static function getRepoDetailsByUrl($url)
     {
+        $url = trim($url);
+
+        if (empty($url)) {
+            return [];
+        }
 
         shell_exec('GIT_TERMINAL_PROMPT=0');
         $outputBranches = shell_exec('git ls-remote --heads '.$url);

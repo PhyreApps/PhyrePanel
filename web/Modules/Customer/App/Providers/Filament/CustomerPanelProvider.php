@@ -52,11 +52,15 @@ class CustomerPanelProvider extends PanelProvider
             ->colors([
                 'primary'=>$defaultColor,
             ])
+            ->navigationGroups([
+                'Hosting',
+                'Git'
+            ])
             ->discoverResources(in: module_path($this->module, 'App/Filament/Resources'), for: "$moduleNamespace\\App\\Filament\\Resources")
             ->discoverPages(in: module_path($this->module, 'App/Filament/Pages'), for: "$moduleNamespace\\App\Filament\\Pages")
-            ->pages([
-                Pages\Dashboard::class,
-            ])
+//            ->pages([
+//                Pages\Dashboard::class,
+//            ])
             ->discoverWidgets(in: module_path($this->module, 'App/Filament/Widgets'), for: "$moduleNamespace\\App\Filament\\Widgets")
             ->widgets([
                 Widgets\AccountWidget::class,

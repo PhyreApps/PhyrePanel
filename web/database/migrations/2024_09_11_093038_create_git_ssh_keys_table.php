@@ -11,20 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('git_repositories', function (Blueprint $table) {
+        Schema::create('git_ssh_keys', function (Blueprint $table) {
             $table->id();
 
             $table->string('name');
-            $table->string('url');
-            $table->string('branch');
-            $table->string('last_commit_hash')->nullable();
-            $table->string('last_commit_message')->nullable();
-            $table->timestamp('last_commit_date')->nullable();
-
+            $table->longText('private_key');
+            $table->longText('public_key');
+            $table->string('passphrase')->nullable();
             $table->string('status')->nullable();
             $table->string('status_message')->nullable();
-
-            $table->string('dir')->nullable();
 
             $table->unsignedBigInteger('domain_id');
 
@@ -37,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('git_repositories');
+        Schema::dropIfExists('git_ssh_keys');
     }
 };

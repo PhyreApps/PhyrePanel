@@ -21,14 +21,10 @@ class GitRepositoryResource extends Resource
 
     protected static ?string $navigationIcon = 'phyre-git';
 
-    protected static ?string $navigationGroup = 'Hosting';
+    protected static ?string $navigationGroup = 'Git';
 
     public static function form(Form $form): Form
     {
-
-        $branches = [];
-        $tags = [];
-
         return $form
             ->schema([
 
@@ -38,13 +34,9 @@ class GitRepositoryResource extends Resource
                     ->columnSpanFull()
                     ->live()
                     ->afterStateUpdated(function ($state, Forms\Set $set) use (&$branches, &$tags) {
-                        $state = trim($state);
-
                         $repoDetails = GitClient::getRepoDetailsByUrl($state);
-                        if ($repoDetails['name']) {
+                        if (isset($repoDetails['name'])) {
                             $set('name', $repoDetails['owner'] .'/'. $repoDetails['name']);
-                            $branches = $repoDetails['branches'];
-                            $tags = $repoDetails['tags'];
                         }
                     })
                     ->placeholder('Enter the URL of the repository'),
@@ -59,7 +51,13 @@ class GitRepositoryResource extends Resource
                 Forms\Components\Select::make('branch')
                     ->label('Branch')
                     ->required()
-                    ->options($branches)
+                    ->options(function (Forms\Get $get) {
+                        $url = $get('url');
+                        $repoDetails = GitClient::getRepoDetailsByUrl($url);
+                        if (isset($repoDetails['name'])) {
+                            return $repoDetails['branches'];
+                        }
+                    })
                     ->live()
                     ->columnSpanFull()
                     ->placeholder('Enter the branch of the repository'),
@@ -67,7 +65,13 @@ class GitRepositoryResource extends Resource
                 Forms\Components\Select::make('tag')
                     ->label('Tag')
                     ->live()
-                    ->options($tags)
+                    ->options(function (Forms\Get $get) {
+                        $url = $get('url');
+                        $repoDetails = GitClient::getRepoDetailsByUrl($url);
+                        if (isset($repoDetails['name'])) {
+                            return $repoDetails['tags'];
+                        }
+                    })
                     ->columnSpanFull()
                     ->placeholder('Enter the tag of the repository'),
 
