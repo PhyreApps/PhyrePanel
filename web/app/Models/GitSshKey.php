@@ -15,4 +15,9 @@ class GitSshKey extends Model
         'private_key',
         'public_key',
     ];
+
+    public function hostingSubscription()
+    {
+        return $this->belongsTo(HostingSubscription::class);
+    }
 }
