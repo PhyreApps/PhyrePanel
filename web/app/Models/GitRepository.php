@@ -91,9 +91,9 @@ class GitRepository extends Model
 
         $gitSSHKey = GitSshKey::find($this->git_ssh_key_id);
         if ($gitSSHKey) {
-            $sshPath = '/home/'.$findHostingSubscription->system_username .'/.git-ssh/'.$gitSSHKey->id;
-            $privateKeyFile = $sshPath.'/id_rsa';
-            $publicKeyFile = $sshPath.'/id_rsa.pub';
+            $sshPath = '/home/'.$findHostingSubscription->system_username .'/.ssh';
+            $privateKeyFile = $sshPath.'/id_rsa_'. $gitSSHKey->id;
+            $publicKeyFile = $sshPath.'/id_rsa_'.$gitSSHKey->id.'.pub';
 
             if (!is_dir($sshPath)) {
                 shell_exec('mkdir -p ' . $sshPath);
@@ -103,14 +103,16 @@ class GitRepository extends Model
 
             if (!file_exists($privateKeyFile)) {
                 file_put_contents($privateKeyFile, $gitSSHKey->private_key);
-                chown($privateKeyFile, $findHostingSubscription->system_username);
-                chmod($privateKeyFile, 0400);
+
+                shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' ' . $privateKeyFile);
+                shell_exec('chmod 0400 ' . $privateKeyFile);
+
             }
 
             if (!file_exists($publicKeyFile)) {
                 file_put_contents($publicKeyFile, $gitSSHKey->public_key);
-                chown($publicKeyFile, $findHostingSubscription->system_username);
-                chmod($publicKeyFile, 0400);
+                shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' ' . $publicKeyFile);
+                shell_exec('chmod 0400 ' . $publicKeyFile);
             }
         }
 
@@ -130,6 +132,11 @@ class GitRepository extends Model
 
 
         if ($gitSSHKey) {
+
+            $shellCommand[] = "ssh-keyscan github.com >> /home/$findHostingSubscription->system_username/.ssh/known_hosts";
+            $shellCommand[] = 'chmod 0600 /home/'.$findHostingSubscription->system_username.'/.ssh/known_hosts';
+            $shellCommand[] = 'chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' /home/'.$findHostingSubscription->system_username.'/.ssh/known_hosts';
+
             $cloneUrl = 'git@'.$gitSSHUrl['provider'].':'.$gitSSHUrl['owner'].'/'.$gitSSHUrl['name'].'.git';
             $cloneCommand = 'git -c core.sshCommand="ssh -i '.$privateKeyFile .'" clone '.$cloneUrl.' '.$projectDir . ' 2>&1';
         } else {
