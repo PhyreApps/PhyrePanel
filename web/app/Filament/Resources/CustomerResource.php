@@ -136,7 +136,7 @@ class CustomerResource extends Resource
 
                 Impersonate::make('impersonate')
                     ->guard('web_customer')
-                    ->redirectTo(route('filament.customer::admin.pages.dashboard')),
+                    ->redirectTo(route('filament.customer::admin.resources.domains.index')),
 
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

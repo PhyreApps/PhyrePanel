@@ -124,29 +124,33 @@ class GitRepository extends Model
 
         $shellCommand = [];
         $shellCommand[] = 'echo "Cloning started at $(date)"';
-        $shellCommand[] = 'export HOME=/home/'.$findHostingSubscription->system_username;
-//        $shellCommand[] = 'cd '.$findDomain->domain_root;
+
+        $exportHomeCommand = 'export HOME=/home/'.$findHostingSubscription->system_username;
+        $shellCommand[] = 'su -m '.$findHostingSubscription->system_username.' -c "'.$exportHomeCommand.'"';
+
 
         if ($gitSSHKey) {
             $cloneUrl = 'git@'.$gitSSHUrl['provider'].':'.$gitSSHUrl['owner'].'/'.$gitSSHUrl['name'].'.git';
-            $shellCommand[] = 'git -c core.sshCommand="ssh -i '.$privateKeyFile .'" clone '.$cloneUrl.' '.$projectDir . ' 2>&1';
+            $gitCloneCommand = 'git -c core.sshCommand="ssh -i '.$privateKeyFile .'" clone '.$cloneUrl.' '.$projectDir . ' 2>&1';
         } else {
             $gitCloneCommand = 'git clone '.$this->url.' '.$projectDir . ' 2>&1';
-            $shellCommand[] = 'su -m '.$findHostingSubscription->system_username.' -c "'.$gitCloneCommand.'"';
         }
 
+        $shellCommand[] = 'su -m '.$findHostingSubscription->system_username.' -c "'.$gitCloneCommand.'"';
+
         $shellCommand[] = 'phyre-php /usr/local/phyre/web/artisan git-repository:mark-as-cloned '.$this->id;
+
+        $shellFile = '/tmp/git-clone-' . $this->id . '.sh';
+        $shellLog = '/tmp/git-clone-' . $this->id . '.log';
+
+        $shellCommand[] = 'rm -rf ' . $shellFile;
 
         $shellContent = '';
         foreach ($shellCommand as $command) {
             $shellContent .= $command . "\n";
         }
 
-        $shellFile = '/tmp/git-clone-' . $this->id . '.sh';
-        $shellLog = '/tmp/git-clone-' . $this->id . '.log';
-
         file_put_contents($shellFile, $shellContent);
-        file_put_contents($shellLog, 'Clone started at ' . date('Y-m-d H:i:s') . "\n");
 
         shell_exec('chmod +x ' . $shellFile);
         shell_exec('bash '.$shellFile.' >> ' . $shellLog . ' &');
