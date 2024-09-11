@@ -5,6 +5,7 @@ namespace App\Models;
 use App\GitClient;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use function Psy\sh;
 
 class GitRepository extends Model
 {
@@ -106,10 +107,30 @@ class GitRepository extends Model
             return;
         }
 
-//        $cloneUrl = 'git@'.$gitSSHUrl['provider'].':'.$gitSSHUrl['owner'].'/'.$gitSSHUrl['name'].'.git';
-//        $clone = shell_exec('git -c core.sshCommand="ssh -i '.$privateKeyFile.'" clone ' . $cloneUrl . ' ' . $projectDir);
+        $cloneUrl = 'git@'.$gitSSHUrl['provider'].':'.$gitSSHUrl['owner'].'/'.$gitSSHUrl['name'].'.git';
 
-//        dd($clone);
+        $shellCommand = [];
+
+        if ($gitSSHKey) {
+            $shellCommand[] = 'git -c core.sshCommand="ssh -i '.$privateKeyFile .'" clone '.$cloneUrl.' '.$projectDir;
+        } else {
+            $shellCommand[] = 'git clone '.$cloneUrl.' '.$projectDir;
+        }
+
+        $shellCommand[] = 'phyre-php /usr/local/phyre/web/artisan git-repository:mark-as-cloned '.$this->id;
+
+        $shellContent = '';
+        foreach ($shellCommand as $command) {
+            $shellContent .= $command . "\n";
+        }
+
+        $shellFile = '/tmp/git-clone-' . $this->id . '.sh';
+        $shellLog = '/tmp/git-clone-' . $this->id . '.log';
+        
+        file_put_contents($shellFile, $shellContent);
+
+        shell_exec('chmod +x ' . $shellFile);
+        shell_exec('bash '.$shellFile.' >> ' . $shellLog . ' &');
 
     }
 
