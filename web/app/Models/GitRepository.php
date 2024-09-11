@@ -43,16 +43,16 @@ class GitRepository extends Model
         return $this->belongsTo(Domain::class);
     }
 
-    public function clone()
+    public function pull()
     {
-        $this->status = self::STATUS_CLONING;
+        $this->status = self::STATUS_PULLING;
         $this->save();
 
     }
 
-    public function pull()
+    public function clone()
     {
-        $this->status = self::STATUS_PULLING;
+        $this->status = self::STATUS_CLONING;
         $this->save();
 
         $findDomain = Domain::find($this->domain_id);
@@ -107,17 +107,18 @@ class GitRepository extends Model
             return;
         }
 
-        $cloneUrl = 'git@'.$gitSSHUrl['provider'].':'.$gitSSHUrl['owner'].'/'.$gitSSHUrl['name'].'.git';
-
         $shellCommand = [];
 
         if ($gitSSHKey) {
-            $shellCommand[] = 'git -c core.sshCommand="ssh -i '.$privateKeyFile .'" clone '.$cloneUrl.' '.$projectDir;
+            $cloneUrl = 'git@'.$gitSSHUrl['provider'].':'.$gitSSHUrl['owner'].'/'.$gitSSHUrl['name'].'.git';
+            $shellCommand[] = 'git -c core.sshCommand="ssh -i '.$privateKeyFile .'" clone '.$cloneUrl.' '.$projectDir . ' 2>&1';
         } else {
-            $shellCommand[] = 'git clone '.$cloneUrl.' '.$projectDir;
+            $shellCommand[] = 'git clone '.$this->url.' '.$projectDir . ' 2>&1';
         }
 
         $shellCommand[] = 'phyre-php /usr/local/phyre/web/artisan git-repository:mark-as-cloned '.$this->id;
+
+        $shellCommand[] = 'echo "Cloning completed at $(date)"';
 
         $shellContent = '';
         foreach ($shellCommand as $command) {
@@ -126,8 +127,9 @@ class GitRepository extends Model
 
         $shellFile = '/tmp/git-clone-' . $this->id . '.sh';
         $shellLog = '/tmp/git-clone-' . $this->id . '.log';
-        
+
         file_put_contents($shellFile, $shellContent);
+        file_put_contents($shellLog, 'Clone started at ' . date('Y-m-d H:i:s') . "\n");
 
         shell_exec('chmod +x ' . $shellFile);
         shell_exec('bash '.$shellFile.' >> ' . $shellLog . ' &');
