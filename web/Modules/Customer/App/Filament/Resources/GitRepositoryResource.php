@@ -79,14 +79,15 @@ class GitRepositoryResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                     Tables\Actions\Action::make('pull')
-                      //  ->hidden(fn (GitRepository $record) => $record->status !== 'cloned')
+                        ->hidden(fn (GitRepository $record) => $record->status !== 'cloned')
                         ->icon('heroicon-o-arrow-down-tray')
                     ->action(function (GitRepository $record) {
 
                         $gitRepository = GitRepository::find($record->id);
-                        $gitRepository->pull();
+                        $gitRepository->clone();
 
-                    })
+                    }),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
 //                Tables\Actions\BulkActionGroup::make([

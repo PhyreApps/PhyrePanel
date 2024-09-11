@@ -28,11 +28,7 @@ class CloneGitRepository extends Page
 
     protected static bool $shouldRegisterNavigation = false;
 
-    public $state = [
-        'url' => '',
-        'name' => '',
-        'git_ssh_key_id' => '',
-    ];
+    public $state = [];
 
     public $repositoryDetails = [];
     public function getTitle(): string
@@ -66,6 +62,8 @@ class CloneGitRepository extends Page
                                     if (isset($repoDetails['name'])) {
                                         $set('name', $repoDetails['owner'] .'/'. $repoDetails['name']);
                                         $this->repositoryDetails = $repoDetails;
+
+                                        $set('dir', $repoDetails['name']);
                                     }
                                 })
                                 ->placeholder('Enter the URL of the repository'),
@@ -137,7 +135,6 @@ class CloneGitRepository extends Page
                                 ->label('Directory')
                                 ->columnSpanFull()
                                 ->required()
-                                ->default('public_html/')
                                 ->placeholder('Enter the directory to clone the repository'),
 
                         ]),
@@ -164,7 +161,11 @@ class CloneGitRepository extends Page
         $newGitRepository->dir = $this->state['dir'];
         $newGitRepository->clone_from = $this->state['clone_from'];
         $newGitRepository->domain_id = $this->state['domain_id'];
-        $newGitRepository->git_ssh_key_id = (int) $this->state['git_ssh_key_id'];
+
+        if (isset($this->state['git_ssh_key_id'])) {
+            $newGitRepository->git_ssh_key_id = $this->state['git_ssh_key_id'];
+        }
+
         $newGitRepository->status = GitRepository::STATUS_PENDING;
         $newGitRepository->save();
 

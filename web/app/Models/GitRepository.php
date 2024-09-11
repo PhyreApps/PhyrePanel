@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\GitClient;
+use App\ShellApi;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use function Psy\sh;
@@ -36,7 +37,21 @@ class GitRepository extends Model
         'domain_id',
         'git_ssh_key_id',
     ];
+    public static function boot()
+    {
+        parent::boot();
 
+        static::created(function ($model) {
+            $model->clone();
+        });
+
+        static::deleting(function ($model) {
+            $projectDir = $model->domain->domain_root . '/' . $model->dir;
+            ShellApi::safeDelete($projectDir,[
+                $model->domain->domain_root . '/',
+            ]);
+        });
+    }
 
     public function domain()
     {
@@ -108,17 +123,19 @@ class GitRepository extends Model
         }
 
         $shellCommand = [];
+        $shellCommand[] = 'echo "Cloning started at $(date)"';
+        $shellCommand[] = 'export HOME=/home/'.$findHostingSubscription->system_username;
+//        $shellCommand[] = 'cd '.$findDomain->domain_root;
 
         if ($gitSSHKey) {
             $cloneUrl = 'git@'.$gitSSHUrl['provider'].':'.$gitSSHUrl['owner'].'/'.$gitSSHUrl['name'].'.git';
             $shellCommand[] = 'git -c core.sshCommand="ssh -i '.$privateKeyFile .'" clone '.$cloneUrl.' '.$projectDir . ' 2>&1';
         } else {
-            $shellCommand[] = 'git clone '.$this->url.' '.$projectDir . ' 2>&1';
+            $gitCloneCommand = 'git clone '.$this->url.' '.$projectDir . ' 2>&1';
+            $shellCommand[] = 'su -m '.$findHostingSubscription->system_username.' -c "'.$gitCloneCommand.'"';
         }
 
         $shellCommand[] = 'phyre-php /usr/local/phyre/web/artisan git-repository:mark-as-cloned '.$this->id;
-
-        $shellCommand[] = 'echo "Cloning completed at $(date)"';
 
         $shellContent = '';
         foreach ($shellCommand as $command) {
