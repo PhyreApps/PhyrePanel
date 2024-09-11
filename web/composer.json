@@ -26,7 +26,7 @@
         "monarobase/country-list": "^3.5",
         "nwidart/laravel-modules": "^10.0",
         "outerweb/filament-settings": "^1.2",
-        "phpseclib/phpseclib": "^3.0",
+        "phpseclib/phpseclib": "~3.0",
         "postare/blade-mdi": "^1.1",
         "riodwanto/filament-ace-editor": "^1.0",
         "spatie/ssh": "^1.10",

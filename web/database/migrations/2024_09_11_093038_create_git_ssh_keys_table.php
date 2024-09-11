@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('status')->nullable();
             $table->string('status_message')->nullable();
 
-            $table->unsignedBigInteger('domain_id');
+            $table->unsignedBigInteger('hosting_subscription_id');
 
             $table->timestamps();
         });

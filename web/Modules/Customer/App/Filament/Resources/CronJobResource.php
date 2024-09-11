@@ -34,7 +34,6 @@ class CronJobResource extends Resource
                     ->options(
                         \App\Models\HostingSubscription::all()->pluck('domain', 'id')
                     )
-                    ->live()
                     ->disabled(function ($record) {
                         return $record;
                     })

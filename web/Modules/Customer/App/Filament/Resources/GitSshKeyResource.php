@@ -13,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use phpseclib3\Crypt\RSA;
 
 class GitSshKeyResource extends Resource
 {
@@ -24,14 +25,64 @@ class GitSshKeyResource extends Resource
 
     public static function form(Form $form): Form
     {
+
+
         return $form
             ->schema([
 
-                Forms\Components\Select::make('domain_id')
-                    ->label('Domain')
-                    ->options([])
+                Forms\Components\Select::make('hosting_subscription_id')
+                    ->label('Hosting Subscription')
+                    ->options(
+                        \App\Models\HostingSubscription::all()->pluck('domain', 'id')
+                    )
+                    ->disabled(function ($record) {
+                        return $record;
+                    })
                     ->columnSpanFull()
                     ->required(),
+
+                Forms\Components\TextInput::make('name')
+                    ->autofocus()
+                    ->required()
+                    ->columnSpanFull()
+                    ->label('Name'),
+
+                Forms\Components\Textarea::make('private_key')
+                    ->required()
+                    ->columnSpanFull()
+                    ->label('Private Key')
+                    ->rows(10)
+                    ->disabled(function ($record) {
+                        return $record;
+                    })
+                    ->hintAction(function ($record) {
+                        if ($record) {
+                            return null;
+                        }
+                        return Forms\Components\Actions\Action::make('generate')
+                            ->icon('heroicon-m-key')
+                            ->action(function (Forms\Set $set) {
+
+
+                                $private = RSA::createKey();
+                                $public = $private->getPublicKey();
+
+                                $privateKeyString = $private->toString('OpenSSH');
+                                $publicKey = $public->toString('OpenSSH');
+
+                                $set('private_key', $privateKeyString);
+                                $set('public_key', $publicKey);
+                            });
+                    }),
+
+                Forms\Components\Textarea::make('public_key')
+                    ->required()
+                    ->columnSpanFull()
+                    ->rows(10)
+                    ->disabled(function ($record) {
+                        return $record;
+                    })
+                    ->label('Public Key'),
 
             ]);
     }

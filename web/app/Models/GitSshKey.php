@@ -10,7 +10,9 @@ class GitSshKey extends Model
     use HasFactory;
 
     protected $fillable = [
+        'hosting_subscription_id',
         'name',
-
+        'private_key',
+        'public_key',
     ];
 }
