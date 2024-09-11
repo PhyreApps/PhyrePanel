@@ -3,6 +3,9 @@
 namespace Modules\Customer\App\Filament\Pages;
 
 use App\GitClient;
+use App\Models\Domain;
+use App\Models\GitRepository;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -11,6 +14,8 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\HtmlString;
 
 class CloneGitRepository extends Page
 {
@@ -122,16 +127,48 @@ class CloneGitRepository extends Page
                         ]),
                     Wizard\Step::make('Clone to')
                         ->schema([
+                            Select::make('domain_id')
+                                ->label('Domain')
+                                ->live()
+                                ->options(
+                                    Domain::get()->pluck('domain', 'id')->toArray()
+                                )->columnSpanFull(),
 
                             TextInput::make('dir')
                                 ->label('Directory')
                                 ->columnSpanFull()
                                 ->required()
-                                ->placeholder('Enter the directory of the repository'),
+                                ->default('public_html/')
+                                ->placeholder('Enter the directory to clone the repository'),
 
                         ]),
-                ])->columnSpanFull()
+                ])
+                    ->submitAction(new HtmlString(Blade::render(<<<BLADE
+                            <x-filament::button
+                                wire:click="cloneRepository"
+                            >
+                                Clone Repository
+                            </x-filament::button>
+                        BLADE)))
+                    ->columnSpanFull()
 
             ]);
+    }
+
+    public function cloneRepository()
+    {
+        $newGitRepository = new GitRepository();
+        $newGitRepository->name = $this->state['name'];
+        $newGitRepository->url = $this->state['url'];
+        $newGitRepository->branch = $this->state['branch'];
+        $newGitRepository->tag = $this->state['tag'];
+        $newGitRepository->dir = $this->state['dir'];
+        $newGitRepository->clone_from = $this->state['clone_from'];
+        $newGitRepository->domain_id = $this->state['domain_id'];
+        $newGitRepository->git_ssh_key_id = $this->state['git_ssh_key_id'];
+        $newGitRepository->status = GitRepository::STATUS_PENDING;
+        $newGitRepository->save();
+
+        $this->redirect('/customer/git-repositories');
     }
 }

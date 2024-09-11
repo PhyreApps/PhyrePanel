@@ -9,10 +9,20 @@ class GitRepository extends Model
 {
     use HasFactory;
 
+    public $timestamps = true;
+
+    const STATUS_PENDING = 'pending';
+
+    const STATUS_CLONING = 'cloning';
+    const STATUS_CLONED = 'cloned';
+    const STATUS_FAILED = 'failed';
+
     protected $fillable = [
         'name',
         'url',
         'branch',
+        'tag',
+        'clone_from',
         'last_commit_hash',
         'last_commit_message',
         'last_commit_date',

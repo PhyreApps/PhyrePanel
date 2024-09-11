@@ -16,7 +16,9 @@ return new class extends Migration
 
             $table->string('name');
             $table->string('url');
-            $table->string('branch');
+            $table->string('branch')->nullable();
+            $table->string('tag')->nullable();
+            $table->string('clone_from')->nullable();
             $table->string('last_commit_hash')->nullable();
             $table->string('last_commit_message')->nullable();
             $table->timestamp('last_commit_date')->nullable();
