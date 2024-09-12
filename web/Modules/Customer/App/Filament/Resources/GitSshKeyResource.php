@@ -4,6 +4,7 @@ namespace Modules\Customer\App\Filament\Resources;
 
 use App\Models\Domain;
 use App\Models\GitSshKey;
+use App\Models\Scopes\CustomerScope;
 use Modules\Customer\App\Filament\Resources\GitSshKeyResource\Pages;
 use Modules\Customer\App\Filament\Resources\GitSshKeyResource\RelationManagers;
 use Filament\Forms;

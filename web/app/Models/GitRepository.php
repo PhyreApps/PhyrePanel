@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\GitClient;
+use App\Models\Scopes\CustomerDomainScope;
+use App\Models\Scopes\CustomerHostingSubscriptionScope;
 use App\ShellApi;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -37,6 +39,15 @@ class GitRepository extends Model
         'domain_id',
         'git_ssh_key_id',
     ];
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new CustomerDomainScope());
+    }
+
     public static function boot()
     {
         parent::boot();
