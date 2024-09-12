@@ -14,3 +14,5 @@ use Modules\Customer\App\Http\Controllers\CustomerController;
 |
 */
 
+Route::get('/customer/phpMyAdmin/login/{id}', [\Modules\Customer\App\Http\Controllers\PHPMyAdminController::class, 'login'])
+    ->name('customer.phpmyadmin.login');
