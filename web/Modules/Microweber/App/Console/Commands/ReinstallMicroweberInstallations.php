@@ -8,14 +8,14 @@ use MicroweberPackages\SharedServerScripts\MicroweberReinstaller;
 use Modules\Microweber\App\Actions\MicroweberScanner;
 use Modules\Microweber\App\Models\MicroweberInstallation;
 
-class RunDomainRepair extends Command
+class ReinstallMicroweberInstallations extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'microweber:run-domain-repair';
+    protected $signature = 'microweber:reinstall-installations';
 
     /**
      * The console command description.
@@ -29,9 +29,6 @@ class RunDomainRepair extends Command
      */
     public function handle()
     {
-//        $newMwScan = new MicroweberScanner();
-//        $newMwScan->handle();
-
         $getMwInstallations = MicroweberInstallation::all();
         if ($getMwInstallations->count() > 0) {
             foreach ($getMwInstallations as $mwInstallation) {
@@ -39,11 +36,6 @@ class RunDomainRepair extends Command
                 $domain = $mwInstallation->domain()->first();
                 if (!$domain) {
                     $this->info('Domain not found: ' . $mwInstallation->domain_id);
-                    continue;
-                }
-
-                if (is_link($mwInstallation->installation_path.'/userfiles/modules/logo')) {
-                    $this->info('Symlink exists: ' . $mwInstallation->installation_path.'/userfiles/modules/logo');
                     continue;
                 }
 
