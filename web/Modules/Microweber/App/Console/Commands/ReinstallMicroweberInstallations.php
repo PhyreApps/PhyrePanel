@@ -3,6 +3,7 @@
 namespace Modules\Microweber\App\Console\Commands;
 
 use App\Models\Domain;
+use App\Models\HostingSubscription;
 use Illuminate\Console\Command;
 use MicroweberPackages\SharedServerScripts\MicroweberReinstaller;
 use Modules\Microweber\App\Actions\MicroweberScanner;
@@ -38,12 +39,24 @@ class ReinstallMicroweberInstallations extends Command
                     $this->info('Domain not found: ' . $mwInstallation->domain_id);
                     continue;
                 }
+                $findHostingSubscription = HostingSubscription::where('id', $domain->hosting_subscription_id)->first();
+                if (!$findHostingSubscription) {
+                    $this->info('Hosting subscription not found: ' . $domain->hosting_subscription_id);
+                    continue;
+                }
 
                 $this->info('Repair domain: ' . $domain->domain);
 
+                dump([
+                    'sourcePath' => config('microweber.sharedPaths.app'),
+                    'domain_username' => $findHostingSubscription->system_username,
+                    'installation_path' => $mwInstallation->installation_path,
+                ]);
+                continue;
+
                 $microweberReinstall = new MicroweberReinstaller();
                 $microweberReinstall->setSymlinkInstallation();
-                $microweberReinstall->setChownUser($domain->domain_username);
+                $microweberReinstall->setChownUser($findHostingSubscription->system_username);
                 $microweberReinstall->setPath($mwInstallation->installation_path);
                 $microweberReinstall->setSourcePath(config('microweber.sharedPaths.app'));
 
