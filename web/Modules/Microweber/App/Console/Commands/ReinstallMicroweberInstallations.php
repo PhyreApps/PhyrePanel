@@ -45,14 +45,7 @@ class ReinstallMicroweberInstallations extends Command
                     continue;
                 }
 
-                $this->info('Repair domain: ' . $domain->domain);
-
-                dump([
-                    'sourcePath' => config('microweber.sharedPaths.app'),
-                    'domain_username' => $findHostingSubscription->system_username,
-                    'installation_path' => $mwInstallation->installation_path,
-                ]);
-                continue;
+                //$this->info('Repair domain: ' . $domain->domain);
 
                 $microweberReinstall = new MicroweberReinstaller();
                 $microweberReinstall->setSymlinkInstallation();
