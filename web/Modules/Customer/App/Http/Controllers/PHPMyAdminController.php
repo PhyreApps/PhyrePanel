@@ -11,6 +11,7 @@ class PHPMyAdminController extends Controller
 {
     public function login($id)
     {
+        ///usr/share/doc/phpmyadmin.
 
         $hostingSubscription = HostingSubscription::where('id', $id)
         //    ->where('customer_id', auth()->user()->id)// TODO
@@ -34,7 +35,7 @@ class PHPMyAdminController extends Controller
         $currentUrl = url('/');
         $currentUrl = str_replace(':8443', ':8440', $currentUrl);
 
-        return redirect($currentUrl . '/phyre-sso.php?server=1&token=' . $ssoToken->token);
+        return redirect($currentUrl . '/phyre-sso.php?server=1&token=' . $ssoToken->token . '&panel_url=' . url('/'));
 
     }
 
