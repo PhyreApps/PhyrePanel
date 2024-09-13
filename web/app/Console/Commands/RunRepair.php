@@ -6,8 +6,11 @@ use App\Actions\GetLinuxUser;
 use App\ApacheParser;
 use App\Jobs\ApacheBuild;
 use App\Models\Backup;
+use App\Models\Database;
 use App\Models\Domain;
 use App\Models\HostingSubscription;
+use App\PhyreConfig;
+use App\UniversalDatabaseExecutor;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Database\Schema\Blueprint;
@@ -44,6 +47,8 @@ class RunRepair extends Command
 //                $brokenDomain->saveQuietly();
 //            }
 //        }
+
+        $this->fixDatabaseRootUsers();
 
         $this->fixPhpMyAdmin();
 
@@ -82,6 +87,48 @@ class RunRepair extends Command
         $sessionDir = '/usr/local/phyre/data/sessions';
         if (!is_dir($sessionDir)) {
             shell_exec('mkdir -p ' . $sessionDir);
+        }
+    }
+
+    public function fixDatabaseRootUsers()
+    {
+        $findDatabases = Database::all();
+        if ($findDatabases->count() > 0) {
+            foreach ($findDatabases as $database) {
+                if ($database->is_remote_database_server == 1) {
+                    // TODO
+                    continue;
+                }
+
+                $findHostingSubscription = HostingSubscription::where('id', $database->hosting_subscription_id)->first();
+                if (!$findHostingSubscription) {
+                    continue;
+                }
+
+                $universalDatabaseExecutor = new UniversalDatabaseExecutor(
+                    PhyreConfig::get('MYSQL_HOST', '127.0.0.1'),
+                    PhyreConfig::get('MYSQL_PORT', 3306),
+                    PhyreConfig::get('MYSQL_ROOT_USERNAME'),
+                    PhyreConfig::get('MYSQL_ROOT_PASSWORD'),
+                );
+                $universalDatabaseExecutor->fixPasswordPolicy();
+
+                // Check main database user exists
+                $mainDatabaseUser = $universalDatabaseExecutor->getUserByUsername($findHostingSubscription->system_username);
+                if (!$mainDatabaseUser) {
+                    $createMainDatabaseUser = $universalDatabaseExecutor->createUser($findHostingSubscription->system_username, $findHostingSubscription->system_password);
+                    if (!isset($createMainDatabaseUser['success'])) {
+                        throw new \Exception($createMainDatabaseUser['message']);
+                    }
+                }
+
+                $databaseName = Str::slug($database->database_name, '_');
+                $databaseName = $database->database_name_prefix . $databaseName;
+                $databaseName = strtolower($databaseName);
+
+                $universalDatabaseExecutor->userGrantPrivilegesToDatabase($findHostingSubscription->system_username, [$databaseName]);
+
+            }
         }
     }
 
