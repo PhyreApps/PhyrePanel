@@ -22,7 +22,23 @@ class FileItem extends Model
         'dateModified' => 'datetime',
         'size' => 'integer',
         'type' => 'string',
+        'content' => 'string',
     ];
+
+    protected $fillable = [
+        'content',
+    ];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::updating(function ($model) {
+            if (!empty($model->content)) {
+                $model->storageInstance()->put($model->path, $model->content);
+            }
+        });
+    }
 
     public static function queryForDiskAndPath(string $rootPath = 'public', string $path = ''): Builder
     {
@@ -76,6 +92,7 @@ class FileItem extends Model
 
             $backPath = [
                 [
+                    'content' => null,
                     'name' => '..',
                     'dateModified' => null,
                     'size' => null,
@@ -96,6 +113,7 @@ class FileItem extends Model
                 'size' => null,
                 'type' => 'Folder',
                 'path' => $directory,
+                'content' => null,
             ]),
             ...collect($storage->files(static::$path))
             ->sort()
@@ -105,6 +123,7 @@ class FileItem extends Model
                 'size' => $storage->size($file),
                 'type' => $storage->mimeType($file) ?: 'File',
                 'path' => $file,
+                'content' => $storage->exists($file) ? $storage->get($file) : null,
             ])
         )->toArray();
 

@@ -11,11 +11,14 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\Page;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\HeaderActionsPosition;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -94,11 +97,16 @@ class FileManager extends Page implements HasForms, HasTable
             ->actions([
 
                 ActionGroup::make([
-//                    ViewAction::make('open')
-//                        ->label('Open')
-//                        ->hidden(fn (FileItem $record): bool => ! $record->canOpen())
-//                        ->url(fn (FileItem $record): string => $storage->url($record->path))
-//                        ->openUrlInNewTab(),
+                    EditAction::make('edit')
+                        ->label('Edit')
+                        ->hidden(fn (FileItem $record): bool => ! $record->canOpen())
+                        ->form([
+                            Textarea::make('content')
+                                ->label('Content')
+                                ->rows(30)
+                            ,
+                        ]),
+
 Action::make('download')
     ->label('Download')
     ->icon('heroicon-o-document-arrow-down')
