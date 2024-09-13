@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Artisan;
 use MicroweberPackages\ComposerClient\Client;
 use MicroweberPackages\SharedServerScripts\MicroweberDownloader;
 use MicroweberPackages\SharedServerScripts\MicroweberModuleConnectorsDownloader;
@@ -51,6 +52,8 @@ class DownloadMicroweber implements ShouldQueue
         $templatesDownloader = new MicroweberTemplatesDownloader();
         $templatesDownloader->setComposerClient($instance);
         $status = $templatesDownloader->download(config('microweber.sharedPaths.templates'));
+
+        Artisan::call('microweber:reinstall-installations');
 
     }
 

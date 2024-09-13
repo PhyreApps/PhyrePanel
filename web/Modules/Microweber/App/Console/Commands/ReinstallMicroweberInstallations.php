@@ -3,19 +3,20 @@
 namespace Modules\Microweber\App\Console\Commands;
 
 use App\Models\Domain;
+use App\Models\HostingSubscription;
 use Illuminate\Console\Command;
 use MicroweberPackages\SharedServerScripts\MicroweberReinstaller;
 use Modules\Microweber\App\Actions\MicroweberScanner;
 use Modules\Microweber\App\Models\MicroweberInstallation;
 
-class RunDomainRepair extends Command
+class ReinstallMicroweberInstallations extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'microweber:run-domain-repair';
+    protected $signature = 'microweber:reinstall-installations';
 
     /**
      * The console command description.
@@ -29,9 +30,6 @@ class RunDomainRepair extends Command
      */
     public function handle()
     {
-//        $newMwScan = new MicroweberScanner();
-//        $newMwScan->handle();
-
         $getMwInstallations = MicroweberInstallation::all();
         if ($getMwInstallations->count() > 0) {
             foreach ($getMwInstallations as $mwInstallation) {
@@ -41,17 +39,17 @@ class RunDomainRepair extends Command
                     $this->info('Domain not found: ' . $mwInstallation->domain_id);
                     continue;
                 }
-
-                if (is_link($mwInstallation->installation_path.'/userfiles/modules/logo')) {
-                    $this->info('Symlink exists: ' . $mwInstallation->installation_path.'/userfiles/modules/logo');
+                $findHostingSubscription = HostingSubscription::where('id', $domain->hosting_subscription_id)->first();
+                if (!$findHostingSubscription) {
+                    $this->info('Hosting subscription not found: ' . $domain->hosting_subscription_id);
                     continue;
                 }
 
-                $this->info('Repair domain: ' . $domain->domain);
+                //$this->info('Repair domain: ' . $domain->domain);
 
                 $microweberReinstall = new MicroweberReinstaller();
                 $microweberReinstall->setSymlinkInstallation();
-                $microweberReinstall->setChownUser($domain->domain_username);
+                $microweberReinstall->setChownUser($findHostingSubscription->system_username);
                 $microweberReinstall->setPath($mwInstallation->installation_path);
                 $microweberReinstall->setSourcePath(config('microweber.sharedPaths.app'));
 
