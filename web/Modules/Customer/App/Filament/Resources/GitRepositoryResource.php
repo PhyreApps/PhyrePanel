@@ -33,6 +33,11 @@ class GitRepositoryResource extends Resource
                     ->required()
                     ->columnSpanFull(),
 
+                Forms\Components\Select::make('git_ssh_key_id')
+                    ->label('SSH Key')
+                    ->options(fn () => \App\Models\GitSshKey::pluck('name', 'id'))
+                    ->columnSpanFull(),
+
             ]);
     }
 

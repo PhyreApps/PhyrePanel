@@ -71,10 +71,12 @@ class GitRepository extends Model
         return $this->belongsTo(Domain::class);
     }
 
-    private function _getSSHKey($findHostingSubscription)
+    private function _getSSHKey($gitSshKeyId, $findHostingSubscription)
     {
+        $gitSSHKey = GitSshKey::where('id', $gitSshKeyId)
+            ->where('hosting_subscription_id', $findHostingSubscription->id)
+            ->first();
 
-        $gitSSHKey = GitSshKey::find($this->git_ssh_key_id);
         if ($gitSSHKey) {
             $sshPath = '/home/'.$findHostingSubscription->system_username .'/.ssh';
             $privateKeyFile = $sshPath.'/id_rsa_'. $gitSSHKey->id;
@@ -131,11 +133,10 @@ class GitRepository extends Model
         $projectDir = $findDomain->domain_root . '/' . $this->dir;
 
         $privateKeyFile = null;
-        $getSSHKey = $this->_getSSHKey($findHostingSubscription);
+        $getSSHKey = $this->_getSSHKey($this->git_ssh_key_id, $findHostingSubscription);
         if (isset($getSSHKey['privateKeyFile'])) {
             $privateKeyFile = $getSSHKey['privateKeyFile'];
         }
-
 
         $gitSSHUrl = GitClient::parseGitUrl($this->url);
         if (!isset($gitSSHUrl['provider'])) {
@@ -190,7 +191,7 @@ class GitRepository extends Model
         $projectDir = $findDomain->domain_root . '/' . $this->dir;
 
         $privateKeyFile = null;
-        $getSSHKey = $this->_getSSHKey($findHostingSubscription);
+        $getSSHKey = $this->_getSSHKey($this->git_ssh_key_id, $findHostingSubscription);
         if (isset($getSSHKey['privateKeyFile'])) {
             $privateKeyFile = $getSSHKey['privateKeyFile'];
         }

@@ -18,4 +18,4 @@ su -m {{$systemUsername}} -c 'git clone {{$cloneUrl}} {{$projectDir}}'
 
 phyre-php /usr/local/phyre/web/artisan git-repository:mark-as-cloned {{$gitRepositoryId}}
 
-# rm -rf /tmp/git-clone-{{$gitRepositoryId}}.sh
+rm -rf /tmp/git-clone-{{$gitRepositoryId}}.sh
