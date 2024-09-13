@@ -1,4 +1,4 @@
-echo "Pull started at {{ date('Y-m-d H:i:s') }}
+echo "Pull started at {{ date('Y-m-d H:i:s') }}"
 
 su -m {{$systemUsername}} -c "export HOME=/home/{{$systemUsername}}"
 

@@ -1,4 +1,4 @@
-echo "Cloning started at {{ date('Y-m-d H:i:s') }}
+echo "Cloning started at {{ date('Y-m-d H:i:s') }}"
 
 su -m {{$systemUsername}} -c "export HOME=/home/{{$systemUsername}}"
 
@@ -18,5 +18,4 @@ su -m {{$systemUsername}} -c 'git clone {{$cloneUrl}} {{$projectDir}}'
 
 phyre-php /usr/local/phyre/web/artisan git-repository:mark-as-cloned {{$gitRepositoryId}}
 
-
-rm -rf /tmp/git-clone-{{$gitRepositoryId}}.sh
+# rm -rf /tmp/git-clone-{{$gitRepositoryId}}.sh
