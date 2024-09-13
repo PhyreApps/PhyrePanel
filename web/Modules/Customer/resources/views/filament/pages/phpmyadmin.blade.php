@@ -19,6 +19,7 @@
                 </div>
 
                 <x-filament::button
+                    target="_blank"
                     href="{{route('customer.phpmyadmin.login', $hostingSubscription->id)}}"
                     tag="a"
                 >
