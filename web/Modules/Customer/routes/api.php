@@ -18,3 +18,6 @@ use Illuminate\Support\Facades\Route;
 //Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function () {
 //    Route::get('customer', fn (Request $request) => $request->user())->name('customer');
 //});
+
+Route::get('/customer/phpMyAdmin/validate-token', [\Modules\Customer\App\Http\Controllers\PHPMyAdminController::class, 'validateToken'])
+    ->name('customer.phpmyadmin.validate-token');
