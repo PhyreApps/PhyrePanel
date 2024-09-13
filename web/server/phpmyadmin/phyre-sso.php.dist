@@ -10,16 +10,25 @@ session_name($session_name);
 @session_start();
 
 
-function validateToken($token) {
+function validate_token($token, $panel_url = false) {
 
     // Current server ip
     $server_ip = $_SERVER['SERVER_ADDR'];
-    $sso_server = "https://".$server_ip.":8443/api/customer/phpMyAdmin/validate-token?token=" . $token;
+
+    $sso_server = "https://".$server_ip.":8443/";
+    if ($panel_url) {
+        $sso_server = $panel_url . "/";
+    }
+    $sso_server_endpoint = $sso_server . "api/customer/phpMyAdmin/validate-token?token=" . $token;
 
     // Curl get request
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $sso_server);
+    curl_setopt($ch, CURLOPT_URL, $sso_server_endpoint);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    // ssl verification off
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
     $output = curl_exec($ch);
     curl_close($ch);
 
@@ -33,9 +42,11 @@ function validateToken($token) {
 if (isset($_GET['token'])) {
 
     $token = (isset($_GET['token']) ? $_GET['token'] : '');
+    $panel_url = (isset($_GET['panel_url']) ? $_GET['panel_url'] : '');
 
     // Request credentials from remote server
-    $response = validateToken($token);
+    $response = validate_token($token, $panel_url);
+
     if (!isset($response['success'])) {
         $_SESSION['PMA_single_signon_error_message'] = 'Token invalid';
         header('Location: phyre-sso.php');
@@ -47,7 +58,7 @@ if (isset($_GET['token'])) {
     $_SESSION['PMA_single_signon_user'] = $response['databaseLoginDetails']['username'];
     $_SESSION['PMA_single_signon_password'] = $response['databaseLoginDetails']['password'];
     /* Update another field of server configuration */
-    $_SESSION['PMA_single_signon_cfgupdate'] = array('verbose' => 'PhyrePanel SSO');
+    $_SESSION['PMA_single_signon_cfgupdate'] = array('verbose' => 'PhyrePanel');
     $id = session_id();
     /* Close that session */
     @session_write_close();
