@@ -190,11 +190,7 @@ class HostingSubscriptionResource extends Resource
     {
         return $page->generateNavigationItems([
          //   Pages\ViewHos::class,
-            Pages\EditHostingSubscription::class,
-            Pages\ManageHostingSubscriptionDatabases::class,
-            Pages\ManageHostingSubscriptionBackups::class,
-//            Pages\ManageHostingSubscriptionFtpAccounts::class,
-            Pages\ManageHostingSubscriptionFileManager::class
+            Pages\EditHostingSubscription::class
         ]);
     }
 
@@ -208,15 +204,9 @@ class HostingSubscriptionResource extends Resource
     public static function getPages(): array
     {
         return [
-            // 'index' => Pages\ManageHostingSubscriptions::route('/'),
             'index' => Pages\ListHostingSubscriptions::route('/'),
             'create' => Pages\CreateHostingSubscription::route('/create'),
             'edit' => Pages\EditHostingSubscription::route('/{record}/edit'),
-          //  'view' => Pages\ViewHostingSubscription::route('/{record}'),
-            'databases' => Pages\ManageHostingSubscriptionDatabases::route('/{record}/databases'),
-            'backups' => Pages\ManageHostingSubscriptionBackups::route('/{record}/backups'),
-//            'ftp-accounts' => Pages\ManageHostingSubscriptionFtpAccounts::route('/{record}/ftp-accounts'),
-            'file-manager' => Pages\ManageHostingSubscriptionFileManager::route('/{record}/file-manager'),
         ];
     }
 
