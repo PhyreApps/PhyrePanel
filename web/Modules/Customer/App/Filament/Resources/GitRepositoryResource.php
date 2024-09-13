@@ -84,7 +84,7 @@ class GitRepositoryResource extends Resource
                     ->action(function (GitRepository $record) {
 
                         $gitRepository = GitRepository::find($record->id);
-                        $gitRepository->clone();
+                        $gitRepository->pull();
 
                     }),
                 Tables\Actions\DeleteAction::make(),
