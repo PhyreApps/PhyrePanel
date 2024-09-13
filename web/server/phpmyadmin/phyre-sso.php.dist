@@ -1,0 +1,63 @@
+<?php
+
+/* Need to have cookie visible from parent directory */
+session_set_cookie_params(0, '/', '', true, true);
+/* Create signon session */
+$session_name = 'SignonSession';
+session_name($session_name);
+// Uncomment and change the following line to match your $cfg['SessionSavePath']
+// session_save_path('');
+@session_start();
+
+
+function validateToken($token) {
+
+    // Current server ip
+    $server_ip = $_SERVER['SERVER_ADDR'];
+    $sso_server = "https://".$server_ip.":8443/api/customer/phpMyAdmin/validate-token?token=" . $token;
+
+    // Curl get request
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $sso_server);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $output = curl_exec($ch);
+    curl_close($ch);
+
+    $output = json_decode($output, true);
+
+    return $output;
+
+}
+
+/* Was data posted? */
+if (isset($_GET['token'])) {
+
+    $token = (isset($_GET['token']) ? $_GET['token'] : '');
+
+    // Request credentials from remote server
+    $response = validateToken($token);
+    if (!isset($response['success'])) {
+        $_SESSION['PMA_single_signon_error_message'] = 'Token invalid';
+        header('Location: phyre-sso.php');
+        exit;
+    }
+
+    /* Store there credentials */
+    $_SESSION['PMA_single_signon_host'] = $response['databaseLoginDetails']['host'];
+    $_SESSION['PMA_single_signon_user'] = $response['databaseLoginDetails']['username'];
+    $_SESSION['PMA_single_signon_password'] = $response['databaseLoginDetails']['password'];
+    /* Update another field of server configuration */
+    $_SESSION['PMA_single_signon_cfgupdate'] = array('verbose' => 'PanelOmega');
+    $id = session_id();
+    /* Close that session */
+    @session_write_close();
+
+    setcookie($session_name, $id , 0, "/");
+
+    /* Redirect to phpMyAdmin (should use absolute URL here!) */
+    header('Location: ../index.php');
+
+} else {
+    header('Location: ../index.php');
+}
+?>

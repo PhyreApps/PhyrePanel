@@ -45,6 +45,8 @@ class RunRepair extends Command
 //            }
 //        }
 
+        $this->fixPhpMyAdmin();
+
         // Overwrite supervisor config file
         $workersCount = (int) setting('general.supervisor_workers_count');
         $supervisorConf = view('actions.samples.ubuntu.supervisor-conf', [
@@ -67,6 +69,20 @@ class RunRepair extends Command
 
         $this->fixApacheErrors();
 
+    }
+
+    public function fixPhpMyAdmin()
+    {
+        $this->info('Fix phpMyAdmin');
+
+        $ssoContent = file_get_contents('/usr/local/phyre/web/server/phpmyadmin/phyre-sso.php.dist');
+        if ($ssoContent) {
+            file_put_contents('/usr/share/phpmyadmin/phyre-sso.php', $ssoContent);
+        }
+        $sessionDir = '/usr/local/phyre/data/sessions';
+        if (!is_dir($sessionDir)) {
+            shell_exec('mkdir -p ' . $sessionDir);
+        }
     }
 
     public function fixApacheErrors()
