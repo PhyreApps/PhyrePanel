@@ -36,13 +36,14 @@ class UniversalDatabaseExecutor
             'driver' => 'pdo_mysql',
         ];
 
-        $connection = DriverManager::getConnection($connectionParams);
-        $connection->connect();
-        if (!$connection->isConnected()) {
-            throw new \Exception('Could not connect to database');
-        }
+        return DriverManager::getConnection($connectionParams);
 
-        return $connection;
+    }
+
+    public function fixPasswordPolicy()
+    {
+        $connection = $this->_getDatabaseConnection();
+        $connection->executeQuery('SET GLOBAL validate_password.policy = 0');
     }
 
     public function createDatabase($databaseName)
@@ -87,6 +88,35 @@ class UniversalDatabaseExecutor
 
     }
 
+    public function getUserByUsername($username)
+    {
+
+        $connection = $this->_getDatabaseConnection();
+
+        $resultSet = $connection->executeQuery('SELECT * FROM mysql.user WHERE User = ?', [
+            $username
+        ]);
+
+        return $resultSet->fetchAssociative();
+
+    }
+
+    public function userGrantPrivilegesToDatabase($username, $databases = [])
+    {
+
+        $connection = $this->_getDatabaseConnection();
+
+        if (!empty($databases)) {
+            foreach ($databases as $database) {
+                $connection->executeStatement('GRANT ALL PRIVILEGES ON '.$database.'.* TO ?', [
+                    $username
+                ]);
+            }
+        }
+
+        $connection->executeQuery('FLUSH PRIVILEGES');
+
+    }
     public function createUser($username, $password)
     {
         try {
@@ -96,12 +126,6 @@ class UniversalDatabaseExecutor
                 $username,
                 $password
             ]);
-
-            $connection->executeStatement('GRANT ALL PRIVILEGES ON '.$this->database.'.* TO ?', [
-                $username
-            ]);
-
-            $connection->executeQuery('FLUSH PRIVILEGES');
 
             return [
                 'success' => true,
@@ -117,7 +141,24 @@ class UniversalDatabaseExecutor
     }
     public function deleteUser($username)
     {
+        try {
+            $connection = $this->_getDatabaseConnection();
 
+            $resultSet = $connection->executeStatement('DROP USER ?', [
+                $username
+            ]);
+
+            return [
+                'success' => true,
+                'message' => 'User deleted successfully'
+            ];
+
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'message' => $e->getMessage()
+            ];
+        }
     }
 
 }

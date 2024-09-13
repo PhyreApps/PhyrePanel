@@ -47,7 +47,7 @@ if (isset($_GET['token'])) {
     $_SESSION['PMA_single_signon_user'] = $response['databaseLoginDetails']['username'];
     $_SESSION['PMA_single_signon_password'] = $response['databaseLoginDetails']['password'];
     /* Update another field of server configuration */
-    $_SESSION['PMA_single_signon_cfgupdate'] = array('verbose' => 'PanelOmega');
+    $_SESSION['PMA_single_signon_cfgupdate'] = array('verbose' => 'PhyrePanel SSO');
     $id = session_id();
     /* Close that session */
     @session_write_close();

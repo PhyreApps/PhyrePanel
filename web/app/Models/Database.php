@@ -67,10 +67,23 @@ class Database extends Model
                     PhyreConfig::get('MYSQL_ROOT_PASSWORD'),
                 );
 
+                $universalDatabaseExecutor->fixPasswordPolicy();
+
+                // Check main database user exists
+                $mainDatabaseUser = $universalDatabaseExecutor->getUserByUsername($findHostingSubscription->system_username);
+                if (!$mainDatabaseUser) {
+                    $createMainDatabaseUser = $universalDatabaseExecutor->createUser($findHostingSubscription->system_username, $findHostingSubscription->system_password);
+                    if (!isset($createMainDatabaseUser['success'])) {
+                        throw new \Exception($createMainDatabaseUser['message']);
+                    }
+                }
+
                 $createDatabase = $universalDatabaseExecutor->createDatabase($databaseName);
                 if (isset($createDatabase['error'])) {
                     throw new \Exception($createDatabase['message']);
                 }
+
+                $universalDatabaseExecutor->userGrantPrivilegesToDatabase($findHostingSubscription->system_username, [$databaseName]);
             }
 
             return $model;
