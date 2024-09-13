@@ -2,6 +2,7 @@
 
 namespace App\Models\Scopes;
 
+use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
@@ -13,9 +14,12 @@ class CustomerHostingSubscriptionScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        if (auth()->check() && auth()->guard()->name == 'web_customer') {
-            $builder->whereHas('hostingSubscription', function ($query) {
-                $query->where('customer_id', auth()->user()->id);
+
+        $guard = Filament::auth();
+
+        if ($guard->check() && $guard->name == 'web_customer') {
+            $builder->whereHas('hostingSubscription', function ($query) use($guard) {
+                $query->where('customer_id', $guard->user()->id);
             });
         }
     }

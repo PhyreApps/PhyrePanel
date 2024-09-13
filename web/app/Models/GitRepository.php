@@ -100,6 +100,8 @@ class GitRepository extends Model
 
         $projectDir = $findDomain->domain_root . '/' . $this->dir;
 
+        $privateKeyFile = null;
+
         $gitSSHKey = GitSshKey::find($this->git_ssh_key_id);
         if ($gitSSHKey) {
             $sshPath = '/home/'.$findHostingSubscription->system_username .'/.ssh';
@@ -135,46 +137,23 @@ class GitRepository extends Model
             return;
         }
 
-        $gitProvider = $gitSSHUrl['provider'];
-
-        $shellCommand = [];
-        $shellCommand[] = 'echo "Cloning started at $(date)"';
-
-        $exportCommand = 'export HOME=/home/'.$findHostingSubscription->system_username;
-        $shellCommand[] = 'su -m '.$findHostingSubscription->system_username.' -c "'.$exportCommand.'"';
-
-
-        if ($gitSSHKey) {
-
-            $shellCommand[] = "ssh-keyscan $gitProvider >> /home/$findHostingSubscription->system_username/.ssh/known_hosts";
-            $shellCommand[] = 'chmod 0600 /home/'.$findHostingSubscription->system_username.'/.ssh/known_hosts';
-            $shellCommand[] = 'chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' /home/'.$findHostingSubscription->system_username.'/.ssh/known_hosts';
-
-            $cloneUrl = 'git@'.$gitSSHUrl['provider'].':'.$gitSSHUrl['owner'].'/'.$gitSSHUrl['name'].'.git';
-            $cloneCommand = 'git -c core.sshCommand="ssh -i '.$privateKeyFile .'" clone '.$cloneUrl.' '.$projectDir . ' 2>&1';
-        } else {
-            $cloneCommand = 'git clone '.$this->url.' '.$projectDir . ' 2>&1';
-        }
-
-        $shellCommand[] = 'su -m '.$findHostingSubscription->system_username." -c '".$cloneCommand."'";
-
-        $shellCommand[] = 'phyre-php /usr/local/phyre/web/artisan git-repository:mark-as-cloned '.$this->id;
+        $cloneUrl = 'git@'.$gitSSHUrl['provider'].':'.$gitSSHUrl['owner'].'/'.$gitSSHUrl['name'].'.git';
 
         $shellFile = '/tmp/git-clone-' . $this->id . '.sh';
         $shellLog = '/tmp/git-clone-' . $this->id . '.log';
 
-        $shellCommand[] = 'rm -rf ' . $shellFile;
+        $shellContent = view('actions.git.clone-repo', [
+            'gitProvider' => $gitSSHUrl['provider'],
+            'systemUsername' => $findHostingSubscription->system_username,
+            'gitRepositoryId' => $this->id,
+            'cloneUrl' => $cloneUrl,
+            'projectDir' => $projectDir,
+            'privateKeyFile' => $privateKeyFile,
+        ])->render();
 
-        $shellContent = '';
-        foreach ($shellCommand as $command) {
-            $shellContent .= $command . "\n";
-        }
-
-        shell_exec('rm -rf ' . $shellFile);
         file_put_contents($shellFile, $shellContent);
 
         shell_exec('chmod +x ' . $shellFile);
-
         shell_exec('bash '.$shellFile.' >> ' . $shellLog . ' &');
 
     }

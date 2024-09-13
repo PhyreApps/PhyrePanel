@@ -6,6 +6,7 @@ use App\Actions\ApacheWebsiteDelete;
 use App\Events\DomainIsCreated;
 use App\Events\ModelDomainDeleting;
 use App\Jobs\ApacheBuild;
+use App\Models\Scopes\CustomerHostingSubscriptionScope;
 use App\ShellApi;
 use App\VirtualHosts\DTO\ApacheVirtualHostSettings;
 use Illuminate\Database\Eloquent\Builder;
@@ -38,13 +39,7 @@ class Domain extends Model
 
     protected static function booted(): void
     {
-        static::addGlobalScope('customer', function (Builder $query) {
-            if (auth()->check() && auth()->guard()->name == 'web_customer') {
-                $query->whereHas('hostingSubscription', function ($query) {
-                    $query->where('customer_id', auth()->user()->id);
-                });
-            }
-        });
+        static::addGlobalScope(new CustomerHostingSubscriptionScope());
     }
 
     public static function boot()

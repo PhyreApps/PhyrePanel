@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\CustomerHostingSubscriptionScope;
 use App\PhyreConfig;
 use App\Services\RemoteDatabaseService;
 use App\UniversalDatabaseExecutor;
@@ -25,13 +26,7 @@ class Database extends Model
 
     protected static function booted(): void
     {
-        static::addGlobalScope('customer', function (Builder $query) {
-            if (auth()->check() && auth()->guard()->name == 'web_customer') {
-                $query->whereHas('hostingSubscription', function ($query) {
-                    $query->where('customer_id', auth()->user()->id);
-                });
-            }
-        });
+        static::addGlobalScope(new CustomerHostingSubscriptionScope());
     }
 
     public static function boot()

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\ApiSDK\PhyreApiSDK;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 
 class Customer extends Authenticatable
@@ -31,7 +32,17 @@ class Customer extends Authenticatable
     {
         parent::boot();
 
+        static::updating(function ($model) {
+
+            $model->password = Hash::make($model->password);
+
+        });
+
+
         static::creating(function ($model) {
+
+            $model->password = Hash::make($model->password);
+
             if ($model->phyre_server_id > 0) {
                 $phyreServer = PhyreServer::where('id', $model->phyre_server_id)->first();
                 if ($phyreServer) {

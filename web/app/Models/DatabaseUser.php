@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\CustomerHostingSubscriptionScope;
 use App\PhyreConfig;
 use App\UniversalDatabaseExecutor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
