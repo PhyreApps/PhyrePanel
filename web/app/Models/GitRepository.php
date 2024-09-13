@@ -24,6 +24,8 @@ class GitRepository extends Model
 
     const STATUS_PULLING = 'pulling';
 
+    const STATUS_UP_TO_DATE = 'up_to_date';
+
     protected $fillable = [
         'name',
         'url',
@@ -69,38 +71,8 @@ class GitRepository extends Model
         return $this->belongsTo(Domain::class);
     }
 
-    public function pull()
+    private function _getSSHKey($findHostingSubscription)
     {
-        $this->status = self::STATUS_PULLING;
-        $this->save();
-
-    }
-
-    public function clone()
-    {
-        $this->status = self::STATUS_CLONING;
-        $this->save();
-
-        $findDomain = Domain::find($this->domain_id);
-        if (!$findDomain) {
-            $this->status = self::STATUS_FAILED;
-            $this->status_message = 'Domain not found';
-            $this->save();
-            return;
-        }
-
-        $findHostingSubscription = HostingSubscription::find($findDomain->hosting_subscription_id);
-        if (!$findHostingSubscription) {
-            $this->status = self::STATUS_FAILED;
-            $this->status_message = 'Hosting Subscription not found';
-            $this->save();
-            return;
-        }
-
-
-        $projectDir = $findDomain->domain_root . '/' . $this->dir;
-
-        $privateKeyFile = null;
 
         $gitSSHKey = GitSshKey::find($this->git_ssh_key_id);
         if ($gitSSHKey) {
@@ -127,7 +99,102 @@ class GitRepository extends Model
                 shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' ' . $publicKeyFile);
                 shell_exec('chmod 0400 ' . $publicKeyFile);
             }
+
+            return [
+                'privateKeyFile' => $privateKeyFile,
+                'publicKeyFile' => $publicKeyFile,
+            ];
         }
+    }
+
+    public function pull()
+    {
+        $this->status = self::STATUS_PULLING;
+        $this->save();
+
+        $findDomain = Domain::find($this->domain_id);
+        if (!$findDomain) {
+            $this->status = self::STATUS_FAILED;
+            $this->status_message = 'Domain not found';
+            $this->save();
+            return;
+        }
+
+        $findHostingSubscription = HostingSubscription::find($findDomain->hosting_subscription_id);
+        if (!$findHostingSubscription) {
+            $this->status = self::STATUS_FAILED;
+            $this->status_message = 'Hosting Subscription not found';
+            $this->save();
+            return;
+        }
+
+        $projectDir = $findDomain->domain_root . '/' . $this->dir;
+
+        $privateKeyFile = null;
+        $getSSHKey = $this->_getSSHKey($findHostingSubscription);
+        if (isset($getSSHKey['privateKeyFile'])) {
+            $privateKeyFile = $getSSHKey['privateKeyFile'];
+        }
+
+
+        $gitSSHUrl = GitClient::parseGitUrl($this->url);
+        if (!isset($gitSSHUrl['provider'])) {
+            $this->status = self::STATUS_FAILED;
+            $this->status_message = 'Provider not found';
+            $this->save();
+            return;
+        }
+
+        $cloneUrl = 'git@'.$gitSSHUrl['provider'].':'.$gitSSHUrl['owner'].'/'.$gitSSHUrl['name'].'.git';
+
+        $shellFile = '/tmp/git-pull-' . $this->id . '.sh';
+        $shellLog = '/tmp/git-pull-' . $this->id . '.log';
+
+        $shellContent = view('actions.git.pull-repo', [
+            'gitProvider' => $gitSSHUrl['provider'],
+            'systemUsername' => $findHostingSubscription->system_username,
+            'gitRepositoryId' => $this->id,
+            'cloneUrl' => $cloneUrl,
+            'projectDir' => $projectDir,
+            'privateKeyFile' => $privateKeyFile,
+        ])->render();
+
+        file_put_contents($shellFile, $shellContent);
+
+        shell_exec('chmod +x ' . $shellFile);
+        shell_exec('bash '.$shellFile.' >> ' . $shellLog . ' &');
+
+    }
+
+    public function clone()
+    {
+        $this->status = self::STATUS_CLONING;
+        $this->save();
+
+        $findDomain = Domain::find($this->domain_id);
+        if (!$findDomain) {
+            $this->status = self::STATUS_FAILED;
+            $this->status_message = 'Domain not found';
+            $this->save();
+            return;
+        }
+
+        $findHostingSubscription = HostingSubscription::find($findDomain->hosting_subscription_id);
+        if (!$findHostingSubscription) {
+            $this->status = self::STATUS_FAILED;
+            $this->status_message = 'Hosting Subscription not found';
+            $this->save();
+            return;
+        }
+
+        $projectDir = $findDomain->domain_root . '/' . $this->dir;
+
+        $privateKeyFile = null;
+        $getSSHKey = $this->_getSSHKey($findHostingSubscription);
+        if (isset($getSSHKey['privateKeyFile'])) {
+            $privateKeyFile = $getSSHKey['privateKeyFile'];
+        }
+
 
         $gitSSHUrl = GitClient::parseGitUrl($this->url);
         if (!isset($gitSSHUrl['provider'])) {
