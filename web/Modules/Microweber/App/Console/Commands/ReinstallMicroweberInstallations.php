@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 use MicroweberPackages\SharedServerScripts\MicroweberReinstaller;
 use Modules\Microweber\App\Actions\MicroweberScanner;
 use Modules\Microweber\App\Models\MicroweberInstallation;
+use Modules\Microweber\Jobs\UpdateWhitelabelToWebsites;
 
 class ReinstallMicroweberInstallations extends Command
 {
@@ -30,6 +31,10 @@ class ReinstallMicroweberInstallations extends Command
      */
     public function handle()
     {
+
+        $updateWhitelabel = new UpdateWhitelabelToWebsites();
+        $updateWhitelabel->handle();
+
         $getMwInstallations = MicroweberInstallation::all();
         if ($getMwInstallations->count() > 0) {
             foreach ($getMwInstallations as $mwInstallation) {
@@ -45,7 +50,7 @@ class ReinstallMicroweberInstallations extends Command
                     continue;
                 }
 
-                //$this->info('Repair domain: ' . $domain->domain);
+                $this->info('Repair domain: ' . $domain->domain);
 
                 $microweberReinstall = new MicroweberReinstaller();
                 $microweberReinstall->setSymlinkInstallation();

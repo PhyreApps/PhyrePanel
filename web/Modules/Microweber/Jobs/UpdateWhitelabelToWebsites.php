@@ -35,6 +35,7 @@ class UpdateWhitelabelToWebsites implements ShouldQueue
 
         $sharedAppPath = config('microweber.sharedPaths.app');
         $whitelabelSettings = setting('microweber.whitelabel');
+        $whitelabelSettings['website_manager_url'] = setting('microweber.website_manager_url');
 
         $whitelabel = new MicroweberWhitelabelSettingsUpdater();
         $whitelabel->setPath($sharedAppPath);

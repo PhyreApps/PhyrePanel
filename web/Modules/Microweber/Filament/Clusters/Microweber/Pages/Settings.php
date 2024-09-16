@@ -5,6 +5,7 @@ namespace Modules\Microweber\Filament\Clusters\Microweber\Pages;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Illuminate\Support\Facades\Artisan;
 use Modules\Microweber\Filament\Clusters\MicroweberCluster;
 use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
 
@@ -17,6 +18,14 @@ class Settings extends BaseSettings
     protected static ?string $navigationIcon = 'heroicon-o-cog';
 
     protected static ?int $navigationSort = 3;
+
+
+    public function save(): void
+    {
+        parent::save();
+
+        Artisan::call('microweber:reinstall-installations');
+    }
 
     public function schema(): array
     {
