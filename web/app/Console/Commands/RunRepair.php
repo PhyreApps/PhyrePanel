@@ -94,6 +94,12 @@ class RunRepair extends Command
         if ($ssoContent) {
             file_put_contents('/usr/share/phpmyadmin/phyre-sso.php', $ssoContent);
         }
+
+        $configContent = file_get_contents('/usr/local/phyre/web/server/phpmyadmin/config.inc.php.dist');
+        if ($configContent) {
+            file_put_contents('/usr/share/phpmyadmin/config.inc.php', $configContent);
+        }
+
         $sessionDir = '/usr/local/phyre/data/sessions';
         if (!is_dir($sessionDir)) {
             shell_exec('mkdir -p ' . $sessionDir);
