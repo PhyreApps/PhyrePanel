@@ -16,6 +16,7 @@ use Illuminate\Console\Command;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
+use function Symfony\Component\String\s;
 
 class RunRepair extends Command
 {
@@ -79,6 +80,15 @@ class RunRepair extends Command
     public function fixPhpMyAdmin()
     {
         $this->info('Fix phpMyAdmin');
+
+        // Download PHPMyAdmin
+        shell_exec('mkdir -p /usr/share/phpmyadmin');
+        shell_exec('rm -rf /usr/share/phpmyadmin/*');
+        shell_exec('wget https://files.phpmyadmin.net/phpMyAdmin/5.2.1/phpMyAdmin-5.2.1-all-languages.zip -O /tmp/phpMyAdmin-5.2.1-all-languages.zip');
+        shell_exec('unzip /tmp/phpMyAdmin-5.2.1-all-languages.zip -d /usr/share/phpmyadmin');
+        shell_exec('mv /usr/share/phpmyadmin/phpMyAdmin-5.2.1-all-languages/* /usr/share/phpmyadmin');
+        shell_exec('rm -rf /usr/share/phpmyadmin/phpMyAdmin-5.2.1-all-languages');
+        shell_exec('rm -f /tmp/phpMyAdmin-5.2.1-all-languages.zip');
 
         $ssoContent = file_get_contents('/usr/local/phyre/web/server/phpmyadmin/phyre-sso.php.dist');
         if ($ssoContent) {
