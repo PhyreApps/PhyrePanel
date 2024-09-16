@@ -39,8 +39,8 @@ class MicroweberComposerClientHelper
     public function getMicroweberDownloaderInstance()
     {
         $coreDownloader = new MicroweberDownloader();
-
-        if (setting('microweber.update_app_channel') == 'development') {
+        
+        if (setting('microweber.update_app_channel') == 'beta') {
             $coreDownloader->setReleaseSource(MicroweberDownloader::DEV_RELEASE);
         } else {
             $coreDownloader->setReleaseSource(MicroweberDownloader::STABLE_RELEASE);
