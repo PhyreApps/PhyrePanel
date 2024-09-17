@@ -32,6 +32,7 @@ services:
       - ENABLE_SPAMASSASSIN=0
       - SPOOF_PROTECTION=0
       - ENABLE_POP3=1
+      - POSTMASTER_ADDRESS=postmaster@localhost.localdomain
     cap_add:
       - NET_ADMIN
       - SYS_PTRACE

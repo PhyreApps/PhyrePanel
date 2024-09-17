@@ -2,8 +2,10 @@
 
 namespace Modules\Email\App\Console;
 
+use App\Models\DomainSslCertificate;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Blade;
+use Modules\LetsEncrypt\Models\LetsEncryptCertificate;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
@@ -37,23 +39,34 @@ class SetupDockerEmailServer extends Command
 
         $workPath = '/usr/local/phyre/email/docker';
 
+        $domain = 'allsidepixels.com';
+
         $moduleServerConfigTemplatesPath = '/usr/local/phyre/web/Modules/Email/server/docker/';
         $dockerComposeYaml = file_get_contents($moduleServerConfigTemplatesPath . 'docker-compose.yaml');
         $dockerComposeYaml = Blade::render($dockerComposeYaml, [
             'containerName' => 'phyre-mail-server',
-            'hostName'=> 'mail.allsidepixels.com',
+            'hostName'=> 'mail.'.$domain,
             'workPath' => $workPath,
         ]);
         shell_exec('mkdir -p ' . $workPath);
         file_put_contents($workPath . '/docker-compose.yaml', $dockerComposeYaml);
 
+        $ssl = DomainSslCertificate::where('domain', $domain)->first();
+        if ($ssl) {
+            shell_exec('mkdir -p ' . $workPath . '/docker-data/acme-companion/certs/' . $domain);
+            file_put_contents($workPath . '/docker-data/acme-companion/certs/' . $domain . '/fullchain.pem', $ssl->certificate_chain);
+            file_put_contents($workPath . '/docker-data/acme-companion/certs/' . $domain . '/privkey.pem', $ssl->private_key);
+        }
+
+
+
      //   dd(shell_exec('docker-compose -f ' . $workPath . '/docker-compose.yaml up -d'));
 
         // after compose you must create the email account
 
-        //docker exec -ti ba139fb8b106 setup email add bobi@server11.microweber.me passwd123
+        //docker exec -ti cc85629c8ad5 setup email add peter@allsidepixels.com passwd123
 
-//        docker exec -it ba139fb8b106 setup config dkim
+//        docker exec -it cc85629c8ad5 setup config dkim
 
 
         //ufw allow 25
@@ -61,6 +74,20 @@ class SetupDockerEmailServer extends Command
         //ufw allow 465
 
         dd($dockerComposeYaml);
+
+    }
+
+    public function checkDNSValidation()
+    {
+
+        // exec: dig @1.1.1.1 +short MX allsidepixels.com
+        // output: 10 mail.allsidepixels.com
+
+        // exec: dig @1.1.1.1 +short A mail.allsidepixels.com
+        // output: 49.13.13.211
+
+        // exec: dig @1.1.1.1 +short -x 49.13.13.211
+        // output: mail.allsidepixels.com
 
     }
 }
