@@ -41,7 +41,7 @@ class SetupDockerEmailServer extends Command
         $dockerComposeYaml = file_get_contents($moduleServerConfigTemplatesPath . 'docker-compose.yaml');
         $dockerComposeYaml = Blade::render($dockerComposeYaml, [
             'containerName' => 'phyre-mail-server',
-            'hostName'=> 'mail.server11.microweber.me',
+            'hostName'=> 'mail.allsidepixels.com',
             'workPath' => $workPath,
         ]);
         shell_exec('mkdir -p ' . $workPath);
@@ -49,6 +49,16 @@ class SetupDockerEmailServer extends Command
 
      //   dd(shell_exec('docker-compose -f ' . $workPath . '/docker-compose.yaml up -d'));
 
+        // after compose you must create the email account
+
+        //docker exec -ti ba139fb8b106 setup email add bobi@server11.microweber.me passwd123
+
+//        docker exec -it ba139fb8b106 setup config dkim
+
+
+        //ufw allow 25
+        //ufw allow 587
+        //ufw allow 465
 
         dd($dockerComposeYaml);
 
