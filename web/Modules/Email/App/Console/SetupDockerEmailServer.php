@@ -34,7 +34,6 @@ class SetupDockerEmailServer extends Command
      */
     public function handle()
     {
-
         $this->info('Setting up email server...');
 
         $workPath = '/usr/local/phyre/email/docker';
@@ -51,7 +50,7 @@ class SetupDockerEmailServer extends Command
         shell_exec('mkdir -p ' . $workPath);
         file_put_contents($workPath . '/docker-compose.yaml', $dockerComposeYaml);
 
-        $ssl = DomainSslCertificate::where('domain', $domain)->first();
+        $ssl = DomainSslCertificate::where('domain', 'mail.'.$domain)->first();
         if ($ssl) {
             shell_exec('mkdir -p ' . $workPath . '/docker-data/acme-companion/certs/' . $domain);
             file_put_contents($workPath . '/docker-data/acme-companion/certs/' . $domain . '/fullchain.pem', $ssl->certificate_chain);
@@ -64,9 +63,11 @@ class SetupDockerEmailServer extends Command
 
         // after compose you must create the email account
 
-        //docker exec -ti cc85629c8ad5 setup email add peter@allsidepixels.com passwd123
+        //docker exec -ti c2d4fec32239 setup email add peter@allsidepixels.com passwd123
 
-//        docker exec -it cc85629c8ad5 setup config dkim
+        //docker exec -ti c2d4fec32239 setup email add boris@allsidepixels.com passwd123
+
+//        docker exec -it c2d4fec32239 setup config dkim
 
 
         //ufw allow 25
