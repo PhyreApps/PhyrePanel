@@ -5,6 +5,7 @@ namespace Modules\Email\App\Providers;
 use BladeUI\Icons\Factory;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Modules\Email\App\Console\SetupDockerEmailServer;
 
 class EmailServiceProvider extends ServiceProvider
 {
@@ -46,7 +47,9 @@ class EmailServiceProvider extends ServiceProvider
      */
     protected function registerCommands(): void
     {
-        // $this->commands([]);
+         $this->commands([
+             SetupDockerEmailServer::class
+         ]);
     }
 
     /**

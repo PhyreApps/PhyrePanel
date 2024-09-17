@@ -1,9 +1,9 @@
 services:
   mailserver:
     image: ghcr.io/docker-mailserver/docker-mailserver:latest
-    container_name: mailserver
+    container_name: {{$containerName}}
     # Provide the FQDN of your mail server here (Your DNS MX record should point to this value)
-    hostname: mail.domain.ai
+    hostname: {{$hostName}}
     ports:
       - "25:25"    # SMTP  (explicit TLS => STARTTLS)
       - "465:465"  # ESMTP (implicit TLS)
@@ -13,16 +13,17 @@ services:
       - "110:110"  # POP3
       - "995:995"  # POP3 (with TLS)
     volumes:
-      - ./docker-data/dms/mail-data/:/var/mail/
-      - ./docker-data/dms/mail-state/:/var/mail-state/
-      - ./docker-data/dms/mail-logs/:/var/log/mail/
-      - ./docker-data/dms/config/:/tmp/docker-mailserver/
+      - {{$workPath}}/docker-data/dms/mail-data/:/var/mail/
+      - {{$workPath}}/docker-data/dms/mail-state/:/var/mail-state/
+      - {{$workPath}}/docker-data/dms/mail-logs/:/var/log/mail/
+      - {{$workPath}}/docker-data/dms/config/:/tmp/docker-mailserver/
       - /etc/localtime:/etc/localtime:ro
-      - ./docker-data/acme-companion/certs/:/etc/letsencrypt/live/:ro
+      - {{$workPath}}/docker-data/acme-companion/certs/:/etc/letsencrypt/live/:ro
+
     environment:
       - SSL_TYPE=letsencrypt
-      - VIRTUAL_HOST=mail.vanesa.ai
-      - LETSENCRYPT_HOST=mail.vanesa.ai
+      - VIRTUAL_HOST={{$hostName}}
+      - LETSENCRYPT_HOST={{$hostName}}
       - ENABLE_FAIL2BAN=0
       - PERMIT_DOCKER=network
       - ONE_DIR=1

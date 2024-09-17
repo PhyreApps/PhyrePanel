@@ -19,11 +19,11 @@ ufw allow 25
 ufw allow 587
 ufw allow 465
 ufw allow 993
-
-docker exec -it xx setup config dkim
-docker exec -ti xx setup email add xx@domain.ai passwd123
-docker exec -ti xx setup email add user@domain.ai passwd123
-docker exec -ti x setup alias add postmaster@domain.ai user@domain.ai
+#
+#docker exec -it xx setup config dkim
+#docker exec -ti xx setup email add xx@domain.ai passwd123
+#docker exec -ti xx setup email add user@domain.ai passwd123
+#docker exec -ti x setup alias add postmaster@domain.ai user@domain.ai
 
 echo "Done!"
 
