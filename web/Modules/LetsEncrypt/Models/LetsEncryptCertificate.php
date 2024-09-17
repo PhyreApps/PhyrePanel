@@ -32,7 +32,9 @@ class LetsEncryptCertificate extends Model
 
             $findSSL = DomainSslCertificate::where('domain', $findDomain->domain)->first();
             if ($findSSL) {
-                throw new \Exception('SSL already exists');
+                $findSSL->delete();
+                $findSSL = null;
+//                throw new \Exception('SSL already exists');
             }
 
             $findHostingSubscription = HostingSubscription::where('id', $findDomain->hosting_subscription_id)->first();

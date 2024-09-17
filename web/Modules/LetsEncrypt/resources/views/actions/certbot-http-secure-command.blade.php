@@ -4,7 +4,6 @@ sudo certbot certonly \
     --manual \
     --preferred-challenges=http \
     -d {{$domain}} \
-    -d mail.{{$domain}} \
     --email {{$email}} \
     --manual-auth-hook /usr/local/phyre/web/Modules/LetsEncrypt/shell/hooks/pre/http-authenticator.sh \
     --force-renewal
