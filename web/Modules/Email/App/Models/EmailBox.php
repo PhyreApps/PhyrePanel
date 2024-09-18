@@ -13,6 +13,28 @@ class EmailBox extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'username',
+        'password',
+        'name',
+        'maildir',
+        'quota',
+        'local_part',
+        'domain',
+        'created',
+        'modified',
+        'active',
+        'phone',
+        'email_other',
+        'token',
+        'token_validity',
+        'password_expiry',
+        'smtp_active',
+    ];
 
+
+    public function getEmailAttribute()
+    {
+        return $this->username . '@' . $this->domain;
+    }
 }

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('password')->nullable();
             $table->string('name')->nullable();
             $table->string('maildir')->nullable();
-            $table->bigInteger('quota')->default(0);
+            $table->bigInteger('quota')->nullable();
             $table->string('local_part')->nullable();
             $table->string('domain')->nullable();
             $table->dateTime('created')->default('2000-01-01 00:00:00');
