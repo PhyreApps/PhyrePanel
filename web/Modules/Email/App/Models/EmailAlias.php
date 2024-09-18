@@ -14,9 +14,5 @@ class EmailAlias extends Model
      * The attributes that are mass assignable.
      */
     protected $fillable = [];
-    
-    protected static function newFactory(): EmailAliasFactory
-    {
-        //return EmailAliasFactory::new();
-    }
+
 }

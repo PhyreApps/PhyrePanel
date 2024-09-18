@@ -15,8 +15,4 @@ class DomainDkim extends Model
      */
     protected $fillable = [];
     
-    protected static function newFactory(): DomainDkimFactory
-    {
-        //return DomainDkimFactory::new();
-    }
 }

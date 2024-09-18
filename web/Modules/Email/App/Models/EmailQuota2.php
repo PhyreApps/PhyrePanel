@@ -14,9 +14,5 @@ class EmailQuota2 extends Model
      * The attributes that are mass assignable.
      */
     protected $fillable = [];
-    
-    protected static function newFactory(): EmailQuota2Factory
-    {
-        //return EmailQuota2Factory::new();
-    }
+
 }

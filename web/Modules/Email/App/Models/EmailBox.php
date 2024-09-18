@@ -14,9 +14,5 @@ class EmailBox extends Model
      * The attributes that are mass assignable.
      */
     protected $fillable = [];
-    
-    protected static function newFactory(): EmailBoxFactory
-    {
-        //return EmailBoxFactory::new();
-    }
+
 }

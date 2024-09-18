@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('email_quota2', function (Blueprint $table) {
+        Schema::create('email_quotas2', function (Blueprint $table) {
             $table->id();
-            
+
             $table->string('username', 100)->nullable();
             $table->bigInteger('bytes')->default(0);
             $table->integer('messages')->nullable();
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('email_quota2');
+        Schema::dropIfExists('email_quotas2');
     }
 };

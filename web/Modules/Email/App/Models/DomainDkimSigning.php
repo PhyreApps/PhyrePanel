@@ -14,9 +14,5 @@ class DomainDkimSigning extends Model
      * The attributes that are mass assignable.
      */
     protected $fillable = [];
-    
-    protected static function newFactory(): DomainDkimSigningFactory
-    {
-        //return DomainDkimSigningFactory::new();
-    }
+
 }
