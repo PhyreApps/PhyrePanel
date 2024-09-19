@@ -77,28 +77,7 @@ class SetupDockerEmailServer extends Command
 
         shell_exec('systemctl restart dovecot');
         shell_exec('systemctl restart postfix');
-
-
-
-
-//        $universalDatabaseExecutor = new UniversalDatabaseExecutor(
-//            PhyreConfig::get('MYSQL_HOST', '127.0.0.1'),
-//            PhyreConfig::get('MYSQL_PORT', 3306),
-//            PhyreConfig::get('MYSQL_ROOT_USERNAME'),
-//            PhyreConfig::get('MYSQL_ROOT_PASSWORD'),
-//        );
-//
-     //   $createDb = $universalDatabaseExecutor->createDatabase('phyre_postfix');
-//        dd($createDb);
-//        $universalDatabaseExecutor->fixPasswordPolicy();
-//        $createUser = $universalDatabaseExecutor->createUser('phyre_postfix', 'phyre_postfix_password');
-//        dd($createUser);
-
-//        $universalDatabaseExecutor->userGrantPrivilegesToDatabase('phyre_postfix', [
-//            'phyre_postfix'
-//        ]);
-
-
+        
     }
 
     public function checkDNSValidation()
