@@ -8,6 +8,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use PHPMailer\PHPMailer\PHPMailer;
 
 class SendEmail extends Page
 {
@@ -55,7 +56,17 @@ Welcome to your new account.
 
     public function send()
     {
-        if (mail($this->to, $this->subject, $this->body)) {
+
+        $phpMailer = new PHPMailer();
+        $phpMailer->isMail();
+        $phpMailer->setFrom('admin@allsidepixels.com', 'admin@allsidepixels.com');
+        $phpMailer->addAddress($this->to);
+        $phpMailer->Subject = $this->subject;
+        $phpMailer->Body = $this->body;
+        
+        $sendMail = $phpMailer->send();
+
+        if ($sendMail) {
             // Trigger a success notification
             Notification::make()
                 ->title('Email Sent')
