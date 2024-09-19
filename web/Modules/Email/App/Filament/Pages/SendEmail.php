@@ -63,7 +63,7 @@ Welcome to your new account.
         $phpMailer->addAddress($this->to);
         $phpMailer->Subject = $this->subject;
         $phpMailer->Body = $this->body;
-        
+
         $sendMail = $phpMailer->send();
 
         if ($sendMail) {
