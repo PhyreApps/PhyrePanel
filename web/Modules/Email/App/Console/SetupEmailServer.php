@@ -12,12 +12,12 @@ use Modules\LetsEncrypt\Models\LetsEncryptCertificate;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class SetupDockerEmailServer extends Command
+class SetupEmailServer extends Command
 {
     /**
      * The name and signature of the console command.
      */
-    protected $signature = 'email:setup-docker-email-server';
+    protected $signature = 'email:setup-email-server';
 
     /**
      * The console command description.
