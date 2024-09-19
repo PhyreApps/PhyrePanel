@@ -22,6 +22,8 @@ class EmailBoxResource extends Resource
 
     protected static ?string $navigationGroup = 'Email';
 
+    protected static ?string $label = 'Boxes';
+
     protected static ?int $navigationSort = 0;
 
     public static function form(Form $form): Form

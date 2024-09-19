@@ -13,6 +13,11 @@ class EmailAliasDomain extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [];
+    protected $fillable = [
+
+        'alias_domain',
+        'target_domain',
+
+    ];
 
 }

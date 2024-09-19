@@ -13,6 +13,10 @@ class EmailAlias extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'address',
+        'goto',
+        'domain',
+    ];
 
 }

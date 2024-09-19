@@ -86,6 +86,7 @@ class EmailServiceProvider extends ServiceProvider
     {
         $this->publishes([module_path($this->moduleName, 'config/config.php') => config_path($this->moduleNameLower.'.php')], 'config');
         $this->mergeConfigFrom(module_path($this->moduleName, 'config/config.php'), $this->moduleNameLower);
+
     }
 
     /**
