@@ -4428,7 +4428,6 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/microweber-packages/shared-server-scripts/zipball/159879db147f4a69f8a5f6797b57312bee869df0",
                 "reference": "159879db147f4a69f8a5f6797b57312bee869df0",
                 "shasum": ""
             },

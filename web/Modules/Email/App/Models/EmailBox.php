@@ -33,6 +33,15 @@ class EmailBox extends Model
     ];
 
 
+    public function getQuotaFormatedAttribute()
+    {
+        if ($this->quota == 0) {
+            return 'Unlimited';
+        }
+
+        return $this->quota . ' MB';
+    }
+
     public function getEmailAttribute()
     {
         return $this->username . '@' . $this->domain;

@@ -14,4 +14,6 @@ class EmailSettings extends Page
 
     protected static ?string $navigationLabel = 'Settings';
 
+    protected static ?int $navigationSort = 4;
+
 }

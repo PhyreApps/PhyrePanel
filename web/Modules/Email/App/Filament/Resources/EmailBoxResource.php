@@ -22,6 +22,8 @@ class EmailBoxResource extends Resource
 
     protected static ?string $navigationGroup = 'Email';
 
+    protected static ?int $navigationSort = 0;
+
     public static function form(Form $form): Form
     {
         return $form
@@ -93,7 +95,7 @@ class EmailBoxResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('quota')
+                Tables\Columns\TextColumn::make('quotaFormated')
                     ->searchable()
                     ->sortable(),
             ])
