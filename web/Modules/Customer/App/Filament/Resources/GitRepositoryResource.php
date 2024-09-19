@@ -87,6 +87,14 @@ class GitRepositoryResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+
+                    Tables\Actions\Action::make('log')
+                        ->label('Log')
+                        ->form([
+                            Forms\Components\View::make('log')
+                                ->view('filament.resources.git-repositories.log')
+                        ]),
+
                     Tables\Actions\Action::make('pull')
                        // ->hidden(fn (GitRepository $record) => $record->status !== 'cloned')
                         ->icon('heroicon-o-arrow-down-tray')

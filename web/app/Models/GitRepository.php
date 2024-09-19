@@ -149,7 +149,7 @@ class GitRepository extends Model
         $cloneUrl = 'git@'.$gitSSHUrl['provider'].':'.$gitSSHUrl['owner'].'/'.$gitSSHUrl['name'].'.git';
 
         $shellFile = $findDomain->domain_root . '/git/tmp/git-pull-' . $this->id . '.sh';
-        $shellLog = $findDomain->domain_root . '/git/tmp/git-pull-' . $this->id . '.log';
+        $shellLog = $findDomain->domain_root . '/git/tmp/git-action-' . $this->id . '.log';
 
         shell_exec('mkdir -p ' . dirname($shellFile));
         shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' -R ' . dirname(dirname($shellFile)));
@@ -175,6 +175,7 @@ class GitRepository extends Model
 
         $gitExecutorContent = view('actions.git.git-executor', [
             'shellFile' => $shellFile,
+            'shellLog' => $shellLog,
             'systemUsername' => $findHostingSubscription->system_username,
             'selfFile' => $gitExecutorShellFile,
             'afterCommand' => 'phyre-php /usr/local/phyre/web/artisan git-repository:mark-as-pulled '.$this->id,
@@ -228,7 +229,7 @@ class GitRepository extends Model
         $cloneUrl = 'git@'.$gitSSHUrl['provider'].':'.$gitSSHUrl['owner'].'/'.$gitSSHUrl['name'].'.git';
 
         $shellFile = $findDomain->domain_root . '/git/tmp/git-clone-' . $this->id . '.sh';
-        $shellLog = $findDomain->domain_root . '/git/tmp/git-clone-' . $this->id . '.log';
+        $shellLog = $findDomain->domain_root . '/git/tmp/git-action-' . $this->id . '.log';
 
         shell_exec('mkdir -p ' . dirname($shellFile));
         shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' -R ' . dirname(dirname($shellFile)));
@@ -250,6 +251,22 @@ class GitRepository extends Model
 
         shell_exec('su -m ' . $findHostingSubscription->system_username . ' -c "bash '.$shellFile.' >> ' . $shellLog . ' && phyre-php /usr/local/phyre/web/artisan git-repository:mark-as-cloned '.$this->id.' &"');
 
+    }
+
+    public function getLog()
+    {
+        $findDomain = Domain::find($this->domain_id);
+        if (!$findDomain) {
+            return 'Domain not found';
+        }
+
+        $shellLog = $findDomain->domain_root . '/git/tmp/git-action-' . $this->id . '.log';
+        if (file_exists($shellLog)) {
+            $content =  file_get_contents($shellLog);
+            return nl2br($content);
+        }
+
+        return 'No logs';
     }
 
 }

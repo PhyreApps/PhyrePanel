@@ -1,7 +1,7 @@
 chmod +x {{$shellFile}}
 chown {{$systemUsername}}:{{$systemUsername}} {{$shellFile}}
 
-sudo -m {{$systemUsername}} -c "bash {{$shellFile}}"
+su -m {{$systemUsername}} -c "bash {{$shellFile}} > {{$shellLog}}"
 
 @if ($afterCommand)
 
