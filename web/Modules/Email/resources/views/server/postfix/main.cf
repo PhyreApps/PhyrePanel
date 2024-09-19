@@ -39,7 +39,6 @@ smtp_use_tls = yes
 smtp_tls_auth_only = yes
 smtp_sasl_type = dovecot
 smtp_sasl_path = private/auth
-smtp_sasl_auth_enable = yes
 smtp_sasl_security_options = noanonymous
 smtp_sasl_local_domain = $myhostname
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
