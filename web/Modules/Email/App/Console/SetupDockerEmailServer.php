@@ -3,6 +3,9 @@
 namespace Modules\Email\App\Console;
 
 use App\Models\DomainSslCertificate;
+use App\PhyreBlade;
+use App\PhyreConfig;
+use App\UniversalDatabaseExecutor;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Blade;
 use Modules\LetsEncrypt\Models\LetsEncryptCertificate;
@@ -34,47 +37,50 @@ class SetupDockerEmailServer extends Command
      */
     public function handle()
     {
-        $this->info('Setting up email server...');
 
-        $workPath = '/usr/local/phyre/email/docker';
-
-        $domain = 'allsidepixels.com';
-
-        $moduleServerConfigTemplatesPath = '/usr/local/phyre/web/Modules/Email/server/docker/';
-        $dockerComposeYaml = file_get_contents($moduleServerConfigTemplatesPath . 'docker-compose.yaml');
-        $dockerComposeYaml = Blade::render($dockerComposeYaml, [
-            'containerName' => 'phyre-mail-server',
-            'hostName'=> 'mail.'.$domain,
-            'workPath' => $workPath,
-        ]);
-        shell_exec('mkdir -p ' . $workPath);
-        file_put_contents($workPath . '/docker-compose.yaml', $dockerComposeYaml);
-
-        $ssl = DomainSslCertificate::where('domain', 'mail.'.$domain)->first();
-        if ($ssl) {
-            shell_exec('mkdir -p ' . $workPath . '/docker-data/acme-companion/certs/' . $domain);
-            file_put_contents($workPath . '/docker-data/acme-companion/certs/' . $domain . '/fullchain.pem', $ssl->certificate_chain);
-            file_put_contents($workPath . '/docker-data/acme-companion/certs/' . $domain . '/privkey.pem', $ssl->private_key);
+        $sslPaths = [];
+        $findSSL = DomainSslCertificate::where('domain', setting('email.hostname'))->first();
+        if ($findSSL) {
+            $getSSLPaths = $findSSL->getSSLFiles();
+            if ($getSSLPaths) {
+                $sslPaths = $getSSLPaths;
+            }
         }
 
+        $postfixMainCf = PhyreBlade::render('email::server.postfix.main.cf', [
+            'hostName' => setting('email.hostname'),
+            'domain' => setting('email.domain'),
+            'sslPaths' => $sslPaths,
+        ]);
+
+        file_put_contents('/etc/postfix/main.cf', $postfixMainCf);
+
+        $postfixMasterCf = PhyreBlade::render('email::server.postfix.master.cf');
+        file_put_contents('/etc/postfix/master.cf', $postfixMasterCf);
+
+        shell_exec('systemctl restart dovecot');
+        shell_exec('systemctl restart postfix');
 
 
-     //   dd(shell_exec('docker-compose -f ' . $workPath . '/docker-compose.yaml up -d'));
-
-        // after compose you must create the email account
-
-        //docker exec -ti c2d4fec32239 setup email add peter@allsidepixels.com passwd123
-
-        //docker exec -ti c2d4fec32239 setup email add boris@allsidepixels.com passwd123
-
-//        docker exec -it c2d4fec32239 setup config dkim
 
 
-        //ufw allow 25
-        //ufw allow 587
-        //ufw allow 465
+//        $universalDatabaseExecutor = new UniversalDatabaseExecutor(
+//            PhyreConfig::get('MYSQL_HOST', '127.0.0.1'),
+//            PhyreConfig::get('MYSQL_PORT', 3306),
+//            PhyreConfig::get('MYSQL_ROOT_USERNAME'),
+//            PhyreConfig::get('MYSQL_ROOT_PASSWORD'),
+//        );
+//
+     //   $createDb = $universalDatabaseExecutor->createDatabase('phyre_postfix');
+//        dd($createDb);
+//        $universalDatabaseExecutor->fixPasswordPolicy();
+//        $createUser = $universalDatabaseExecutor->createUser('phyre_postfix', 'phyre_postfix_password');
+//        dd($createUser);
 
-        dd($dockerComposeYaml);
+//        $universalDatabaseExecutor->userGrantPrivilegesToDatabase('phyre_postfix', [
+//            'phyre_postfix'
+//        ]);
+
 
     }
 

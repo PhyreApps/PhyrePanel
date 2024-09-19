@@ -150,6 +150,5 @@ scalemail-backend unix -       n       n       -       2       pipe
 mailman   unix  -       n       n       -       -       pipe
   flags=FRX user=list argv=/usr/lib/mailman/bin/postfix-to-mailman.py ${nexthop} ${user}
 
-
 dovecot   unix  -       n       n       -       -       pipe
   flags=DRhu user=vmail:vmail argv=/usr/lib/dovecot/deliver -d ${recipient}
