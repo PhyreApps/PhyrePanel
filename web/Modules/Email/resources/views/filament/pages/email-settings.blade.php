@@ -1,6 +1,6 @@
 <x-filament-panels::page>
 
-    <div>
+<div>
         Email settings
     </div>
 
