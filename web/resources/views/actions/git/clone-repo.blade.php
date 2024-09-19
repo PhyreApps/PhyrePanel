@@ -1,6 +1,5 @@
 echo "Cloning started at {{ date('Y-m-d H:i:s') }}"
 
-
 @if($privateKeyFile)
 
 ssh-keyscan {{$gitProvider}} >> /home/{{$systemUsername}}/.ssh/known_hosts
