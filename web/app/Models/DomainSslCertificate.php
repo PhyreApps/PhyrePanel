@@ -23,4 +23,21 @@ class DomainSslCertificate extends Model
         'renewed_date',
         'renewed_until_date',
     ];
+
+    public function getSSLFiles()
+    {
+        $findDomain = Domain::where('domain', $this->domain)->first();
+        if ($findDomain) {
+            $domainRoot = $findDomain->domain_root;
+            $certPath = $domainRoot . '/certs/' . $this->domain;
+
+            return [
+                'certificate' => $certPath . '/public/cert.pem',
+                'certificateChain' => $certPath . '/public/fullchain.pem',
+                'privateKey' => $certPath . '/private/key.private.pem',
+            ];
+        }
+
+        return null;
+    }
 }

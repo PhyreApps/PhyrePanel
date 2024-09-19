@@ -4,48 +4,9 @@
 # https://phyrepanel.com                                                  #
 #=========================================================================#
 
-# Global
-smtpd_banner = $myhostname ESMTP $mail_name (Ubuntu)
-biff = no
-append_dot_mydomain = no
-#delay_warning_time = 4h
-compatibility_level = 3.6
-message_size_limit = 0
-virtual_transport = dovecot
-
-# SMTP
-smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
-smtp_tls_CApath=/etc/ssl/certs
-smtp_tls_security_level=may
-smtp_tls_cert_file=/usr/local/phyre/email/docker/docker-data/acme-companion/certs/allsidepixels.com/fullchain.pem
-smtp_tls_key_file=/usr/local/phyre/email/docker/docker-data/acme-companion/certs/allsidepixels.com/privkey.pem
-smtp_sasl_type = dovecot
-smtp_sasl_path = private/auth
-smtp_use_tls = yes
-smtp_tls_security_level = may
-smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
-smtp_sasl_security_options = noanonymous
-
-# SMTPD
-smtpd_tls_cert_file=/usr/local/phyre/email/docker/docker-data/acme-companion/certs/allsidepixels.com/fullchain.pem
-smtpd_tls_key_file=/usr/local/phyre/email/docker/docker-data/acme-companion/certs/allsidepixels.com/privkey.pem
-smtpd_tls_security_level=may
-smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
-smtpd_sasl_path = private/auth
-smtpd_sasl_type = dovecot
-smtpd_use_tls = yes
-smtpd_tls_security_level = may
-smtpd_tls_auth_only = yes
-smtpd_sender_restrictions = permit_sasl_authenticated
-smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
-smtpd_sasl_auth_enable = yes
-smtpd_sasl_security_options = noanonymous
-smtpd_sasl_local_domain = $myhostname
-
-
 # Setup
-myhostname = mail.allsidepixels.com
-mydomain = allsidepixels.com
+myhostname = {{$hostName}}
+mydomain =  {{$domain}}
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
 myorigin = $mydomain
@@ -57,11 +18,60 @@ recipient_delimiter = +
 inet_interfaces = all
 inet_protocols = ipv4
 
+# Global
+smtpd_banner = $myhostname ESMTP $mail_name (Ubuntu)
+biff = no
+append_dot_mydomain = no
+#delay_warning_time = 4h
+compatibility_level = 3.6
+message_size_limit = 0
+virtual_transport = dovecot
+
+# SMTP
+@if(!empty($sslPaths))
+smtp_tls_cert_file = {{$sslPaths['certificateChain']}}
+smtp_tls_key_file = {{$sslPaths['privateKey']}}
+@endif
+
+smtp_tls_CApath = /etc/ssl/certs
+smtp_tls_security_level = may
+smtp_use_tls = yes
+smtp_tls_auth_only = yes
+smtp_sasl_type = dovecot
+smtp_sasl_path = private/auth
+smtp_sasl_auth_enable = yes
+smtp_sasl_security_options = noanonymous
+smtp_sasl_local_domain = $myhostname
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtp_sender_restrictions = permit_sasl_authenticated
+smtp_relay_restrictions = permit_mynetworks, permit_sasl_authenticated, defer_unauth_destination
+smtp_milters = inet:127.0.0.1:8891
+
+# SMTPD
+@if(!empty($sslPaths))
+smtpd_tls_cert_file = {{$sslPaths['certificateChain']}}
+smtpd_tls_key_file = {{$sslPaths['privateKey']}}
+@endif
+
+smtpd_tls_CApath = /etc/ssl/certs
+smtpd_tls_security_level = may
+smtpd_use_tls = yes
+smtpd_tls_auth_only = yes
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_security_options = noanonymous
+smtpd_sasl_local_domain = $myhostname
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+smtpd_sender_restrictions = permit_sasl_authenticated
+smtpd_relay_restrictions = permit_mynetworks, permit_sasl_authenticated, defer_unauth_destination
+smtpd_milters = inet:127.0.0.1:8891
+
 # DKIM
 milter_default_action = accept
 milter_protocol = 2
-smtpd_milters = inet:127.0.0.1:8891
 non_smtpd_milters = inet:127.0.0.1:8891
+non_smtp_milters = inet:127.0.0.1:8891
 
 # Virtual Domains
 virtual_mailbox_base = 0
