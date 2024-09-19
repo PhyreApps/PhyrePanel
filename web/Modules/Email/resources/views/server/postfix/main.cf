@@ -1,0 +1,105 @@
+# See /usr/share/postfix/main.cf.dist for a commented, more complete version
+
+
+# Debian specific:  Specifying a file name will cause the first
+# line of that file to be used as the name.  The Debian default
+# is /etc/mailname.
+#myorigin = /etc/mailname
+
+smtpd_banner = $myhostname ESMTP $mail_name (Ubuntu)
+biff = no
+
+# appending .domain is the MUA's job.
+append_dot_mydomain = no
+
+# Uncomment the next line to generate "delayed mail" warnings
+#delay_warning_time = 4h
+
+readme_directory = no
+
+# See http://www.postfix.org/COMPATIBILITY_README.html -- default to 3.6 on
+# fresh installs.
+compatibility_level = 3.6
+
+
+
+# TLS parameters
+smtp_tls_cert_file=/usr/local/phyre/email/docker/docker-data/acme-companion/certs/allsidepixels.com/fullchain.pem
+smtp_tls_key_file=/usr/local/phyre/email/docker/docker-data/acme-companion/certs/allsidepixels.com/privkey.pem
+
+smtpd_tls_cert_file=/usr/local/phyre/email/docker/docker-data/acme-companion/certs/allsidepixels.com/fullchain.pem
+smtpd_tls_key_file=/usr/local/phyre/email/docker/docker-data/acme-companion/certs/allsidepixels.com/privkey.pem
+smtpd_tls_security_level=may
+
+smtp_tls_CApath=/etc/ssl/certs
+smtp_tls_security_level=may
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+
+
+smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
+myhostname = mail.allsidepixels.com
+mydomain = allsidepixels.com
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+myorigin = $mydomain
+
+
+mydestination = $myhostname, localhost.$mydomain, localhost
+relayhost =
+mynetworks = 127.0.0.0/8 [::1]/128 [fe80::]/64
+mailbox_size_limit = 0
+recipient_delimiter = +
+inet_interfaces = all
+inet_protocols = ipv4
+
+
+# DKIM
+# --------------------------------------
+
+milter_default_action = accept
+milter_protocol = 2
+smtpd_milters = inet:127.0.0.1:8891
+non_smtpd_milters = inet:127.0.0.1:8891
+
+
+
+
+# Virtual Domains
+virtual_mailbox_base = 0
+virtual_mailbox_domains = mysql:/etc/postfix/sql/mysql_virtual_domains_maps.cf
+virtual_mailbox_maps = mysql:/etc/postfix/sql/mysql_virtual_mailbox_maps.cf
+virtual_alias_maps = mysql:/etc/postfix/sql/mysql_virtual_alias_maps.cf
+
+
+
+
+# Dovecot SASL
+virtual_transport = dovecot
+smtpd_sasl_type = dovecot
+smtp_sasl_type = dovecot
+
+## Path to the Postfix auth socket
+smtpd_sasl_path = private/auth
+smtp_sasl_path = private/auth
+
+# TLS parameters
+smtpd_use_tls=yes
+smtp_use_tls = yes
+smtpd_tls_security_level = may
+smtpd_tls_auth_only = yes
+smtp_tls_security_level = may
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtpd_sender_restrictions = permit_sasl_authenticated
+
+
+## Tells Postfix to let people send email if they've authenticated to the server.
+## Otherwise they can only send if they're logged in (SSH)
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_security_options = noanonymous
+smtp_sasl_security_options = noanonymous
+smtpd_sasl_local_domain = $myhostname
+
+
+message_size_limit = 0
+
