@@ -17,3 +17,5 @@ git pull
 @endif
 
 rm -rf {{$selfFile}}
+
+curl

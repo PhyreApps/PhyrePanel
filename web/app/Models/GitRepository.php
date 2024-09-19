@@ -166,10 +166,24 @@ class GitRepository extends Model
 
         file_put_contents($shellFile, $shellContent);
 
-        shell_exec('chmod +x ' . $shellFile);
-        shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' ' . $shellFile);
 
-        shell_exec('su -m ' . $findHostingSubscription->system_username . ' -c "bash '.$shellFile.' >> ' . $shellLog . ' &"');
+        $gitExecutorTempPath = storage_path('app/git/tmp');
+        shell_exec('mkdir -p ' . $gitExecutorTempPath);
+
+        $gitExecutorShellFile = $gitExecutorTempPath . '/git-pull-' . $this->id . '.sh';
+        $gitExecutorShellFileLog = $gitExecutorTempPath . '/git-pull-' . $this->id . '.log';
+
+        $gitExecutorContent = view('actions.git.git-executor', [
+            'shellFile' => $shellFile,
+            'systemUsername' => $findHostingSubscription->system_username,
+            'selfFile' => $gitExecutorShellFile,
+            'afterCommand' => 'phyre-php /usr/local/phyre/web/artisan git-repository:mark-as-pulled '.$this->id,
+        ])->render();
+
+        file_put_contents($gitExecutorShellFile, $gitExecutorContent);
+
+        shell_exec('chmod +x ' . $gitExecutorShellFile);
+        shell_exec('bash ' . $gitExecutorShellFile . ' >> ' . $gitExecutorShellFileLog . ' &');
 
     }
 
@@ -234,7 +248,7 @@ class GitRepository extends Model
         shell_exec('chmod +x ' . $shellFile);
         shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' ' . $shellFile);
 
-        shell_exec('su -m ' . $findHostingSubscription->system_username . ' -c "bash '.$shellFile.' >> ' . $shellLog . ' &"');
+        shell_exec('su -m ' . $findHostingSubscription->system_username . ' -c "bash '.$shellFile.' >> ' . $shellLog . ' && phyre-php /usr/local/phyre/web/artisan git-repository:mark-as-cloned '.$this->id.' &"');
 
     }
 
