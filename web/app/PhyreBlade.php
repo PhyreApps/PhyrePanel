@@ -20,6 +20,9 @@ class PhyreBlade
         $hints = app()->view->getFinder()->getHints();
         if (isset($hints[$namespace])) {
             $path = $hints[$namespace][0] . '/' . $file;
+        } else {
+            $viewsPath = app()->view->getFinder()->getPaths()[0];
+            $path = $viewsPath . '/' . $file;
         }
 
         if (!is_file($path)) {
