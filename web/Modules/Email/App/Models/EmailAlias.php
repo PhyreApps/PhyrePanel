@@ -19,4 +19,9 @@ class EmailAlias extends Model
         'domain',
     ];
 
+
+    public function getForwardAttribute()
+    {
+        return $this->address . '@' . $this->domain; 
+    }
 }

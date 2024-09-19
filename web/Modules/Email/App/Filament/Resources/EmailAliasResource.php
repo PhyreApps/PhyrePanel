@@ -3,6 +3,7 @@
 namespace Modules\Email\App\Filament\Resources;
 
 use App\Models\Domain;
+use Faker\Provider\Text;
 use Modules\Email\App\Filament\Resources\EmailAliasResource\Pages;
 use Modules\Email\App\Filament\Resources\EmailAliasResource\RelationManagers;
 use Modules\Email\App\Models\EmailAlias;
@@ -52,7 +53,10 @@ class EmailAliasResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('forward'),
+
+                Tables\Columns\TextColumn::make('goto')
+                    ->label('To'),
             ])
             ->filters([
                 //
