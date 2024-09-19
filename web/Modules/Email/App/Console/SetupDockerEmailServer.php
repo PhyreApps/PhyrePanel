@@ -77,7 +77,7 @@ class SetupDockerEmailServer extends Command
 
         shell_exec('systemctl restart dovecot');
         shell_exec('systemctl restart postfix');
-        
+
     }
 
     public function checkDNSValidation()
