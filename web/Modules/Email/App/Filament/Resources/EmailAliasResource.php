@@ -31,14 +31,16 @@ class EmailAliasResource extends Resource
         return $form
             ->schema([
 
-                Forms\Components\TextInput::make('forward')
+                Forms\Components\TextInput::make('address')
+                    ->label('Forward')
                     ->helperText('To create a catch-all use an "*" as alias.')
                     ->required(),
 
                 Forms\Components\Select::make('domain')
                     ->options(Domain::get()->pluck('domain', 'domain')->toArray()),
 
-                Forms\Components\Textarea::make('to')
+                Forms\Components\Textarea::make('goto')
+                    ->label('To')
                     ->columnSpanFull()
                 ->placeholder('Accepts multiple targets, one entry per line.')
                 ->cols(20)
