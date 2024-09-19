@@ -47,6 +47,23 @@ class SetupDockerEmailServer extends Command
             }
         }
 
+        $mysqlDbDetails = [
+            'host' => PhyreConfig::get('MYSQL_HOST', '127.0.0.1'),
+            'port' => PhyreConfig::get('MYSQL_PORT', 3306),
+            'username' => PhyreConfig::get('DB_USERNAME'),
+            'password' => PhyreConfig::get('DB_PASSWORD'),
+            'database' => PhyreConfig::get('DB_DATABASE'),
+        ];
+
+        $postfixMysqlVirtualAliasMapsCf = PhyreBlade::render('email::server.postfix.sql.mysql_virtual_alias_maps.cf',$mysqlDbDetails);
+        file_put_contents('/etc/postfix/sql/mysql_virtual_alias_maps.cf', $postfixMysqlVirtualAliasMapsCf);
+
+        $postfixMysqlVirtualDomainsMapsCf = PhyreBlade::render('email::server.postfix.sql.mysql_virtual_domains_maps.cf',$mysqlDbDetails);
+        file_put_contents('/etc/postfix/sql/mysql_virtual_domains_maps.cf', $postfixMysqlVirtualDomainsMapsCf);
+
+        $postfixMysqlVirtualMailboxMapsCf = PhyreBlade::render('email::server.postfix.sql.mysql_virtual_mailbox_maps.cf',$mysqlDbDetails);
+        file_put_contents('/etc/postfix/sql/mysql_virtual_mailbox_maps.cf', $postfixMysqlVirtualMailboxMapsCf);
+
         $postfixMainCf = PhyreBlade::render('email::server.postfix.main.cf', [
             'hostName' => setting('email.hostname'),
             'domain' => setting('email.domain'),

@@ -1,5 +1,6 @@
-user = phyre_postfix
-password = phyre_postfix_password
-hosts = 127.0.0.1
-dbname = phyre_postfix
+user = {{$username}}
+password = {{$password}}
+hosts = {{$host}}
+dbname = {{$database}}
+port = {{$port}}
 query = SELECT maildir FROM mailbox WHERE username='%s' AND active = '1'
