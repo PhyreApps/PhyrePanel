@@ -84,23 +84,25 @@ class GitRepository extends Model
 
             if (!is_dir($sshPath)) {
                 shell_exec('mkdir -p ' . $sshPath);
-                shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' -R ' . dirname($sshPath));
-                shell_exec('chmod 0700 ' . dirname($sshPath));
             }
+
+            shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' -R ' . dirname($sshPath));
+            shell_exec('chmod 0700 ' . dirname($sshPath));
 
             if (!file_exists($privateKeyFile)) {
                 file_put_contents($privateKeyFile, $gitSSHKey->private_key);
-
-                shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' ' . $privateKeyFile);
-                shell_exec('chmod 0400 ' . $privateKeyFile);
-
             }
+
+            shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' ' . $privateKeyFile);
+            shell_exec('chmod 0400 ' . $privateKeyFile);
 
             if (!file_exists($publicKeyFile)) {
                 file_put_contents($publicKeyFile, $gitSSHKey->public_key);
-                shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' ' . $publicKeyFile);
-                shell_exec('chmod 0400 ' . $publicKeyFile);
             }
+
+            shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' ' . $publicKeyFile);
+            shell_exec('chmod 0400 ' . $publicKeyFile);
+
 
             return [
                 'privateKeyFile' => $privateKeyFile,
