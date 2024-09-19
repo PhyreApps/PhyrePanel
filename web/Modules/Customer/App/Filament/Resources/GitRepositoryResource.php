@@ -47,6 +47,10 @@ class GitRepositoryResource extends Resource
         return $table
             ->columns([
 
+                Tables\Columns\TextColumn::make('id')
+                    ->label('#')
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('domain.domain'),
 
 //                Tables\Columns\TextColumn::make('name')

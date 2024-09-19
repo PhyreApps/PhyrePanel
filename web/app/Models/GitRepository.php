@@ -148,8 +148,11 @@ class GitRepository extends Model
 
         $cloneUrl = 'git@'.$gitSSHUrl['provider'].':'.$gitSSHUrl['owner'].'/'.$gitSSHUrl['name'].'.git';
 
-        $shellFile = '/tmp/git-pull-' . $this->id . '.sh';
-        $shellLog = '/tmp/git-pull-' . $this->id . '.log';
+        $shellFile = $findDomain->domain_root . '/git/tmp/git-pull-' . $this->id . '.sh';
+        $shellLog = $findDomain->domain_root . '/git/tmp/git-pull-' . $this->id . '.log';
+
+        shell_exec('mkdir -p ' . dirname($shellFile));
+        shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' -R ' . dirname(dirname($shellFile)));
 
         $shellContent = view('actions.git.pull-repo', [
             'gitProvider' => $gitSSHUrl['provider'],
@@ -158,12 +161,15 @@ class GitRepository extends Model
             'cloneUrl' => $cloneUrl,
             'projectDir' => $projectDir,
             'privateKeyFile' => $privateKeyFile,
+            'selfFile' => $shellFile,
         ])->render();
 
         file_put_contents($shellFile, $shellContent);
 
         shell_exec('chmod +x ' . $shellFile);
-        shell_exec('bash '.$shellFile.' >> ' . $shellLog . ' &');
+        shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' ' . $shellFile);
+
+        shell_exec('su -m ' . $findHostingSubscription->system_username . ' -c "bash '.$shellFile.' >> ' . $shellLog . ' &"');
 
     }
 
