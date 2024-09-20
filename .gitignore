@@ -5,7 +5,6 @@ web/phyre-config.ini
 
 
 # vitepress build output
-**/.vitepress/dist/
 **/.vitepress/cache/
 /docs/node_modules/
 

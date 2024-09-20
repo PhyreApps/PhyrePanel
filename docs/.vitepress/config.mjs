@@ -14,10 +14,10 @@ export default defineConfig({
     //   lang: 'bg',
     // }
   },
-  base: 'https://phyreapps.github.io/PhyrePanel/',
-  
+  base: 'https://docs.phyrepanel.com/',
+
   sitemap: {
-    hostname: 'https://phyreapps.github.io/PhyrePanel/',
+    hostname: 'https://docs.phyrepanel.com/',
     lastmodDateOnly: false
   },
 
