@@ -95,13 +95,15 @@ class AdminPanelProvider extends PanelProvider
             ]);
 
         $defaultColor = Color::Yellow;
-        $brandLogo = asset('images/phyre-logo.svg');
-
-
+        $brandLogo = null;
+        $brandName = null;
         $isAppInstalled = file_exists(storage_path('installed'));
         if ($isAppInstalled) {
             if (setting('general.brand_logo_url')) {
                 $brandLogo = setting('general.brand_logo_url');
+            }
+            if (setting('general.brand_name')) {
+                $brandName = setting('general.brand_name');
             }
             if (setting('general.brand_primary_color')) {
                 $defaultColor = Color::hex(setting('general.brand_primary_color'));
@@ -142,8 +144,15 @@ class AdminPanelProvider extends PanelProvider
             }
         }
 
-        $panel->brandLogo($brandLogo)
-        ->brandLogoHeight('2.2rem')
+        if ($brandLogo) {
+            $panel->brandLogo($brandLogo);
+        } else if ($brandName) {
+            $panel->brandName($brandName);
+        } else {
+            $panel->brandLogo(asset('images/phyre-logo.svg'));
+        }
+        
+        $panel->brandLogoHeight('2.2rem')
         ->colors([
             'primary'=>$defaultColor,
         ]);
