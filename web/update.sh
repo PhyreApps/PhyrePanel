@@ -24,5 +24,5 @@ systemctl restart phyre
 #systemctl status phyre
 
 printf "Updating the database...\n"
-$PHYRE_PHP artisan migrate
+$PHYRE_PHP /usr/local/phyre/web/artisan migrate
 #$PHYRE_PHP artisan l5-swagger:generate
