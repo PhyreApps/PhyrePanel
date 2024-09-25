@@ -14,5 +14,6 @@ class PostInstall  extends ModulePostInstall
         shell_exec("chmod +x $installDockerShellFile");
         shell_exec("bash $installDockerShellFile >> $this->logFile &");
 
+        return true;
     }
 }
