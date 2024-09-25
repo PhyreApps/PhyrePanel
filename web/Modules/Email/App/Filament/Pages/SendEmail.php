@@ -29,9 +29,14 @@ Welcome to your new account.
     ';
     public $subject = 'Welcome';
 
+    public function getEmailDomain()
+    {
+        return setting('email.domain');
+    }
+
     public function form(Form $form): Form
     {
-        $this->from = 'admin@';
+        $this->from = 'admin@'.$this->getEmailDomain();
 
         return $form
             ->schema([
@@ -57,9 +62,11 @@ Welcome to your new account.
     public function send()
     {
 
+        $emailDomain = $this->getEmailDomain();
+
         $phpMailer = new PHPMailer();
         $phpMailer->isMail();
-        $phpMailer->setFrom('admin@allsidepixels.com', 'admin@allsidepixels.com');
+        $phpMailer->setFrom('admin@' . $emailDomain, 'admin@'.$emailDomain);
         $phpMailer->addAddress($this->to);
         $phpMailer->Subject = $this->subject;
         $phpMailer->Body = $this->body;

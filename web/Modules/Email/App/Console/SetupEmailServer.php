@@ -55,6 +55,10 @@ class SetupEmailServer extends Command
             'database' => PhyreConfig::get('DB_DATABASE'),
         ];
 
+        if (!is_dir('/etc/postfix/sql')) {
+            mkdir('/etc/postfix/sql');
+        }
+
         $postfixMysqlVirtualAliasMapsCf = PhyreBlade::render('email::server.postfix.sql.mysql_virtual_alias_maps.cf',$mysqlDbDetails);
         file_put_contents('/etc/postfix/sql/mysql_virtual_alias_maps.cf', $postfixMysqlVirtualAliasMapsCf);
 

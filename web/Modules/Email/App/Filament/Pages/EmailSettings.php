@@ -19,6 +19,13 @@ class EmailSettings extends BaseSettings
 
     protected static ?int $navigationSort = 4;
 
+    public function save() : void
+    {
+        parent::save();
+
+        \Artisan::call('email:setup-email-server');
+
+    }
 
     public function schema(): array
     {

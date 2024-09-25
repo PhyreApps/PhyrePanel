@@ -1,11 +1,12 @@
 sudo apt-get update -y
-sudo apt-get install dovecot-core dovecot-imapd dovecot-pop3d dovecot-lmtpd dovecot-mysql dovecot-sieve dovecot-managesieved -y
-sudo apt-get install postfix postfix-mysql -y
-sudo apt-get install mailutils -y
-sudo apt-get install opendkim opendkim-tools -y
-sudo apt-get install spamassassin spamc -y
-sudo apt-get install clamav clamav-daemon -y
-sudo apt-get install amavisd-new -y
+
+sudo DEBIAN_FRONTEND=noninteractive apt-get --no-install-recommends install dovecot-core dovecot-imapd dovecot-pop3d dovecot-lmtpd dovecot-mysql dovecot-sieve dovecot-managesieved -yq
+sudo DEBIAN_FRONTEND=noninteractive apt-get --no-install-recommends install postfix postfix-mysql -yq
+sudo apt-get --no-install-recommends install mailutils -yq
+sudo apt-get --no-install-recommends install opendkim opendkim-tools -yq
+sudo apt-get --no-install-recommends install spamassassin spamc -yq
+sudo apt-get --no-install-recommends install clamav clamav-daemon -yq
+sudo apt-get --no-install-recommends install amavisd-new -yq
 
 # Enable email ports
 ufw allow 25

@@ -34,9 +34,10 @@ class EmailBoxResource extends Resource
                 Forms\Components\TextInput::make('username')
                     ->label('Username')
                     ->disabled(function ($record) {
-                        return $record->exists;
-                    })
-                    ->columnSpanFull(),
+                        if ($record) {
+                            return $record->exists;
+                        }
+                    })->columnSpanFull(),
 
                 Forms\Components\Select::make('domain')
                     ->label('Domain')
