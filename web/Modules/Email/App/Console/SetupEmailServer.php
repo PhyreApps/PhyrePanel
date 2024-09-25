@@ -81,6 +81,7 @@ class SetupEmailServer extends Command
 
         shell_exec('systemctl restart dovecot');
         shell_exec('systemctl restart postfix');
+        shell_exec('systemctl restart opendkim');
 
     }
 

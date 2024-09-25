@@ -44,7 +44,7 @@ smtp_sasl_local_domain = $myhostname
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 smtp_sender_restrictions = permit_sasl_authenticated
 smtp_relay_restrictions = permit_mynetworks, permit_sasl_authenticated, defer_unauth_destination
-smtp_milters = inet:127.0.0.1:8891
+# smtp_milters = inet:127.0.0.1:8891
 
 # SMTPD
 @if(!empty($sslPaths))
@@ -64,13 +64,13 @@ smtpd_sasl_local_domain = $myhostname
 smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
 smtpd_sender_restrictions = permit_sasl_authenticated
 smtpd_relay_restrictions = permit_mynetworks, permit_sasl_authenticated, defer_unauth_destination
-smtpd_milters = inet:127.0.0.1:8891
+# smtpd_milters = inet:127.0.0.1:8891
 
 # DKIM
-milter_default_action = accept
-milter_protocol = 2
-non_smtpd_milters = inet:127.0.0.1:8891
-non_smtp_milters = inet:127.0.0.1:8891
+# milter_default_action = accept
+# milter_protocol = 2
+# non_smtpd_milters = inet:127.0.0.1:8891
+# non_smtp_milters = inet:127.0.0.1:8891
 
 # Virtual Domains
 virtual_mailbox_base = 0

@@ -3,4 +3,4 @@ password = {{$password}}
 hosts = {{$host}}
 dbname = {{$database}}
 port = {{$port}}
-query = SELECT domain FROM domain WHERE domain='%s' AND active = '1'
+query = SELECT domain FROM domains WHERE domain='%s'

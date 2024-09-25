@@ -3,4 +3,4 @@ password = {{$password}}
 hosts = {{$host}}
 dbname = {{$database}}
 port = {{$port}}
-query = SELECT maildir FROM mailbox WHERE username='%s' AND active = '1'
+query = SELECT maildir FROM email_boxes WHERE username='%s'

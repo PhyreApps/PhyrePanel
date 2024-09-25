@@ -3,4 +3,4 @@ password = {{$password}}
 hosts = {{$host}}
 dbname = {{$database}}
 port = {{$port}}
-query = SELECT goto FROM alias WHERE address='%s' AND active = '1'
+query = SELECT goto FROM email_aliases WHERE address='%s'
