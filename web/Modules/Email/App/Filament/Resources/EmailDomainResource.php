@@ -11,6 +11,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Modules\Email\App\Http\Livewire\DkimSetup;
 use Modules\Email\App\Models\EmailBox;
 use Modules\Email\DkimDomainSetup;
 
@@ -47,11 +48,14 @@ class EmailDomainResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\Action::make('dkimSetup')
+                Tables\Actions\ViewAction::make('dkimSetup')
                     ->label('DKIM Setup')
-                    ->action(function (Domain $record) {
-                        $output = DkimDomainSetup::run($record->domain);
-                        dd($output);
+                    ->form(function (Domain $record) {
+                        return [
+                            Forms\Components\Livewire::make(DkimSetup::class, [
+                                'domain' => $record->domain,
+                            ]),
+                        ];
                     })
                     ->icon('heroicon-o-pencil'),
             ])
