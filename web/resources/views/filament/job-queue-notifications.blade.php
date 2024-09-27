@@ -2,7 +2,7 @@
 
    {{-- @if(auth()->id())
 
-    <script> 
+    <script>
         let hiddenJobQueueNotifications = [];
         function hideJobQueueNotification(jobId) {
             hiddenJobQueueNotifications.push(jobId);
