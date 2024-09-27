@@ -1,8 +1,8 @@
 <div>
 
-    @if(auth()->id())
+   {{-- @if(auth()->id())
 
-    <script>
+    <script> 
         let hiddenJobQueueNotifications = [];
         function hideJobQueueNotification(jobId) {
             hiddenJobQueueNotifications.push(jobId);
@@ -46,5 +46,5 @@
 @endforeach
     </div>
 
-    @endif
+    @endif--}}
 </div>
