@@ -12,9 +12,11 @@ class DkimSetup extends Component
     public function render()
     {
         $secure = $this->secure();
+        $verify = $this->verify();
 
         return view('email::livewire.dkim-setup', [
             'secure' => $secure,
+            'verify' => $verify,
         ]);
     }
 
@@ -37,7 +39,8 @@ class DkimSetup extends Component
         $checks[] = [
             'check' => 'MX',
             'pass' => $checkOnePass,
-            'result'=>$checkOne
+            'result'=>$checkOne,
+            'must'=>'10 '.$this->domain
         ];
 
         $checkTwo = shell_exec('dig @1.1.1.1 +short A '.$this->domain);
@@ -50,7 +53,8 @@ class DkimSetup extends Component
         $checks[] = [
             'check'=>'IP',
             'pass'=>$checkTwoPass,
-            'result'=>$checkTwo
+            'result'=>$checkTwo,
+            'must'=>$getIpOfDomain
         ];
 
         $checkThree = shell_exec('dig @1.1.1.1 +short -x ' . $getIpOfDomain);
@@ -62,10 +66,14 @@ class DkimSetup extends Component
         $checks[] = [
             'check'=>'Reverse DNS',
             'pass'=>$checkTreePass,
-            'result'=>$checkThree
+            'result'=>$checkThree,
+            'must'=>$this->domain
         ];
 
-        return $checks;
+        return [
+            'checks' => $checks,
+            'pass' => $checkOnePass && $checkTwoPass && $checkTreePass,
+        ];
     }
 
     public function secure()
