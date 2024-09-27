@@ -5,7 +5,9 @@ namespace Modules\Email\App\Providers;
 use BladeUI\Icons\Factory;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 use Modules\Email\App\Console\SetupEmailServer;
+use Modules\Email\App\Http\Livewire\DkimSetup;
 
 class EmailServiceProvider extends ServiceProvider
 {
@@ -40,6 +42,8 @@ class EmailServiceProvider extends ServiceProvider
         });
 
         $this->app->register(RouteServiceProvider::class);
+
+        Livewire::component('email::dkim-setup', DkimSetup::class);
     }
 
     /**

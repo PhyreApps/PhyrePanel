@@ -52,7 +52,7 @@ class EmailDomainResource extends Resource
                     ->label('DKIM Setup')
                     ->form(function (Domain $record) {
                         return [
-                            Forms\Components\Livewire::make(DkimSetup::class, [
+                            Forms\Components\Livewire::make('email::dkim-setup', [
                                 'domain' => $record->domain,
                             ]),
                         ];
