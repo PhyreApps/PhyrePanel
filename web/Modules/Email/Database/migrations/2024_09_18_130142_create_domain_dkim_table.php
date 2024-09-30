@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('domain_dkims', function (Blueprint $table) {
+        Schema::create('domain_dkim', function (Blueprint $table) {
             $table->id();
 
             $table->string('domain_name');
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('domain_dkims');
+        Schema::dropIfExists('domain_dkim');
     }
 };

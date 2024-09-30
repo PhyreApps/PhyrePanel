@@ -7,6 +7,7 @@ sudo apt-get --no-install-recommends install opendkim opendkim-tools postfix-pol
 sudo apt-get --no-install-recommends install spamassassin spamc -yq
 sudo apt-get --no-install-recommends install clamav clamav-daemon -yq
 sudo apt-get --no-install-recommends install amavisd-new -yq
+sudo apt-get install libmysqlclient-dev libopendbx1-mysql -yq
 
 # Enable email ports
 ufw allow 25

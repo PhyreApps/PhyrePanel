@@ -80,6 +80,9 @@ class SetupEmailServer extends Command
         $postfixMasterCf = PhyreBlade::render('email::server.postfix.master.cf');
         file_put_contents('/etc/postfix/master.cf', $postfixMasterCf);
 
+        $openDkimConf = PhyreBlade::render('email::server.opendkim.opendkim.conf', $mysqlDbDetails);
+        file_put_contents('/etc/opendkim.conf', $openDkimConf);
+
         shell_exec('systemctl restart dovecot');
         shell_exec('systemctl restart postfix');
         shell_exec('systemctl restart opendkim');
