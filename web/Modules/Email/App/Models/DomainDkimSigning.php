@@ -15,4 +15,6 @@ class DomainDkimSigning extends Model
      */
     protected $fillable = [];
 
+    protected $table = 'domain_dkim_signings';
+
 }

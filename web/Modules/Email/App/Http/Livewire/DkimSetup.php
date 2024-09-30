@@ -4,6 +4,7 @@ namespace Modules\Email\App\Http\Livewire;
 
 use Livewire\Component;
 use Modules\Email\App\Models\DomainDkim;
+use Modules\Email\App\Models\DomainDkimSigning;
 use Modules\Email\DkimDomainSetup;
 
 class DkimSetup extends Component
@@ -90,6 +91,14 @@ class DkimSetup extends Component
             $findDomainDkim->private_key = $output['privateKey'];
             $findDomainDkim->public_key = $output['text'];
             $findDomainDkim->save();
+
+            $findDomainDkimSigning = DomainDkimSigning::where('author', '*')->where('dkim_id', $findDomainDkim->id)->first();
+            if (!$findDomainDkimSigning) {
+                $findDomainDkimSigning = new DomainDkimSigning();
+                $findDomainDkimSigning->author = '*';
+                $findDomainDkimSigning->dkim_id = $findDomainDkim->id;
+                $findDomainDkimSigning->save();
+            }
         }
 
         return $output;

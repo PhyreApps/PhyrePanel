@@ -69,10 +69,12 @@ class SetupEmailServer extends Command
         $postfixMysqlVirtualMailboxMapsCf = PhyreBlade::render('email::server.postfix.sql.mysql_virtual_mailbox_maps.cf',$mysqlDbDetails);
         file_put_contents('/etc/postfix/sql/mysql_virtual_mailbox_maps.cf', $postfixMysqlVirtualMailboxMapsCf);
 
+        $findDkim = DomainDkim::where('domain_name', setting('email.hostname'))->first();
         $postfixMainCf = PhyreBlade::render('email::server.postfix.main.cf', [
             'hostName' => setting('email.hostname'),
             'domain' => setting('email.domain'),
             'sslPaths' => $sslPaths,
+            'dkim' => $findDkim,
         ]);
 
         file_put_contents('/etc/postfix/main.cf', $postfixMainCf);
