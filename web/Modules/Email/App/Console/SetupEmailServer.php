@@ -80,7 +80,11 @@ class SetupEmailServer extends Command
         $postfixMasterCf = PhyreBlade::render('email::server.postfix.master.cf');
         file_put_contents('/etc/postfix/master.cf', $postfixMasterCf);
 
-        $openDkimConf = PhyreBlade::render('email::server.opendkim.opendkim.conf', $mysqlDbDetails);
+        $openDkimConf = PhyreBlade::render('email::server.opendkim.opendkim.conf', [
+            'hostName' => setting('email.hostname'),
+            'domain' => setting('email.domain'),
+            'mysqlConnectionUrl'=>  $mysqlDbDetails["username"].':'.$mysqlDbDetails['password'].'@'.$mysqlDbDetails['host'].'/'.$mysqlDbDetails['database'],
+        ]);
         file_put_contents('/etc/opendkim.conf', $openDkimConf);
 
         shell_exec('systemctl restart dovecot');
@@ -89,17 +93,4 @@ class SetupEmailServer extends Command
 
     }
 
-    public function checkDNSValidation()
-    {
-
-        // exec: dig @1.1.1.1 +short MX allsidepixels.com
-        // output: 10 mail.allsidepixels.com
-
-        // exec: dig @1.1.1.1 +short A mail.allsidepixels.com
-        // output: 49.13.13.211
-
-        // exec: dig @1.1.1.1 +short -x 49.13.13.211
-        // output: mail.allsidepixels.com
-
-    }
 }
