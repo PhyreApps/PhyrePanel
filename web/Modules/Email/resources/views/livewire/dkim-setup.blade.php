@@ -38,6 +38,18 @@
             @endforeach
         @endif
 
+    <div>
+        You do not have a DMARC record, please add a TXT record to your domain _dmarc.multiweber.com with the following value:
+        <br />
+        v=DMARC1; p=none
+    </div>
+
+    <div>
+        You do not have a SPF record, please add the following one to your domain multiweber.com:
+        <br />
+        v=spf1 a mx ip4:91.107.217.103 ~all
+    </div>
+
         <x-filament::button wire:click="verify">
             Check DNS Record
         </x-filament::button>

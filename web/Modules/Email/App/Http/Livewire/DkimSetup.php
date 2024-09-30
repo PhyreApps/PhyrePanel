@@ -88,6 +88,7 @@ class DkimSetup extends Component
                 $findDomainDkim = new DomainDkim();
                 $findDomainDkim->domain_name = $this->domain;
             }
+            $findDomainDkim->selector = 'mail';
             $findDomainDkim->private_key = $output['privateKey'];
             $findDomainDkim->public_key = $output['text'];
             $findDomainDkim->save();

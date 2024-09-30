@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->string('domain_name');
             $table->string('description')->default('');
-            $table->string('selector')->default('default');
+            $table->string('selector')->default('mail');
             $table->text('private_key');
             $table->text('public_key');
 
