@@ -35,19 +35,19 @@ class DkimSetup extends Component
         $checks = [];
         $checkOne = shell_exec('dig @1.1.1.1 +short MX '.$getMainDomain);
         $checkOnePass = false;
-        if (str_contains($checkOne, '10 '.$this->domain)) {
+        if (str_contains($checkOne, '10 mail.'.$this->domain)) {
             $checkOnePass = true;
         }
         $checks[] = [
             'check' => 'MX',
             'pass' => $checkOnePass,
             'result'=>$checkOne,
-            'must'=>'10 '.$this->domain
+            'must'=>'10 mail'.$this->domain
         ];
 
-        $checkTwo = shell_exec('dig @1.1.1.1 +short A '.$this->domain);
+        $checkTwo = shell_exec('dig @1.1.1.1 +short A mail.'.$this->domain);
         $checkTwo = trim($checkTwo);
-        $getIpOfDomain = gethostbyname($this->domain);
+        $getIpOfDomain = gethostbyname('mail.'.$this->domain);
         $checkTwoPass = false;
         if ($checkTwo == $getIpOfDomain) {
             $checkTwoPass = true;
