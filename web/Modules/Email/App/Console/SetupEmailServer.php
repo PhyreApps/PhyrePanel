@@ -8,6 +8,7 @@ use App\PhyreConfig;
 use App\UniversalDatabaseExecutor;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Blade;
+use Modules\Email\App\Models\DomainDkim;
 use Modules\LetsEncrypt\Models\LetsEncryptCertificate;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;

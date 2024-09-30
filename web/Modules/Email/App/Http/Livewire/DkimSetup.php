@@ -3,6 +3,7 @@
 namespace Modules\Email\App\Http\Livewire;
 
 use Livewire\Component;
+use Modules\Email\App\Models\DomainDkim;
 use Modules\Email\DkimDomainSetup;
 
 class DkimSetup extends Component
@@ -80,6 +81,16 @@ class DkimSetup extends Component
     public function secure()
     {
         $output = DkimDomainSetup::run($this->domain);
+        if (isset($output['privateKey'])) {
+            $findDomainDkim = DomainDkim::where('domain_name', $this->domain)->first();
+            if (!$findDomainDkim) {
+                $findDomainDkim = new DomainDkim();
+                $findDomainDkim->domain_name = $this->domain;
+            }
+            $findDomainDkim->private_key = $output['privateKey'];
+            $findDomainDkim->public_key = $output['text'];
+            $findDomainDkim->save();
+        }
 
         return $output;
     }
