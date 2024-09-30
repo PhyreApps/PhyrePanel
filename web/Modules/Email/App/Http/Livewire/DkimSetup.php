@@ -60,9 +60,10 @@ class DkimSetup extends Component
         $checkThree = shell_exec('dig @1.1.1.1 +short -x ' . $getIpOfDomain);
         $checkThree = trim($checkThree);
         $checkTreePass = false;
-        if ($checkThree == $this->domain) {
+        if (str_contains($checkThree, $this->domain)) {
             $checkTreePass = true;
         }
+
         $checks[] = [
             'check'=>'Reverse DNS',
             'pass'=>$checkTreePass,
