@@ -36,27 +36,61 @@ class PHPInstaller
         $commands[] = 'add-apt-repository -y ppa:ondrej/php';
         $commands[] = 'add-apt-repository -y ppa:ondrej/apache2';
 
-        $dependenciesList = [
+
+        $apacheCommands = [];
+        $apacheCommands[] = 'a2enmod cgi';
+        $apacheCommands[] = 'a2enmod deflate';
+        $apacheCommands[] = 'a2enmod expires';
+        $apacheCommands[] = 'a2enmod mime';
+        $apacheCommands[] = 'a2enmod rewrite';
+        $apacheCommands[] = 'a2enmod env';
+        $apacheCommands[] = 'a2enmod ssl';
+        $apacheCommands[] = 'a2enmod actions';
+        $apacheCommands[] = 'a2enmod headers';
+        $apacheCommands[] = 'a2enmod suexec';
+        $apacheCommands[] = 'a2enmod ruid2';
+        $apacheCommands[] = 'a2enmod proxy';
+        $apacheCommands[] = 'a2enmod proxy_http';
+
+        // For Fast CGI
+//        $apacheCommands[] = 'a2enmod fcgid';
+//        $apacheCommands[] = 'a2enmod alias';
+//        $apacheCommands[] = 'a2enmod proxy_fcgi';
+//        $apacheCommands[] = 'a2enmod setenvif';
+
+        // $apacheCommands[] = 'ufw allow in "Apache Full"';
+
+
+        $dependenciesListApache = [
             'apache2',
             'apache2-suexec-custom',
             'libapache2-mod-ruid2'
         ];
+
+        $dependenciesApache = implode(' ', $dependenciesListApache);
+        $commands[] = 'apt-get install -yq ' . $dependenciesApache;
+        $commands = array_merge($commands, $apacheCommands);
+
         if (!empty($this->phpVersions)) {
             foreach ($this->phpVersions as $phpVersion) {
-                $dependenciesList[] = 'libapache2-mod-php' . $phpVersion;
-            }
-            if (!empty($this->phpModules)) {
-                foreach ($this->phpVersions as $phpVersion) {
-                    $dependenciesList[] = 'php' . $phpVersion;
-                    $dependenciesList[] = 'php' . $phpVersion . '-cgi';
-                    $dependenciesList[] = 'php' . $phpVersion . '-{' . implode(',', $this->phpModules) . '}';
+
+                $dependenciesListPHP = [];
+                $dependenciesListPHP[] = 'php'.$phpVersion;
+                $dependenciesListPHP[] = 'libapache2-mod-php'.$phpVersion;
+                $dependenciesListPHP[] = 'php'.$phpVersion;
+                $dependenciesListPHP[] = 'php'.$phpVersion.'-cgi';
+
+                if (!empty($this->phpModules)) {
+                    $dependenciesListPHP[] = 'php'.$phpVersion.'-{'.implode(',',
+                            $this->phpModules).'}';
                 }
+
+                $dependenciesPHP = implode(' ', $dependenciesListPHP);
+                $commands[] = 'apt-get install -yq '.$dependenciesPHP;
             }
+
         }
 
-
-        $dependencies = implode(' ', $dependenciesList);
-        $commands[] = 'apt-get install -yq ' . $dependencies;
 
         $lastItem = end($this->phpVersions);
         foreach ($this->phpVersions as $phpVersion) {
@@ -67,27 +101,7 @@ class PHPInstaller
             }
         }
 
-        $commands[] = 'a2enmod cgi';
-        $commands[] = 'a2enmod deflate';
-        $commands[] = 'a2enmod expires';
-        $commands[] = 'a2enmod mime';
-        $commands[] = 'a2enmod rewrite';
-        $commands[] = 'a2enmod env';
-        $commands[] = 'a2enmod ssl';
-        $commands[] = 'a2enmod actions';
-        $commands[] = 'a2enmod headers';
-        $commands[] = 'a2enmod suexec';
-        $commands[] = 'a2enmod ruid2';
-        $commands[] = 'a2enmod proxy';
-        $commands[] = 'a2enmod proxy_http';
 
-        // For Fast CGI
-//        $commands[] = 'a2enmod fcgid';
-//        $commands[] = 'a2enmod alias';
-//        $commands[] = 'a2enmod proxy_fcgi';
-//        $commands[] = 'a2enmod setenvif';
-
-       // $commands[] = 'ufw allow in "Apache Full"';
         $commands[] = 'systemctl restart apache2';
         $commands[] = 'phyre-php /usr/local/phyre/web/artisan phyre:run-repair';
         $commands[] = 'apt-get autoremove -yq';
