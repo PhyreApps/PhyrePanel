@@ -176,6 +176,7 @@ class GitRepository extends Model
         $gitExecutorShellFileLog = $gitExecutorTempPath . '/git-pull-' . $this->id . '.log';
 
         $gitExecutorContent = view('actions.git.git-executor', [
+            'gitProvider' => $gitSSHUrl['provider'],
             'shellFile' => $shellFile,
             'shellLog' => $shellLog,
             'systemUsername' => $findHostingSubscription->system_username,
@@ -228,7 +229,13 @@ class GitRepository extends Model
             return;
         }
 
-        $cloneUrl = 'git@'.$gitSSHUrl['provider'].':'.$gitSSHUrl['owner'].'/'.$gitSSHUrl['name'].'.git';
+        if ($privateKeyFile) {
+            $cloneUrl = 'git@'.$gitSSHUrl['provider'].':'.$gitSSHUrl['owner']
+                .'/'.$gitSSHUrl['name'].'.git';
+        } else {
+            $cloneUrl = 'https://'.$gitSSHUrl['provider'].'/'.$gitSSHUrl['owner']
+                .'/'.$gitSSHUrl['name'].'.git';
+        }
 
         $shellFile = $findDomain->domain_root . '/git/tmp/git-clone-' . $this->id . '.sh';
         $shellLog = $findDomain->domain_root . '/git/tmp/git-action-' . $this->id . '.log';
@@ -245,7 +252,7 @@ class GitRepository extends Model
             'privateKeyFile' => $privateKeyFile,
             'selfFile' => $shellFile,
         ])->render();
-
+        
         file_put_contents($shellFile, $shellContent);
 
 
@@ -256,6 +263,7 @@ class GitRepository extends Model
         $gitExecutorShellFileLog = $gitExecutorTempPath . '/git-clone-' . $this->id . '.log';
 
         $gitExecutorContent = view('actions.git.git-executor', [
+            'gitProvider' => $gitSSHUrl['provider'],
             'shellFile' => $shellFile,
             'shellLog' => $shellLog,
             'systemUsername' => $findHostingSubscription->system_username,
