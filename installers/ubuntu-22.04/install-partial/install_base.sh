@@ -55,8 +55,6 @@ dpkg -i phyre-php-8.2.0-ubuntu-22.04.deb
 wget https://github.com/PhyreApps/PhyrePanelNGINX/raw/main/compilators/debian/nginx/dist/phyre-nginx-1.24.0-ubuntu-22.04.deb
 dpkg -i phyre-nginx-1.24.0-ubuntu-22.04.deb
 
-service phyre start
-
 PHYRE_PHP=/usr/local/phyre/php/bin/php
 
 ln -s $PHYRE_PHP /usr/bin/phyre-php

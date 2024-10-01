@@ -55,8 +55,6 @@ dpkg -i phyre-php-8.2.0-ubuntu-24.04.deb
 wget https://github.com/PhyreApps/PhyrePanelNGINX/raw/main/compilators/debian/nginx/dist/phyre-nginx-1.24.0-ubuntu-24.04.deb
 dpkg -i phyre-nginx-1.24.0-ubuntu-24.04.deb
 
-service phyre start
-
 PHYRE_PHP=/usr/local/phyre/php/bin/php
 
 ln -s $PHYRE_PHP /usr/bin/phyre-php
@@ -149,6 +147,12 @@ phyre-php artisan phyre:set-ini-settings APP_ENV "production"
 
 chmod -R o+w /usr/local/phyre/web/storage/
 chmod -R o+w /usr/local/phyre/web/bootstrap/cache/
+
+mkdir -p /usr/local/phyre/ssl
+cp /usr/local/phyre/web/server/ssl/phyre.crt /usr/local/phyre/ssl/phyre.crt
+cp /usr/local/phyre/web/server/ssl/phyre.key /usr/local/phyre/ssl/phyre.key
+
+service phyre start
 
 CURRENT_IP=$(hostname -I | awk '{print $1}')
 

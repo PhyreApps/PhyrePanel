@@ -64,6 +64,12 @@ phyre-php artisan phyre:set-ini-settings APP_ENV "production"
 chmod -R o+w /usr/local/phyre/web/storage/
 chmod -R o+w /usr/local/phyre/web/bootstrap/cache/
 
+mkdir -p /usr/local/phyre/ssl
+cp /usr/local/phyre/web/server/ssl/phyre.crt /usr/local/phyre/ssl/phyre.crt
+cp /usr/local/phyre/web/server/ssl/phyre.key /usr/local/phyre/ssl/phyre.key
+
+service phyre start
+
 CURRENT_IP=$(hostname -I | awk '{print $1}')
 
 echo "PhyrePanel downloaded successfully."
