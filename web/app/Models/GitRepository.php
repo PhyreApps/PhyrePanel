@@ -236,7 +236,7 @@ class GitRepository extends Model
         shell_exec('mkdir -p ' . dirname($shellFile));
         shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' -R ' . dirname(dirname($shellFile)));
 
-        $shellContent = view('actions.git.clone-repo', [
+        $shellContent = view('actions.git.clone-repo-user', [
             'gitProvider' => $gitSSHUrl['provider'],
             'systemUsername' => $findHostingSubscription->system_username,
             'gitRepositoryId' => $this->id,
