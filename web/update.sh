@@ -1,5 +1,41 @@
 PHYRE_PHP=/usr/local/phyre/php/bin/php
 
+rm -rf /usr/local/phyre/update/web
+mkdir -p /usr/local/phyre/update/web
+
+rm -rf /usr/local/phyre/update/phyre-web-panel.zip
+wget https://github.com/PhyreApps/PhyrePanelWebCompiledVersions/raw/refs/heads/main/phyre-web-panel.zip -O /usr/local/phyre/update/phyre-web-panel.zip
+
+unzip /usr/local/phyre/update/phyre-web-panel.zip -d /usr/local/phyre/update/web
+
+rm -rf /usr/local/phyre/web/app
+rm -rf /usr/local/phyre/web/bootstrap
+rm -rf /usr/local/phyre/web/config
+rm -rf /usr/local/phyre/web/database
+rm -rf /usr/local/phyre/web/public
+rm -rf /usr/local/phyre/web/resources
+rm -rf /usr/local/phyre/web/routes
+rm -rf /usr/local/phyre/web/tests
+rm -rf /usr/local/phyre/web/vendor
+rm -rf /usr/local/phyre/web/composer.json
+rm -rf /usr/local/phyre/web/composer.lock
+rm -rf /usr/local/phyre/web/package.json
+
+cp -r /usr/local/phyre/update/web/app /usr/local/phyre/web/app
+cp -r /usr/local/phyre/update/web/bootstrap /usr/local/phyre/web/bootstrap
+cp -r /usr/local/phyre/update/web/config /usr/local/phyre/web/config
+cp -r /usr/local/phyre/update/web/database /usr/local/phyre/web/database
+cp -r /usr/local/phyre/update/web/public /usr/local/phyre/web/public
+cp -r /usr/local/phyre/update/web/resources /usr/local/phyre/web/resources
+cp -r /usr/local/phyre/update/web/routes /usr/local/phyre/web/routes
+cp -r /usr/local/phyre/update/web/tests /usr/local/phyre/web/tests
+cp -r /usr/local/phyre/update/web/vendor /usr/local/phyre/web/vendor
+cp /usr/local/phyre/update/web/composer.json /usr/local/phyre/web/composer.json
+cp /usr/local/phyre/update/web/composer.lock /usr/local/phyre/web/composer.lock
+cp /usr/local/phyre/update/web/package.json /usr/local/phyre/web/package.json
+
+
+
 systemctl stop phyre
 apt-remove phyre -y
 
