@@ -105,14 +105,15 @@ class GitRepositoryResource extends Resource
 
                     }),
 
-                Tables\Actions\EditAction::make('deploy')
-                    ->label('Deploy')
+                Tables\Actions\EditAction::make('deployment_script')
+                    ->label('Deployment Script')
                     ->icon('heroicon-o-command-line')
                     ->form([
                         Forms\Components\Textarea::make('deployment_script')
                             ->label('Deployment script')
                             ->required()
                             ->rows(15)
+                            ->helperText('Example: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader')
                             ->columnSpanFull(),
                         Forms\Components\Toggle::make('quick_deploy')
                             ->label('Quick deploy')

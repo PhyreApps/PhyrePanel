@@ -40,6 +40,8 @@ class GitRepository extends Model
         'dir',
         'domain_id',
         'git_ssh_key_id',
+        'deployment_script',
+        'quick_deploy'
     ];
 
     /**
@@ -164,6 +166,7 @@ class GitRepository extends Model
             'projectDir' => $projectDir,
             'privateKeyFile' => $privateKeyFile,
             'selfFile' => $shellFile,
+            'deploymentScript'=>$this->deployment_script
         ])->render();
 
         file_put_contents($shellFile, $shellContent);
@@ -252,7 +255,7 @@ class GitRepository extends Model
             'privateKeyFile' => $privateKeyFile,
             'selfFile' => $shellFile,
         ])->render();
-        
+
         file_put_contents($shellFile, $shellContent);
 
 

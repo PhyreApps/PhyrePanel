@@ -14,4 +14,8 @@ git pull
 
 @endif
 
+@if($deploymentScript)
+{!! $deploymentScript !!}
+@endif
+
 rm -rf {{$selfFile}}
