@@ -79,47 +79,47 @@ class CloneGitRepository extends Page
                                 ->columnSpanFull()
                                 ->placeholder('Enter the name of the repository'),
 
-                            Radio::make('clone_from')
-                                ->label('Clone from')
-                                ->options([
-                                    'branch' => 'Branch',
-                                    'tag' => 'Tag',
-                                ])
-                                ->live()
-                                ->columnSpanFull(),
+//                            Radio::make('clone_from')
+//                                ->label('Clone from')
+//                                ->options([
+//                                    'branch' => 'Branch',
+//                                    'tag' => 'Tag',
+//                                ])
+//                                ->live()
+//                                ->columnSpanFull(),
 
-                            Select::make('branch')
-                                ->label('Branch')
-                                ->required()
-                                ->hidden(function (Get $get) {
-                                    return $get('clone_from') !== 'branch';
-                                })
-                                ->options(function (Get $get) {
-                                    $url = $get('url');
-                                    $repoDetails = GitClient::getRepoDetailsByUrl($url);
-                                    if (isset($repoDetails['name'])) {
-                                        return $repoDetails['branches'];
-                                    }
-                                })
-                                ->live()
-                                ->columnSpanFull()
-                                ->placeholder('Enter the branch of the repository'),
-
-                            Select::make('tag')
-                                ->label('Tag')
-                                ->live()
-                                ->hidden(function (Get $get) {
-                                    return $get('clone_from') !== 'tag';
-                                })
-                                ->options(function (Get $get) {
-                                    $url = $get('url');
-                                    $repoDetails = GitClient::getRepoDetailsByUrl($url);
-                                    if (isset($repoDetails['name'])) {
-                                        return $repoDetails['tags'];
-                                    }
-                                })
-                                ->columnSpanFull()
-                                ->placeholder('Enter the tag of the repository'),
+//                            Select::make('branch')
+//                                ->label('Branch')
+//                                ->required()
+//                                ->hidden(function (Get $get) {
+//                                    return $get('clone_from') !== 'branch';
+//                                })
+//                                ->options(function (Get $get) {
+//                                    $url = $get('url');
+//                                    $repoDetails = GitClient::getRepoDetailsByUrl($url);
+//                                    if (isset($repoDetails['name'])) {
+//                                        return $repoDetails['branches'];
+//                                    }
+//                                })
+//                                ->live()
+//                                ->columnSpanFull()
+//                                ->placeholder('Enter the branch of the repository'),
+//
+//                            Select::make('tag')
+//                                ->label('Tag')
+//                                ->live()
+//                                ->hidden(function (Get $get) {
+//                                    return $get('clone_from') !== 'tag';
+//                                })
+//                                ->options(function (Get $get) {
+//                                    $url = $get('url');
+//                                    $repoDetails = GitClient::getRepoDetailsByUrl($url);
+//                                    if (isset($repoDetails['name'])) {
+//                                        return $repoDetails['tags'];
+//                                    }
+//                                })
+//                                ->columnSpanFull()
+//                                ->placeholder('Enter the tag of the repository'),
 
                         ]),
                     Wizard\Step::make('Clone to')

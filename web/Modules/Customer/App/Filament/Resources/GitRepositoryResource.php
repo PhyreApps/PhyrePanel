@@ -104,6 +104,22 @@ class GitRepositoryResource extends Resource
                         $gitRepository->pull();
 
                     }),
+
+                Tables\Actions\EditAction::make('deploy')
+                    ->label('Deploy')
+                    ->icon('heroicon-o-command-line')
+                    ->form([
+                        Forms\Components\Textarea::make('deployment_script')
+                            ->label('Deployment script')
+                            ->required()
+                            ->rows(15)
+                            ->columnSpanFull(),
+                        Forms\Components\Toggle::make('quick_deploy')
+                            ->label('Quick deploy')
+                            ->columnSpanFull(),
+                    ]),
+
+
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
