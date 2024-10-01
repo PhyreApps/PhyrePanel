@@ -9,6 +9,7 @@ wget https://github.com/PhyreApps/PhyrePanelWebCompiledVersions/raw/refs/heads/m
 unzip /usr/local/phyre/update/phyre-web-panel.zip -d /usr/local/phyre/update/web
 
 rm -rf /usr/local/phyre/web/app
+rm -rf /usr/local/phyre/web/Modules
 rm -rf /usr/local/phyre/web/bootstrap
 rm -rf /usr/local/phyre/web/config
 rm -rf /usr/local/phyre/web/database
@@ -22,6 +23,7 @@ rm -rf /usr/local/phyre/web/composer.lock
 rm -rf /usr/local/phyre/web/package.json
 
 cp -r /usr/local/phyre/update/web/app /usr/local/phyre/web/app
+cp -r /usr/local/phyre/update/web/Modules /usr/local/phyre/web/Modules
 cp -r /usr/local/phyre/update/web/bootstrap /usr/local/phyre/web/bootstrap
 cp -r /usr/local/phyre/update/web/config /usr/local/phyre/web/config
 cp -r /usr/local/phyre/update/web/database /usr/local/phyre/web/database
