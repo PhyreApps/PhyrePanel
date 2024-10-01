@@ -86,8 +86,8 @@ class GitRepository extends Model
                 shell_exec('mkdir -p ' . $sshPath);
             }
 
-            shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' -R ' . dirname($sshPath));
-            shell_exec('chmod 0700 ' . dirname($sshPath));
+            shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' -R ' . $sshPath);
+            shell_exec('chmod 0700 ' . $sshPath);
 
             if (!file_exists($privateKeyFile)) {
                 file_put_contents($privateKeyFile, $gitSSHKey->private_key);
@@ -156,7 +156,7 @@ class GitRepository extends Model
         shell_exec('mkdir -p ' . dirname($shellFile));
         shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' -R ' . dirname(dirname($shellFile)));
 
-        $shellContent = view('actions.git.pull-repo', [
+        $shellContent = view('actions.git.pull-repo-user', [
             'gitProvider' => $gitSSHUrl['provider'],
             'systemUsername' => $findHostingSubscription->system_username,
             'gitRepositoryId' => $this->id,
