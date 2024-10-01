@@ -248,10 +248,25 @@ class GitRepository extends Model
 
         file_put_contents($shellFile, $shellContent);
 
-        shell_exec('chmod +x ' . $shellFile);
-        shell_exec('chown '.$findHostingSubscription->system_username.':'.$findHostingSubscription->system_username.' ' . $shellFile);
 
-        shell_exec('su -m ' . $findHostingSubscription->system_username . ' -c "bash '.$shellFile.' >> ' . $shellLog . ' && phyre-php /usr/local/phyre/web/artisan git-repository:mark-as-cloned '.$this->id.' &"');
+        $gitExecutorTempPath = storage_path('app/git/tmp');
+        shell_exec('mkdir -p ' . $gitExecutorTempPath);
+
+        $gitExecutorShellFile = $gitExecutorTempPath . '/git-clone-' . $this->id . '.sh';
+        $gitExecutorShellFileLog = $gitExecutorTempPath . '/git-clone-' . $this->id . '.log';
+
+        $gitExecutorContent = view('actions.git.git-executor', [
+            'shellFile' => $shellFile,
+            'shellLog' => $shellLog,
+            'systemUsername' => $findHostingSubscription->system_username,
+            'selfFile' => $gitExecutorShellFile,
+            'afterCommand' => 'phyre-php /usr/local/phyre/web/artisan git-repository:mark-as-cloned '.$this->id,
+        ])->render();
+
+        file_put_contents($gitExecutorShellFile, $gitExecutorContent);
+
+        shell_exec('chmod +x ' . $gitExecutorShellFile);
+        shell_exec('bash ' . $gitExecutorShellFile . ' >> ' . $gitExecutorShellFileLog . ' &');
 
     }
 
