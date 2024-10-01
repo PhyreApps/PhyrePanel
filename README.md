@@ -31,6 +31,12 @@ wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/main/installers/inst
 ```
 The admin panel can be opened on port: yourserver.com:8443
 
+## Updating
+To update PhyrePanel, you need to run this commands:
+```
+wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/main/web/update.sh && chmod +x update.sh && ./update.sh
+```
+
 ## Documentation
 For more information, please refer to the [documentation](https://docs.phyrepanel.com/introduction/getting-started.html).
 
