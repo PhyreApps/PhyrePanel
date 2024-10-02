@@ -61,25 +61,26 @@ class Backup extends Model
 
     public function checkCronJob()
     {
-        $cronJobCommand = 'phyre-php /usr/local/phyre/web/artisan phyre:run-backup-checks';
-        $findCronJob = CronJob::where('command', $cronJobCommand)->first();
-        if (! $findCronJob) {
-            $cronJob = new CronJob();
-            $cronJob->schedule = '*/5 * * * *';
-            $cronJob->command = $cronJobCommand;
-            $cronJob->user = 'root';
-            $cronJob->save();
-        }
+        
+        //$cronJobCommand = 'phyre-php /usr/local/phyre/web/artisan phyre:run-backup-checks';
+        //$findCronJob = CronJob::where('command', $cronJobCommand)->first();
+        //if (! $findCronJob) {
+          //  $cronJob = new CronJob();
+         //   $cronJob->schedule = '*/5 * * * *';
+            //$cronJob->command = $cronJobCommand;
+            //$cronJob->user = 'root';
+            //$cronJob->save();
+        //}
 
-        $cronJobCommand = 'phyre-php /usr/local/phyre/web/artisan phyre:create-daily-full-backup';
-        $findCronJob = CronJob::where('command', $cronJobCommand)->first();
-        if (! $findCronJob) {
-            $cronJob = new CronJob();
-            $cronJob->schedule = '0 0 * * *';
-            $cronJob->command = $cronJobCommand;
-            $cronJob->user = 'root';
-            $cronJob->save();
-        }
+        // $cronJobCommand = 'phyre-php /usr/local/phyre/web/artisan phyre:create-daily-full-backup';
+        // $findCronJob = CronJob::where('command', $cronJobCommand)->first();
+        // if (! $findCronJob) {
+        //     $cronJob = new CronJob();
+        //     $cronJob->schedule = '0 0 * * *';
+        //     $cronJob->command = $cronJobCommand;
+        //     $cronJob->user = 'root';
+        //     $cronJob->save();
+        // }
 
         return true;
     }
