@@ -15,14 +15,16 @@ class DkimSetup extends Component
     {
         $secure = $this->secure();
         $verify = $this->verify();
+        $mainDomain = $this->getMainDomain();
 
         return view('email::livewire.dkim-setup', [
             'secure' => $secure,
             'verify' => $verify,
+            'mainDomain' => $mainDomain,
         ]);
     }
 
-    public function verify()
+    public function getMainDomain()
     {
         $getMainDomain = '';
         $parseDomain = explode('.', $this->domain);
@@ -31,6 +33,12 @@ class DkimSetup extends Component
         } else {
             $getMainDomain = $this->domain;
         }
+
+        return $getMainDomain;
+    }
+    public function verify()
+    {
+        $getMainDomain = $this->getMainDomain();
 
         $checks = [];
         $checkOne = shell_exec('dig @1.1.1.1 +short MX '.$getMainDomain);

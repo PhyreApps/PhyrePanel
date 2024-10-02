@@ -17,4 +17,9 @@ class DomainDkimSigning extends Model
 
     protected $table = 'domain_dkim_signings';
 
+
+    public function dkim()
+    {
+        return $this->belongsTo(DomainDkim::class);
+    }
 }
