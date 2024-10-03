@@ -11,9 +11,13 @@ class DkimDomainSetup
         $dkimTextFile = '/etc/opendkim/keys/'.$domain.'/mail.txt';
 
         if (is_file($dkimPrivateKeyFile)) {
+
+            $dkimText = file_get_contents($dkimTextFile);
+            $dkimText = str_replace("\r\n", "\n", $dkimText);
+
             return [
                 'privateKey' => file_get_contents($dkimPrivateKeyFile),
-                'text' => file_get_contents($dkimTextFile),
+                'text' => $dkimText,
             ];
         }
 
@@ -25,6 +29,7 @@ class DkimDomainSetup
 
         $dkimPrivateKey = file_get_contents($dkimPrivateKeyFile);
         $dkimText = file_get_contents($dkimTextFile);
+        $dkimText = str_replace("\r\n", "\n", $dkimText);
 
         return [
             'privateKey' => $dkimPrivateKey,

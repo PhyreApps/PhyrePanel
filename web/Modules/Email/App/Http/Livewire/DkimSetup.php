@@ -21,6 +21,7 @@ class DkimSetup extends Component
             'secure' => $secure,
             'verify' => $verify,
             'mainDomain' => $mainDomain,
+            'serverIp' => $_SERVER['SERVER_ADDR'],
         ]);
     }
 

@@ -8,7 +8,7 @@
 
          <div class="w-full mt-2">
              <textarea rows="10" class="w-full p-4 rounded-md border-2 border-gray-100">
-         {{ $secure['text'] }}
+                 {{ $secure['text'] }}
         </textarea>
          </div>
 
@@ -39,15 +39,15 @@
         @endif
 
     <div>
-        You do not have a DMARC record, please add a TXT record to your domain _dmarc.{{$mainDomain}} with the following value:
+        Please add DMARC TXT record to your domain _dmarc.{{$mainDomain}} with the following value:
         <br />
         v=DMARC1; p=none
     </div>
 
     <div>
-        You do not have a SPF record, please add the following one to your domain {{$mainDomain}}:
+       Please add SPF record to your domain {{$mainDomain}}:
         <br />
-        v=spf1 a mx ip4:91.107.217.103 ~all
+        v=spf1 a mx ip4:{{$serverIp}} ~all
     </div>
 
         <x-filament::button wire:click="verify">
