@@ -45,10 +45,9 @@
             </svg>
             Downloading new app version...
         </div>
-    @else
+    @endif
     <x-filament::button wire:click="checkForUpdates" class="w-[16rem]">
         Check for updates
     </x-filament::button>
-    @endif
 
 </x-filament-panels::page>
