@@ -70,7 +70,17 @@ class Version extends Page
 
     public function checkForUpdates()
     {
-        DownloadMicroweber::dispatch();
+        $findJob = DB::table('jobs')->where('payload', 'like', '%DownloadMicroweber%')->get();
+        if ($findJob->count() > 0) {
+            foreach ($findJob as $job) {
+                DB::table('jobs')->where('id', $job->id)->delete();
+            }
+        }
 
+        $debug = 1;
+        if ($debug) {
+            $dm = new DownloadMicroweber();
+            $dm->handle();
+        }
     }
 }
