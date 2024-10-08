@@ -32,6 +32,9 @@ class ReinstallMicroweberInstallations extends Command
     public function handle()
     {
 
+        $sharedServerScriptsPath = '/usr/local/phyre/web/vendor/microweber-packages/shared-server-scripts/shell-scripts/';
+        shell_exec('chmod +x ' . $sharedServerScriptsPath . 'chown_installed_app.sh');
+
         $updateWhitelabel = new UpdateWhitelabelToWebsites();
         $updateWhitelabel->handle();
 
