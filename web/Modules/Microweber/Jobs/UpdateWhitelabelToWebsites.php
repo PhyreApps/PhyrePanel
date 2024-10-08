@@ -43,10 +43,14 @@ class UpdateWhitelabelToWebsites implements ShouldQueue
 
         foreach ($mwInstallations as $mwInstallation) {
 
-            $whitelabelApply = new MicroweberWhitelabelWebsiteApply();
-            $whitelabelApply->setWebPath($mwInstallation->installation_path);
-            $whitelabelApply->setSharedPath($sharedAppPath);
-            $whitelabelApply->apply();
+            try {
+                $whitelabelApply = new MicroweberWhitelabelWebsiteApply();
+                $whitelabelApply->setWebPath($mwInstallation->installation_path);
+                $whitelabelApply->setSharedPath($sharedAppPath);
+                $whitelabelApply->apply();
+            } catch (\Exception $e) {
+             //   \Log::error('Error applying whitelabel to website: ' . $mwInstallation->installation_path);
+            }
 
         }
 
