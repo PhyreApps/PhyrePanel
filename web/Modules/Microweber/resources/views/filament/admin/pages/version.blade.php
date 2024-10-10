@@ -22,7 +22,8 @@
 
         <div class="mt-4">
             @foreach ($appTemplates as $appTemplate)
-                <span>{{ $appTemplate['name'] }}</span>
+
+                <span>{{ $appTemplate['name'] }} ({{ $appTemplate['version'] }})</span>
                 @if (!$loop->last)
                     ,
                 @endif
