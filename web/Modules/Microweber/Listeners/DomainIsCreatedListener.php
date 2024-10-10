@@ -11,6 +11,7 @@ use App\Models\HostingSubscription;
 use App\Services\HostingSubscriptionService;
 use Illuminate\Support\Str;
 use MicroweberPackages\SharedServerScripts\MicroweberWhitelabelSettingsUpdater;
+use MicroweberPackages\SharedServerScripts\MicroweberWhitelabelWebsiteApply;
 use Modules\Microweber\App\Models\MicroweberInstallation;
 
 class DomainIsCreatedListener
@@ -143,12 +144,22 @@ class DomainIsCreatedListener
 
         if (isset($status['success']) && $status['success']) {
 
-            $whiteLabelSettings = [];
-            $whiteLabelSettings['website_manager_url'] = $website_manager_url;
+            $sharedAppPath = config('microweber.sharedPaths.app');
+//            $whitelabelSettings = setting('microweber.whitelabel');
+//            $whitelabelSettings['website_manager_url'] = setting('microweber.website_manager_url');
+//
+//            $whitelabel = new MicroweberWhitelabelSettingsUpdater();
+//            $whitelabel->setPath($sharedAppPath);
+//            $whitelabel->apply($whitelabelSettings);
 
-            $whitelabel = new MicroweberWhitelabelSettingsUpdater();
-            $whitelabel->setPath($findDomain->domain_public);
-            $whitelabel->apply($whiteLabelSettings);
+            try {
+                $whitelabelApply = new MicroweberWhitelabelWebsiteApply();
+                $whitelabelApply->setWebPath($findDomain->domain_public);
+                $whitelabelApply->setSharedPath($sharedAppPath);
+                $whitelabelApply->apply();
+            } catch (\Exception $e) {
+                //   \Log::error('Error applying whitelabel to website: ' . $mwInstallation->installation_path);
+            }
 
             $findInstallation = MicroweberInstallation::where('installation_path', $findDomain->domain_public)
                 ->where('domain_id', $findDomain->id)
