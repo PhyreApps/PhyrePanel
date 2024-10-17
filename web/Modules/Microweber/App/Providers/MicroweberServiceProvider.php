@@ -47,6 +47,7 @@ class MicroweberServiceProvider extends ServiceProvider
         });
 
         $this->app->register(RouteServiceProvider::class);
+        $this->app->register(EventServiceProvider::class);
 
         app()->backupManager->registerConfig(MicroweberBackupConfig::class, $this->moduleNameLower);
         app()->virtualHostManager->registerConfig(MicroweberApacheVirtualHostConfig::class, $this->moduleNameLower);

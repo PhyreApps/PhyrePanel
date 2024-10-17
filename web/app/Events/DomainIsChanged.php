@@ -14,12 +14,14 @@ class DomainIsChanged
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $domain;
+
     /**
      * Create a new event instance.
      */
-    public function __construct()
+    public function __construct($domain)
     {
-        //
+        $this->domain = $domain;
     }
 
     /**

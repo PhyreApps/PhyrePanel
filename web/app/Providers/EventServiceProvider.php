@@ -34,10 +34,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         ModelPhyreServerCreated::class => [
             ModelPhyreServerCreatedListener::class,
-        ],
-        DomainIsChanged::class => [
-            DomainIsChangedListener::class,
-        ],
+        ]
     ];
 
     /**
