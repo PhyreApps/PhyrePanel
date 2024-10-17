@@ -10,6 +10,7 @@ Timeout 300
 KeepAlive On
 MaxKeepAliveRequests 100
 KeepAliveTimeout 5
+GracefulShutdownTimeout 5
 
 ServerName {{ $serverName }}
 
