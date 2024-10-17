@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Events\DomainIsChanged;
 use App\Events\ModelDomainCreated;
 use App\Events\ModelDomainDeleting;
 use App\Events\ModelHostingSubscriptionCreated;
 use app\Events\ModelHostingSubscriptionCreating;
 use App\Events\ModelHostingSubscriptionDeleting;
 use App\Events\ModelPhyreServerCreated;
+use App\Listeners\DomainIsChangedListener;
 use App\Listeners\ModelDomainCreatedListener;
 use App\Listeners\ModelDomainDeletingListener;
 use App\Listeners\ModelHostingSubscriptionCreatingListener;
@@ -30,13 +32,12 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        ModelDomainDeleting::class => [
-            ModelDomainDeletingListener::class,
-        ],
         ModelPhyreServerCreated::class => [
             ModelPhyreServerCreatedListener::class,
         ],
-
+        DomainIsChanged::class => [
+            DomainIsChangedListener::class,
+        ],
     ];
 
     /**

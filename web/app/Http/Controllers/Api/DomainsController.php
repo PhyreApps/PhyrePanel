@@ -2,6 +2,7 @@
 
 namespace app\Http\Controllers\Api;
 
+use App\Events\DomainIsChanged;
 use App\Http\Controllers\ApiController;
 use App\Jobs\ApacheBuild;
 use App\Models\Domain;
@@ -110,6 +111,8 @@ class DomainsController extends ApiController
             $findDomain->save();
 
             ApacheBuild::dispatchSync();
+
+            event(new DomainIsChanged($findDomain));
 
             return response()->json([
                 'status' => 'ok',
