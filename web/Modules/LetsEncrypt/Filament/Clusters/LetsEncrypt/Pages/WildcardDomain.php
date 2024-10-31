@@ -107,93 +107,42 @@ class WildcardDomain extends BaseSettings
             ApacheBuild::dispatchSync();
 
             return [
-                'error' => 'Domain SSL certificate updated.'
+                'success' => 'Domain SSL certificate updated.'
             ];
 
         }
-        
 
-//
-//
-//
-//        if (file_exists($this->installLogFilePath)) {
-//            unlink($this->installLogFilePath);
-//        }
-//
-//        $acmeConfigYaml = view('letsencrypt::actions.acme-config-wildcard-yaml', [
-//            'domain' => $masterDomain->domain,
-//            'domainRoot' => $masterDomain->domainRoot,
-//            'domainPublic' => $masterDomain->domainPublic,
-//            'email' => $masterDomain->email,
-//            'country' => $masterDomain->country,
-//            'locality' => $masterDomain->locality,
-//            'organization' => $masterDomain->organization
-//        ])->render();
-//
-//        $acmeConfigYaml = preg_replace('~(*ANY)\A\s*\R|\s*(?!\r\n)\s$~mu', '', $acmeConfigYaml);
-//
-//        file_put_contents($masterDomain->domainRoot.'/acme-wildcard-config.yaml', $acmeConfigYaml);
-//
-//        $amePHPPharFile = base_path().'/Modules/LetsEncrypt/Actions/acmephp.phar';
-//
-//        if (!is_dir(dirname($this->installLogFilePath))) {
-//            shell_exec('mkdir -p ' . dirname($this->installLogFilePath));
-//        }
-//
-//        //$phyrePHP = ApiClient::getPhyrePHP();
-//        $phyrePHP = 'phyre-php';
-//        $command = $phyrePHP.' '.$amePHPPharFile.' run '.$masterDomain->domainRoot.'/acme-wildcard-config.yaml >> ' . $this->installLogFilePath . ' &';
-//        shell_exec($command);
-//
-//        $validateCertificates = [];
-//
-//        if (! file_exists($sslCertificateFilePath)
-//            || ! file_exists($sslCertificateKeyFilePath)
-//            || ! file_exists($sslCertificateChainFilePath)) {
-//            // Cant get all certificates
-//            return [
-//                'error' => 'Cant get all certificates.'
-//            ];
-//        }
-//
-//
-//
-//        if (! empty($sslCertificateChainFileContent)) {
-//            $validateCertificates['certificate'] = $sslCertificateFileContent;
-//        }
-//        if (! empty($sslCertificateKeyFileContent)) {
-//            $validateCertificates['private_key'] = $sslCertificateKeyFileContent;
-//        }
-//        if (! empty($sslCertificateChainFileContent)) {
-//            $validateCertificates['certificate_chain'] = $sslCertificateChainFileContent;
-//        }
-//        if (count($validateCertificates) !== 3) {
-//            // Cant get all certificates
-//            return [
-//                'error' => 'Cant get all certificates.'
-//            ];
-//        }
-//
-//        $websiteSslCertificate = new DomainSslCertificate();
-//        $websiteSslCertificate->domain = '*.' . $masterDomain->domain;
-//        $websiteSslCertificate->certificate = $validateCertificates['certificate'];
-//        $websiteSslCertificate->private_key = $validateCertificates['private_key'];
-//        $websiteSslCertificate->certificate_chain = $validateCertificates['certificate_chain'];
-//        $websiteSslCertificate->customer_id = 0;
-//        $websiteSslCertificate->is_active = 1;
-//        $websiteSslCertificate->is_wildcard = 1;
-//        $websiteSslCertificate->is_auto_renew = 1;
-//        $websiteSslCertificate->provider = 'letsencrypt';
-//        $websiteSslCertificate->save();
-//
-//        $mds = new MasterDomain();
-//        $mds->configureVirtualHost();
-//
-//        ApacheBuild::dispatchSync();
-//
-//        return [
-//            'success' => 'SSL certificate installed successfully.'
-//        ];
+        if (file_exists($this->installLogFilePath)) {
+            unlink($this->installLogFilePath);
+        }
+
+        $acmeConfigYaml = view('letsencrypt::actions.acme-config-wildcard-yaml', [
+            'domain' => $masterDomain->domain,
+            'domainRoot' => $masterDomain->domainRoot,
+            'domainPublic' => $masterDomain->domainPublic,
+            'email' => $masterDomain->email,
+            'country' => $masterDomain->country,
+            'locality' => $masterDomain->locality,
+            'organization' => $masterDomain->organization
+        ])->render();
+
+        $acmeConfigYaml = preg_replace('~(*ANY)\A\s*\R|\s*(?!\r\n)\s$~mu', '', $acmeConfigYaml);
+
+        file_put_contents($masterDomain->domainRoot.'/acme-wildcard-config.yaml', $acmeConfigYaml);
+
+        $amePHPPharFile = base_path().'/Modules/LetsEncrypt/Actions/acmephp.phar';
+
+        if (!is_dir(dirname($this->installLogFilePath))) {
+            shell_exec('mkdir -p ' . dirname($this->installLogFilePath));
+        }
+
+        $phyrePHP = 'phyre-php';
+        $command = $phyrePHP.' '.$amePHPPharFile.' run '.$masterDomain->domainRoot.'/acme-wildcard-config.yaml >> ' . $this->installLogFilePath . ' &';
+        shell_exec($command);
+
+        return [
+            'success' => 'SSL certificate request sent.'
+        ];
     }
 
     public function getInstallLog()
