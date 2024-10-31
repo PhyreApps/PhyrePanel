@@ -39,7 +39,7 @@ cp /usr/local/phyre/update/web/package.json /usr/local/phyre/web/package.json
 
 
 systemctl stop phyre
-apt-remove phyre -y
+apt remove phyre-nginx -y
 
 OS=$(lsb_release -si)
 OS_LOWER=$(echo $OS | tr '[:upper:]' '[:lower:]')

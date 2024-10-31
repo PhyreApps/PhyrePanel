@@ -53,7 +53,7 @@ class HostingSubscription extends Model
                 $model->system_username = $create['system_username'];
                 $model->system_password = $create['system_password'];
             } else {
-                throw new \Exception('System username or password not created');
+                throw new \Exception('System username or password not created: Error: ' .json_encode($create));
             }
         });
 
@@ -185,7 +185,10 @@ class HostingSubscription extends Model
 
         }
 
-        return [];
+        return [
+            'error'=>true,
+            'message'=>$createLinuxWebUserOutput
+        ];
 
     }
     private static function _generateUsername($string)
