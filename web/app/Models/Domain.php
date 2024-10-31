@@ -84,7 +84,7 @@ class Domain extends Model
 
             $model->configureVirtualHost(true);
 
-            ApacheBuild::dispatchSync();
+            ApacheBuild::dispatch();
 
         });
 
@@ -106,7 +106,7 @@ class Domain extends Model
 
         static::deleted(function ($model) {
 
-            ApacheBuild::dispatchSync();
+            ApacheBuild::dispatch();
 
         });
 
