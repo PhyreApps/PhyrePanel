@@ -23,6 +23,17 @@ class DomainSslCertificate extends Model
         'renewed_date',
         'renewed_until_date',
     ];
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($model) {
+
+            shell_exec('rm -rf '.'/root/.acmephp/master/certs/'.$model->domain);
+            shell_exec('rm -rf '.'/etc/letsencrypt/live/'.$model->domain);
+
+        });
+    }
 
     public function getSSLFiles()
     {

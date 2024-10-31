@@ -52,14 +52,16 @@ class WildcardDomain extends BaseSettings
         $sslCertificateKeyFilePath = '/root/.acmephp/master/certs/*.'.$domain.'/private/key.private.pem';
         $sslCertificateChainFilePath = '/root/.acmephp/master/certs/*.'.$domain.'/public/fullchain.pem';
 
-        $sslCertificateFileContent = file_get_contents($sslCertificateFilePath);
-        $sslCertificateKeyFileContent = file_get_contents($sslCertificateKeyFilePath);
-        $sslCertificateChainFileContent = file_get_contents($sslCertificateChainFilePath);
-
 
         if (file_exists($sslCertificateFilePath)
             && file_exists($sslCertificateKeyFilePath)
             && file_exists($sslCertificateChainFilePath)) {
+
+            $sslCertificateFileContent = file_get_contents($sslCertificateFilePath);
+            $sslCertificateKeyFileContent = file_get_contents($sslCertificateKeyFilePath);
+            $sslCertificateChainFileContent = file_get_contents($sslCertificateChainFilePath);
+
+
             return [
                 'sslFiles' => [
                     'certificate' => $sslCertificateFilePath,
