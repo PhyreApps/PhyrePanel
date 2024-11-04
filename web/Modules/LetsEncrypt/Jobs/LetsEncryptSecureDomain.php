@@ -39,12 +39,19 @@ class LetsEncryptSecureDomain
             'organization' => $generalSettings['organization_name'],
         ])->render();
 
+        $isCertbotInstalled = shell_exec('which certbot');
+        if (empty($isCertbotInstalled)) {
+            shell_exec('sudo apt install certbot -y');
+        }
+
         $tmpFile = '/tmp/certbot-http-secure-command-'.$findDomain->id.'.sh';
         file_put_contents($tmpFile, $certbotHttpSecureCommand);
         shell_exec('chmod +x '.$tmpFile);
         shell_exec('chmod +x /usr/local/phyre/web/Modules/LetsEncrypt/shell/hooks/pre/http-authenticator.sh');
         shell_exec('chmod +x /usr/local/phyre/web/Modules/LetsEncrypt/shell/hooks/post/http-cleanup.sh');
         $exec = shell_exec("bash $tmpFile");
+
+        sleep(10);
 
         unlink($tmpFile);
 
