@@ -33,6 +33,9 @@ class LetsEncryptSecureDomain
             'domain' => $findDomain->domain,
             'domainRoot' => $findDomain->domain_root,
             'domainPublic' => $findDomain->domain_public,
+            'sslCertificateFilePath'=> $sslCertificateFilePath,
+            'sslCertificateKeyFilePath'=> $sslCertificateKeyFilePath,
+            'sslCertificateChainFilePath'=> $sslCertificateChainFilePath,
             'email' => $generalSettings['master_email'],
             'country' => $generalSettings['master_country'],
             'locality' => $generalSettings['master_locality'],
@@ -43,7 +46,7 @@ class LetsEncryptSecureDomain
         if (empty($isCertbotInstalled)) {
             shell_exec('sudo apt install certbot -y');
         }
-
+        $output ='';
         $tmpFile = '/tmp/certbot-http-secure-command-'.$findDomain->id.'.sh';
         file_put_contents($tmpFile, $certbotHttpSecureCommand);
         shell_exec('chmod +x '.$tmpFile);
@@ -52,6 +55,10 @@ class LetsEncryptSecureDomain
         $exec = shell_exec("bash $tmpFile");
 
         sleep(10);
+        shell_exec('chmod 0755 /etc/letsencrypt/live/'.$findDomain->domain.'/privkey.pem');
+        shell_exec('chmod 0755 /etc/letsencrypt/live/'.$findDomain->domain.'/fullchain.pem');
+        shell_exec('chmod 0755 /etc/letsencrypt/live/'.$findDomain->domain.'/cert.pem');
+        shell_exec('chmod 0755 /etc/letsencrypt/live/'.$findDomain->domain.'/chain.pem');
 
         unlink($tmpFile);
 
