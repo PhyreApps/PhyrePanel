@@ -17,6 +17,11 @@ class LetsEncryptCertificate extends Model
     protected $fillable = [
         'domain_id',
         'email',
+
+        'domain',
+        'domain_ssl_certificate_id',
+
+
     ];
 
     public static function boot()
@@ -25,10 +30,13 @@ class LetsEncryptCertificate extends Model
 
         static::creating(function ($model) {
 
+
             $findDomain = Domain::where('id', $model->domain_id)->first();
             if (!$findDomain) {
                 throw new \Exception('Domain not found');
             }
+unset($model->domain_id);
+unset($model->email);
 
             $findSSL = DomainSslCertificate::where('domain', $findDomain->domain)->first();
             if ($findSSL) {
@@ -42,17 +50,18 @@ class LetsEncryptCertificate extends Model
                 throw new \Exception('Hosting subscription not found');
             }
 
-            $secureDomain = new LetsEncryptSecureDomain($findDomain->id);
+           $secureDomain = new LetsEncryptSecureDomain($findDomain->id);
             $secureDomain->handle();
 
-            ApacheBuild::dispatchSync();
+          ApacheBuild::dispatchSync();
 
             $findSSL = DomainSslCertificate::where('domain', $findDomain->domain)->first();
             if ($findSSL) {
-                $model->domain_ssl_certificate_id = $findSSL->id;
-                $model->certificate = $findSSL->certificate;
-                $model->private_key = $findSSL->private_key;
-                $model->expires_at = $findSSL->expiration_date;
+               $model->domain_ssl_certificate_id = $findSSL->id;
+//                $model->certificate = $findSSL->certificate;
+//                $model->private_key = $findSSL->private_key;
+           // $model->expires_at = $findSSL->expiration_date;
+//                $model->fullchain = $findSSL->expiration_date;
             }
         });
     }
