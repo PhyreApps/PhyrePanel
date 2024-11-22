@@ -139,6 +139,10 @@ class MasterDomain
             shell_exec('chown -R www-data:www-data ' . $this->domainPublic);
             shell_exec('chmod -R 755 ' . $this->domainPublic);
         }
+        if(!is_dir($this->domainPublic)){
+            return false;
+        }
+
 
         return [
             'virtualHostSettings' => $virtualHostSettings,

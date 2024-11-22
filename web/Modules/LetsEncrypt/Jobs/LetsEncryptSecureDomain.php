@@ -95,7 +95,7 @@ class LetsEncryptSecureDomain
             //acme.sh  --register-account  -m myemail@example.com --server zerossl
             $exec = shell_exec("bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh  --register-account  -m " . $generalSettings['master_email'] . " --server zerossl");
 
-            $tmpFile = '/tmp/certbot-zerossl-http-secure-command-' . $findDomain->id . '.sh';
+            $tmpFile = '/tmp/acme-sh-zerossl-http-secure-command-' . $findDomain->id . '.sh';
             $certbotHttpSecureCommand = view('letsencrypt::actions.acme-sh-http-secure-command', [
                 'domain' => $domainName,
                 'domainNameWww' => $domainNameWww,
@@ -112,6 +112,7 @@ class LetsEncryptSecureDomain
             file_put_contents($tmpFile, $certbotHttpSecureCommand);
             shell_exec('chmod +x ' . $tmpFile);
             $exec = shell_exec("bash $tmpFile");
+            unlink($tmpFile);
 
             //check file
             $zerSslCert = '/root/.acme.sh/' . $domainName . '_ecc/' . $domainName . '.cer';
