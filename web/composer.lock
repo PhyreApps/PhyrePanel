@@ -4400,16 +4400,16 @@
         },
         {
             "name": "microweber-packages/shared-server-scripts",
-            "version": "0.8",
+            "version": "0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/microweber-packages/shared-server-scripts.git",
-                "reference": "02db1a07a6252550fe40796b83be97e4554fae02"
+                "reference": "5d5e9f77de598c24b6a81b7cad641c828e45963c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/microweber-packages/shared-server-scripts/zipball/02db1a07a6252550fe40796b83be97e4554fae02",
-                "reference": "02db1a07a6252550fe40796b83be97e4554fae02",
+                "url": "https://api.github.com/repos/microweber-packages/shared-server-scripts/zipball/5d5e9f77de598c24b6a81b7cad641c828e45963c",
+                "reference": "5d5e9f77de598c24b6a81b7cad641c828e45963c",
                 "shasum": ""
             },
             "require": {
@@ -4448,9 +4448,9 @@
             "support": {
                 "email": "support@microweber.com",
                 "issues": "https://github.com/microweber-packages/shared-server-scripts/issues",
-                "source": "https://github.com/microweber-packages/shared-server-scripts/tree/0.8"
+                "source": "https://github.com/microweber-packages/shared-server-scripts/tree/0.9"
             },
-            "time": "2024-09-17T08:30:40+00:00"
+            "time": "2024-10-10T07:08:41+00:00"
         },
         {
             "name": "mkocansey/bladewind",
@@ -12549,5 +12549,5 @@
         "php": "^8.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.2.0"
 }
