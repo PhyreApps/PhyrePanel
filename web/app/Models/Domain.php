@@ -252,6 +252,7 @@ class Domain extends Model
         $apacheVirtualHostBuilder->setHomeRoot($this->home_root);
         $apacheVirtualHostBuilder->setUser($findHostingSubscription->system_username);
         $apacheVirtualHostBuilder->setUserGroup($webUserGroup);
+        $apacheVirtualHostBuilder->setEnableLogs(true);
 
         if ($this->status == self::STATUS_SUSPENDED) {
             $suspendedPath = '/var/www/html/suspended';

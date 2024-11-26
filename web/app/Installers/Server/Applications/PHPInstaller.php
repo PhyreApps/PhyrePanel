@@ -110,11 +110,14 @@ class PHPInstaller
         foreach ($commands as $command) {
             $shellFileContent .= $command . PHP_EOL;
         }
+
         $shellFileContent .= 'echo "All packages installed successfully!"' . PHP_EOL;
         $shellFileContent .= 'echo "DONE!"' . PHP_EOL;
         $shellFileContent .= 'rm -f /tmp/php-installer.sh';
 
         file_put_contents('/tmp/php-installer.sh', $shellFileContent);
+
+        shell_exec('chmod +x /tmp/php-installer.sh');
         shell_exec('bash /tmp/php-installer.sh >> ' . $this->logFilePath . ' &');
 
     }
