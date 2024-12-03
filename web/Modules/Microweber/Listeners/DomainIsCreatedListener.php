@@ -142,8 +142,9 @@ class DomainIsCreatedListener
             $emailDomain = $wildcardDomain;
         }
 
-        $install->setAdminEmail(Str::random(8) . '@'.$emailDomain);
-        $install->setAdminUsername(Str::random(8));
+        $username = Str::random(8);
+        $install->setAdminEmail($username . '@'.$emailDomain);
+        $install->setAdminUsername($username);
         $install->setAdminPassword(Str::random(8));
 
         $status = $install->run();
