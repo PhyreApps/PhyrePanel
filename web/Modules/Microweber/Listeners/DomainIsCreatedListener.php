@@ -136,7 +136,13 @@ class DomainIsCreatedListener
             $install->setDatabaseDriver('sqlite');
         }
 
-        $install->setAdminEmail(Str::random(8) . '@microweber.com');
+        $emailDomain = 'microweber.com';
+        $wildcardDomain = setting('general.wildcard_domain');
+        if (!empty($wildcardDomain)) {
+            $emailDomain = $wildcardDomain;
+        }
+
+        $install->setAdminEmail(Str::random(8) . '@'.$emailDomain);
         $install->setAdminUsername(Str::random(8));
         $install->setAdminPassword(Str::random(8));
 
