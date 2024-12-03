@@ -18,3 +18,4 @@ web/phyre-config.ini
 .idea/php.xml
 .idea/modules.xml
 .idea/deployment.xml
+/web/Modules/Microweber/vendor/
