@@ -27,19 +27,19 @@ class EmailHealthStatus extends Model
         $rows = [
             [
                 'service' => 'Dovecot',
-                'status' => ServiceStatus::from($service->checkDovecotStatus()),
+                'status' => ServiceStatus::from($service->checkServiceStatus('dovecot')),
             ],
             [
                 'service' => 'Postfix',
-                'status' => ServiceStatus::from($service->checkPostfixStatus()),
+                'status' => ServiceStatus::from($service->checkServiceStatus('postfix')),
             ],
             [
                 'service' => 'OpenDKIM',
-                'status' => ServiceStatus::from($service->checkOpenDkimStatus()),
+                'status' => ServiceStatus::from($service->checkServiceStatus('opendkim')),
             ],
             [
                 'service' => 'Firewall',
-                'status' => ServiceStatus::from($service->checkFirewallStatus()),
+                'status' => ServiceStatus::from($service->checkServiceStatus('firewalld')),
             ],
         ];
 
