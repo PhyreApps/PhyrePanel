@@ -78,7 +78,7 @@ class EmailHealthStatusPage extends Page implements HasForms, HasTable
                         $serviceName = strtolower($record->service);
                         $emailService = new EmailService();
                         $logContents = $emailService->getLog($serviceName);
-                        return view('email::filament.pages.view-log',[
+                        return view('email::filament.pages.view-log-modal',[
                             'logContents' => $logContents
                         ]);
                     })
