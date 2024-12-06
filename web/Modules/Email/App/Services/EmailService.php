@@ -5,7 +5,7 @@ namespace Modules\Email\App\Services;
 class EmailService
 {
 
-    public $services = [
+    public static $services = [
         [
             'service' => 'postfix',
             'logPath' => '/var/log/mail.log',
@@ -19,9 +19,13 @@ class EmailService
             'logPath'=>'/var/log/mail.log',
         ],
         [
-            'service' => 'rspamd',
-            'logPath' => '/var/log/rspamd/rspamd.log',
+            'service' => 'firewalld',
+            'logPath' => '/var/log/firewalld', 
         ],
+        [
+            'service' => 'syslog',
+            'logPath' => '/var/log/syslog',
+        ]
     ];
 
     public function restartService(string $serviceName): string
@@ -41,7 +45,7 @@ class EmailService
     }
     public function getLog(string $serviceName): string
     {
-        $service = collect($this->services)->firstWhere('service', $serviceName);
+        $service = collect(self::$services)->firstWhere('service', $serviceName);
 
         if ($service && file_exists($service['logPath'])) {
             return file_get_contents($service['logPath']);
@@ -49,15 +53,16 @@ class EmailService
 
         return 'Log file not found.';
     }
-    public function deleteLog(string $serviceName): string
+    public function truncateLog(string $serviceName): string
     {
-        $logFilePath = "/var/log/{$serviceName}.log"; // Adjust the path as needed
-        if (file_exists($logFilePath)) {
-            unlink($logFilePath);
-            return 'Log file deleted successfully.';
-        } else {
-            return 'Log file not found.';
+        $service = collect(self::$services)->firstWhere('service', $serviceName);
+
+        if ($service && file_exists($service['logPath'])) {
+            file_put_contents($service['logPath'], '');
+            return 'Log file truncated.';
         }
+
+        return 'Log file not found.';
     }
 }
 

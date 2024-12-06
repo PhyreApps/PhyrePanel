@@ -5,6 +5,7 @@ namespace Modules\Email\App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Email\App\Enums\ServiceStatus;
 use Modules\Email\App\Services\EmailHealthService;
+use Modules\Email\App\Services\EmailService;
 use Sushi\Sushi;
 
 class EmailHealthStatus extends Model
@@ -24,24 +25,14 @@ class EmailHealthStatus extends Model
     {
         $service = new EmailHealthService();
 
-        $rows = [
-            [
-                'service' => 'Dovecot',
-                'status' => ServiceStatus::from($service->checkServiceStatus('dovecot')),
-            ],
-            [
-                'service' => 'Postfix',
-                'status' => ServiceStatus::from($service->checkServiceStatus('postfix')),
-            ],
-            [
-                'service' => 'OpenDKIM',
-                'status' => ServiceStatus::from($service->checkServiceStatus('opendkim')),
-            ],
-            [
-                'service' => 'Firewall',
-                'status' => ServiceStatus::from($service->checkServiceStatus('firewalld')),
-            ],
-        ];
+        $rows = [];
+        foreach (EmailService::$services as $serviceInfo) {
+            $serviceName = $serviceInfo['service'];
+            $rows[] = [
+                'service' => ucfirst($serviceName),
+                'status' => ServiceStatus::from($service->checkServiceStatus($serviceName)),
+            ];
+        }
 
         return $rows;
     }

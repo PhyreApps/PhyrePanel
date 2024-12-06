@@ -6,6 +6,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\Page;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\BadgeColumn;
 use Modules\Email\App\Services\EmailService;
@@ -71,27 +72,30 @@ class EmailHealthStatusPage extends Page implements HasForms, HasTable
                     ->requiresConfirmation()
                     ->color('danger')
                     ->visible(fn (EmailHealthStatus $record) => $record->status === ServiceStatus::RUNNING),
-                ViewAction::make('viewLogs')
-                    ->label('View Logs')
-                    ->icon('heroicon-o-document')
-                    ->modalContent(function (EmailHealthStatus $record){
-                        $serviceName = strtolower($record->service);
-                        $emailService = new EmailService();
-                        $logContents = $emailService->getLog($serviceName);
-                        return view('email::filament.pages.view-log-modal',[
-                            'logContents' => $logContents
-                        ]);
-                    })
-                    ->color('info'),
-                Action::make('deleteLogs')
-                    ->label('Delete Logs')
-                    ->action(function (EmailHealthStatus $record) {
-                        $serviceName = strtolower($record->service);
-                        $emailService = new EmailService();
-                        $emailService->deleteLog($serviceName);
-                    })
-                    ->requiresConfirmation()
-                    ->color('danger'),
+
+                    ActionGroup::make([
+                        Action::make('viewLogs')
+                        ->label('View Logs')
+                        ->modalContent(function (EmailHealthStatus $record){
+                            $serviceName = strtolower($record->service);
+                            $emailService = new EmailService();
+                            $logContents = $emailService->getLog($serviceName);
+                            return view('email::filament.pages.view-log-modal',[
+                                'logContents' => $logContents
+                            ]);
+                        })
+                        ->color('info'),
+                    Action::make('deleteLogs')
+                        ->label('Delete Logs')
+                        ->action(function (EmailHealthStatus $record) {
+                            $serviceName = strtolower($record->service);
+                            $emailService = new EmailService();
+                            $emailService->truncateLog($serviceName);
+                        })
+                        ->requiresConfirmation()
+                        ->color('danger')
+                    ])->label('Logs')
+
             ]);
     }
 }
