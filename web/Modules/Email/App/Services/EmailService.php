@@ -4,6 +4,26 @@ namespace Modules\Email\App\Services;
 
 class EmailService
 {
+
+    public $services = [
+        [
+            'service' => 'postfix',
+            'logPath' => '/var/log/mail.log',
+        ],
+        [
+            'service' => 'dovecot',
+            'logPath' => '/var/log/dovecot.log',
+        ],
+        [
+            'service'=>'opendkim',
+            'logPath'=>'/var/log/mail.log',
+        ],
+        [
+            'service' => 'rspamd',
+            'logPath' => '/var/log/rspamd/rspamd.log',
+        ],
+    ];
+
     public function restartService(string $serviceName): string
     {
         $output = shell_exec("sudo systemctl restart $serviceName");
@@ -21,8 +41,23 @@ class EmailService
     }
     public function getLog(string $serviceName): string
     {
+        $service = collect($this->services)->firstWhere('service', $serviceName);
+
+        if ($service && file_exists($service['logPath'])) {
+            return file_get_contents($service['logPath']);
+        }
+
+        return 'Log file not found.';
+    }
+    public function deleteLog(string $serviceName): string
+    {
         $logFilePath = "/var/log/{$serviceName}.log"; // Adjust the path as needed
-        return file_exists($logFilePath) ? file_get_contents($logFilePath) : 'Log file not found.';
+        if (file_exists($logFilePath)) {
+            unlink($logFilePath);
+            return 'Log file deleted successfully.';
+        } else {
+            return 'Log file not found.';
+        }
     }
 }
 

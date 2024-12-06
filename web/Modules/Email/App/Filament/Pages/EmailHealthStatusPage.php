@@ -83,6 +83,15 @@ class EmailHealthStatusPage extends Page implements HasForms, HasTable
                         ]);
                     })
                     ->color('info'),
+                Action::make('deleteLogs')
+                    ->label('Delete Logs')
+                    ->action(function (EmailHealthStatus $record) {
+                        $serviceName = strtolower($record->service);
+                        $emailService = new EmailService();
+                        $emailService->deleteLog($serviceName);
+                    })
+                    ->requiresConfirmation()
+                    ->color('danger'),
             ]);
     }
 }
