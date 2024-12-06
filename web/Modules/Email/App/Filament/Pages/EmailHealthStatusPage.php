@@ -28,6 +28,8 @@ class EmailHealthStatusPage extends Page implements HasForms, HasTable
     protected static ?string $navigationGroup = 'Email';
     protected static ?string $navigationLabel = 'Email Health Status';
 
+    protected static ?int $navigationSort = 5;
+
     public function table(Table $table): Table
     {
         return $table
