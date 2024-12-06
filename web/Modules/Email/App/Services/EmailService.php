@@ -19,5 +19,10 @@ class EmailService
         $output = shell_exec("sudo systemctl start $serviceName");
         return $output ? trim($output) : "$serviceName started successfully.";
     }
+    public function getLog(string $serviceName): string
+    {
+        $logFilePath = "/var/log/{$serviceName}.log"; // Adjust the path as needed
+        return file_exists($logFilePath) ? file_get_contents($logFilePath) : 'Log file not found.';
+    }
 }
 
