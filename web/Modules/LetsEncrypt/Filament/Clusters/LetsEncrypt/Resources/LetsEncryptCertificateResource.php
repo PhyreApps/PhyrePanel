@@ -47,7 +47,7 @@ class LetsEncryptCertificateResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('domain.domain')
             ])
             ->filters([
                 //

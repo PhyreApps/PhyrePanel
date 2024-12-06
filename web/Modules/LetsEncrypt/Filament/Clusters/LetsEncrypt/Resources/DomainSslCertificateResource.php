@@ -37,7 +37,7 @@ class DomainSslCertificateResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('domain')
+                Tables\Columns\TextColumn::make('relatedDomain.domain')
             ])
             ->filters([
                 //

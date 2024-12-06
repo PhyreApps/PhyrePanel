@@ -35,8 +35,9 @@ class LetsEncryptCertificate extends Model
             if (!$findDomain) {
                 throw new \Exception('Domain not found');
             }
-unset($model->domain_id);
-unset($model->email);
+
+            unset($model->domain_id);
+            unset($model->email);
 
             $findSSL = DomainSslCertificate::where('domain', $findDomain->domain)->first();
             if ($findSSL) {
@@ -64,6 +65,11 @@ unset($model->email);
 //                $model->fullchain = $findSSL->expiration_date;
             }
         });
+    }
+
+    public function domain()
+    {
+        return $this->belongsTo(Domain::class);
     }
 
 }

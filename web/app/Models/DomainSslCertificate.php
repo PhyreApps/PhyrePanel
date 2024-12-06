@@ -51,4 +51,9 @@ class DomainSslCertificate extends Model
 
         return null;
     }
+
+    public function relatedDomain()
+    {
+        return $this->belongsTo(Domain::class, 'domain', 'domain');
+    }
 }
