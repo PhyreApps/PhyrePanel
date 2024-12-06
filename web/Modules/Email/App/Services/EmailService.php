@@ -20,7 +20,7 @@ class EmailService
         ],
         [
             'service' => 'firewalld',
-            'logPath' => '/var/log/firewalld', 
+            'logPath' => '/var/log/firewalld',
         ],
         [
             'service' => 'syslog',
