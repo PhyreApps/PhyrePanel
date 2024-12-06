@@ -21,12 +21,12 @@ class EmailHealthService
 
     public function checkFirewallStatus(): string
     {
-        return shell_exec('sudo ufw status');
+        return $this->checkServiceStatus('firewalld');
     }
 
     private function checkServiceStatus(string $serviceName): string
     {
         $status = shell_exec("systemctl is-active $serviceName");
-        return trim($status) === 'active' ? 'Running' : 'Not Running';
+        return trim($status) === 'active' ? 'Running' : 'NotRunning';
     }
 }
