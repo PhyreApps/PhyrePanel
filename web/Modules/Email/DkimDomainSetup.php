@@ -28,6 +28,7 @@ class DkimDomainSetup
         $output = shell_exec('sudo opendkim-genkey -b 2048 -D /etc/opendkim/keys/'.$domain.' -h rsa-sha256 -r -s mail -d '.$domain.' -v');
 
         $dkimPrivateKey = file_get_contents($dkimPrivateKeyFile);
+
         $dkimText = file_get_contents($dkimTextFile);
         $dkimText = str_replace("\r\n", "\n", $dkimText);
 
