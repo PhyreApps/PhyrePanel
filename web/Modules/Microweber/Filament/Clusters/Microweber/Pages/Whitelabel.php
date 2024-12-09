@@ -38,9 +38,7 @@ class Whitelabel extends BaseSettings
     {
         parent::save();
 
-        UpdateWhitelabelToWebsites::dispatch();
-
-        $this->redirect('/admin/microweber/whitelabel');
+        Artisan::call('microweber:reinstall-installations');
     }
 
     public function schema(): array
