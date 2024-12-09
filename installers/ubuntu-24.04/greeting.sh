@@ -10,7 +10,7 @@ echo " \
  |_|   |_| |_| |_| |_| \_\_____| |_| /_/   \_\_| \_|_____|_____
  WELCOME TO PHYRE PANEL!
  OS: Ubuntu 24.04
- You can login at: http://$CURRENT_IP:8443
+ You can login at: https://$CURRENT_IP:8443
 "
 
 # File can be saved at: /etc/profile.d/greeting.sh
