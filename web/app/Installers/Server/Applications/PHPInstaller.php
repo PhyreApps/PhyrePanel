@@ -35,6 +35,7 @@ class PHPInstaller
         $commands[] = 'apt-get install -yq sudo';
         $commands[] = 'add-apt-repository -y ppa:ondrej/php';
         $commands[] = 'add-apt-repository -y ppa:ondrej/apache2';
+        $commands[] = 'apt-get update -yq';
 
 
         $apacheCommands = [];
@@ -64,7 +65,7 @@ class PHPInstaller
         $dependenciesListApache = [
             'apache2',
             'apache2-suexec-custom',
-            'libapache2-mod-ruid2'
+            'libapache2-mod-ruid2',
         ];
 
         $dependenciesApache = implode(' ', $dependenciesListApache);
