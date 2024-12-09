@@ -14,7 +14,7 @@ git clone {{$cloneUrl}} {{$projectDir}}
 
 @endif
 
-@if($deploymentScript)
+@if(isset($deploymentScript))
 {!! $deploymentScript !!}
 @endif
 

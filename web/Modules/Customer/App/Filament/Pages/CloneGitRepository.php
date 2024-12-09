@@ -156,10 +156,18 @@ class CloneGitRepository extends Page
         $newGitRepository = new GitRepository();
         $newGitRepository->name = $this->state['name'];
         $newGitRepository->url = $this->state['url'];
-        $newGitRepository->branch = $this->state['branch'];
-        $newGitRepository->tag = $this->state['tag'];
+
+        if (isset($this->state['branch'])) {
+            $newGitRepository->branch = $this->state['branch'];
+        }
+        if (isset($this->state['tag'])) {
+            $newGitRepository->tag = $this->state['tag'];
+        }
+         if (isset($this->state['clone_from'])) {
+            $newGitRepository->clone_from = $this->state['clone_from'];
+        }
+
         $newGitRepository->dir = $this->state['dir'];
-        $newGitRepository->clone_from = $this->state['clone_from'];
         $newGitRepository->domain_id = $this->state['domain_id'];
 
         if (isset($this->state['git_ssh_key_id'])) {
