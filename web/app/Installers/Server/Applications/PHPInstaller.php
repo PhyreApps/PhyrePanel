@@ -116,7 +116,7 @@ class PHPInstaller
         file_put_contents('/tmp/php-installer.sh', $shellFileContent);
         shell_exec('chmod +x /tmp/php-installer.sh');
 
-        shell_exec('bash /tmp/php-installer.sh >> ' . $this->logFilePath . ' &');
+        shell_exec('sudo bash /tmp/php-installer.sh >> ' . $this->logFilePath . ' &');
 
     }
 
