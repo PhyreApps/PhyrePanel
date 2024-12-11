@@ -7,6 +7,7 @@ use BladeUI\Icons\Factory;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Modules\Microweber\App\Console\Commands\DownloadMicroweber;
 use Modules\Microweber\App\Console\Commands\ReinstallMicroweberInstallations;
 use Modules\Microweber\Listeners\DomainIsCreatedListener;
 use Modules\Microweber\MicroweberApacheVirtualHostConfig;
@@ -59,7 +60,8 @@ class MicroweberServiceProvider extends ServiceProvider
     protected function registerCommands(): void
     {
         $this->commands([
-            ReinstallMicroweberInstallations::class
+            ReinstallMicroweberInstallations::class,
+            DownloadMicroweber::class,
         ]);
     }
 
