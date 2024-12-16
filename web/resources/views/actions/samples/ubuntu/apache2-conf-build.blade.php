@@ -98,11 +98,11 @@ IncludeOptional conf-enabled/*.conf
 
     @if($virtualHost['enableLogs'])
 
-        LogFormat "%h %l %u %t \"%r\" %>s %b" common
+        # LogFormat "%h %l %u %t \"%r\" %>s %b" common
 
-        CustomLog {{$virtualHost['domainRoot']}}/logs/apache2/bytes.log bytes
-        CustomLog {{$virtualHost['domainRoot']}}/logs/apache2/access.log common
-        ErrorLog {{$virtualHost['domainRoot']}}/logs/apache2/error.log
+        # CustomLog {{$virtualHost['domainRoot']}}/logs/apache2/bytes.log bytes
+        # CustomLog {{$virtualHost['domainRoot']}}/logs/apache2/access.log common
+        # ErrorLog {{$virtualHost['domainRoot']}}/logs/apache2/error.log
 
     @endif
 
