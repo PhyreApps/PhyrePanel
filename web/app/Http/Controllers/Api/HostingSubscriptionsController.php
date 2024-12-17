@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Api\Request\HostingSubscriptionCreateRequest;
 use App\Http\Controllers\ApiController;
+use App\Jobs\ApacheBuild;
 use App\Models\Domain;
 use App\Models\HostingSubscription;
 use Carbon\Carbon;
@@ -61,7 +62,7 @@ class HostingSubscriptionsController extends ApiController
 
         $hostingSubscription->setup_date = Carbon::now();
         $hostingSubscription->save();
-
+        ApacheBuild::dispatchSync();
         return response()->json([
             'status' => 'ok',
             'message' => 'Hosting subscription created',

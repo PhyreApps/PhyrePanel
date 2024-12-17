@@ -46,7 +46,7 @@ class MasterDomain
         $apacheVirtualHost->setDomainRoot($this->domainRoot);
         $apacheVirtualHost->setHomeRoot($this->domainRoot);
         $apacheVirtualHost->setServerAdmin($this->email);
-        $apacheVirtualHost->setDomainAlias('*.'.$this->domain);
+        $apacheVirtualHost->setDomainAlias('*.' . $this->domain);
 
         $virtualHostSettings = $apacheVirtualHost->getSettings();
 
@@ -78,7 +78,7 @@ class MasterDomain
             if ($findDomainSSL) {
                 $findDomainSSLCertificate = $findDomainSSL;
             } else {
-                $findMainDomainWildcardSSLCertificate = \App\Models\DomainSslCertificate::where('domain', '*.'.$catchMainDomain)
+                $findMainDomainWildcardSSLCertificate = \App\Models\DomainSslCertificate::where('domain', '*.' . $catchMainDomain)
                     ->first();
                 if ($findMainDomainWildcardSSLCertificate) {
                     $findDomainSSLCertificate = $findMainDomainWildcardSSLCertificate;
@@ -115,13 +115,14 @@ class MasterDomain
                 }
                 file_put_contents($sslCertificateChainFile, $findDomainSSLCertificate->certificate_chain);
             }
+            if (is_file($sslCertificateFile)) {
+                $apacheVirtualHost->setPort(443);
+                $apacheVirtualHost->setSSLCertificateFile($sslCertificateFile);
+                $apacheVirtualHost->setSSLCertificateKeyFile($sslCertificateKeyFile);
+                $apacheVirtualHost->setSSLCertificateChainFile($sslCertificateChainFile);
 
-            $apacheVirtualHost->setPort(443);
-            $apacheVirtualHost->setSSLCertificateFile($sslCertificateFile);
-            $apacheVirtualHost->setSSLCertificateKeyFile($sslCertificateKeyFile);
-            $apacheVirtualHost->setSSLCertificateChainFile($sslCertificateChainFile);
-
-            $virtualHostSettingsWithSSL = $apacheVirtualHost->getSettings();
+                $virtualHostSettingsWithSSL = $apacheVirtualHost->getSettings();
+            }
 
         }
         // End install SSL
@@ -131,15 +132,15 @@ class MasterDomain
             if (file_exists($domainIndexFile)) {
                 $domainIndexFileContent = file_get_contents($domainIndexFile);
                 if (str_contains($domainIndexFileContent, 'Apache2 Debian Default Page')) {
-                     $indexContent = file_get_contents(base_path('resources/views/actions/samples/apache/html/app-index.html'));
-                     file_put_contents($this->domainPublic . '/index.html', $indexContent);
+                    $indexContent = file_get_contents(base_path('resources/views/actions/samples/apache/html/app-index.html'));
+                    file_put_contents($this->domainPublic . '/index.html', $indexContent);
                 }
             }
 
             shell_exec('chown -R www-data:www-data ' . $this->domainPublic);
             shell_exec('chmod -R 755 ' . $this->domainPublic);
         }
-        if(!is_dir($this->domainPublic)){
+        if (!is_dir($this->domainPublic)) {
             return false;
         }
 

@@ -29,12 +29,29 @@ class ApacheBuild implements ShouldQueue
      */
     public function handle(): void
     {
-        $getAllDomains = Domain::whereNot('status','<=>', 'broken')->get();
+        $getAllDomains = Domain::whereNot('status', '<=>', 'broken')->get();
         $virtualHosts = [];
-        foreach ($getAllDomains as $domain) {
 
+
+        file_put_contents(storage_path('logs/apache2.log'),1111);
+
+        foreach ($getAllDomains as $domain) {
+            $isBroken = false;
+//            $findHostingSubscription = \App\Models\HostingSubscription::where('id', $domain->hosting_subscription_id)
+//                ->first();
+//            // check is valid domain
+//            if (!$findHostingSubscription) {
+//                $isBroken = true;
+//            }
+            if ($domain->status === 'broken') {
+                continue;
+            }
             // check is valid domain
             if (!filter_var($domain->domain, FILTER_VALIDATE_DOMAIN)) {
+                $isBroken = true;
+            }
+
+            if ($isBroken) {
                 // mark domain as broken
                 $domain->status = 'broken';
                 $domain->save();
@@ -42,9 +59,10 @@ class ApacheBuild implements ShouldQueue
             }
 
 
+            /* @var  Domain $domain */
             $virtualHostSettings = $domain->configureVirtualHost($this->fixPermissions);
 
-            if(!$virtualHostSettings){
+            if (!$virtualHostSettings) {
                 // mark domain as broken
                 $domain->status = 'broken';
                 $domain->save();
@@ -54,7 +72,7 @@ class ApacheBuild implements ShouldQueue
             if (isset($virtualHostSettings['virtualHostSettings'])) {
                 $virtualHosts[] = $virtualHostSettings['virtualHostSettings'];
             }
-            if (isset($virtualHostSettings['virtualHostSettingsWithSSL'])) {
+            if (isset($virtualHostSettings['virtualHostSettingsWithSSL']) and $virtualHostSettings['virtualHostSettingsWithSSL']) {
                 $virtualHosts[] = $virtualHostSettings['virtualHostSettingsWithSSL'];
             }
         }
@@ -67,7 +85,7 @@ class ApacheBuild implements ShouldQueue
             if (isset($domainVirtualHost['virtualHostSettings'])) {
                 $virtualHosts[] = $domainVirtualHost['virtualHostSettings'];
             }
-            if (isset($domainVirtualHost['virtualHostSettingsWithSSL'])) {
+            if (isset($domainVirtualHost['virtualHostSettingsWithSSL']) and $domainVirtualHost['virtualHostSettingsWithSSL']) {
                 $virtualHosts[] = $domainVirtualHost['virtualHostSettingsWithSSL'];
             }
         }
