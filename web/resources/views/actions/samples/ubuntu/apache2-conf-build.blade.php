@@ -65,6 +65,39 @@ LogFormat "%{User-agent}i" agent
 
 IncludeOptional conf-enabled/*.conf
 
+# Add default virtual host configuration:
+
+<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/html
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+
+<VirtualHost *:443>
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/html
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+    SSLEngine on
+
+    SSLCertificateFile      /etc/ssl/certs/ssl-cert-snakeoil.pem
+    SSLCertificateKeyFile   /etc/ssl/private/ssl-cert-snakeoil.key
+
+    <FilesMatch "\.(?:cgi|shtml|phtml|php)$">
+    SSLOptions +StdEnvVars
+    </FilesMatch>
+    <Directory /usr/lib/cgi-bin>
+    SSLOptions +StdEnvVars
+    </Directory>
+</VirtualHost>
+
+
+# Include the virtual host configurations:
+
 @foreach($virtualHosts as $virtualHost)
 
 <VirtualHost *:{{$virtualHost['port']}}>
