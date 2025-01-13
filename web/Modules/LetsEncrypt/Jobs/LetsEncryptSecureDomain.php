@@ -67,6 +67,7 @@ class LetsEncryptSecureDomain
 
         $output = '';
         $tmpFile = '/tmp/certbot-http-secure-command-' . $findDomain->id . '.sh';
+
         file_put_contents($tmpFile, $certbotHttpSecureCommand);
         shell_exec('chmod +x ' . $tmpFile);
         shell_exec('chmod +x /usr/local/phyre/web/Modules/LetsEncrypt/shell/hooks/pre/http-authenticator.sh');

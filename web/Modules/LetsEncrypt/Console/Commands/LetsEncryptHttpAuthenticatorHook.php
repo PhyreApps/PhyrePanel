@@ -34,9 +34,11 @@ class LetsEncryptHttpAuthenticatorHook extends Command
         $certbotValidation = $this->option('certbot-validation');
         $certbotDomain = $this->option('certbot-domain');
 
+        $certbotDomain = str_replace('www.', '', $certbotDomain);
+
         $findDomain = Domain::where('domain', $certbotDomain)->first();
         if (!$findDomain) {
-            $this->error('Domain not found');
+            $this->error('Domain not found:' . $certbotDomain);
             return;
         }
         if (!is_dir($findDomain->domain_public)) {
