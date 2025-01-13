@@ -72,6 +72,7 @@ class LetsEncryptSecureDomain
         shell_exec('chmod +x /usr/local/phyre/web/Modules/LetsEncrypt/shell/hooks/pre/http-authenticator.sh');
         shell_exec('chmod +x /usr/local/phyre/web/Modules/LetsEncrypt/shell/hooks/post/http-cleanup.sh');
         shell_exec('chmod +x /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh');
+
         $exec = shell_exec("bash $tmpFile");
 
         sleep(10);
