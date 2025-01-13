@@ -3,7 +3,7 @@ sudo certbot certonly \
     --agree-tos \
     --manual \
     --preferred-challenges=http \
-    -d {{$domain}} \
+    -d {{$domain}}, www.{{$domain}} \
     --cert-name {{$domain}} \
     --email {{$email}} \
     --cert-path {{$sslCertificateFilePath}} \
