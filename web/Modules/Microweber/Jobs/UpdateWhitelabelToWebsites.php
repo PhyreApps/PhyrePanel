@@ -53,6 +53,20 @@ class UpdateWhitelabelToWebsites implements ShouldQueue
 
         foreach ($mwInstallations as $mwInstallation) {
 
+            // TODO
+            try {
+                if (isset($whitelabelSettings['brand_favicon'])) {
+                    $faviconUrl = $whitelabelSettings['brand_favicon'];
+                    $faviconContent = file_get_contents($faviconUrl);
+                    $faviconPath = $mwInstallation->installation_path . '/public/favicon.ico';
+                    file_put_contents($faviconPath, $faviconContent);
+                    $faviconSecondPath = $mwInstallation->installation_path . '/favicon.ico';
+                    file_put_contents($faviconSecondPath, $faviconContent);
+                }
+            } catch (\Exception $e) {
+                // \Log::error('Error updating favicon for website: ' . $mwInstallation->installation_path);
+            }
+
             try {
                 $whitelabelApply = new MicroweberWhitelabelWebsiteApply();
                 $whitelabelApply->setWebPath($mwInstallation->installation_path);
