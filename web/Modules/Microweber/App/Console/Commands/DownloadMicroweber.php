@@ -25,7 +25,7 @@ class DownloadMicroweber extends Command
      */
     public function handle()
     {
-        $download = new \Modules\Microweber\App\Console\Commands\DownloadMicroweber();
+        $download = new \Modules\Microweber\Jobs\DownloadMicroweber();
         $download->handle();
     }
 }

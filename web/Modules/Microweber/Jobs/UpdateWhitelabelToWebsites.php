@@ -37,6 +37,16 @@ class UpdateWhitelabelToWebsites implements ShouldQueue
         $whitelabelSettings = setting('microweber.whitelabel');
         $whitelabelSettings['website_manager_url'] = setting('microweber.website_manager_url');
 
+        if (isset($whitelabelSettings['brand_favicon'])) {
+            $faviconUrl = $whitelabelSettings['brand_favicon'];
+            $faviconContent = file_get_contents($faviconUrl);
+            $faviconPath = $sharedAppPath . '/public/favicon.ico';
+            file_put_contents($faviconPath, $faviconContent);
+            $faviconSecondPath = $sharedAppPath . '/favicon.ico';
+            file_put_contents($faviconSecondPath, $faviconContent);
+        }
+
+
         $whitelabel = new MicroweberWhitelabelSettingsUpdater();
         $whitelabel->setPath($sharedAppPath);
         $whitelabel->apply($whitelabelSettings);
