@@ -2,7 +2,8 @@ echo "Pull started at {{ date('Y-m-d H:i:s') }}"
 
 cd {{$projectDir}}
 
-git reset --hard
+git clean -f -d
+git reset --hard HEAD~2
 
 @if($privateKeyFile)
 
@@ -10,7 +11,7 @@ git -c core.sshCommand="ssh -i {{$privateKeyFile}}" pull
 
 @else
 
-git pull
+git pull --rebase
 
 @endif
 
@@ -18,4 +19,4 @@ git pull
 {!! $deploymentScript !!}
 @endif
 
-rm -rf {{$selfFile}}
+{{--rm -rf {{$selfFile}}--}}
