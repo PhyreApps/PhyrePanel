@@ -92,6 +92,9 @@ class Whitelabel extends BaseSettings
                 Checkbox::make('microweber.whitelabel.disable_marketplace')
                     ->label('Disable Microweber Marketplace'),
 
+                Textarea::make('microweber.whitelabel.marketplace_repositories_urls')
+                    ->label('Marketplace repository urls'),
+
                 Checkbox::make('microweber.whitelabel.disable_powered_by_link')
                     ->label('Disable Powered by link'),
 
