@@ -9,12 +9,20 @@ class MicroweberComposerClientHelper
 {
     public function getComposerClientInstance()
     {
-        // The module connector must have own instance of composer client
-        $composerClient = new Client();
-        $composerClient->packageServers = [
+        $packageServers = [
             'https://market.microweberapi.com/packages/microweberserverpackages/packages.json',
             'https://packages.microweberapi.com/packages/microweber/packages.json',
         ];
+
+        $marketplaceRepositoriesUrls = setting('microweber.whitelabel.marketplace_repositories_urls');
+        if ($marketplaceRepositoriesUrls) {
+            $marketplaceRepositoriesUrls = explode("\n", $marketplaceRepositoriesUrls);
+            $packageServers = array_merge($packageServers, $marketplaceRepositoriesUrls);
+        }
+
+        // The module connector must have own instance of composer client
+        $composerClient = new Client();
+        $composerClient->packageServers = $packageServers;
 
         $lic = setting('whitelabel_license_key');
 

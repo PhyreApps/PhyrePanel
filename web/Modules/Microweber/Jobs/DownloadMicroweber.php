@@ -39,7 +39,6 @@ class DownloadMicroweber implements ShouldQueue
         $instance = $mwComposerClientHelper->getComposerClientInstance();
         $instance->prepareHeaders();
 
-
         // Download core app
         $status = $mwComposerClientHelper->getMicroweberDownloaderInstance()->download(config('microweber.sharedPaths.app'));
 
