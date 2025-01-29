@@ -122,7 +122,7 @@ class WildcardDomain extends BaseSettings
             }
         }
 
-        $phyrePHP = 'phyre-php';
+        $phyrePHP = 'php';
         $command = $phyrePHP.' '.$amePHPPharFile.' run '.$masterDomain->domainRoot.'/acme-wildcard-config.yaml >> ' . $this->installLogFilePath . ' &';
         shell_exec($command);
 
