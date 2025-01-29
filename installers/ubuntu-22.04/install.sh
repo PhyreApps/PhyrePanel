@@ -49,6 +49,9 @@ mkdir -p /usr/local/phyre/ssl
 wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/refs/heads/main/web/server/ssl/phyre.crt -O /usr/local/phyre/ssl/phyre.crt
 wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/refs/heads/main/web/server/ssl/phyre.key -O /usr/local/phyre/ssl/phyre.key
 
+sudo chmod 644 /usr/local/phyre/ssl/phyre.crt
+sudo chmod 600 /usr/local/phyre/ssl/phyre.key
+
 wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/main/installers/ubuntu-22.04/greeting.sh -O /etc/profile.d/phyre-greeting.sh
 
 # Install PHYRE PHP
