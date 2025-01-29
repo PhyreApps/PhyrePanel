@@ -78,40 +78,14 @@ class WildcardDomain extends BaseSettings
 
     }
 
-    public function installCertificates()
-    {
+    public function requestCertificates() {
+
         $masterDomain = new MasterDomain();
         $masterDomain->domain = setting('general.wildcard_domain');
 
         $checkCertificateFilesExist = $this->checkCertificateFilesExist($masterDomain->domain);
-        if (isset($checkCertificateFilesExist['sslFiles']['certificateContent'])) {
-
-            $findWildcardSsl = DomainSslCertificate::where('domain', '*.'.$masterDomain->domain)->first();
-            if (!$findWildcardSsl) {
-                $findWildcardSsl = new DomainSslCertificate();
-                $findWildcardSsl->domain = '*.'.$masterDomain->domain;
-                $findWildcardSsl->customer_id = 0;
-                $findWildcardSsl->is_active = 1;
-                $findWildcardSsl->is_wildcard = 1;
-                $findWildcardSsl->is_auto_renew = 1;
-                $findWildcardSsl->provider = 'letsencrypt';
-            }
-
-            $findWildcardSsl->certificate = $checkCertificateFilesExist['sslFiles']['certificateContent'];
-            $findWildcardSsl->private_key = $checkCertificateFilesExist['sslFiles']['privateKeyContent'];
-            $findWildcardSsl->certificate_chain = $checkCertificateFilesExist['sslFiles']['certificateChainContent'];
-            $findWildcardSsl->save();
-
-
-            $mds = new MasterDomain();
-            $mds->configureVirtualHost();
-
-            ApacheBuild::dispatchSync();
-
-            return [
-                'success' => 'Domain SSL certificate updated.'
-            ];
-
+        if ($checkCertificateFilesExist) {
+            throw new \Exception('SSL certificate already exists.');
         }
 
         if (file_exists($this->installLogFilePath)) {
@@ -145,6 +119,50 @@ class WildcardDomain extends BaseSettings
         return [
             'success' => 'SSL certificate request sent.'
         ];
+
+    }
+
+    public function installCertificates()
+    {
+        $masterDomain = new MasterDomain();
+        $masterDomain->domain = setting('general.wildcard_domain');
+
+        $checkCertificateFilesExist = $this->checkCertificateFilesExist($masterDomain->domain);
+
+        if (isset($checkCertificateFilesExist['sslFiles']['certificateContent'])) {
+
+            $findWildcardSsl = DomainSslCertificate::where('domain', '*.'.$masterDomain->domain)->first();
+            if (!$findWildcardSsl) {
+                $findWildcardSsl = new DomainSslCertificate();
+                $findWildcardSsl->domain = '*.'.$masterDomain->domain;
+                $findWildcardSsl->customer_id = 0;
+                $findWildcardSsl->is_active = 1;
+                $findWildcardSsl->is_wildcard = 1;
+                $findWildcardSsl->is_auto_renew = 1;
+                $findWildcardSsl->provider = 'letsencrypt';
+            }
+
+            $findWildcardSsl->certificate = $checkCertificateFilesExist['sslFiles']['certificateContent'];
+            $findWildcardSsl->private_key = $checkCertificateFilesExist['sslFiles']['privateKeyContent'];
+            $findWildcardSsl->certificate_chain = $checkCertificateFilesExist['sslFiles']['certificateChainContent'];
+            $findWildcardSsl->save();
+
+
+            $mds = new MasterDomain();
+            $mds->configureVirtualHost();
+
+            ApacheBuild::dispatchSync();
+
+            return [
+                'success' => 'Domain SSL certificate updated.'
+            ];
+
+        }
+
+        return [
+            'error' => 'SSL certificate not found.'
+        ];
+
     }
 
     public function getInstallLog()
@@ -202,7 +220,15 @@ class WildcardDomain extends BaseSettings
                             unlink($this->installLogFilePath);
                         }
                         $this->poolingInstallLog = true;
-                        $this->installCertificates();
+                        $log = $this->requestCertificates();
+                        if (!isset($log['success'])) {
+                            Notification::make()
+                                ->title('Failed to request SSL certificate.')
+                                ->body('Please, try again.')
+                                ->danger()
+                                ->send();
+                            throw new Halt();
+                        }
                     }),
                 Wizard\Step::make('Verification')
                    // ->description('Adding TXT record in DNS zone to verify domain ownership')
