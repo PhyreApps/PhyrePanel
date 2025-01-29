@@ -159,4 +159,4 @@ service phyre start
 CURRENT_IP=$(hostname -I | awk '{print $1}')
 
 echo "PhyrePanel downloaded successfully."
-echo "Please visit http://$CURRENT_IP:8443 to continue installation of the panel."
+echo "Please visit https://$CURRENT_IP:8443 to continue installation of the panel."
