@@ -106,10 +106,8 @@ class WildcardDomain extends BaseSettings
         $masterDomain = new MasterDomain();
         $masterDomain->domain = setting('general.wildcard_domain');
 
-//        $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --renew -d '*.$masterDomain->domain' --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please";
-//        $acmeCommand = shell_exec($acmeCommand);
-
-        $acmeCommand = 'And the full-chain cert is in';
+        $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --renew -d '*.$masterDomain->domain' --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please";
+        $acmeCommand = shell_exec($acmeCommand);
 
         if (str_contains($acmeCommand, 'And the full-chain cert is in')) {
 
