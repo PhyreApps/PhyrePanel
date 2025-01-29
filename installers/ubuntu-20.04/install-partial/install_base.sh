@@ -44,6 +44,8 @@ done
 # Start MySQL
 service mysql start
 
+mkdir -p /usr/local/phyre/ssl
+
 wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/refs/heads/main/web/server/ssl/phyre.crt -O /usr/local/phyre/ssl/phyre.crt
 wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/refs/heads/main/web/server/ssl/phyre.key -O /usr/local/phyre/ssl/phyre.key
 

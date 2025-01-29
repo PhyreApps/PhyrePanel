@@ -44,6 +44,8 @@ done
 # Start MySQL
 service mysql start
 
+mkdir -p /usr/local/phyre/ssl
+
 wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/refs/heads/main/web/server/ssl/phyre.crt -O /usr/local/phyre/ssl/phyre.crt
 wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/refs/heads/main/web/server/ssl/phyre.key -O /usr/local/phyre/ssl/phyre.key
 
@@ -150,9 +152,6 @@ phyre-php artisan phyre:set-ini-settings APP_ENV "production"
 chmod -R o+w /usr/local/phyre/web/storage/
 chmod -R o+w /usr/local/phyre/web/bootstrap/cache/
 
-mkdir -p /usr/local/phyre/ssl
-cp /usr/local/phyre/web/server/ssl/phyre.crt /usr/local/phyre/ssl/phyre.crt
-cp /usr/local/phyre/web/server/ssl/phyre.key /usr/local/phyre/ssl/phyre.key
 
 service phyre start
 
