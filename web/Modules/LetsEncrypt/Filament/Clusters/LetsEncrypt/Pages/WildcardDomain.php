@@ -112,6 +112,16 @@ class WildcardDomain extends BaseSettings
             shell_exec('mkdir -p ' . dirname($this->installLogFilePath));
         }
 
+        $getExistingProcess = shell_exec("ps aux | grep '[a]cmephp.phar' | awk '{print $2}'");
+        $getExistingProcess = explode("\n", $getExistingProcess);
+        if (!empty($getExistingProcess)) {
+            foreach ($getExistingProcess as $process) {
+                if (!empty($process)) {
+                    shell_exec('kill -9 ' . $process);
+                }
+            }
+        }
+
         $phyrePHP = 'phyre-php';
         $command = $phyrePHP.' '.$amePHPPharFile.' run '.$masterDomain->domainRoot.'/acme-wildcard-config.yaml >> ' . $this->installLogFilePath . ' &';
         shell_exec($command);
