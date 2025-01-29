@@ -12,6 +12,7 @@ use App\Models\User;
 use App\SupportedApplicationTypes;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Field;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -26,6 +27,8 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
 use JaOcero\RadioDeck\Forms\Components\RadioDeck;
 use Livewire\Component;
+use Filament\Forms\Components\ColorPicker;
+use Monarobase\CountryList\CountryList;
 
 class Installer extends Page
 {
@@ -65,7 +68,39 @@ class Installer extends Page
         '3.4'
     ];
 
+    public $brand_name;
+
+    public $brand_logo_url;
+
+    public $brand_primary_color;
+
+    public $master_domain;
+
+    public $wildcard_domain;
+
+    public $master_email;
+
+    public $master_country;
+
+    public $master_locality;
+
+    public $organization_name;
+
     public $enable_email_server = true;
+
+    public function mount()
+    {
+        $this->brand_name = setting('general.brand_name');
+        $this->brand_logo_url = setting('general.brand_logo_url');
+        $this->brand_primary_color = setting('general.brand_primary_color');
+        $this->master_domain = setting('general.master_domain');
+        $this->wildcard_domain = setting('general.wildcard_domain');
+        $this->master_email = setting('general.master_email');
+        $this->master_country = setting('general.master_country');
+        $this->master_locality = setting('general.master_locality');
+        $this->organization_name = setting('general.organization_name');
+
+    }
 
     public function form(Form $form): Form
     {
@@ -100,6 +135,41 @@ class Installer extends Page
                 ->password(),
         ];
 
+        $step2 = [
+            TextInput::make('brand_name')
+                ->label('My Brand')
+                ->helperText('The name of your brand'),
+            Group::make([
+                TextInput::make('brand_logo_url')
+                    ->helperText('The URL to your brand\'s logo'),
+                ColorPicker::make('brand_primary_color')
+                    ->helperText('The primary color of your brand')
+            ])->columns(2),
+
+            Group::make([
+               TextInput::make('master_domain')
+                     ->placeholder('server.example.com')
+                   ->helperText('The domain name of your server')
+                   ->regex('/^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/i'),
+              TextInput::make('wildcard_domain')
+                  ->placeholder('sites.example.com')
+                    ->helperText('The wildcard domain name of your server')
+                  ->regex('/^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/i'),
+            ])->columns(2),
+
+            TextInput::make('master_email'),
+            Group::make([
+                Select::make('master_country')
+                    ->searchable()
+                    ->options(function () {
+                        $countryList = new CountryList();
+                        return $countryList->getList();
+                    }),
+                TextInput::make('master_locality'),
+            ])->columns(2),
+            TextInput::make('organization_name'),
+        ];
+
         $startOnStep = 1;
         $findUserCount = User::count();
         if ($findUserCount >= 1) {
@@ -110,7 +180,6 @@ class Installer extends Page
                     ->description('You can continue to configure your hosting server.')
             ];
         }
-
 
             return $form
             ->schema([
@@ -131,7 +200,25 @@ class Installer extends Page
 
                         }),
 
-                    Wizard\Step::make('Step 2')
+                 Wizard\Step::make('Step 2')
+                     ->description('Setup your hosting server')
+                     ->schema($step2)->afterValidation(function () {
+
+                         setting([
+                                'general.brand_name' => $this->brand_name,
+                                'general.brand_logo_url' => $this->brand_logo_url,
+                                'general.brand_primary_color' => $this->brand_primary_color,
+                                'general.master_domain' => $this->master_domain,
+                                'general.wildcard_domain' => $this->wildcard_domain,
+                                'general.master_email' => $this->master_email,
+                                'general.master_country' => $this->master_country,
+                                'general.master_locality' => $this->master_locality,
+                                'general.organization_name' => $this->organization_name,
+                            ]);
+
+                     }),
+
+                    Wizard\Step::make('Step 3')
                         ->description('Configure your hosting server')
                         ->schema([
 
@@ -266,7 +353,7 @@ class Installer extends Page
 //                        //    dd(storage_path($this->install_log_file_path));
 //                        }),
 
-                    Wizard\Step::make('Step 3')
+                    Wizard\Step::make('Step 4')
                         ->description('Finish installation')
                         ->schema([
 
