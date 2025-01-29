@@ -48,19 +48,20 @@ class WildcardDomain extends BaseSettings
     public function checkCertificateFilesExist($domain)
     {
 
-        $sslCertificateFilePath = '/root/.acmephp/master/certs/*.'.$domain.'/public/cert.pem';
-        $sslCertificateKeyFilePath = '/root/.acmephp/master/certs/*.'.$domain.'/private/key.private.pem';
-        $sslCertificateChainFilePath = '/root/.acmephp/master/certs/*.'.$domain.'/public/fullchain.pem';
+        //check file
+        $sslCertificateFilePath = '/root/.acme.sh/*.' . $domain . '_ecc/*.' . $domain . '.cer';
+        $sslCertificateKeyFilePath = '/root/.acme.sh/*.' . $domain . '_ecc/*.' . $domain . '.key';
+        $sslCertificateChainFilePath = '/root/.acme.sh/*.' . $domain . '_ecc/fullchain.cer';
 
 
         if (file_exists($sslCertificateFilePath)
             && file_exists($sslCertificateKeyFilePath)
-            && file_exists($sslCertificateChainFilePath)) {
+            && file_exists($sslCertificateChainFilePath)
+        ) {
 
             $sslCertificateFileContent = file_get_contents($sslCertificateFilePath);
             $sslCertificateKeyFileContent = file_get_contents($sslCertificateKeyFilePath);
             $sslCertificateChainFileContent = file_get_contents($sslCertificateChainFilePath);
-
 
             return [
                 'sslFiles' => [
@@ -83,63 +84,20 @@ class WildcardDomain extends BaseSettings
         $masterDomain = new MasterDomain();
         $masterDomain->domain = setting('general.wildcard_domain');
 
+        if (file_exists($this->installLogFilePath)) {
+            unlink($this->installLogFilePath);
+        }
+
         $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --register-account -m $masterDomain->email ";
         $acmeCommand = shell_exec($acmeCommand);
 
-        $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --issue -d '*.$masterDomain->domain' --dns dns_cf";
-        $acmeCommand = shell_exec($acmeCommand . " >> ' . $this->installLogFilePath . ' &'");
+        $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --issue -d '*.$masterDomain->domain' --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please";
+        $acmeCommand = shell_exec($acmeCommand . " >> $this->installLogFilePath &");
 
         return [
             'success' => 'SSL certificate request sent.',
             'commandOutput' => $acmeCommand
         ];
-
-//        $checkCertificateFilesExist = $this->checkCertificateFilesExist($masterDomain->domain);
-//        if ($checkCertificateFilesExist) {
-//            throw new \Exception('SSL certificate already exists.');
-//        }
-//
-//        if (file_exists($this->installLogFilePath)) {
-//            unlink($this->installLogFilePath);
-//        }
-//
-//        $acmeConfigYaml = view('letsencrypt::actions.acme-config-wildcard-yaml', [
-//            'domain' => $masterDomain->domain,
-//            'domainRoot' => $masterDomain->domainRoot,
-//            'domainPublic' => $masterDomain->domainPublic,
-//            'email' => $masterDomain->email,
-//            'country' => $masterDomain->country,
-//            'locality' => $masterDomain->locality,
-//            'organization' => $masterDomain->organization
-//        ])->render();
-//
-//        $acmeConfigYaml = preg_replace('~(*ANY)\A\s*\R|\s*(?!\r\n)\s$~mu', '', $acmeConfigYaml);
-//
-//        file_put_contents($masterDomain->domainRoot.'/acme-wildcard-config.yaml', $acmeConfigYaml);
-//
-//        $amePHPPharFile = base_path().'/Modules/LetsEncrypt/Actions/acmephp.phar';
-//
-//        if (!is_dir(dirname($this->installLogFilePath))) {
-//            shell_exec('mkdir -p ' . dirname($this->installLogFilePath));
-//        }
-//
-//        $getExistingProcess = shell_exec("ps aux | grep '[a]cmephp.phar' | awk '{print $2}'");
-//        $getExistingProcess = explode("\n", $getExistingProcess);
-//        if (!empty($getExistingProcess)) {
-//            foreach ($getExistingProcess as $process) {
-//                if (!empty($process)) {
-//                    shell_exec('kill -9 ' . $process);
-//                }
-//            }
-//        }
-//
-//        $phyrePHP = 'php';
-//        $command = $phyrePHP.' '.$amePHPPharFile.' run '.$masterDomain->domainRoot.'/acme-wildcard-config.yaml >> ' . $this->installLogFilePath . ' &';
-//        shell_exec($command);
-//
-//        return [
-//            'success' => 'SSL certificate request sent.'
-//        ];
 
     }
 
@@ -148,36 +106,40 @@ class WildcardDomain extends BaseSettings
         $masterDomain = new MasterDomain();
         $masterDomain->domain = setting('general.wildcard_domain');
 
-        $checkCertificateFilesExist = $this->checkCertificateFilesExist($masterDomain->domain);
+        $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --renew -d '*.$masterDomain->domain' --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please";
+        $acmeCommand = shell_exec($acmeCommand);
 
-        if (isset($checkCertificateFilesExist['sslFiles']['certificateContent'])) {
+        if (str_contains($acmeCommand, 'And the full-chain cert is in')) {
 
-            $findWildcardSsl = DomainSslCertificate::where('domain', '*.'.$masterDomain->domain)->first();
-            if (!$findWildcardSsl) {
-                $findWildcardSsl = new DomainSslCertificate();
-                $findWildcardSsl->domain = '*.'.$masterDomain->domain;
-                $findWildcardSsl->customer_id = 0;
-                $findWildcardSsl->is_active = 1;
-                $findWildcardSsl->is_wildcard = 1;
-                $findWildcardSsl->is_auto_renew = 1;
-                $findWildcardSsl->provider = 'letsencrypt';
+            $checkCertificateFilesExist  = $this->checkCertificateFilesExist($masterDomain->domain);
+            if (isset($checkCertificateFilesExist['sslFiles']['certificateContent'])) {
+
+                $findWildcardSsl = DomainSslCertificate::where('domain', '*.'.$masterDomain->domain)->first();
+                if (!$findWildcardSsl) {
+                    $findWildcardSsl = new DomainSslCertificate();
+                    $findWildcardSsl->domain = '*.'.$masterDomain->domain;
+                    $findWildcardSsl->customer_id = 0;
+                    $findWildcardSsl->is_active = 1;
+                    $findWildcardSsl->is_wildcard = 1;
+                    $findWildcardSsl->is_auto_renew = 1;
+                    $findWildcardSsl->provider = 'letsencrypt';
+                }
+
+                $findWildcardSsl->certificate = $checkCertificateFilesExist['sslFiles']['certificateContent'];
+                $findWildcardSsl->private_key = $checkCertificateFilesExist['sslFiles']['privateKeyContent'];
+                $findWildcardSsl->certificate_chain = $checkCertificateFilesExist['sslFiles']['certificateChainContent'];
+                $findWildcardSsl->save();
+
+                $mds = new MasterDomain();
+                $mds->configureVirtualHost();
+
+                ApacheBuild::dispatchSync();
+
+                return [
+                    'success' => 'Domain SSL certificate updated.'
+                ];
+
             }
-
-            $findWildcardSsl->certificate = $checkCertificateFilesExist['sslFiles']['certificateContent'];
-            $findWildcardSsl->private_key = $checkCertificateFilesExist['sslFiles']['privateKeyContent'];
-            $findWildcardSsl->certificate_chain = $checkCertificateFilesExist['sslFiles']['certificateChainContent'];
-            $findWildcardSsl->save();
-
-
-            $mds = new MasterDomain();
-            $mds->configureVirtualHost();
-
-            ApacheBuild::dispatchSync();
-
-            return [
-                'success' => 'Domain SSL certificate updated.'
-            ];
-
         }
 
         return [
