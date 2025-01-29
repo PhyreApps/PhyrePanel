@@ -83,52 +83,63 @@ class WildcardDomain extends BaseSettings
         $masterDomain = new MasterDomain();
         $masterDomain->domain = setting('general.wildcard_domain');
 
-        $checkCertificateFilesExist = $this->checkCertificateFilesExist($masterDomain->domain);
-        if ($checkCertificateFilesExist) {
-            throw new \Exception('SSL certificate already exists.');
-        }
+        $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --register-account -m $masterDomain->email ";
+        $acmeCommand = shell_exec($acmeCommand);
 
-        if (file_exists($this->installLogFilePath)) {
-            unlink($this->installLogFilePath);
-        }
-
-        $acmeConfigYaml = view('letsencrypt::actions.acme-config-wildcard-yaml', [
-            'domain' => $masterDomain->domain,
-            'domainRoot' => $masterDomain->domainRoot,
-            'domainPublic' => $masterDomain->domainPublic,
-            'email' => $masterDomain->email,
-            'country' => $masterDomain->country,
-            'locality' => $masterDomain->locality,
-            'organization' => $masterDomain->organization
-        ])->render();
-
-        $acmeConfigYaml = preg_replace('~(*ANY)\A\s*\R|\s*(?!\r\n)\s$~mu', '', $acmeConfigYaml);
-
-        file_put_contents($masterDomain->domainRoot.'/acme-wildcard-config.yaml', $acmeConfigYaml);
-
-        $amePHPPharFile = base_path().'/Modules/LetsEncrypt/Actions/acmephp.phar';
-
-        if (!is_dir(dirname($this->installLogFilePath))) {
-            shell_exec('mkdir -p ' . dirname($this->installLogFilePath));
-        }
-
-        $getExistingProcess = shell_exec("ps aux | grep '[a]cmephp.phar' | awk '{print $2}'");
-        $getExistingProcess = explode("\n", $getExistingProcess);
-        if (!empty($getExistingProcess)) {
-            foreach ($getExistingProcess as $process) {
-                if (!empty($process)) {
-                    shell_exec('kill -9 ' . $process);
-                }
-            }
-        }
-
-        $phyrePHP = 'php';
-        $command = $phyrePHP.' '.$amePHPPharFile.' run '.$masterDomain->domainRoot.'/acme-wildcard-config.yaml >> ' . $this->installLogFilePath . ' &';
-        shell_exec($command);
+        $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --issue -d '*.$masterDomain->domain' --dns dns_cf";
+        $acmeCommand = shell_exec($acmeCommand . " >> ' . $this->installLogFilePath . ' &'");
 
         return [
-            'success' => 'SSL certificate request sent.'
+            'success' => 'SSL certificate request sent.',
+            'commandOutput' => $acmeCommand
         ];
+
+//        $checkCertificateFilesExist = $this->checkCertificateFilesExist($masterDomain->domain);
+//        if ($checkCertificateFilesExist) {
+//            throw new \Exception('SSL certificate already exists.');
+//        }
+//
+//        if (file_exists($this->installLogFilePath)) {
+//            unlink($this->installLogFilePath);
+//        }
+//
+//        $acmeConfigYaml = view('letsencrypt::actions.acme-config-wildcard-yaml', [
+//            'domain' => $masterDomain->domain,
+//            'domainRoot' => $masterDomain->domainRoot,
+//            'domainPublic' => $masterDomain->domainPublic,
+//            'email' => $masterDomain->email,
+//            'country' => $masterDomain->country,
+//            'locality' => $masterDomain->locality,
+//            'organization' => $masterDomain->organization
+//        ])->render();
+//
+//        $acmeConfigYaml = preg_replace('~(*ANY)\A\s*\R|\s*(?!\r\n)\s$~mu', '', $acmeConfigYaml);
+//
+//        file_put_contents($masterDomain->domainRoot.'/acme-wildcard-config.yaml', $acmeConfigYaml);
+//
+//        $amePHPPharFile = base_path().'/Modules/LetsEncrypt/Actions/acmephp.phar';
+//
+//        if (!is_dir(dirname($this->installLogFilePath))) {
+//            shell_exec('mkdir -p ' . dirname($this->installLogFilePath));
+//        }
+//
+//        $getExistingProcess = shell_exec("ps aux | grep '[a]cmephp.phar' | awk '{print $2}'");
+//        $getExistingProcess = explode("\n", $getExistingProcess);
+//        if (!empty($getExistingProcess)) {
+//            foreach ($getExistingProcess as $process) {
+//                if (!empty($process)) {
+//                    shell_exec('kill -9 ' . $process);
+//                }
+//            }
+//        }
+//
+//        $phyrePHP = 'php';
+//        $command = $phyrePHP.' '.$amePHPPharFile.' run '.$masterDomain->domainRoot.'/acme-wildcard-config.yaml >> ' . $this->installLogFilePath . ' &';
+//        shell_exec($command);
+//
+//        return [
+//            'success' => 'SSL certificate request sent.'
+//        ];
 
     }
 
