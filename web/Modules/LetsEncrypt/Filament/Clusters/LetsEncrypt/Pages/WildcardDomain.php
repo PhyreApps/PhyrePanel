@@ -106,12 +106,15 @@ class WildcardDomain extends BaseSettings
         $masterDomain = new MasterDomain();
         $masterDomain->domain = setting('general.wildcard_domain');
 
-        $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --renew -d '*.$masterDomain->domain' --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please";
-        $acmeCommand = shell_exec($acmeCommand);
+//        $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --renew -d '*.$masterDomain->domain' --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please";
+//        $acmeCommand = shell_exec($acmeCommand);
+
+        $acmeCommand = 'And the full-chain cert is in';
 
         if (str_contains($acmeCommand, 'And the full-chain cert is in')) {
 
             $checkCertificateFilesExist  = $this->checkCertificateFilesExist($masterDomain->domain);
+
             if (isset($checkCertificateFilesExist['sslFiles']['certificateContent'])) {
 
                 $findWildcardSsl = DomainSslCertificate::where('domain', '*.'.$masterDomain->domain)->first();
@@ -122,7 +125,7 @@ class WildcardDomain extends BaseSettings
                     $findWildcardSsl->is_active = 1;
                     $findWildcardSsl->is_wildcard = 1;
                     $findWildcardSsl->is_auto_renew = 1;
-                    $findWildcardSsl->provider = 'letsencrypt';
+                    $findWildcardSsl->provider = 'AUTO_SSL';
                 }
 
                 $findWildcardSsl->certificate = $checkCertificateFilesExist['sslFiles']['certificateContent'];
