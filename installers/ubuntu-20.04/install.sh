@@ -44,8 +44,10 @@ done
 # Start MySQL
 service mysql start
 
-wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/main/installers/ubuntu-20.04/greeting.sh
-mv greeting.sh /etc/profile.d/phyre-greeting.sh
+wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/refs/heads/main/web/server/ssl/phyre.crt -O /usr/local/phyre/ssl/phyre.crt
+wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/refs/heads/main/web/server/ssl/phyre.key -O /usr/local/phyre/ssl/phyre.key
+
+wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/main/installers/ubuntu-20.04/greeting.sh -O /etc/profile.d/phyre-greeting.sh
 
 # Install PHYRE PHP
 wget https://github.com/PhyreApps/PhyrePanelPHP/raw/main/compilators/debian/php/dist/phyre-php-8.2.0-ubuntu-20.04.deb
@@ -155,4 +157,4 @@ service phyre start
 CURRENT_IP=$(hostname -I | awk '{print $1}')
 
 echo "PhyrePanel downloaded successfully."
-echo "Please visit https://$CURRENT_IP:8443 to continue installation of the panel."
+echo "Please visit http://$CURRENT_IP:8443 to continue installation of the panel."
