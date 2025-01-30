@@ -60,8 +60,10 @@ class SetupMasterDomainSSL extends Command
         } while (!$this->isValidDomain($this->masterDomain));
 
         $this->info("Master domain: $this->masterDomain");
-        $this->info('Your PhyrePanel will be visitable at https://' . $this->masterDomain);
+        $this->info('Your PhyrePanel will be visitable at https://' . $this->masterDomain.':8443');
 
+
+        
     }
 
     /**
