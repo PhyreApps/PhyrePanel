@@ -126,7 +126,8 @@ class SetupMasterDomainSSL extends Command
         $mds = new MasterDomain();
         $mds->configureVirtualHost();
 
-        ApacheBuild::dispatchSync();
+        $apacheBuild = new ApacheBuild(true);
+        $apacheBuild->handle();
 
         $this->info('Everything is set up!');
         $this->info('You can now visit your PhyrePanel at https://' . $this->masterDomain.':8443');
