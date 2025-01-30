@@ -69,6 +69,9 @@ class WildcardIssuer extends BaseSettings
 
     public function requestCertificates() {
 
+        $wildcardDomain = $this->wildcardDomain;
+        $wildcardDomain = str_replace('*.', '', $wildcardDomain);
+
         if (file_exists($this->installLogFilePath)) {
             unlink($this->installLogFilePath);
         }
@@ -76,7 +79,7 @@ class WildcardIssuer extends BaseSettings
         $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --register-account -m $this->masterEmail ";
         $acmeCommand = shell_exec($acmeCommand);
 
-        $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --issue -d '*.$this->wildcardDomain' --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please";
+        $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --issue -d '*.$wildcardDomain' --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please";
         $acmeCommand = shell_exec($acmeCommand . " >> $this->installLogFilePath &");
 
         return [
