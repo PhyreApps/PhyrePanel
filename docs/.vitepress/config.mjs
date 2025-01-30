@@ -49,12 +49,8 @@ export default defineConfig({
             text: 'Contributing',
             link: 'https://github.com/PhyreApps/PhyrePanel/blob/main/CONTRIBUTING.md',
           },
-          {
-            text: 'Security policy',
-            link: 'https://github.com/PhyreApps/PhyrePanel/blob/main/SECURITY.md',
-          },
-        ],
-      },
+        ]
+        }
     ],
 
     sidebar: [
@@ -64,7 +60,19 @@ export default defineConfig({
           { text: 'Getting Started', link: '/introduction/getting-started' },
           { text: 'Installation', link: '/install' },
           { text: 'Requirements', link: '/introduction/requirements' },
-          { text: 'Features', link: '/introduction/features' },
+          { text: 'Features', link: '/introduction/features' }
+        ]
+      },
+      {
+        text: 'Commands',
+        items: [
+          { text: 'System Commands', link: '/commands/system-commands' },
+          { text: 'Installation Commands', link: '/commands/installation-commands' },
+          { text: 'SSL & Domain Management', link: '/commands/ssl-domain-management' },
+          { text: 'Backup Management', link: '/commands/backup-management' },
+          { text: 'User Management', link: '/commands/user-management' },
+          { text: 'System Configuration', link: '/commands/system-configuration' },
+          { text: 'System Update', link: '/commands/system-update' },
         ]
       },
       {
