@@ -21,3 +21,4 @@ web/phyre-config.ini
 /web/Modules/Microweber/vendor/
 .aider*
 /.vscode
+.env
