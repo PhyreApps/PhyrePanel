@@ -1,0 +1,11 @@
+{
+    "name": "SSLManager",
+    "alias": "sslmanager",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\SSLManager\\App\\Providers\\SSLManagerServiceProvider"
+    ],
+    "files": []
+}

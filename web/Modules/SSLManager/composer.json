@@ -1,0 +1,31 @@
+{
+    "name": "nwidart/sslmanager",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\SSLManager\\": "",
+            "Modules\\SSLManager\\App\\": "app/",
+            "Modules\\SSLManager\\Database\\Factories\\": "database/factories/",
+            "Modules\\SSLManager\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\SSLManager\\Tests\\": "tests/"
+        }
+    }
+}

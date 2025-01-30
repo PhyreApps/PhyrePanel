@@ -8,5 +8,6 @@
     "Terminal": true,
     "Mail": true,
     "Email": true,
-    "Minecraft": true
+    "Minecraft": true,
+    "SSLManager": true
 }
