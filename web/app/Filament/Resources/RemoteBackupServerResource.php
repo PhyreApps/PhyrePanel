@@ -29,6 +29,7 @@ class RemoteBackupServerResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->label('Name')
+                    ->columnSpanFull()
                     ->required(),
 
                 Forms\Components\Select::make('type')
@@ -47,7 +48,11 @@ class RemoteBackupServerResource extends Resource
                 Forms\Components\TextInput::make('port')
                     ->label('Port')
                     ->default('21')
-                    ->required(),
+                    ->numeric()
+                    ->minValue(1)
+                    ->maxValue(65535)
+                    ->required()
+                    ->helperText('Default ports: FTP - 21, SFTP - 22'),
 
                 Forms\Components\TextInput::make('username')
                     ->label('Username')
@@ -55,12 +60,17 @@ class RemoteBackupServerResource extends Resource
 
                 Forms\Components\TextInput::make('password')
                     ->label('Password')
-                    ->required(),
+                    ->password()
+                    ->required()
+                    ->dehydrated(fn ($state) => filled($state))
+                    ->helperText('Leave empty to keep the existing password'),
 
                 Forms\Components\TextInput::make('path')
                     ->label('Path')
                     ->default('/')
-                    ->required(),
+                    ->required()
+                    ->placeholder('/path/to/backups')
+                    ->helperText('The directory path where backups will be stored'),
 
             ]);
     }
@@ -70,13 +80,15 @@ class RemoteBackupServerResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('type')->badge(),
+                Tables\Columns\TextColumn::make('type')->badge(), 
                 Tables\Columns\TextColumn::make('hostname'),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
+                    ->default('offline')
                     ->color(fn (string $state): string => match ($state) {
                         'online' => 'success',
                         'offline' => 'danger',
+                        default => 'warning', 
                     })
             ])
             ->filters([
