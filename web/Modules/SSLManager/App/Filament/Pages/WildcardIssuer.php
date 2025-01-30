@@ -88,20 +88,22 @@ class WildcardIssuer extends BaseSettings
     public function installCertificates()
     {
      
+        $wildcardDomain = $this->wildcardDomain;
+        $wildcardDomain = str_replace('*.', '', $wildcardDomain);
 
-        $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --renew -d '*.$this->wildcardDomain' --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please";
+        $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --renew -d '*.$wildcardDomain' --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please";
         $acmeCommand = shell_exec($acmeCommand);
 
         if (str_contains($acmeCommand, 'And the full-chain cert is in')) {
 
-            $checkCertificateFilesExist  = $this->checkCertificateFilesExist($this->wildcardDomain);
+            $checkCertificateFilesExist  = $this->checkCertificateFilesExist($wildcardDomain);
 
             if (isset($checkCertificateFilesExist['sslFiles']['certificateContent'])) {
 
-                $findWildcardSsl = DomainSslCertificate::where('domain', '*.'.$this->wildcardDomain)->first();
+                $findWildcardSsl = DomainSslCertificate::where('domain', '*.'.$wildcardDomain)->first();
                 if (!$findWildcardSsl) {
                     $findWildcardSsl = new DomainSslCertificate();
-                    $findWildcardSsl->domain = '*.'.$this->wildcardDomain;
+                    $findWildcardSsl->domain = '*.'.$wildcardDomain;
                     $findWildcardSsl->customer_id = 0;
                     $findWildcardSsl->is_active = 1;
                     $findWildcardSsl->is_wildcard = 1;
