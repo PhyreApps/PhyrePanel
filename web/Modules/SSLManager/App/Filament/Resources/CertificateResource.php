@@ -17,7 +17,7 @@ class CertificateResource extends Resource
 {
     protected static ?string $model = Certificate::class;
 
-    protected static ?string $navigationGroup = 'SSL Manager';
+    protected static ?string $navigationGroup = 'SSL Manager'; 
 
     // sort in navigation
     protected static int $sort = 1;

@@ -13,6 +13,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Wizard;
+use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Support\Exceptions\Halt;
 use Illuminate\Support\Str;
@@ -184,7 +185,7 @@ class IssueWildcardCertificate extends BaseSettings
 
     }
 
-    public function schema(): array
+    public function form(Form $form): Form
     {
         if (request()->get('step', null) === 'verification') {
             $this->getInstallLog();
