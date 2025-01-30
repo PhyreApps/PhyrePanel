@@ -58,40 +58,55 @@ class SupportedApplicationTypes
     public static function getPHPVersions()
     {
         $versions = [];
-        $phpVersions = [
-            '5.6',
-            '7.4',
-            '8.0',
-            '8.1',
-            '8.2',
-            '8.3',
-        ];
+        $phpVersions = [];
+
+        $getPHPVersions = shell_exec('apt-cache search php | grep php[0-9] | cut -d" " -f1');
+        if (!empty($getPHPVersions)) {
+            $getPHPVersions = explode("\n", $getPHPVersions);
+            foreach ($getPHPVersions as $version) {
+                $regex = '/php[0-9]+\.[0-9]+/';
+                preg_match($regex, $version, $pregMatch);
+                if (!isset($pregMatch[0])) {
+                    continue;
+                }
+                $phpVersion = $pregMatch[0];
+                $phpVersion = str_replace('php', '', $phpVersion);
+
+                $phpVersions[$phpVersion] = $phpVersion;
+            }
+        }
+
         foreach ($phpVersions as $version) {
             $versions[$version] = 'PHP '.$version;
         }
+
         return $versions;
     }
 
-    public static function getPHPModules()
+    public static function getPHPModules($filters = [])
     {
         $modules = [];
-        $phpModules = [
-            'bcmath' => 'BCMath',
-            'bz2' => 'Bzip2',
-            'calendar' => 'Calendar',
-            'ctype' => 'Ctype',
-            'curl' => 'Curl',
-            'dom' => 'DOM',
-            'fileinfo' => 'Fileinfo',
-            'gd' => 'GD',
-            'intl' => 'Intl',
-            'mbstring' => 'Mbstring',
-            'mysql' => 'MySQL',
-            'opcache' => 'OPcache',
-            'sqlite3' => 'SQLite3',
-            'xmlrpc' => 'XML-RPC',
-            'zip' => 'Zip',
-        ];
+        $phpModules = [];
+
+        $getModules = shell_exec('apt-cache search php | grep php- | cut -d" " -f1');
+        if (!empty($getModules)) {
+            $getModules = explode("\n", $getModules);
+            foreach ($getModules as $module) {
+                $module = str_replace('php-', '', $module);
+                if (empty($module)) {
+                    continue;
+                }
+                if (isset($filters['skip'])) {
+                    foreach ($filters['skip'] as $skip) {
+                        if (fnmatch($skip, $module)) {
+                            continue 2;
+                        }
+                    }
+                }
+                $phpModules[$module] = ucwords(str_replace('-', ' ', $module));
+            }
+        }
+
         foreach ($phpModules as $module => $name) {
             $modules[$module] = $name;
         }

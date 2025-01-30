@@ -23,12 +23,8 @@ class PHPInstaller
         $this->logFilePath = $path;
     }
 
-    public function install()
+    public function commands()
     {
-
-        // Clear log file
-        file_put_contents($this->logFilePath, '');
-
         $commands = [];
         $commands[] = 'echo "Starting PHP Installation..."';
         $commands[] = 'export DEBIAN_FRONTEND=noninteractive';
@@ -103,6 +99,17 @@ class PHPInstaller
         $commands[] = 'systemctl restart apache2';
         $commands[] = 'phyre-php /usr/local/phyre/web/artisan phyre:run-repair';
         $commands[] = 'apt-get autoremove -yq';
+
+        return $commands;
+    }
+
+    public function install()
+    {
+
+        // Clear log file
+        file_put_contents($this->logFilePath, '');
+
+        $commands = $this->commands();
 
         $shellFileContent = '';
         foreach ($commands as $command) {

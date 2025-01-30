@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\ApacheBuild;
 use Illuminate\Console\Command;
 
 class SetupMasterDomainSSL extends Command
@@ -44,6 +45,12 @@ class SetupMasterDomainSSL extends Command
             'general.master_domain' => $this->masterDomain,
         ]);
 
+        $this->info('Adding ' . $this->masterDomain . ' to Apache 2...');
+
+
+        $apacheBuild = new ApacheBuild(true);
+        $apacheBuild->handle();
+
         $this->info('Setting up SSL certificate for the master domain...');
         $this->info('This may take a few minutes. Please wait...');
 
@@ -62,8 +69,6 @@ class SetupMasterDomainSSL extends Command
         $this->info("Master domain: $this->masterDomain");
         $this->info('Your PhyrePanel will be visitable at https://' . $this->masterDomain.':8443');
 
-
-        
     }
 
     /**
