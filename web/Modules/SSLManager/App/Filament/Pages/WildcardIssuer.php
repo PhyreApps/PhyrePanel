@@ -2,23 +2,24 @@
 
 namespace Modules\SSLManager\App\Filament\Pages;
 
-use App\ApiClient;
-use App\Jobs\ApacheBuild;
-use App\MasterDomain;
-use App\Models\DomainSslCertificate;
 use App\Settings;
-use Filament\Actions\Action;
-use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Wizard;
-use Filament\Notifications\Notification;
-use Filament\Support\Exceptions\Halt;
+use App\ApiClient;
+use App\MasterDomain;
+use Filament\Forms\Form;
+use Filament\Pages\Page;
+use App\Jobs\ApacheBuild;
 use Illuminate\Support\Str;
-use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
+use Filament\Actions\Action;
+use App\Models\DomainSslCertificate;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Wizard;
+use Filament\Support\Exceptions\Halt;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 
-class WildcardIssuer extends BaseSettings
+class WildcardIssuer extends Page
 {
     protected static ?string $navigationGroup = 'SSL Manager'; 
 
@@ -31,8 +32,10 @@ class WildcardIssuer extends BaseSettings
     public $installLogFilePath =  '/var/www/acme-wildcard-install.log';
     public $installInstructions = [];
 
-    public $wildcardDomain = '';
-    public $masterEmail = '';
+    public ?string $wildcardDomain = '';
+    public ?string $masterEmail = '';
+
+    protected static string $view = 'sslmanager::filament.pages.wildcard-issuer';
 
 
     public function checkCertificateFilesExist($domain)
@@ -70,7 +73,7 @@ class WildcardIssuer extends BaseSettings
     public function requestCertificates() {
 
         $wildcardDomain = $this->wildcardDomain;
-        $wildcardDomain = str_replace('*.', '', $wildcardDomain);
+        $wildcardDomain = str_replace('*.', '', $wildcardDomain); 
 
         if (file_exists($this->installLogFilePath)) {
             unlink($this->installLogFilePath);
@@ -168,6 +171,12 @@ class WildcardIssuer extends BaseSettings
         }
     }
 
+    public function form(Form $form) : Form
+    {
+        return $form
+            ->schema($this->schema());
+    }
+
     public function schema(): array
     {
         if (request()->get('step', null) === 'verification') {
@@ -179,11 +188,14 @@ class WildcardIssuer extends BaseSettings
                 Wizard\Step::make('Install')
                     ->description('Issue new Wildcard SSL certificate for domain')
                     ->schema([
+
                         TextInput::make('wildcardDomain')
+                            ->live()
                             ->helperText('Issue new Wildcard SSL certificate for domain. Example: *.mysite.com')
                             ->placeholder('*.mysite.com'),
 
                         TextInput::make('masterEmail')
+                            ->live()
                             ->default(setting('general.master_email'))
                             ->helperText('Email address for notifications')
                             ->placeholder('master@example.com'),
