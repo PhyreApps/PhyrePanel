@@ -28,16 +28,7 @@ class InstallApache extends Command
     public function handle()
     {
         $phpVersions = array_keys(SupportedApplicationTypes::getPHPVersions());
-        $phpModules = array_keys(SupportedApplicationTypes::getPHPModules([
-            'skip'=> [
-                'symfony-*',
-                'zumba-*',
-                'codeigniter-*',
-                'doctrine-*',
-                'twig-*',
-                'zend-*',
-            ]
-        ]));
+        $phpModules = array_keys(SupportedApplicationTypes::getPHPModules());
 
         $latestPHPVersion = end($phpVersions);
 

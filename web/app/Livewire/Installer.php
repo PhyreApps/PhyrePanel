@@ -145,16 +145,10 @@ class Installer extends Page
                     ->helperText('The primary color of your brand')
             ])->columns(2),
 
-            Group::make([
-               TextInput::make('master_domain')
-                     ->placeholder('server.example.com')
-                   ->helperText('The domain name of your server')
-                   ->regex('/^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/i'),
-              TextInput::make('wildcard_domain')
-                  ->placeholder('sites.example.com')
-                    ->helperText('The wildcard domain name of your server')
-                  ->regex('/^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/i'),
-            ])->columns(2),
+            TextInput::make('master_domain')
+                ->placeholder('server.example.com')
+                ->helperText('The domain name of your server')
+                ->regex('/^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/i'),
 
             TextInput::make('master_email'),
             Group::make([
@@ -228,7 +222,7 @@ class Installer extends Page
                                 ->descriptions(ServerApplicationType::class)
                                 ->required()
                                 ->color('primary')
-                                ->columns(2),
+                                ->columns(3),
 
                             // PHP Configuration
                             CheckboxList::make('server_php_versions')
@@ -240,7 +234,7 @@ class Installer extends Page
                                 ])
                                 ->label('PHP Version')
                                 ->options(SupportedApplicationTypes::getPHPVersions())
-                                ->columns(5)
+                                ->columns(6)
                                 ->required(),
 
                             CheckboxList::make('server_php_modules')
@@ -248,7 +242,7 @@ class Installer extends Page
                                     return $get('server_application_type') !== 'apache_php';
                                 })
                                 ->label('PHP Modules')
-                                ->columns(5)
+                                ->columns(6)
                                 ->options(SupportedApplicationTypes::getPHPModules()),
                             // End of PHP Configuration
 

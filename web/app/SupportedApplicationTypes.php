@@ -88,6 +88,31 @@ class SupportedApplicationTypes
         $modules = [];
         $phpModules = [];
 
+        $allowedModules = [
+            'gd',
+            'imagick',
+            'intl',
+            'mbstring',
+            'mysqli',
+            'pdo',
+            'pdo_mysql',
+            'pdo_pgsql',
+            'pgsql',
+            'soap',
+            'xml',
+            'zip',
+            'bcmath',
+            'calendar',
+            'exif',
+            'ftp',
+            'gettext',
+            'iconv',
+            'json',
+            'ldap',
+            'opcache',
+            'pcntl'
+        ];
+
         $getModules = shell_exec('apt-cache search php | grep php- | cut -d" " -f1');
         if (!empty($getModules)) {
             $getModules = explode("\n", $getModules);
@@ -108,6 +133,11 @@ class SupportedApplicationTypes
         }
 
         foreach ($phpModules as $module => $name) {
+
+            if (!empty($allowedModules) && !in_array($module, $allowedModules)) {
+                continue;
+            }
+
             $modules[$module] = $name;
         }
         return $modules;
