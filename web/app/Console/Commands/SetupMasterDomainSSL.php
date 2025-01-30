@@ -54,6 +54,12 @@ class SetupMasterDomainSSL extends Command
         $this->info('Setting up SSL certificate for the master domain...');
         $this->info('This may take a few minutes. Please wait...');
 
+
+        
+
+        $this->info('Everything is set up!');
+        $this->info('You can now visit your PhyrePanel at https://' . $this->masterDomain.':8443');
+
     }
 
     public function askForMasterDomain()
