@@ -123,6 +123,14 @@ class SetupMasterDomainSSL extends Command
         $findWildcardSsl->certificate_chain = $sslFiles['sslFiles']['certificateChainContent'];
         $findWildcardSsl->save();
 
+        // Replace PhyrePanel Certificate
+        file_put_contents('/usr/local/phyre/ssl/phyre.crt', $sslFiles['sslFiles']['certificateContent']);
+        file_put_contents('/usr/local/phyre/ssl/phyre.key', $sslFiles['sslFiles']['privateKeyContent']);
+        file_put_contents('/usr/local/phyre/ssl/phyre.chain', $sslFiles['sslFiles']['certificateChainContent']);
+
+        // Restart PhyrePanel Service
+        shell_exec('service phyre restart');
+
         $mds = new MasterDomain();
         $mds->configureVirtualHost();
 
