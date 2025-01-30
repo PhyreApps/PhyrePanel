@@ -14,9 +14,8 @@ class Certificate extends Model
      * The attributes that are mass assignable.
      */
     protected $fillable = [];
+
     
-    protected static function newFactory(): CertificateFactory
-    {
-        //return CertificateFactory::new();
-    }
+
+
 }
