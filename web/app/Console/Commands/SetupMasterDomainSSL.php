@@ -72,7 +72,6 @@ class SetupMasterDomainSSL extends Command
         // Replace default index.html with a new one
         file_put_contents('/var/www/html/index.html', view('actions/samples/apache/html/app-index')->render());
 
-
         // Register ACME account
         $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --register-account -m $this->masterEmail";
         $acmeCommand = shell_exec($acmeCommand);
