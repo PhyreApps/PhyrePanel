@@ -19,3 +19,4 @@ web/phyre-config.ini
 .idea/modules.xml
 .idea/deployment.xml
 /web/Modules/Microweber/vendor/
+.aider*
