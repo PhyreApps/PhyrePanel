@@ -19,7 +19,7 @@ use Illuminate\Support\Str;
 use Modules\LetsEncrypt\Filament\Clusters\LetsEncryptCluster;
 use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
 
-class WildcardDomain extends BaseSettings
+class IssueWildcardCertificate extends BaseSettings
 {
     protected static ?string $navigationGroup = 'Let\'s Encrypt';
 
@@ -36,8 +36,9 @@ class WildcardDomain extends BaseSettings
 
     public static function getNavigationLabel() : string
     {
-        return 'Wildcard Domain';
+        return 'Issue Wildcard Certificate';
     }
+
     public function getFormActions() : array
     {
         return [
@@ -193,12 +194,11 @@ class WildcardDomain extends BaseSettings
 
             Wizard::make([
                 Wizard\Step::make('Install')
-                    //->description('Install a wildcard SSL certificate for the master domain')
+                ->description('Issue new wildcard SSL certificate for domain')
                     ->schema([
                         TextInput::make('wildcard_domain')
-                            ->helperText('Install a wildcard SSL certificate for the master domain')
-                            ->placeholder('*.example.com')
-                            ->disabled(),
+                            ->helperText('Issue new wildcard SSL certificate for domain. Example: *.mysite.com')
+                            ->placeholder('*.mysite.com'),
                     ])->afterValidation(function () {
                         if (file_exists($this->installLogFilePath)) {
                             unlink($this->installLogFilePath);
