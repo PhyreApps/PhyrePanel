@@ -75,7 +75,7 @@ class RemoteBackupServerResource extends Resource
                 Forms\Components\Section::make('Authentication')
                     ->collapsible()
                     ->schema([
-                        Forms\Components\Grid::make(3)
+                        Forms\Components\Grid::make(2)
                             ->schema([
                                 Forms\Components\TextInput::make('username')
                                     ->label('Username')
@@ -85,8 +85,7 @@ class RemoteBackupServerResource extends Resource
                                     ->label('Password')
                                     ->password()
                                     ->required()
-                                    ->dehydrated(fn ($state) => filled($state))
-                                    ->helperText('Leave empty to keep existing'),
+                                    ->dehydrated(fn ($state) => filled($state)),
 
                                     Actions::make([
                                         Forms\Components\Actions\Action::make('test_connection')
