@@ -27,51 +27,78 @@ class RemoteBackupServerResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->label('Name')
-                    ->columnSpanFull()
-                    ->required(),
-
-                Forms\Components\Select::make('type')
-                    ->label('Type')
-                    ->options([
-                        'ftp' => 'FTP',
-                        'sftp' => 'SFTP',
+                Forms\Components\Section::make('Basic Information')
+                    ->collapsible()
+                    ->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->label('Name')
+                            ->helperText('A unique name for the backup server')
+                            ->required(),
                     ])
-                    ->default('ftp')
-                    ->required(),
+                    ->compact(),
 
-                Forms\Components\TextInput::make('hostname')
-                    ->label('Hostname')
-                    ->required(),
+                Forms\Components\Section::make('Connection Settings')
+                    ->collapsible()
+                    ->schema([
+                        Forms\Components\Grid::make(3)
+                            ->schema([
+                                Forms\Components\Select::make('type')
+                                    ->label('Type')
+                                    ->helperText('Choose the type of backup server')
+                                    ->options([
+                                        'ftp' => 'FTP',
+                                        'sftp' => 'SFTP',
+                                    ])
+                                    ->default('ftp')
+                                    ->required(),
 
-                Forms\Components\TextInput::make('port')
-                    ->label('Port')
-                    ->default('21')
-                    ->numeric()
-                    ->minValue(1)
-                    ->maxValue(65535)
-                    ->required()
-                    ->helperText('Default ports: FTP - 21, SFTP - 22'),
+                                Forms\Components\TextInput::make('hostname')
+                                    ->helperText('The hostname or IP address')
+                                    ->label('Hostname')
+                                    ->required(),
 
-                Forms\Components\TextInput::make('username')
-                    ->label('Username')
-                    ->required(),
+                                Forms\Components\TextInput::make('port')
+                                    ->label('Port')
+                                    ->default('21')
+                                    ->numeric()
+                                    ->minValue(1)
+                                    ->maxValue(65535)
+                                    ->required()
+                                    ->helperText('FTP: 21, SFTP: 22'),
+                            ]),
+                    ])
+                    ->compact(),
 
-                Forms\Components\TextInput::make('password')
-                    ->label('Password')
-                    ->password()
-                    ->required()
-                    ->dehydrated(fn ($state) => filled($state))
-                    ->helperText('Leave empty to keep the existing password'),
+                Forms\Components\Section::make('Authentication')
+                    ->collapsible()
+                    ->schema([
+                        Forms\Components\Grid::make(2)
+                            ->schema([
+                                Forms\Components\TextInput::make('username')
+                                    ->label('Username')
+                                    ->required(),
 
-                Forms\Components\TextInput::make('path')
-                    ->label('Path')
-                    ->default('/')
-                    ->required()
-                    ->placeholder('/path/to/backups')
-                    ->helperText('The directory path where backups will be stored'),
+                                Forms\Components\TextInput::make('password')
+                                    ->label('Password')
+                                    ->password()
+                                    ->required()
+                                    ->dehydrated(fn ($state) => filled($state))
+                                    ->helperText('Leave empty to keep existing'),
+                            ]),
+                    ])
+                    ->compact(),
 
+                Forms\Components\Section::make('Storage Settings')
+                    ->collapsible()
+                    ->schema([
+                        Forms\Components\TextInput::make('path')
+                            ->label('Path')
+                            ->default('/')
+                            ->required()
+                            ->placeholder('/path/to/backups')
+                            ->helperText('Directory path for backups'),
+                    ])
+                    ->compact(),
             ]);
     }
 
