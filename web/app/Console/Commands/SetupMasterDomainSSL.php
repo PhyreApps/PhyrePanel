@@ -55,7 +55,8 @@ class SetupMasterDomainSSL extends Command
         $this->info('This may take a few minutes. Please wait...');
 
 
-        
+        file_put_contents('/var/www/html/index.html', view('actions/samples/apache/html/app-index')->render());
+
 
         $this->info('Everything is set up!');
         $this->info('You can now visit your PhyrePanel at https://' . $this->masterDomain.':8443');
