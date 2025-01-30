@@ -6,10 +6,13 @@ use App\Filament\Resources\RemoteBackupServerResource\Pages;
 use App\Filament\Resources\RemoteBackupServerResource\RelationManagers;
 use App\Models\RemoteBackupServer;
 use Filament\Forms;
+use Filament\Forms\Components\Actions;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -72,7 +75,7 @@ class RemoteBackupServerResource extends Resource
                 Forms\Components\Section::make('Authentication')
                     ->collapsible()
                     ->schema([
-                        Forms\Components\Grid::make(2)
+                        Forms\Components\Grid::make(3)
                             ->schema([
                                 Forms\Components\TextInput::make('username')
                                     ->label('Username')
@@ -84,6 +87,30 @@ class RemoteBackupServerResource extends Resource
                                     ->required()
                                     ->dehydrated(fn ($state) => filled($state))
                                     ->helperText('Leave empty to keep existing'),
+
+                                    Actions::make([
+                                        Forms\Components\Actions\Action::make('test_connection')
+                                        ->label('Test Connection')
+                                        ->icon('heroicon-m-signal')
+                                        ->action(function ($livewire) {
+                                            $data = $livewire->form->getState();
+                                            
+                                            $server = new RemoteBackupServer($data);
+                                            $server->healthCheck(); 
+                                            
+                                            if ($server->status === 'online') {
+                                                Notification::make()
+                                                    ->title('Connection successful')
+                                                    ->success()
+                                                    ->send();
+                                            } else {
+                                                Notification::make()
+                                                    ->title('Connection failed')
+                                                    ->danger()
+                                                    ->send();
+                                            }
+                                        }),
+                                    ])
                             ]),
                     ])
                     ->compact(),
@@ -99,7 +126,7 @@ class RemoteBackupServerResource extends Resource
                             ->helperText('Directory path for backups'),
                     ])
                     ->compact(),
-            ]);
+                ]);
     }
 
     public static function table(Table $table): Table
@@ -123,6 +150,24 @@ class RemoteBackupServerResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('test_connection')
+                    ->label('Test Connection')
+                    ->icon('heroicon-m-signal')
+                    ->action(function (RemoteBackupServer $record) {
+                        $record->healthCheck();
+                        
+                        if ($record->status === 'online') {
+                            Notification::make()
+                                ->title('Connection successful')
+                                ->success()
+                                ->send();
+                        } else {
+                            Notification::make()
+                                ->title('Connection failed')
+                                ->danger()
+                                ->send();
+                        }
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
