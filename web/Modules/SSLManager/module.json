@@ -4,6 +4,9 @@
     "description": "",
     "keywords": [],
     "priority": 0,
+    "logoIcon": "sslmanager-logo",
+    "category": "Security",
+    "adminUrl": "/admin/ssl-manager/ssl-manager-certificates",
     "providers": [
         "Modules\\SSLManager\\App\\Providers\\SSLManagerServiceProvider"
     ],

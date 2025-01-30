@@ -97,8 +97,8 @@ class AdminPanelProvider extends PanelProvider
         $defaultColor = Color::Yellow;
         $brandLogo = null;
         $brandName = null;
-        $isAppInstalled = file_exists(storage_path('installed'));
-        if ($isAppInstalled) {
+        $isAppInstalled = file_exists(storage_path('installed')); 
+        if ($isAppInstalled && !(php_sapi_name() === 'cli' || php_sapi_name() === 'phpdbg')) {
             if (setting('general.brand_logo_url')) {
                 $brandLogo = setting('general.brand_logo_url');
             }

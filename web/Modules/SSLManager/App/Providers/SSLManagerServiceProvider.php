@@ -4,6 +4,7 @@ namespace Modules\SSLManager\App\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use BladeUI\Icons\Factory;
 
 class SSLManagerServiceProvider extends ServiceProvider
 {
@@ -29,7 +30,17 @@ class SSLManagerServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->register(RouteServiceProvider::class);
+    
+        // Register Phyre Icons set
+        $this->callAfterResolving(Factory::class, function (Factory $factory) {
+            $factory->add('ssl_manager', [
+                'path' => __DIR__ . '/../../resources/assets/ssl-manager-svg',
+                'prefix' => 'ssl_manager', 
+            ]);
+        });
+
+        $this->app->register(RouteServiceProvider::class); 
+
     }
 
     /**

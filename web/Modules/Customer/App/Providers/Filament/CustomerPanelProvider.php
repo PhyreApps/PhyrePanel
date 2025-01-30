@@ -32,7 +32,7 @@ class CustomerPanelProvider extends PanelProvider
         $brandLogo = asset('images/phyre-logo.svg');
 
         $isAppInstalled = file_exists(storage_path('installed'));
-        if ($isAppInstalled) {
+        if ($isAppInstalled && !(php_sapi_name() === 'cli' || php_sapi_name() === 'phpdbg')) {
             if (setting('general.brand_logo_url')) {
                 $brandLogo = setting('general.brand_logo_url');
             }
