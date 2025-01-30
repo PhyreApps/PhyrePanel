@@ -26,7 +26,6 @@ class GeneralSettings extends BaseSettings
     public function save() : void
     {
         $oldMasterDomain = setting('general.master_domain');
-        $oldWildcardDomain = setting('general.wildcard_domain');
 
         parent::save();
 
@@ -46,9 +45,6 @@ class GeneralSettings extends BaseSettings
 
         $rebuildApache = false;
         if ($oldMasterDomain != setting('general.master_domain')) {
-            $rebuildApache = true;
-        }
-        if ($oldWildcardDomain != setting('general.wildcard_domain')) {
             $rebuildApache = true;
         }
         if ($rebuildApache) {
@@ -71,7 +67,6 @@ class GeneralSettings extends BaseSettings
                             ColorPicker::make('general.brand_primary_color'),
 
                             TextInput::make('general.master_domain')->regex('/^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/i'),
-                            TextInput::make('general.wildcard_domain')->regex('/^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/i'),
 
                             TextInput::make('general.master_email'),
                             Select::make('general.master_country')

@@ -197,7 +197,7 @@ class WildcardDomain extends BaseSettings
                     ->schema([
                         TextInput::make('wildcard_domain')
                             ->helperText('Install a wildcard SSL certificate for the master domain')
-                            ->placeholder(setting('general.wildcard_domain'))
+                            ->placeholder('*.example.com')
                             ->disabled(),
                     ])->afterValidation(function () {
                         if (file_exists($this->installLogFilePath)) {

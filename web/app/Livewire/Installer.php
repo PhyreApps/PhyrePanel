@@ -94,7 +94,6 @@ class Installer extends Page
         $this->brand_logo_url = setting('general.brand_logo_url');
         $this->brand_primary_color = setting('general.brand_primary_color');
         $this->master_domain = setting('general.master_domain');
-        $this->wildcard_domain = setting('general.wildcard_domain');
         $this->master_email = setting('general.master_email');
         $this->master_country = setting('general.master_country');
         $this->master_locality = setting('general.master_locality');
@@ -209,7 +208,6 @@ class Installer extends Page
                                 'general.brand_logo_url' => $this->brand_logo_url,
                                 'general.brand_primary_color' => $this->brand_primary_color,
                                 'general.master_domain' => $this->master_domain,
-                                'general.wildcard_domain' => $this->wildcard_domain,
                                 'general.master_email' => $this->master_email,
                                 'general.master_country' => $this->master_country,
                                 'general.master_locality' => $this->master_locality,
