@@ -55,6 +55,7 @@ class SetupMasterDomainSSL extends Command
         $this->info('This may take a few minutes. Please wait...');
 
 
+        // Replace default index.html with a new one
         file_put_contents('/var/www/html/index.html', view('actions/samples/apache/html/app-index')->render());
 
 
