@@ -218,10 +218,13 @@ class WildcardIssuer extends Page
                     }),
                 Wizard\Step::make('Verification')
                     ->schema([
+
                         TextInput::make('installInstructions')
                             ->view('sslmanager::filament.wildcard_install_instructions')
                             ->label('Installation Instructions')
+
                     ])->afterValidation(function () {
+
                         $log = $this->installCertificates();
 
                         if (isset($log['success'])) {
