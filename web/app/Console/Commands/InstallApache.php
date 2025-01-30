@@ -48,6 +48,13 @@ class InstallApache extends Command
         $phpInstaller->setPHPModules($phpModules);
         $getCommands = $phpInstaller->commands();
 
-        dd($getCommands);
+        foreach ($getCommands as $command) {
+            try {
+                $this->info(shell_exec($command));
+            } catch (\Exception $e) {
+                $this->error($e->getMessage());
+            }
+        }
+
     }
 }
