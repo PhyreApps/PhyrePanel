@@ -88,6 +88,7 @@ class RemoteBackupServer extends Model
             $uploadCurlCommand = trim($uploadCurlCommand);
 
             $uploadCurlProcess = Process::fromShellCommandline($uploadCurlCommand);
+            $uploadCurlProcess->setTimeout(0);
             $uploadCurlProcess->run();
 
             if (!$uploadCurlProcess->isSuccessful()) {
