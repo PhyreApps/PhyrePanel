@@ -170,5 +170,11 @@ CURRENT_IP=$(hostname -I | awk '{print $1}')
 
 echo "PhyrePanel downloaded successfully."
 
-phyre-php artisan phyre:install-apache
-phyre-php artisan phyre:setup-master-domain-ssl
+# Parse argument --dont-ask
+if [ "$1" == "--dont-ask" ]; then
+  echo "PhyrePanel is now available at https://$CURRENT_IP:8443"
+  exit 0
+else
+  phyre-php artisan phyre:install-apache
+  phyre-php artisan phyre:setup-master-domain-ssl
+fi
