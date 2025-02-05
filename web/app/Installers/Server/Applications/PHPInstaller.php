@@ -110,21 +110,15 @@ class PHPInstaller
         file_put_contents($this->logFilePath, '');
 
         $commands = $this->commands();
-
-        $shellFileContent = '';
+        
         foreach ($commands as $command) {
-            $shellFileContent .= $command . PHP_EOL;
+            $commandExecuted = shell_exec($command);
+            @file_put_contents($this->logFilePath, $commandExecuted . PHP_EOL, FILE_APPEND);
         }
 
-        $shellFileContent .= 'echo "All packages installed successfully!"' . PHP_EOL;
-        $shellFileContent .= 'echo "DONE!"' . PHP_EOL;
-        $shellFileContent .= 'rm -f /tmp/php-installer.sh';
+        file_put_contents($this->logFilePath, 'All packages installed successfully!');
 
-        file_put_contents('/tmp/php-installer.sh', $shellFileContent);
-        shell_exec('chmod +x /tmp/php-installer.sh');
-
-        shell_exec('sudo bash /tmp/php-installer.sh >> ' . $this->logFilePath . ' &');
-
+        @unlink('/tmp/php-installer.sh');
     }
 
     public function installIonCube()
