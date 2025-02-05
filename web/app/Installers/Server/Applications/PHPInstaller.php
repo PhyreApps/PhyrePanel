@@ -2,6 +2,8 @@
 
 namespace App\Installers\Server\Applications;
 
+use App\SupportedApplicationTypes;
+
 class PHPInstaller
 {
     public $phpVersions = [];
@@ -58,9 +60,12 @@ class PHPInstaller
         }
 
 
-        $lastItem = end($this->phpVersions);
-        foreach ($this->phpVersions as $phpVersion) {
-            if ($phpVersion == $lastItem) {
+        $commands = [];
+        $phpVersions = array_keys(SupportedApplicationTypes::getPHPVersions());
+        $lastPHPVersion = end($phpVersions);
+
+        foreach ($phpVersions as $phpVersion) {
+            if ($phpVersion == $lastPHPVersion) {
                 $commands[] = 'a2enmod php' . $phpVersion;
             } else {
                 $commands[] = 'a2dismod php' . $phpVersion;
