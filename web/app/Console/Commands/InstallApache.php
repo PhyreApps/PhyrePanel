@@ -35,7 +35,7 @@ class InstallApache extends Command
             return version_compare($version, '8.0', '>=');
         });
         $phpVersions = array_filter($phpVersions, function ($version) {
-            return version_compare($version, '8.3', '<=');
+            return version_compare($version, '8.2', '<=');
         });
 
         $phpInstaller = new PHPInstaller();
