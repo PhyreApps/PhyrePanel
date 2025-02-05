@@ -35,7 +35,6 @@ class PHPInstaller
         $commands[] = 'add-apt-repository -y ppa:ondrej/apache2';
         $commands[] = 'apt-get update -yq';
 
-
         $dependenciesListApache = [
             'apache2',
             'apache2-suexec-custom'
@@ -99,6 +98,9 @@ class PHPInstaller
 
         // $commands[] = 'ufw allow in "Apache Full"';
 
+
+        $commands[] = 'wget http://security.ubuntu.com/ubuntu/pool/universe/liba/libapache2-mod-ruid2/libapache2-mod-ruid2_0.9.8-3_amd64.deb';
+        $commands[] = 'dpkg -i libapache2-mod-ruid2_0.9.8-3_amd64.deb';
 
         $commands[] = 'systemctl restart apache2';
         $commands[] = 'phyre-php /usr/local/phyre/web/artisan phyre:run-repair';
