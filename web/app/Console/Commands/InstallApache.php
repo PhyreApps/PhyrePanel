@@ -31,7 +31,12 @@ class InstallApache extends Command
         $phpModules = array_keys(SupportedApplicationTypes::getPHPModules());
 
         // Get the latest four versions of PHP
-        $phpVersions = array_slice($phpVersions, -4);
+        $phpVersions = array_filter($phpVersions, function ($version) {
+            return version_compare($version, '8.0', '>=');
+        });
+        $phpVersions = array_filter($phpVersions, function ($version) {
+            return version_compare($version, '8.3', '<=');
+        });
 
         $phpInstaller = new PHPInstaller();
         $phpInstaller->setPHPVersions($phpVersions);
