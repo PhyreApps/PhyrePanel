@@ -46,19 +46,14 @@ class PHPInstaller
         if (!empty($this->phpVersions)) {
             foreach ($this->phpVersions as $phpVersion) {
 
-                $dependenciesListPHP = [];
-                $dependenciesListPHP[] = 'php'.$phpVersion;
-                $dependenciesListPHP[] = 'libapache2-mod-php'.$phpVersion;
-                $dependenciesListPHP[] = 'php'.$phpVersion;
-                $dependenciesListPHP[] = 'php'.$phpVersion.'-cgi';
-
+                $commands[] = 'apt-get install -yq php'.$phpVersion;
+                $commands[] = 'apt-get install -yq php'.$phpVersion.'-cgi';
                 if (!empty($this->phpModules)) {
-                    $dependenciesListPHP[] = 'php'.$phpVersion.'-{'.implode(',',
-                            $this->phpModules).'}';
+                    foreach ($this->phpModules as $module) {
+                        $commands[] = 'apt-get install -yq php'.$phpVersion.'-' . $module;
+                    }
                 }
-
-                $dependenciesPHP = implode(' ', $dependenciesListPHP);
-                $commands[] = 'apt-get install -yq '.$dependenciesPHP;
+                $commands[] = 'apt-get install -yq libapache2-mod-php'.$phpVersion;
             }
 
         }
