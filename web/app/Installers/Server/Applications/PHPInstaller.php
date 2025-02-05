@@ -36,8 +36,7 @@ class PHPInstaller
 
         $dependenciesListApache = [
             'apache2',
-            'apache2-suexec-custom',
-            'libapache2-mod-ruid2',
+            'apache2-suexec-custom'
         ];
 
         $dependenciesApache = implode(' ', $dependenciesListApache);
@@ -78,7 +77,6 @@ class PHPInstaller
         $commands[] = 'a2enmod actions';
         $commands[] = 'a2enmod headers';
         $commands[] = 'a2enmod suexec';
-        $commands[] = 'a2enmod ruid2';
         $commands[] = 'a2enmod proxy';
         $commands[] = 'a2enmod proxy_http';
 

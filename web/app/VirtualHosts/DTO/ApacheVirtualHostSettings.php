@@ -148,7 +148,7 @@ class ApacheVirtualHostSettings
             'serverAdmin' => $this->serverAdmin,
             'user' => $this->user,
             'group' => $this->userGroup,
-            'enableRuid2' => true,
+            'enableRuid2' => false,
             'sslCertificateFile' => $this->sslCertificateFile,
             'sslCertificateKeyFile' => $this->sslCertificateKeyFile,
             'sslCertificateChainFile' => $this->sslCertificateChainFile,
