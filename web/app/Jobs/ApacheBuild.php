@@ -97,7 +97,9 @@ class ApacheBuild implements ShouldQueue
 
         $apache2 = preg_replace('~(*ANY)\A\s*\R|\s*(?!\r\n)\s$~mu', '', $apache2);
 
-        file_put_contents('/etc/apache2/apache2.conf', $apache2);
+        file_put_contents('/etc/apache2/apache2-process.conf', $apache2);
+
+        shell_exec('cp /etc/apache2/apache2-process.conf /etc/apache2/apache2.conf');
 
         shell_exec('systemctl reload apache2'); // IMPORTANT: MUST BE RELOAD! NOT RESTART!
 
