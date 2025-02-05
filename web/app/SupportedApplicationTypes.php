@@ -110,7 +110,16 @@ class SupportedApplicationTypes
             'json',
             'ldap',
             'opcache',
-            'pcntl'
+            'pcntl',
+            'sqlite3',
+            'sodium',
+            'soap',
+            'mysql',
+            'mcrypt',
+            'curl',
+            'mbstring',
+            'intl',
+            'gd'
         ];
 
         $getModules = shell_exec('apt-cache search php | grep php- | cut -d" " -f1');
