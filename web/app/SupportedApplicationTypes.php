@@ -112,6 +112,7 @@ class SupportedApplicationTypes
             'opcache',
             'pcntl',
             'sqlite3',
+            'sqlite',
             'sodium',
             'soap',
             'mysql',
