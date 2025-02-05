@@ -19,15 +19,15 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CertificateResource extends Resource
 {
-    protected static ?string $model = DomainSslCertificate::class; 
+    protected static ?string $model = DomainSslCertificate::class;
 
-    protected static ?string $navigationGroup = 'SSL Manager'; 
+    protected static ?string $navigationGroup = 'SSL Manager';
     protected static ?string $navigationLabel = 'Certificates';
     protected static ?string $pluralModelLabel = 'Certificates';
 
     // sort in navigation
     protected static int $sort = 1;
-    
+
 
     public static function form(Form $form): Form
     {
@@ -44,6 +44,19 @@ class CertificateResource extends Resource
                 TextColumn::make('domain')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('is_active')
+                    ->badge()
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('is_wildcard')
+                    ->badge()
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('provider')
+                    ->searchable()
+                    ->sortable(),
+
             ])
             ->filters([
                 //
