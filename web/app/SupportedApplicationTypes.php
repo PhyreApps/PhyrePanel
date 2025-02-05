@@ -113,7 +113,6 @@ class SupportedApplicationTypes
             'pcntl',
             'sqlite3',
             'sqlite',
-            'sodium',
             'soap',
             'mysql',
             'mcrypt',
