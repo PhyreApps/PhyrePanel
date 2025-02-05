@@ -225,25 +225,25 @@ class Installer extends Page
                                 ->columns(3),
 
                             // PHP Configuration
-                            CheckboxList::make('server_php_versions')
-                                ->hidden(function (Get $get) {
-                                    return $get('server_application_type') !== 'apache_php';
-                                })
-                                ->default([
-                                    '8.2'
-                                ])
-                                ->label('PHP Version')
-                                ->options(SupportedApplicationTypes::getPHPVersions())
-                                ->columns(6)
-                                ->required(),
+//                            CheckboxList::make('server_php_versions')
+//                                ->hidden(function (Get $get) {
+//                                    return $get('server_application_type') !== 'apache_php';
+//                                })
+//                                ->default([
+//                                    '8.2'
+//                                ])
+//                                ->label('PHP Version')
+//                                ->options(SupportedApplicationTypes::getPHPVersions())
+//                                ->columns(6)
+//                                ->required(),
 
-                            CheckboxList::make('server_php_modules')
-                                ->hidden(function (Get $get) {
-                                    return $get('server_application_type') !== 'apache_php';
-                                })
-                                ->label('PHP Modules')
-                                ->columns(6)
-                                ->options(SupportedApplicationTypes::getPHPModules()),
+//                            CheckboxList::make('server_php_modules')
+//                                ->hidden(function (Get $get) {
+//                                    return $get('server_application_type') !== 'apache_php';
+//                                })
+//                                ->label('PHP Modules')
+//                                ->columns(6)
+//                                ->options(SupportedApplicationTypes::getPHPModules()),
                             // End of PHP Configuration
 
                             // Node.js Configuration

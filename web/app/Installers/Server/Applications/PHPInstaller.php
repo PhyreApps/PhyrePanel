@@ -105,41 +105,19 @@ class PHPInstaller
 
     public function install()
     {
-
         // Clear log file
         file_put_contents($this->logFilePath, '');
 
-        $commands = $this->commands();
-        
-        foreach ($commands as $command) {
-            $commandExecuted = shell_exec($command);
-            @file_put_contents($this->logFilePath, $commandExecuted . PHP_EOL, FILE_APPEND);
-        }
+        $shellFileContent = 'phyre-php /usr/local/phyre/web/artisan phyre:install-apache' . PHP_EOL;
 
-        file_put_contents($this->logFilePath, 'All packages installed successfully!');
+        $shellFileContent .= 'echo "All packages installed successfully!"' . PHP_EOL;
+        $shellFileContent .= 'echo "DONE!"' . PHP_EOL;
+        $shellFileContent .= 'rm -f /tmp/php-installer.sh';
 
-        @unlink('/tmp/php-installer.sh');
-    }
+        file_put_contents('/tmp/php-installer.sh', $shellFileContent);
+        shell_exec('chmod +x /tmp/php-installer.sh');
 
-    public function installIonCube()
-    {
+        shell_exec('sudo bash /tmp/php-installer.sh >> ' . $this->logFilePath . ' &');
 
-        // 64  bit
-        // $ wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
-        // tar -zxvf ioncube_loaders_lin_x86*
-        //  cd ioncube/
-        // php -i | grep extension_dir
-        // sudo cp /tmp/ioncube/ioncube_loader_lin_7.4.so /usr/lib/php/20190902
-
-//         sudo vi /etc/php/8.2/cli/php.ini 		#for PHP CLI
-//         sudo vi /etc/php/8.2/fpm/php.ini		#for PHP-FPM & Nginx
-//         sudo vi /etc/php/8.2/apache2/php.ini	        #for Apache2
-
-        // zend_extension = /usr/lib/php/20190902/ioncube_loader_lin_8.2.so
-
-        // command to add zend_extension to the php.ini file -cphp8.2-cgi.ini
-        // sudo echo "zend_extension = /usr/lib/php/20190902/ioncube_loader_lin_8.2.so" | sudo tee -a /etc/php/8.2/cgi/php.ini
-        // sudo echo "zend_extension = /usr/lib/php/20190902/ioncube_loader_lin_8.2.so" | sudo tee -a /etc/php/8.2/apache2/php.ini
-        // sudo echo "zend_extension = /usr/lib/php/20190902/ioncube_loader_lin_8.2.so" | sudo tee -a /etc/php/8.2/cli/php.ini
     }
 }
