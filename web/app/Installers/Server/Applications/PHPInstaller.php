@@ -61,12 +61,7 @@ class PHPInstaller
 
         $commands = [];
         $phpVersions = array_keys(SupportedApplicationTypes::getPHPVersions());
-        $phpVersions = array_filter($phpVersions, function ($version) {
-            return version_compare($version, '8.0', '>=');
-        });
-        $phpVersions = array_filter($phpVersions, function ($version) {
-            return version_compare($version, '8.2', '<=');
-        });
+
         $lastPHPVersion = end($phpVersions);
 
         foreach ($phpVersions as $phpVersion) {
