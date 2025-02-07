@@ -19,9 +19,9 @@
   <a href="https://codecov.io/gh/PhyreApps/PhyrePanel"><img src="https://codecov.io/gh/PhyreApps/PhyrePanel/graph/badge.svg?token=BO0RTPLS4W"/></a>
 </p>
 
-<p align="center">
-<a href="https://www.buymeacoffee.com/phyre">
-    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="50px">
+<p align="center"> 
+<a href="https://www.buymeacoffee.com/phyre" style="display: inline-block;margin: 15px 0px;">
+    <img src="https://img.buymeacoffee.com/button-api/?text=Support Phyre Panel&emoji=&slug=phyre&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Support Phyre Panel" style="height: 40px !important; ">
 </a>
 </p>
 
