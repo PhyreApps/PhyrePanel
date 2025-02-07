@@ -35,6 +35,12 @@ class HostingPlanResource extends Resource
     {
         $remoteDatabaseServers = RemoteDatabaseServer::select(['name','id'])->get()->pluck('name', 'id');
 
+        $phpVersionsOption = [];
+        $getInstalledPHPVersions = SupportedApplicationTypes::getInstalledPHPVersions();
+        foreach ($getInstalledPHPVersions as $version) {
+            $phpVersionsOption[$version['version']] = 'PHP ' . $version['version'];
+        }
+
         return $form
             ->schema([
 
@@ -59,7 +65,7 @@ class HostingPlanResource extends Resource
                             })
                             ->default('8.3')
                             ->label('PHP Version')
-                            ->options(SupportedApplicationTypes::getPHPVersions())
+                            ->options($phpVersionsOption)
                             ->columns(5)
                             ->required(),
 

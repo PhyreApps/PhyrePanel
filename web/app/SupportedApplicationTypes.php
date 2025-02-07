@@ -55,6 +55,55 @@ class SupportedApplicationTypes
         return $versions;
     }
 
+
+    public static function getInstalledPHPModules($phpVersion)
+    {
+        $modules = [];
+        $getModules = shell_exec('php' . $phpVersion . ' -m');
+        if (!empty($getModules)) {
+            $getModules = explode("\n", $getModules);
+            if (is_array($getModules)) {
+                $getModules = array_filter($getModules);
+                foreach ($getModules as $module) {
+                    if ($module == '[PHP Modules]') {
+                        continue;
+                    }
+                    if ($module == '[Zend Modules]') {
+                        continue;
+                    }
+                    $modules[] = $module;
+                }
+                $modules = array_unique($modules);
+            }
+        }
+        return $modules;
+    }
+
+    public static function getInstalledPHPVersions()
+    {
+        $installedPHPVersions = [];
+
+        $getPHPVersions = shell_exec('sudo update-alternatives --list php');
+        if (!empty($getPHPVersions)) {
+            $getPHPVersions = explode("\n", $getPHPVersions);
+            if (is_array($getPHPVersions)) {
+                $getPHPVersions = array_filter($getPHPVersions);
+                foreach ($getPHPVersions as $phpVersion) {
+                    $phpVersion = str_replace('/usr/bin/php', '', $phpVersion);
+                    $phpVersion = str_replace('php', '', $phpVersion);
+                    $phpVersion = str_replace('.', '', $phpVersion);
+                    $phpVersion = substr($phpVersion, 0, 1) . '.' . substr($phpVersion, 1);
+                    $installedPHPVersions[] = [
+                        'version' => $phpVersion,
+                        'modules' => self::getInstalledPHPModules($phpVersion) ?? 'No modules found.',
+                    ];
+                }
+            }
+        }
+
+        return $installedPHPVersions;
+
+    }
     public static function getPHPVersions()
     {
         $versions = [];
