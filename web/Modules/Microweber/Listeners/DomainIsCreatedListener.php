@@ -9,6 +9,7 @@ use App\Models\Domain;
 use App\Models\HostingPlan;
 use App\Models\HostingSubscription;
 use App\Services\HostingSubscriptionService;
+use App\SupportedApplicationTypes;
 use Illuminate\Support\Str;
 use MicroweberPackages\SharedServerScripts\MicroweberWhitelabelSettingsUpdater;
 use MicroweberPackages\SharedServerScripts\MicroweberWhitelabelWebsiteApply;
@@ -48,6 +49,16 @@ class DomainIsCreatedListener
 
         if ($findHostingPlan->default_server_application_type != 'apache_php') {
             return;
+        }
+
+        if (isset($findHostingPlan->default_server_application_settings['php_version'])) {
+            $phpVersion = $findHostingPlan->default_server_application_settings['php_version'];
+            $phpSbin = 'php' .$phpVersion;
+        } else {
+            $supportedPhpVersions = SupportedApplicationTypes::getPHPVersions();
+            $phpVersion = end($supportedPhpVersions);
+            $phpVersion = str_replace('PHP ', '', $phpVersion);
+            $phpSbin = 'php' . $phpVersion;
         }
 
         $databasesAreCreated = false;
@@ -146,6 +157,7 @@ class DomainIsCreatedListener
         $install->setAdminEmail($username . '@'.$emailDomain);
         $install->setAdminUsername($username);
         $install->setAdminPassword(Str::random(8));
+        $install->setPHPSbin($phpSbin);
 
         $status = $install->run();
 
