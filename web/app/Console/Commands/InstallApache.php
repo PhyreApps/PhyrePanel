@@ -27,10 +27,21 @@ class InstallApache extends Command
      */
     public function handle()
     {
+
+        $phpInstaller = new PHPInstaller();
+
+        $repoCommands = $phpInstaller->addReposCommands();
+        foreach ($repoCommands as $command) {
+            try {
+                $this->info(shell_exec($command));
+            } catch (\Exception $e) {
+                $this->error($e->getMessage());
+            }
+        }
+
         $phpVersions = array_keys(SupportedApplicationTypes::getPHPVersions());
         $phpModules = array_keys(SupportedApplicationTypes::getPHPModules());
 
-        $phpInstaller = new PHPInstaller();
         $phpInstaller->setPHPVersions($phpVersions);
         $phpInstaller->setPHPModules($phpModules);
         $getCommands = $phpInstaller->commands();

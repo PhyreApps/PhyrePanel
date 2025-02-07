@@ -25,15 +25,24 @@ class PHPInstaller
         $this->logFilePath = $path;
     }
 
+    public function addReposCommands()
+    {
+        $commands = [];
+        $commands[] = 'apt-get install -yq sudo';
+        $commands[] = 'add-apt-repository -y ppa:ondrej/php';
+        $commands[] = 'add-apt-repository -y ppa:ondrej/apache2';
+        $commands[] = 'apt-get update -yq';
+
+        return $commands;
+    }
+
     public function commands()
     {
         $commands = [];
         $commands[] = 'echo "Starting PHP Installation..."';
         $commands[] = 'export DEBIAN_FRONTEND=noninteractive';
-        $commands[] = 'apt-get install -yq sudo';
-        $commands[] = 'add-apt-repository -y ppa:ondrej/php';
-        $commands[] = 'add-apt-repository -y ppa:ondrej/apache2';
-        $commands[] = 'apt-get update -yq';
+
+        $commands = array_merge($commands, $this->addReposCommands());
 
         $dependenciesListApache = [
             'apache2',
