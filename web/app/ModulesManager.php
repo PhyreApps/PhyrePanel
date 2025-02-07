@@ -32,7 +32,12 @@ class ModulesManager
         if (!is_dir(base_path('Modules/' . $module))) {
             return [];
         }
-        $moduleJson = file_get_contents(base_path('Modules/' . $module . '/module.json'));
+
+        $moduleJson = base_path('Modules/' . $module . '/module.json');
+        if (!file_exists($moduleJson)) {
+            return [];
+        }
+        $moduleJson = file_get_contents($moduleJson);
         $moduleJson = json_decode($moduleJson, true);
         if (isset($moduleJson['hidden']) && $moduleJson['hidden'] == true) {
             return [];
