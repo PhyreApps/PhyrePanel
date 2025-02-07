@@ -9,7 +9,7 @@
     ],
     "require": {
         "microweber-packages/composer-client": "^2.1",
-        "microweber-packages/shared-server-scripts": "^0.9"
+        "microweber-packages/shared-server-scripts": "^1.0"
     },
     "extra": {
         "laravel": {

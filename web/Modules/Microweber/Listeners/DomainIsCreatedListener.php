@@ -154,10 +154,11 @@ class DomainIsCreatedListener
         }
 
         $username = Str::random(8);
+
         $install->setAdminEmail($username . '@'.$emailDomain);
         $install->setAdminUsername($username);
         $install->setAdminPassword(Str::random(8));
-        $install->setPHPSbin($phpSbin);
+        $install->setPhpSbin($phpSbin);
 
         $status = $install->run();
 
