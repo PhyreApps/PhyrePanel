@@ -19,6 +19,10 @@
   <a href="https://codecov.io/gh/PhyreApps/PhyrePanel"><img src="https://codecov.io/gh/PhyreApps/PhyrePanel/graph/badge.svg?token=BO0RTPLS4W"/></a>
 </p>
 
+<a href="https://www.buymeacoffee.com/phyre">
+    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="60px">
+</a>
+
 ![Phyre Panel - Dashboard](screenshots/dashboard.png)
 ## About PHYRE PANEL
 
