@@ -142,64 +142,64 @@ class HostingPlanResource extends Resource
 
                     ]),
 
-                    Forms\Components\Tabs\Tab::make('Hosting Parameters')->schema([
-                        Forms\Components\TextInput::make('disk_space')
-                            ->numeric()
-                            ->default('1000')
-                            ->suffix('GB')
-                            ->label('Disk Space'),
-
-                        Forms\Components\TextInput::make('bandwidth')
-                            ->numeric()
-                            ->default('10000')
-                            ->suffix('GB')
-                            ->label('Bandwidth'),
-
-                        Forms\Components\TextInput::make('databases')
-                            ->numeric()
-                            ->default('5')
-                            ->label('Databases'),
-
-                        Forms\Components\TextInput::make('ftp_accounts')
-                            ->numeric()
-                            ->default('5')
-                            ->label('FTP Accounts'),
-
-                        Forms\Components\TextInput::make('email_accounts')
-                            ->numeric()
-                            ->default('5')
-                            ->label('Email Accounts'),
-
-                        Forms\Components\TextInput::make('subdomains')
-                            ->numeric()
-                            ->default('5')
-                            ->label('Subdomains'),
-
-                        Forms\Components\TextInput::make('parked_domains')
-                            ->numeric()
-                            ->default('5')
-                            ->label('Parked Domains'),
-
-                        Forms\Components\TextInput::make('addon_domains')
-                            ->numeric()
-                            ->default('5')
-                            ->label('Addon Domains'),
-
-                        Forms\Components\TextInput::make('ssl_certificates')
-                            ->numeric()
-                            ->default('1')
-                            ->label('SSL Certificates'),
-
-                        Forms\Components\TextInput::make('daily_backups')
-                            ->numeric()
-                            ->default('1')
-                            ->label('Daily Backups'),
-
-                        Forms\Components\TextInput::make('free_domain')
-                            ->numeric()
-                            ->default('1')
-                            ->label('Free Domain'),
-                    ]),
+//                    Forms\Components\Tabs\Tab::make('Hosting Parameters')->schema([
+//                        Forms\Components\TextInput::make('disk_space')
+//                            ->numeric()
+//                            ->default('1000')
+//                            ->suffix('GB')
+//                            ->label('Disk Space'),
+//
+//                        Forms\Components\TextInput::make('bandwidth')
+//                            ->numeric()
+//                            ->default('10000')
+//                            ->suffix('GB')
+//                            ->label('Bandwidth'),
+//
+//                        Forms\Components\TextInput::make('databases')
+//                            ->numeric()
+//                            ->default('5')
+//                            ->label('Databases'),
+//
+//                        Forms\Components\TextInput::make('ftp_accounts')
+//                            ->numeric()
+//                            ->default('5')
+//                            ->label('FTP Accounts'),
+//
+//                        Forms\Components\TextInput::make('email_accounts')
+//                            ->numeric()
+//                            ->default('5')
+//                            ->label('Email Accounts'),
+//
+//                        Forms\Components\TextInput::make('subdomains')
+//                            ->numeric()
+//                            ->default('5')
+//                            ->label('Subdomains'),
+//
+//                        Forms\Components\TextInput::make('parked_domains')
+//                            ->numeric()
+//                            ->default('5')
+//                            ->label('Parked Domains'),
+//
+//                        Forms\Components\TextInput::make('addon_domains')
+//                            ->numeric()
+//                            ->default('5')
+//                            ->label('Addon Domains'),
+//
+//                        Forms\Components\TextInput::make('ssl_certificates')
+//                            ->numeric()
+//                            ->default('1')
+//                            ->label('SSL Certificates'),
+//
+//                        Forms\Components\TextInput::make('daily_backups')
+//                            ->numeric()
+//                            ->default('1')
+//                            ->label('Daily Backups'),
+//
+//                        Forms\Components\TextInput::make('free_domain')
+//                            ->numeric()
+//                            ->default('1')
+//                            ->label('Free Domain'),
+//                    ]),
 
                      Forms\Components\Tabs\Tab::make('Advanced')->schema([
 
@@ -207,8 +207,8 @@ class HostingPlanResource extends Resource
                              ->label('Additional Services')
                              ->options([
                                  'microweber' => 'Microweber',
-                                 'wordpress' => 'WordPress',
-                                 'opencart' => 'OpenCart',
+//                                 'wordpress' => 'WordPress',
+//                                 'opencart' => 'OpenCart',
                              ])
                              ->multiple(),
 
@@ -216,7 +216,7 @@ class HostingPlanResource extends Resource
                              ->label('Features')
                              ->options([
                                  'ssl' => 'SSL',
-                                 'backup' => 'Backup',
+//                                 'backup' => 'Backup',
                              ])
                              ->multiple(),
                      ])
