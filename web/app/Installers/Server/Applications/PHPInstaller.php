@@ -67,8 +67,6 @@ class PHPInstaller
 
         }
 
-
-        $commands = [];
         $phpVersions = array_keys(SupportedApplicationTypes::getPHPVersions());
 
         $lastPHPVersion = end($phpVersions);
