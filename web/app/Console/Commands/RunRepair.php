@@ -54,7 +54,11 @@ class RunRepair extends Command
         $this->fixPhpMyAdmin();
 
         // Overwrite supervisor config file
+        $minWorkersCount = 1;
         $workersCount = (int) setting('general.supervisor_workers_count');
+        if ($workersCount < $minWorkersCount) {
+            $workersCount = $minWorkersCount;
+        }
         $supervisorConf = view('actions.samples.ubuntu.supervisor-conf', [
             'workersCount' => $workersCount
         ])->render();
