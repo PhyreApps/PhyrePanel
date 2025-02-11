@@ -20,7 +20,7 @@ class Version extends Page
 
     protected static ?string $cluster = MicroweberCluster::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationIcon = 'mw-mw_logo_small_white';
 
     protected static string $view = 'microweber::filament.admin.pages.version';
 
