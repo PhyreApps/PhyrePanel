@@ -212,7 +212,9 @@ class HostingPlanResource extends Resource
                          Forms\Components\Select::make('additional_services')
                              ->label('Additional Services')
                              ->options([
-                                 'microweber' => 'Microweber',
+                                 'microweber' => 'Microweber (Auto Install)',
+                                 'microweber_custom' => 'Microweber (Custom Install)',
+
 //                                 'wordpress' => 'WordPress',
 //                                 'opencart' => 'OpenCart',
                              ])

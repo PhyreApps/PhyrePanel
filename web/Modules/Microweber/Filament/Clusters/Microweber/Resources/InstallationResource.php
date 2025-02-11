@@ -49,6 +49,7 @@ class InstallationResource extends Resource
                 //
             ])
             ->actions([
+
 //                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
