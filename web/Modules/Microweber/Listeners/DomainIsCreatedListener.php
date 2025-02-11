@@ -169,7 +169,9 @@ class DomainIsCreatedListener
         $install->setPhpSbin($phpSbin);
 
         if (in_array('microweber_custom', $findHostingPlan->additional_services)) {
-            $install->setCustomInstall();
+            $install->setAdminEmail(null);
+            $install->setAdminUsername(null);
+            $install->setAdminPassword(null);
         }
 
         $status = $install->run();
