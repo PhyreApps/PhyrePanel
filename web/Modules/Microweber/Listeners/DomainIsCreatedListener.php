@@ -43,7 +43,15 @@ class DomainIsCreatedListener
             return;
         }
 
-        if (!in_array('microweber', $findHostingPlan->additional_services)) {
+        $skip = true;
+        if (in_array('microweber', $findHostingPlan->additional_services)) {
+            $skip = false;
+        }
+        if (in_array('microweber_custom', $findHostingPlan->additional_services)) {
+            $skip = false;
+        }
+
+        if ($skip) {
             return;
         }
 
@@ -159,6 +167,10 @@ class DomainIsCreatedListener
         $install->setAdminUsername($username);
         $install->setAdminPassword(Str::random(8));
         $install->setPhpSbin($phpSbin);
+
+        if (in_array('microweber_custom', $findHostingPlan->additional_services)) {
+            $install->setCustomInstall();
+        }
 
         $status = $install->run();
 
