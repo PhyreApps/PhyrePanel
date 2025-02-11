@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "33fca0326c53e60447e2cc2780a12cd0",
+    "content-hash": "33409785a55bd5b1d18a3b7db9f4a7d0",
     "packages": [
         {
             "name": "microweber-packages/composer-client",
@@ -55,7 +55,7 @@
         },
         {
             "name": "microweber-packages/shared-server-scripts",
-            "version": "1.0",
+            "version": "1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/microweber-packages/shared-server-scripts.git",
@@ -103,7 +103,7 @@
             "support": {
                 "email": "support@microweber.com",
                 "issues": "https://github.com/microweber-packages/shared-server-scripts/issues",
-                "source": "https://github.com/microweber-packages/shared-server-scripts/tree/1.0"
+                "source": "https://github.com/microweber-packages/shared-server-scripts/tree/1.1"
             },
             "time": "2025-02-07T13:17:21+00:00"
         },

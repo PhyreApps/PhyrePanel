@@ -1,6 +1,6 @@
 {
     "name": "phyre/microweber",
-    "description": "",
+    "description": "", 
     "authors": [
         {
             "name": "Bozhidar Slaveykov",
@@ -9,7 +9,7 @@
     ],
     "require": {
         "microweber-packages/composer-client": "^2.1",
-        "microweber-packages/shared-server-scripts": "^1.0"
+        "microweber-packages/shared-server-scripts": "^1.1"
     },
     "extra": {
         "laravel": {
