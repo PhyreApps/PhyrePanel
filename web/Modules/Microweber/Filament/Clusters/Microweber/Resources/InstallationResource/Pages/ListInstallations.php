@@ -18,7 +18,7 @@ class ListInstallations extends ListRecords
     {
         return [
 //            Actions\CreateAction::make(),
-            Actions\Action::make('Scan for installations')->action('scanForInstallations'),
+//            Actions\Action::make('Scan for installations')->action('scanForInstallations'),
         ];
     }
 
