@@ -163,15 +163,17 @@ class DomainIsCreatedListener
 
         $username = Str::random(8);
 
-        $install->setAdminEmail($username . '@'.$emailDomain);
-        $install->setAdminUsername($username);
-        $install->setAdminPassword(Str::random(8));
+
         $install->setPhpSbin($phpSbin);
 
         if (in_array('microweber_custom', $findHostingPlan->additional_services)) {
             $install->setAdminEmail(null);
             $install->setAdminUsername(null);
             $install->setAdminPassword(null);
+        } else {
+            $install->setAdminEmail($username . '@'.$emailDomain);
+            $install->setAdminUsername($username);
+            $install->setAdminPassword(Str::random(8));
         }
 
         $status = $install->run();
