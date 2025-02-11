@@ -15,4 +15,11 @@ class MicroweberInstallation extends Model
         return $this->hasOne(Domain::class, 'id', 'domain_id');
     }
 
+    public function getTemplateAttribute()
+    {
+        if (empty($this->template)) {
+            return 'Default';
+        }
+    }
+
 }
