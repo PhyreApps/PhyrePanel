@@ -46,15 +46,24 @@ class CertificateResource extends Resource
                     ->sortable(),
                 TextColumn::make('is_active')
                     ->badge()
+                    ->formatStateUsing(function ($state) {
+                        return $state ? 'Active' : 'Inactive';
+                    })
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('is_wildcard')
                     ->badge()
+                    ->formatStateUsing(function ($state) {
+                        return $state ? 'Wildcard' : 'Standard';
+                    })
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('provider')
                     ->searchable()
+                    ->formatStateUsing(function ($state) {
+                        return strtoupper($state);
+                    })
                     ->sortable(),
 
             ])
