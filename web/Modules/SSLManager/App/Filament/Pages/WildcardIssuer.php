@@ -21,13 +21,13 @@ use Filament\Notifications\Notification;
 
 class WildcardIssuer extends Page
 {
-    protected static ?string $navigationGroup = 'SSL Manager'; 
+    protected static ?string $navigationGroup = 'SSL Manager';
 
     protected static ?string $navigationIcon = null;
 
-    protected static ?int $navigationSort = 2; 
+    protected static ?int $navigationSort = 2;
 
-    public $poolingInstallLog = true; 
+    public $poolingInstallLog = true;
     public $installLog = '';
     public $installLogFilePath =  '/var/www/acme-wildcard-install.log';
     public $installInstructions = [];
@@ -73,7 +73,7 @@ class WildcardIssuer extends Page
     public function requestCertificates() {
 
         $wildcardDomain = $this->wildcardDomain;
-        $wildcardDomain = str_replace('*.', '', $wildcardDomain); 
+        $wildcardDomain = str_replace('*.', '', $wildcardDomain);
 
         if (file_exists($this->installLogFilePath)) {
             unlink($this->installLogFilePath);
@@ -93,7 +93,7 @@ class WildcardIssuer extends Page
 
     public function installCertificates()
     {
-     
+
         $wildcardDomain = $this->wildcardDomain;
         $wildcardDomain = str_replace('*.', '', $wildcardDomain);
 
@@ -159,7 +159,7 @@ class WildcardIssuer extends Page
             $acmeChallangeDomain = str_replace('Domain: ', '', $acmeChallangeDomain);
             $acmeChallangeTxtValue = str_replace('TXT value: ', '', $acmeChallangeTxtValue);
             $this->installInstructions = [
-                'acmeChallangeDomain' => $acmeChallangeDomain, 
+                'acmeChallangeDomain' => $acmeChallangeDomain,
                 'acmeChallangeTxtValue' => $acmeChallangeTxtValue,
             ];
             $this->poolingInstallLog = false;
@@ -199,7 +199,7 @@ class WildcardIssuer extends Page
                             ->default(setting('general.master_email'))
                             ->helperText('Email address for notifications')
                             ->placeholder('master@example.com'),
-                
+
 
                     ])->afterValidation(function () {
                         if (file_exists($this->installLogFilePath)) {

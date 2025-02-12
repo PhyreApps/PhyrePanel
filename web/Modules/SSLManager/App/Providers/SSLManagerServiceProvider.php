@@ -30,16 +30,16 @@ class SSLManagerServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-    
+
         // Register Phyre Icons set
         $this->callAfterResolving(Factory::class, function (Factory $factory) {
             $factory->add('ssl_manager', [
                 'path' => __DIR__ . '/../../resources/assets/ssl-manager-svg',
-                'prefix' => 'ssl_manager', 
+                'prefix' => 'ssl_manager',
             ]);
         });
 
-        $this->app->register(RouteServiceProvider::class); 
+        $this->app->register(RouteServiceProvider::class);
 
     }
 
@@ -101,6 +101,7 @@ class SSLManagerServiceProvider extends ServiceProvider
 
         $componentNamespace = str_replace('/', '\\', config('modules.namespace').'\\'.$this->moduleName.'\\'.config('modules.paths.generator.component-class.path'));
         Blade::componentNamespace($componentNamespace, $this->moduleNameLower);
+
     }
 
     /**
