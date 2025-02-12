@@ -2,9 +2,11 @@
 
 namespace Modules\SSLManager\App\Console;
 
+use App\Jobs\ApacheBuild;
 use App\Models\CronJob;
 use App\Models\Domain;
 use Illuminate\Console\Command;
+use Modules\SSLManager\App\Jobs\SecureDomain;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
@@ -37,7 +39,6 @@ class RenewSSL extends Command
         $this->_checkForAutoRenewalCron();
 
         $getDomains = Domain::where('status', Domain::STATUS_ACTIVE)
-            ->where('domain', 'inra-bg.bg')
             ->get();
         if ($getDomains->count() > 0) {
             foreach ($getDomains as $domain) {
@@ -46,9 +47,14 @@ class RenewSSL extends Command
                     $this->info('SSL certificate for ' . $domain->domain . ' is valid');
                 } else {
                     $this->info('SSL certificate for ' . $domain->domain . ' is expired');
-                    $this->_renewSSL($domain->domain);
+                    $this->_renewSSL($domain);
                 }
             }
+
+            // Rebuild Apache configuration
+            $this->info('Rebuilding Apache configuration');
+            $apacheBuild = new ApacheBuild(true);
+            $apacheBuild->handle();
         }
 
     }
@@ -56,9 +62,10 @@ class RenewSSL extends Command
     private function _renewSSL($domain)
     {
         // Renew SSL
-        $this->info('Renewing SSL certificate for ' . $domain);
+        $this->info('Renewing SSL certificate for ' . $domain->domain);
 
-
+        $run = new SecureDomain($domain->id);
+        $run->handle();
 
     }
 

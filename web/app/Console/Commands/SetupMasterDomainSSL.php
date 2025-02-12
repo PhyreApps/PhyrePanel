@@ -73,11 +73,11 @@ class SetupMasterDomainSSL extends Command
         file_put_contents('/var/www/html/index.html', view('actions/samples/apache/html/app-index')->render());
 
         // Register ACME account
-        $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --register-account -m $this->masterEmail";
+        $acmeCommand = "bash /usr/local/phyre/web/Modules/SSLManager/shell/acme.sh --register-account -m $this->masterEmail";
         $acmeCommand = shell_exec($acmeCommand);
 
         // Issue SSL certificate
-        $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --issue -d '$this->masterDomain' --webroot /var/www/html";
+        $acmeCommand = "bash /usr/local/phyre/web/Modules/SSLManager/shell/acme.sh --issue -d '$this->masterDomain' --webroot /var/www/html";
         $acmeCommand = shell_exec($acmeCommand);
 
         $issued = false;
