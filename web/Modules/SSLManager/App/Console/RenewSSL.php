@@ -2,6 +2,8 @@
 
 namespace Modules\SSLManager\App\Console;
 
+use App\Models\CronJob;
+use App\Models\Domain;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
@@ -11,12 +13,12 @@ class RenewSSL extends Command
     /**
      * The name and signature of the console command.
      */
-    protected $signature = 'command:name';
+    protected $signature = 'ssl-manager:renew-ssl';
 
     /**
      * The console command description.
      */
-    protected $description = 'Command description.';
+    protected $description = 'Renew SSL certificates';
 
     /**
      * Create a new command instance.
@@ -31,26 +33,71 @@ class RenewSSL extends Command
      */
     public function handle()
     {
-        //
+
+        $this->_checkForAutoRenewalCron();
+
+        $getDomains = Domain::where('status', Domain::STATUS_ACTIVE)
+            ->where('domain', 'inra-bg.bg')
+            ->get();
+        if ($getDomains->count() > 0) {
+            foreach ($getDomains as $domain) {
+                $checkDomainStatus = $this->_checkForSSL($domain->domain);
+                if ($checkDomainStatus) {
+                    $this->info('SSL certificate for ' . $domain->domain . ' is valid');
+                } else {
+                    $this->info('SSL certificate for ' . $domain->domain . ' is expired');
+                    $this->_renewSSL($domain->domain);
+                }
+            }
+        }
+
     }
 
-    /**
-     * Get the console command arguments.
-     */
-    protected function getArguments(): array
+    private function _renewSSL($domain)
     {
-        return [
-            ['example', InputArgument::REQUIRED, 'An example argument.'],
-        ];
+        // Renew SSL
+        $this->info('Renewing SSL certificate for ' . $domain);
+
+
+
     }
 
-    /**
-     * Get the console command options.
-     */
-    protected function getOptions(): array
+
+    private function _checkForSSL($domain)
     {
-        return [
-            ['example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null],
-        ];
+
+        // Check with CURL
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://" . $domain);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+
+        $data = curl_exec($ch);
+
+        $sslInfo = curl_getinfo($ch);
+
+        if ($sslInfo['http_code'] == 200) {
+            return true;
+        } else {
+            return false;
+        }
+
+
     }
+
+    public function _checkForAutoRenewalCron()
+    {
+        $cronJobCommand = 'phyre-php /usr/local/phyre/web/artisan ssl-manager:renew-ssl';
+        $findCronJob = CronJob::where('command', $cronJobCommand)->first();
+        if (! $findCronJob) {
+            $cronJob = new CronJob();
+            $cronJob->schedule = '0 0 * * *';
+            $cronJob->command = $cronJobCommand;
+            $cronJob->user = 'root';
+            $cronJob->save();
+        }
+    }
+
 }
