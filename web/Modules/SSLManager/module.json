@@ -6,7 +6,7 @@
     "priority": 0,
     "logoIcon": "ssl_manager-logo",
     "category": "Security",
-    "adminUrl": "/admin/ssl-manager/ssl-manager-certificates",
+    "adminUrl": "/admin/certificates",
     "providers": [
         "Modules\\SSLManager\\App\\Providers\\SSLManagerServiceProvider"
     ],
