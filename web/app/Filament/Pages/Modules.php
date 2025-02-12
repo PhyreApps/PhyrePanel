@@ -66,6 +66,7 @@ class Modules extends Page
         if ($findModule) {
             $findModule->delete();
         }
+       shell_exec('phyre-php /usr/local/phyre/web/artisan module:disable ' . $module);
     }
 
     public function openInstallModal($module)
@@ -99,6 +100,8 @@ class Modules extends Page
         ModulesManager::saveInstalledModule($module);
 
         $this->installLogPulling = false;
+
+        shell_exec('phyre-php /usr/local/phyre/web/artisan module:enable ' . $module);
 
         $moduleInfo = ModulesManager::getModuleInfo($module);
         if (isset($moduleInfo['adminUrl'])) {

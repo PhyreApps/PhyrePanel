@@ -41,8 +41,10 @@
             <div class="sm:flex gap-3 px-6 py-6 rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10">
                 <div class="">
                     <div class="flex flex-col items-center w-16">
-                        <x-filament::icon :icon="$module['logoIcon']"
-                                          class="w-12 h-12 text-primary-500"/>
+
+
+                       {!! $module['iconRendered'] !!}
+
                     </div>
                 </div>
                 <div class="flex justify-between items-center w-full">

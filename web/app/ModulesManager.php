@@ -61,12 +61,21 @@ class ModulesManager
         if ($findModule) {
             $installed = 1;
         }
+
+//        $iconUrl = route('module.icon.render', ['module' => $module]);
+
+        $iconRendered = '';
+        if (file_exists(base_path($logoIcon))) {
+            $iconRendered = file_get_contents(base_path($logoIcon));
+        }
+
         return [
             'name' => $module,
-            'description' => 'A drag and drop website builder and a powerful next-generation CMS.',
+            'description' => '',
             'url' => $url,
             'adminUrl' => $adminUrl,
-            'iconUrl' => url('images/modules/' . $module . '.png'),
+//            'iconUrl' => $iconUrl,
+            'iconRendered'=>$iconRendered,
             'logoIcon' => $logoIcon,
             'category' => $category,
             'installed'=>$installed,

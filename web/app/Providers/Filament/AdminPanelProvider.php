@@ -55,7 +55,9 @@ class AdminPanelProvider extends PanelProvider
             ->navigationGroups([
                 'Hosting Services' => NavigationGroup::make()->label('Hosting Services'),
                 // 'Docker' => NavigationGroup::make()->label('Docker'),
-                'SSL Manager'=> NavigationGroup::make()->label('SSL Manager')->icon('ssl_manager-logo'),
+                'SSL Manager'=> NavigationGroup::make()->label('SSL Manager')
+//                    ->icon('ssl_manager-logo')
+                ,
                 'Server Management' => NavigationGroup::make()->label('Server Management'),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
@@ -98,7 +100,7 @@ class AdminPanelProvider extends PanelProvider
         $defaultColor = Color::Yellow;
         $brandLogo = null;
         $brandName = null;
-        $isAppInstalled = file_exists(storage_path('installed')); 
+        $isAppInstalled = file_exists(storage_path('installed'));
         if ($isAppInstalled && !(php_sapi_name() === 'cli' || php_sapi_name() === 'phpdbg')) {
             if (setting('general.brand_logo_url')) {
                 $brandLogo = setting('general.brand_logo_url');
@@ -152,7 +154,7 @@ class AdminPanelProvider extends PanelProvider
         } else {
             $panel->brandLogo(asset('images/phyre-logo.svg'));
         }
-        
+
         $panel->brandLogoHeight('2.2rem')
         ->colors([
             'primary'=>$defaultColor,

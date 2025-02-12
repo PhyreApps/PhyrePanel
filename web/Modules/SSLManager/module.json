@@ -4,7 +4,7 @@
     "description": "",
     "keywords": [],
     "priority": 0,
-    "logoIcon": "ssl_manager-logo",
+    "logoIcon": "/Modules/SSLManager/resources/assets/ssl-manager-svg/logo.svg",
     "category": "Security",
     "adminUrl": "/admin/certificates",
     "providers": [

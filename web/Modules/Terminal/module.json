@@ -4,7 +4,7 @@
     "description": "",
     "keywords": [],
     "priority": 0,
-    "logoIcon": "heroicon-o-command-line",
+    "logoIcon": "Modules/Terminal/resources/assets/terminal-svg/logo.svg",
     "category": "DevOps",
     "adminUrl": "/admin/terminal",
     "providers": [

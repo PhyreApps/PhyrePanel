@@ -34,3 +34,24 @@ Route::get('backup/download', [\App\Http\Controllers\BackupDownloadController::c
 
 Route::get('/customers/{id}/login-with-token', [\App\Http\Controllers\Api\CustomersController::class, 'loginWithToken'])
     ->name('customers.login-with-token');
+//
+//
+//Route::get('module/{module}/icon', function ($module) {
+//
+//    $moduleInfo = \App\ModulesManager::getModuleInfo($module);
+//    if (empty($moduleInfo)) {
+//        return response()->json(['error' => 'Module not found'], 404);
+//    }
+//    if (!isset($moduleInfo['logoIcon'])) {
+//        return response()->json(['error' => 'Module icon not found'], 404);
+//    }
+//    if (!file_exists(base_path($moduleInfo['logoIcon']))) {
+//        return response()->json(['error' => 'Module icon not found'], 404);
+//    }
+//
+//    $icon = file_get_contents(base_path($moduleInfo['logoIcon']));
+//
+//    return response($icon)->header('Content-Type', 'image/svg+xml');
+//
+//
+//})->name('module.icon.render');
