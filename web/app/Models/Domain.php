@@ -11,7 +11,7 @@ use App\ShellApi;
 use App\VirtualHosts\DTO\ApacheVirtualHostSettings;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Modules\Docker\App\Models\DockerContainer;
+// use Modules\Docker\App\Models\DockerContainer;
 
 class Domain extends Model
 {
@@ -325,17 +325,17 @@ class Domain extends Model
                 }
 
             }
-            if ($this->server_application_type == 'apache_docker') {
-                if (isset($this->server_application_settings['docker_container_id'])) {
-                    $findDockerContainer = DockerContainer::where('id', $this->server_application_settings['docker_container_id'])
-                        ->first();
-                    if ($findDockerContainer) {
-                        $apacheVirtualHostBuilder->setProxyPass('http://127.0.0.1:' . $findDockerContainer->external_port . '/');
-                        $apacheVirtualHostBuilder->setAppType('docker');
-                        $apacheVirtualHostBuilder->setAppVersion($appVersion);
-                    }
-                }
-            }
+            // if ($this->server_application_type == 'apache_docker') {
+            //     if (isset($this->server_application_settings['docker_container_id'])) {
+            //         $findDockerContainer = DockerContainer::where('id', $this->server_application_settings['docker_container_id'])
+            //             ->first();
+            //         if ($findDockerContainer) {
+            //             $apacheVirtualHostBuilder->setProxyPass('http://127.0.0.1:' . $findDockerContainer->external_port . '/');
+            //             $apacheVirtualHostBuilder->setAppType('docker');
+            //             $apacheVirtualHostBuilder->setAppVersion($appVersion);
+            //         }
+            //     }
+            // }
         }
 
         $virtualHostSettings = $apacheVirtualHostBuilder->getSettings();
