@@ -11,12 +11,12 @@ cd /usr/local/phyre/web
 
 
 mysql -uroot -proot <<MYSQL_SCRIPT
-SET GLOBAL validate_password.policy = LOW;
-SET GLOBAL validate_password.length = 6;
-SET GLOBAL validate_password.mixed_case_count = 0;
-SET GLOBAL validate_password.number_count = 0;
-SET GLOBAL validate_password.special_char_count = 0;
-FLUSH PRIVILEGES;
+  SET GLOBAL validate_password.policy = LOW;
+  SET GLOBAL validate_password.length = 6;
+  SET GLOBAL validate_password.mixed_case_count = 0;
+  SET GLOBAL validate_password.number_count = 0;
+  SET GLOBAL validate_password.special_char_count = 0;
+  FLUSH PRIVILEGES;
 MYSQL_SCRIPT
 
 # Create MySQL user
