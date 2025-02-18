@@ -54,7 +54,5 @@ class InstallApache extends Command
             }
         }
 
-        // This will create cron for SSL renewal
-        shell_exec('phyre-php /usr/local/phyre/web/artisan ssl-manager:renew-ssl');
     }
 }
