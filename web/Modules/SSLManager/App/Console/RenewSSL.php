@@ -47,7 +47,11 @@ class RenewSSL extends Command
                     $this->info('SSL certificate for ' . $domain->domain . ' is valid');
                 } else {
                     $this->info('SSL certificate for ' . $domain->domain . ' is expired');
-                    $this->_renewSSL($domain);
+                    try {
+                        $this->_renewSSL($domain);
+                    } catch (\Exception $e) {
+                        $this->error($e->getMessage());
+                    }
                 }
             }
 
