@@ -92,8 +92,8 @@ class CertificateResource extends Resource
     {
         return [
             'index' => Pages\ListCertificates::route('/'),
-            'create' => Pages\CreateCertificate::route('/create'),
-            'edit' => Pages\EditCertificate::route('/{record}/edit'),
+//            'create' => Pages\CreateCertificate::route('/create'),
+//            'edit' => Pages\EditCertificate::route('/{record}/edit'),
         ];
     }
 }
