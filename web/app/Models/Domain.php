@@ -11,6 +11,8 @@ use App\ShellApi;
 use App\VirtualHosts\DTO\ApacheVirtualHostSettings;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Modules\SSLManager\App\Jobs\SecureDomain;
+
 // use Modules\Docker\App\Models\DockerContainer;
 
 class Domain extends Model
@@ -84,7 +86,19 @@ class Domain extends Model
 
             $model->configureVirtualHost(true);
 
-            ApacheBuild::dispatch();
+            try {
+                $build = new ApacheBuild();
+                $build->handle();
+            } catch (\Exception $e) {
+//                $this->error($e->getMessage());
+            }
+
+            try {
+                $run = new SecureDomain($model->id);
+                $run->handle();
+            } catch (\Exception $e) {
+//                $this->error($e->getMessage());
+            }
 
         });
 
@@ -234,7 +248,7 @@ class Domain extends Model
 
         $appType = 'php';
         $appVersion = '8.3';
-    
+
 
         if ($this->server_application_type == 'apache_php') {
             if (isset($this->server_application_settings['php_version'])) {
