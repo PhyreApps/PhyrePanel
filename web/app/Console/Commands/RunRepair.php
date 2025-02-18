@@ -79,7 +79,7 @@ class RunRepair extends Command
 
         $this->fixApacheErrors();
 
-        shell_exec('phyre-php /usr/local/phyre/web/artisan ssl-manager:renew-ssl');
+        echo shell_exec('phyre-php /usr/local/phyre/web/artisan ssl-manager:renew-ssl');
 
     }
 
