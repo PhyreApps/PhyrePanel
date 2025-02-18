@@ -232,6 +232,7 @@ class Domain extends Model
 
         $appType = 'php';
         $appVersion = '8.3';
+        $this->server_application_type = 'apache_php';
 
         if ($this->server_application_type == 'apache_php') {
             if (isset($this->server_application_settings['php_version'])) {
