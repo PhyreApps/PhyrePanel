@@ -147,6 +147,8 @@ class Domain extends Model
             }
         }
 
+         $this->server_application_type = 'apache_php';
+
         if ($this->is_installed_default_app_template == null) {
             $this->is_installed_default_app_template = 1;
             $this->saveQuietly();
@@ -232,7 +234,7 @@ class Domain extends Model
 
         $appType = 'php';
         $appVersion = '8.3';
-        $this->server_application_type = 'apache_php';
+    
 
         if ($this->server_application_type == 'apache_php') {
             if (isset($this->server_application_settings['php_version'])) {
