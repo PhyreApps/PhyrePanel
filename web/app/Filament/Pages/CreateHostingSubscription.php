@@ -2,8 +2,13 @@
 
 namespace App\Filament\Pages;
 
+use App\Jobs\ApacheBuild;
+use App\Models\Domain;
+use App\Models\HostingSubscription;
+use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Wizard;
@@ -12,6 +17,8 @@ use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Support\Exceptions\Halt;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\HtmlString;
 
 class CreateHostingSubscription extends Page
 {
@@ -166,9 +173,57 @@ EOT;
                             })
                             ->suffixIcon('heroicon-m-lock-closed'),
                     ]),
-            ])->columnSpanFull(),
+            ])
+                ->submitAction(new HtmlString(Blade::render(<<<BLADE
+                    <x-filament::button
+                        wire:loading.attr="disabled"
+                        wire:click="createHostingAccount"
+                    >
+                        Create Hosting Account
+                    </x-filament::button>
+                BLADE)))
+                ->columnSpanFull(),
 
         ]);
+    }
+
+    public function createHostingAccount()
+    {
+        $domain = $this->state['domain'];
+        $findDomain = Domain::where('domain', $domain)->first();
+        if ($findDomain) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Domain already exists',
+            ], 400);
+        }
+
+        if (!empty($this->state['system_username'])) {
+            $findHostingSubscription = HostingSubscription::where('system_username', $this->state['system_username'])->first();
+            if ($findHostingSubscription) {
+                throw new Halt('System username already exists');
+            }
+        }
+
+        $hostingSubscription = new HostingSubscription();
+        $hostingSubscription->customer_id = $this->state['customer_id'];
+        $hostingSubscription->hosting_plan_id = $this->state['hosting_plan_id'];
+        $hostingSubscription->domain = $domain;
+
+        if (isset($this->state['system_username'])) {
+            $hostingSubscription->system_username = $this->state['system_username'];
+        }
+
+        if (isset($this->state['system_password'])) {
+            $hostingSubscription->system_password = $this->state['system_password'];
+        }
+
+        $hostingSubscription->setup_date = Carbon::now();
+        $hostingSubscription->save();
+        
+        ApacheBuild::dispatchSync();
+
+
     }
 
     public function firstVerifyDomainAction(): Action
