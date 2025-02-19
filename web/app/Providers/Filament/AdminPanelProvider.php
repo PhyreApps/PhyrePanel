@@ -48,7 +48,7 @@ class AdminPanelProvider extends PanelProvider
              ->unsavedChangesAlerts()
              ->globalSearch(true)
              ->databaseNotifications()
-            ->font('Anek Latin')
+            ->font('Exo 2')
             ->sidebarWidth('15rem')
           //  ->brandLogo(fn () => view('filament.admin.logo'))
             ->navigationGroups([

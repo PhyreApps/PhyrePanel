@@ -2,13 +2,16 @@
 
 namespace App\Filament\Pages;
 
+use Filament\Actions\Action;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Support\Exceptions\Halt;
 
 class CreateHostingSubscription extends Page
 {
@@ -24,9 +27,65 @@ class CreateHostingSubscription extends Page
 
     protected static ?string $title = 'Create Hosting Account';
 
+    public $state = [];
+
+    public function verifyDomain($domain)
+    {
+
+        $verifyPHPContent = <<<EOT
+<?php
+if (isset(\$_GET['verified'])) {
+    echo 'Domain verified';
+}
+?>
+EOT;
+;
+        $file = fopen("/var/www/html/verify.php", "w") or die("Unable to open file!");
+        fwrite($file, $verifyPHPContent);
+        fclose($file);
+
+        $errors = [];
+
+        // Check if domain is pointing to the server
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, "http://$domain/verify.php?verified=1");
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        $result = curl_exec($curl);
+        curl_close($curl);
+
+        if ($result !== 'Domain verified') {
+            $errors[] = 'Domain not pointing to the server';
+        }
+
+        // Check if www. domain is pointing to the server
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, "http://www.$domain/verify.php?verified=1");
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        $result = curl_exec($curl);
+        curl_close($curl);
+
+        if ($result !== 'Domain verified') {
+            $errors[] = 'www. domain not pointing to the server';
+        }
+
+        return [
+            'errors' => $errors,
+            'domain' => $domain
+        ];
+
+    }
+
     public function form(Form $form): Form
     {
-        return $form->schema([
+        return $form
+            ->statePath('state')
+            ->schema([
             Wizard::make([
                 Wizard\Step::make('Validation')
                     ->schema([
@@ -42,9 +101,24 @@ class CreateHostingSubscription extends Page
                             })
                             ->suffixIcon('heroicon-m-globe-alt')
                             ->columnSpanFull(),
-                    ])->afterValidation(function ($data) {
+                    ])->afterValidation(function () {
 
-                        dd(3);
+                        $domain = $this->state['domain'];
+                        // validate domain
+                        if (!filter_var($domain, FILTER_VALIDATE_DOMAIN)) {
+                            $this->addError('domain', 'Invalid domain name');
+                            return;
+                        }
+
+                        // Verify domain if pointing to the server
+                        $verify = $this->verifyDomain($domain);
+                        if (isset($verify['errors']) && count($verify['errors']) > 0) {
+                            foreach ($verify['errors'] as $error) {
+                                new Notification('error', $error);
+                            }
+                            $this->replaceMountedAction('firstVerifyDomain', ['domain' => $domain]);
+                            throw new Halt();
+                        }
 
                     }),
                 Wizard\Step::make('Customer Information')
@@ -95,6 +169,21 @@ class CreateHostingSubscription extends Page
             ])->columnSpanFull(),
 
         ]);
+    }
+
+    public function firstVerifyDomainAction(): Action
+    {
+
+        // Get current server IP
+        $serverIp = shell_exec("hostname -I | cut -d' ' -f1");
+        $serverIp = trim($serverIp);
+
+        return Action::make('Verifying Domain')
+            ->modalContent(view('filament.pages.create-hosting-subscription.verify-domain-modal', [
+                'domain' => $this->state['domain'],
+                'serverIp' =>$serverIp
+            ]))
+            ->modalSubmitActionLabel('Continue');
     }
 
 }
