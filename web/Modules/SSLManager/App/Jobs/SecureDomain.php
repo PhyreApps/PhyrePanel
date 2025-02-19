@@ -43,7 +43,7 @@ class SecureDomain
         }
 
         shell_exec('chmod +x /usr/local/phyre/web/Modules/SSLManager/shell/acme.sh');
-        $exec = shell_exec("bash /usr/local/phyre/web/Modules/SSLManager/shell/acme.sh  --register-account  -m " . $generalSettings['master_email'] . " --server zerossl");
+        $exec = shell_exec("bash /usr/local/phyre/web/Modules/SSLManager/shell/acme.sh  --register-account  -m " . $generalSettings['master_email'] . " --server letsencrypt");
 
         $tmpFile = '/tmp/acme-sh-zerossl-http-secure-command-' . $findDomain->id . '.sh';
         $certbotHttpSecureCommand = view('sslmanager::actions.acme-sh-http-secure-command', [
