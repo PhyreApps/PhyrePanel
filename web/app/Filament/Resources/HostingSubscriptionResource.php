@@ -20,16 +20,17 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
+use Filament\Forms\Components\Wizard;
 
 class HostingSubscriptionResource extends Resource
 {
     protected static ?string $model = HostingSubscription::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-star';
+    protected static ?string $navigationIcon = 'heroicon-o-server-stack';
 
     protected static ?string $navigationGroup = 'Hosting Services';
 
-    protected static ?string $label = 'Subscriptions';
+    protected static ?string $label = 'Hosting Accounts';
 
     protected static ?int $navigationSort = 2;
 
@@ -40,74 +41,7 @@ class HostingSubscriptionResource extends Resource
         return $form
             ->schema([
 
-                Section::make('Hosting Subscription Information')->schema([
 
-//                    Forms\Components\Placeholder::make('Website Link')
-//                        ->hidden(function ($record) {
-//                            if (isset($record->exists)) {
-//                                return false;
-//                            } else {
-//                                return true;
-//                            }
-//                        })
-//                        ->content(fn($record) => new HtmlString('
-//                    <a href="http://' . $record->domain . '" target="_blank" class="text-sm font-medium text-primary-600 dark:text-primary-400">
-//                           http://' . $record->domain . '
-//                    </a>')),
-
-                    Forms\Components\TextInput::make('domain')
-                        ->required()
-                        ->regex('/^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/i')
-                        ->disabled(function ($record) {
-                            if (isset($record->exists)) {
-                                return $record->exists;
-                            } else {
-                                return false;
-                            }
-                        })
-                        ->suffixIcon('heroicon-m-globe-alt')
-                        ->columnSpanFull(),
-
-                    Forms\Components\Select::make('customer_id')
-                        ->label('Customer')
-                        ->options(
-                            \App\Models\Customer::all()->pluck('name', 'id')
-                        )
-                        ->required()->columnSpanFull(),
-
-                    Forms\Components\Select::make('hosting_plan_id')
-                        ->label('Hosting Plan')
-                        ->options(
-                            \App\Models\HostingPlan::all()->pluck('name', 'id')
-                        )
-                        ->required()->columnSpanFull(),
-
-                    Forms\Components\Checkbox::make('advanced')
-                        ->live()
-                        ->columnSpanFull(),
-
-                    Forms\Components\TextInput::make('system_username')
-                        ->hidden(fn(Forms\Get $get): bool => !$get('advanced'))
-                        ->disabled(function ($record) {
-                            if (isset($record->exists)) {
-                                return $record->exists;
-                            } else {
-                                return false;
-                            }
-                        })
-                        ->suffixIcon('heroicon-m-user'),
-
-                    Forms\Components\TextInput::make('system_password')
-                        ->hidden(fn(Forms\Get $get): bool => !$get('advanced'))
-                        ->disabled(function ($record) {
-                            if (isset($record->exists)) {
-                                return $record->exists;
-                            } else {
-                                return false;
-                            }
-                        })
-                        ->suffixIcon('heroicon-m-lock-closed'),
-                ]),
 
             ]);
     }
@@ -176,13 +110,13 @@ class HostingSubscriptionResource extends Resource
                     ->icon('heroicon-m-arrow-top-right-on-square')
                     ->color('gray')
                     ->url(fn($record): string => 'http://' . $record->domain, true),
-                Tables\Actions\EditAction::make(),
+//                Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+//                Tables\Actions\BulkActionGroup::make([
+//                    Tables\Actions\DeleteBulkAction::make(),
+//                ]),
             ]);
     }
 
@@ -205,8 +139,7 @@ class HostingSubscriptionResource extends Resource
     {
         return [
             'index' => Pages\ListHostingSubscriptions::route('/'),
-            'create' => Pages\CreateHostingSubscription::route('/create'),
-            'edit' => Pages\EditHostingSubscription::route('/{record}/edit'),
+//            'edit' => Pages\EditHostingSubscription::route('/{record}/edit'),
         ];
     }
 

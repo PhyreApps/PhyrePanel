@@ -35,7 +35,6 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-
          $panel->default()
             ->darkMode(true)
             ->id('admin')
@@ -49,8 +48,8 @@ class AdminPanelProvider extends PanelProvider
              ->unsavedChangesAlerts()
              ->globalSearch(true)
              ->databaseNotifications()
-            ->font('Albert Sans')
-            ->sidebarWidth('15rem')
+//            ->font('Albert Sans')
+//            ->sidebarWidth('15rem')
           //  ->brandLogo(fn () => view('filament.admin.logo'))
             ->navigationGroups([
                 'Hosting Services' => NavigationGroup::make()->label('Hosting Services'),

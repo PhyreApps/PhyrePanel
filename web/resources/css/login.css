@@ -1,0 +1,15 @@
+.fi-simple-layout {
+    > .fi-simple-main-ctn {
+        @apply bg-[#4880FF] dark:bg-[var(--ds-dark-bg-primary-color)];
+        @apply bg-[url(/vendor/nuxtifyts/dash-stack-theme/dash-stack-shape.svg)];
+        @apply bg-no-repeat bg-cover;
+
+        > .fi-simple-main {
+            @apply bg-white dark:bg-[var(--ds-dark-bg-secondary-color)] rounded-3xl;
+
+            .fi-simple-header-heading {
+                @apply text-2xl;
+            }
+        }
+    }
+}

@@ -331,7 +331,7 @@ class DomainResource extends Resource
                     ->color('gray')
                     ->url(fn ($record): string => 'http://'.$record->domain, true),
 
-                Tables\Actions\EditAction::make(),
+//                Tables\Actions\EditAction::make(),
 
             ])
             ->filters([
@@ -362,8 +362,8 @@ class DomainResource extends Resource
     {
         return [
             'index' => Pages\ListDomains::route('/'),
-            'create' => Pages\CreateDomain::route('/create'),
-            'edit' => Pages\EditDomain::route('/{record}/edit'),
+//            'create' => Pages\CreateDomain::route('/create'),
+//            'edit' => Pages\EditDomain::route('/{record}/edit'),
 //            'view' => Pages\ViewDomain::route('/{record}'),
         ];
     }
