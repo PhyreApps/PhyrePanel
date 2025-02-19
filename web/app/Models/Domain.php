@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Actions\ApacheWebsiteDelete;
 use App\Events\DomainIsCreated;
+use App\Events\DomainIsDeleted;
 use App\Events\ModelDomainDeleting;
 use App\Jobs\ApacheBuild;
 use App\Models\Scopes\CustomerHostingSubscriptionScope;
@@ -121,6 +122,8 @@ class Domain extends Model
         static::deleted(function ($model) {
 
             ApacheBuild::dispatch();
+
+            event(new DomainIsDeleted($model));
 
         });
 
