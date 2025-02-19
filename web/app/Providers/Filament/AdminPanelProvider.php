@@ -48,8 +48,8 @@ class AdminPanelProvider extends PanelProvider
              ->unsavedChangesAlerts()
              ->globalSearch(true)
              ->databaseNotifications()
-//            ->font('Albert Sans')
-//            ->sidebarWidth('15rem')
+            ->font('Anek Latin')
+            ->sidebarWidth('15rem')
           //  ->brandLogo(fn () => view('filament.admin.logo'))
             ->navigationGroups([
                 'Hosting Services' => NavigationGroup::make()->label('Hosting Services'),
