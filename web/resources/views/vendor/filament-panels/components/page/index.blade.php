@@ -147,10 +147,20 @@
     <x-filament-panels::unsaved-action-changes-alert />
 
     <div class="text-sm dark:text-white/40 text-center mb-4">
-        © 2023-2024 <a href="#" class="hover:underline"> PHYRE - Web Hosting Panel ™</a>. All Rights Reserved.
-        <br />
+        <div style="width: 700px; margin: 0 auto;">
+            PhyrePanel is currently in beta, so some features may not work as expected.
+            <br />
+            If you'd like to support development and help resolve issues, consider <a href="https://www.buymeacoffee.com/phyre">buying a coffee. ☕ </a>
+        </div>
+
         <a href="https://www.buymeacoffee.com/phyre" style="display: inline-block;margin: 15px 0px;">
             <img src="https://img.buymeacoffee.com/button-api/?text=Support Phyre Panel&emoji=&slug=phyre&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Support Phyre Panel" style="height: 30px !important; ">
         </a>
+        <br />
+        <div>
+            © 2023-2024 <a href="#" class="hover:underline"> PHYRE - Web Hosting Panel ™</a>. All Rights Reserved.
+            <br />
+            <br />
+        </div>
     </div>
 </div>
