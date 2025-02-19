@@ -22,6 +22,11 @@ class RepairTool extends Page
         session()->flash('message', 'RunRepair command executed successfully.');
     }
 
+    public function runRenewSSL()
+    {
+        Artisan::call('ssl-manager:renew-ssl');
+        session()->flash('message', 'RenewSSL command executed successfully.');
+    }
     public function runDomainRepair()
     {
         Artisan::call('phyre:run-domain-repair');
