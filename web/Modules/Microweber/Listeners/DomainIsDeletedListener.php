@@ -33,13 +33,12 @@ class DomainIsDeletedListener
     public function handle(DomainIsDeleted $event): void
     {
 
-
         try {
             $newMwScan = new MicroweberScanner();
             $newMwScan->handle();
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
         }
-        
+
     }
 }
