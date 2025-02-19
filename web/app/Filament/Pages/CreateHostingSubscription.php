@@ -120,9 +120,6 @@ EOT;
                         // Verify domain if pointing to the server
                         $verify = $this->verifyDomain($domain);
                         if (isset($verify['errors']) && count($verify['errors']) > 0) {
-                            foreach ($verify['errors'] as $error) {
-                                new Notification('error', $error);
-                            }
                             $this->replaceMountedAction('firstVerifyDomain', ['domain' => $domain]);
                             throw new Halt();
                         }
@@ -192,16 +189,15 @@ EOT;
         $domain = $this->state['domain'];
         $findDomain = Domain::where('domain', $domain)->first();
         if ($findDomain) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Domain already exists',
-            ], 400);
+            $this->replaceMountedAction('errorModal', ['message' => 'Domain already exists']);
+           return;
         }
 
         if (!empty($this->state['system_username'])) {
             $findHostingSubscription = HostingSubscription::where('system_username', $this->state['system_username'])->first();
             if ($findHostingSubscription) {
-                throw new Halt('System username already exists');
+                $this->replaceMountedAction('errorModal', ['message' => 'System username already exists']);
+                return;
             }
         }
 
@@ -220,10 +216,21 @@ EOT;
 
         $hostingSubscription->setup_date = Carbon::now();
         $hostingSubscription->save();
-        
+
         ApacheBuild::dispatchSync();
 
+        return redirect(route('filament.admin.resources.hosting-subscriptions.index'));
 
+    }
+
+    public function errorModalAction(): Action
+    {
+
+        return Action::make('error')
+            ->modalContent(view('filament.pages.create-hosting-subscription.error-modal', [
+                'domain' => $this->state['domain']
+            ]))
+            ->modalSubmitActionLabel('Ok');
     }
 
     public function firstVerifyDomainAction(): Action
