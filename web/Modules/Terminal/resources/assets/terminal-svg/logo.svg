@@ -104,13 +104,15 @@
      id="layer1"
      transform="translate(0,-289.0625)">
     <ellipse
+        fill="currentColor"
        cy="301.98773"
        cx="16.607477"
        id="circle863"
-       style="opacity:1;fill:#40cd8b;fill-opacity:1;stroke:none;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:1;fill-opacity:1;stroke:none;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        r="6" />
     <path
-       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+        fill="currentColor"
+       style="opacity:1;fill-opacity:1;stroke:none;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 5 3 C 3.892 3 3 3.892 3 5 L 3 25 C 3 26.108 3.892 27 5 27 L 25 27 C 26.108 27 27 26.108 27 25 L 27 5 C 27 3.892 26.108 3 25 3 L 5 3 z M 6.875 8.3964844 L 13.394531 12.421875 L 13.394531 14.056641 L 6.9257812 18.082031 L 6 16.734375 L 11.761719 13.248047 L 6 9.7949219 L 6.875 8.3964844 z M 15.578125 20.052734 L 24 20.052734 L 24 21.603516 L 15.578125 21.603516 L 15.578125 20.052734 z "
        transform="translate(0,289.0625)"
        id="rect901" />
