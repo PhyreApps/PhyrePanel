@@ -11,10 +11,10 @@
         <li>Add a new <strong>A Record</strong> with the following details:</li>
     </ol>
 
-    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+    <div class="overflow-x-auto bg-white dark:bg-white/5 shadow-md rounded-lg">
         <table class="min-w-full text-left table-auto">
             <thead>
-            <tr class="bg-primary-500 text-white">
+            <tr class="bg-primary-500 dark:bg-white/5 text-white">
                 <th class="py-2 px-4">Record Type</th>
                 <th class="py-2 px-4">Host/Name</th>
                 <th class="py-2 px-4">Value (IP Address)</th>
@@ -41,9 +41,9 @@
     <p class="mt-4"><strong>4.</strong> Save the changes and wait for DNS propagation (may take a few minutes to several hours).</p>
     <p class="mt-2"><strong>5.</strong> Verify by checking your domain with this command:</p>
 
-    <pre class="bg-gray-200 p-2 rounded-md my-2"><code>nslookup {{$domain}}</code></pre>
+    <pre class="bg-gray-200 dark:bg-white/5 p-2 rounded-md my-2"><code>nslookup {{$domain}}</code></pre>
     <p>or</p>
-    <pre class="bg-gray-200 p-2 rounded-md my-2"><code>dig A {{$domain}} +short</code></pre>
+    <pre class="bg-gray-200 dark:bg-white/5 p-2 rounded-md my-2"><code>dig A {{$domain}} +short</code></pre>
 
     <p class="mt-4"><strong>🔹 Note:</strong> If you want to set up a subdomain (e.g., <code>app.{{$domain}}</code>), use <code>app</code> in the <strong>Host/Name</strong> field instead of <code>@</code>.</p>
 
