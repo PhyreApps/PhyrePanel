@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: phyre-db
+    environment:
+      MYSQL_ROOT_PASSWORD: exampleRootPass
+      MYSQL_DATABASE: phyrepanel
+      MYSQL_USER: phyre
+      MYSQL_PASSWORD: examplePhyrePass
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - phyre_net
+
+  phyre-app:
+    build: .
+    container_name: phyre-app
+    depends_on:
+      - db
+    ports:
+      - "8443:8443"
+      - "8080:80"
+    environment:
+      # These environment variables are used by our entrypoint
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: phyrepanel
+      DB_USERNAME: phyre
+      DB_PASSWORD: examplePhyrePass
+      # Additional app settings
+      APP_ENV: local
+      APP_URL: "https://localhost:8443"
+      APP_NAME: PhyrePanel
+    networks:
+      - phyre_net
+
+volumes:
+  db_data:
+
+networks:
+  phyre_net:
+    driver: bridge
