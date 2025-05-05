@@ -185,7 +185,7 @@ class WildcardIssuer extends Page
 
         return [
             Wizard::make([
-                Wizard\Step::make('Install')
+                Wizard\Step::make('WildcardIssuer Install')
                     ->description('Issue new Wildcard SSL certificate for domain')
                     ->schema([
 
@@ -205,8 +205,10 @@ class WildcardIssuer extends Page
                         if (file_exists($this->installLogFilePath)) {
                             unlink($this->installLogFilePath);
                         }
+
                         $this->poolingInstallLog = true;
                         $log = $this->requestCertificates();
+
                         if (!isset($log['success'])) {
                             Notification::make()
                                 ->title('Failed to request SSL certificate.')
@@ -258,7 +260,7 @@ class WildcardIssuer extends Page
                             ->label('Installation Finished')
                     ]),
             ])
-                ->persistStepInQueryString(),
+            //    ->persistStepInQueryString(),
         ];
     }
 }

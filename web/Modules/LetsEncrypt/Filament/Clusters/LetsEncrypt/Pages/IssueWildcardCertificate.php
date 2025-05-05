@@ -32,15 +32,16 @@ class IssueWildcardCertificate extends BaseSettings
 
     public $poolingInstallLog = true;
     public $installLog = '';
-    public $installLogFilePath =  '/var/www/acme-wildcard-install.log';
+    public $installLogFilePath = '/var/www/acme-wildcard-install.log';
     public $installInstructions = [];
+    public ?array $data = [];
 
-    public static function getNavigationLabel() : string
+    public static function getNavigationLabel(): string
     {
         return 'Issue Wildcard Certificate';
     }
 
-    public function getFormActions() : array
+    public function getFormActions(): array
     {
         return [
 
@@ -81,7 +82,8 @@ class IssueWildcardCertificate extends BaseSettings
 
     }
 
-    public function requestCertificates() {
+    public function requestCertificates()
+    {
 
         $masterDomain = new MasterDomain();
         $masterDomain->domain = setting('general.wildcard_domain');
@@ -111,16 +113,29 @@ class IssueWildcardCertificate extends BaseSettings
         $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --renew -d '*.$masterDomain->domain' --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please";
         $acmeCommand = shell_exec($acmeCommand);
 
-        if (str_contains($acmeCommand, 'And the full-chain cert is in')) {
 
-            $checkCertificateFilesExist  = $this->checkCertificateFilesExist($masterDomain->domain);
+        $done = ['And the full-chain cert is in', 'seems to already have an'];
+
+        $isDone = false;
+
+        foreach ($done as $item) {
+            if (str_contains($acmeCommand, $item)) {
+                $isDone = true;
+              //  break;
+            }
+        }
+
+
+        if ($isDone) {
+
+            $checkCertificateFilesExist = $this->checkCertificateFilesExist($masterDomain->domain);
 
             if (isset($checkCertificateFilesExist['sslFiles']['certificateContent'])) {
 
-                $findWildcardSsl = DomainSslCertificate::where('domain', '*.'.$masterDomain->domain)->first();
+                $findWildcardSsl = DomainSslCertificate::where('domain', '*.' . $masterDomain->domain)->first();
                 if (!$findWildcardSsl) {
                     $findWildcardSsl = new DomainSslCertificate();
-                    $findWildcardSsl->domain = '*.'.$masterDomain->domain;
+                    $findWildcardSsl->domain = '*.' . $masterDomain->domain;
                     $findWildcardSsl->customer_id = 0;
                     $findWildcardSsl->is_active = 1;
                     $findWildcardSsl->is_wildcard = 1;
@@ -191,11 +206,11 @@ class IssueWildcardCertificate extends BaseSettings
             $this->getInstallLog();
         }
 
-        return [
 
+        $form->schema([
             Wizard::make([
-                Wizard\Step::make('Install')
-                ->description('Issue new wildcard SSL certificate for domain')
+                Wizard\Step::make('IssueWildcardCertificate Install')
+                    ->description('Issue new wildcard SSL certificate for domain')
                     ->schema([
                         TextInput::make('wildcard_domain')
                             ->helperText('Issue new wildcard SSL certificate for domain. Example: *.mysite.com')
@@ -204,8 +219,10 @@ class IssueWildcardCertificate extends BaseSettings
                         if (file_exists($this->installLogFilePath)) {
                             unlink($this->installLogFilePath);
                         }
+
                         $this->poolingInstallLog = true;
                         $log = $this->requestCertificates();
+
                         if (!isset($log['success'])) {
                             Notification::make()
                                 ->title('Failed to request SSL certificate.')
@@ -216,12 +233,12 @@ class IssueWildcardCertificate extends BaseSettings
                         }
                     }),
                 Wizard\Step::make('Verification')
-                   // ->description('Adding TXT record in DNS zone to verify domain ownership')
+                    // ->description('Adding TXT record in DNS zone to verify domain ownership')
                     ->schema([
 
-                       TextInput::make('installInstructions')
-                           ->view('letsencrypt::filament.wildcard_install_instructions')
-                           ->label('Installation Instructions')
+                        TextInput::make('installInstructions')
+                            ->view('letsencrypt::filament.wildcard_install_instructions')
+                            ->label('Installation Instructions')
 
 
                     ])->afterValidation(function () {
@@ -260,7 +277,9 @@ class IssueWildcardCertificate extends BaseSettings
                             ->label('Installation Finished')
                     ]),
             ])
-                ->persistStepInQueryString(),
-        ];
+        ]);
+
+        $form->statePath('data');
+        return $form;
     }
 }
