@@ -39,6 +39,7 @@ class RenewSSL extends Command
         $this->_checkForAutoRenewalCron();
 
         $getDomains = Domain::where('status', Domain::STATUS_ACTIVE)
+          //  ->where('domain', 'pgd-retirment-invitation.clould.microweber.me')
             ->get();
         if ($getDomains->count() > 0) {
             foreach ($getDomains as $domain) {
@@ -68,8 +69,15 @@ class RenewSSL extends Command
         // Renew SSL
         $this->info('Renewing SSL certificate for ' . $domain->domain);
 
-        $run = new SecureDomain($domain->id);
-        $run->handle();
+
+
+        try {
+            $secureDomain = new SecureDomain($domain->id);
+            $secureDomain->handle();
+            $this->info('SSL certificate renewed for ' . $domain->domain);
+        } catch (\Exception $e) {
+            $this->error('Error renewing SSL certificate: ' . $e->getMessage());
+        }
 
     }
 

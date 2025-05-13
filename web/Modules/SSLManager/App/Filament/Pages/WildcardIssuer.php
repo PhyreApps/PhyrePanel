@@ -82,9 +82,10 @@ class WildcardIssuer extends Page
         $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --register-account -m $this->masterEmail ";
         $acmeCommand = shell_exec($acmeCommand);
 
-        $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --issue -d '*.$wildcardDomain' --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please";
-        $acmeCommand = shell_exec($acmeCommand . " >> $this->installLogFilePath &");
+        $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --force --issue -d '*.$wildcardDomain' --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please";
+    //    dump($acmeCommand);
 
+        $acmeCommand = shell_exec($acmeCommand . " >> $this->installLogFilePath &");
         return [
             'success' => 'SSL certificate request sent.',
             'commandOutput' => $acmeCommand
@@ -98,9 +99,27 @@ class WildcardIssuer extends Page
         $wildcardDomain = str_replace('*.', '', $wildcardDomain);
 
         $acmeCommand = "bash /usr/local/phyre/web/Modules/LetsEncrypt/shell/acme.sh --renew -d '*.$wildcardDomain' --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please";
+
+
+//dd($acmeCommand);
         $acmeCommand = shell_exec($acmeCommand);
 
-        if (str_contains($acmeCommand, 'And the full-chain cert is in')) {
+        $isOkStrings = [
+           'And the full-chain cert is in',
+           'Skipping. Next renewal time is',
+           'Domains not changed',
+
+        ];
+
+        $isOk = false;
+        foreach ($isOkStrings as $isOkString) {
+            if (str_contains($acmeCommand, $isOkString)) {
+                $isOk = true;
+                break;
+            }
+        }
+
+        if ($isOk) {
 
             $checkCertificateFilesExist  = $this->checkCertificateFilesExist($wildcardDomain);
 

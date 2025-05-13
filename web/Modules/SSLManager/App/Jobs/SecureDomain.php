@@ -43,13 +43,12 @@ class SecureDomain
 
         //   $findWildcardSslAllValid = DomainSslCertificate::where('domain', '*.' . $domainNameForWildcard)->first();
         $findWildcardSslAllValid = DomainSslCertificate::where('is_wildcard', 1)
-            //    ->where('domain', '*.' . $domainNameForWildcard)
+          //    ->where('domain', '*.' . $domainNameForWildcard)
             ->where('is_active', 1)
             ->where('is_auto_renew', 1)
             ->get();
 
         //   "domain" => "*.cloud.microweber.me"
-
 
         if ($findWildcardSslAllValid) {
             foreach ($findWildcardSslAllValid as $wildcardSsl) {
@@ -110,7 +109,7 @@ class SecureDomain
                     $websiteSslCertificate->is_wildcard = 0;
                     $websiteSslCertificate->is_auto_renew = 1;
 
-                    $websiteSslCertificate->provider = 'WILDCARD';
+                    $websiteSslCertificate->provider = 'FROM_WILDCARD_DOMAIN';
                     $websiteSslCertificate->save();
 
                     $findDomain->configureVirtualHost(true);
