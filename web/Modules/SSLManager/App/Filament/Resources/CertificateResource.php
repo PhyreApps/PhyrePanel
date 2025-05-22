@@ -33,7 +33,7 @@ class CertificateResource extends Resource
     {
         return $form
             ->schema([
-                //
+
             ]);
     }
 
@@ -86,14 +86,15 @@ class CertificateResource extends Resource
         return [
             //
         ];
+
     }
 
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListCertificates::route('/'),
-//            'create' => Pages\CreateCertificate::route('/create'),
-//            'edit' => Pages\EditCertificate::route('/{record}/edit'),
+           'create' => Pages\CreateCertificate::route('/create'),
+            'edit' => Pages\EditCertificate::route('/{record}/edit'),
         ];
     }
 }

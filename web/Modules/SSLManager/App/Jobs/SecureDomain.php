@@ -158,12 +158,51 @@ class SecureDomain
         $zerSslCertIntermediate = '/root/.acme.sh/' . $domainName . '_ecc/ca.cer';
         $zerSslCertFullChain = '/root/.acme.sh/' . $domainName . '_ecc/fullchain.cer';
 
+
+        //try without www
+        if (!file_exists($zerSslCert)
+            || !file_exists($zerSslCertKey)
+            || !file_exists($zerSslCertFullChain)) {
+            $tmpFile = '/tmp/acme-sh-zerossl-http-secure-command-' . $findDomain->id . '.sh';
+            $certbotHttpSecureCommand = view('sslmanager::actions.acme-sh-http-secure-command', [
+                'domain' => $domainName,
+            //    'domainNameWww' => $domainNameWww,
+                'domainRoot' => $findDomain->domain_root,
+                'domainPublic' => $findDomain->domain_public,
+                'email' => $generalSettings['master_email'],
+                'country' => $generalSettings['master_country'],
+                'locality' => $generalSettings['master_locality'],
+                'organization' => $generalSettings['organization_name'],
+            ])->render();
+
+            file_put_contents($tmpFile, $certbotHttpSecureCommand);
+            shell_exec('chmod +x ' . $tmpFile);
+
+            $exec = shell_exec("bash $tmpFile");
+            unlink($tmpFile);
+
+            //check file
+            $zerSslCert = '/root/.acme.sh/' . $domainName . '_ecc/' . $domainName . '.cer';
+            $zerSslCertKey = '/root/.acme.sh/' . $domainName . '_ecc/' . $domainName . '.key';
+            $zerSslCertIntermediate = '/root/.acme.sh/' . $domainName . '_ecc/ca.cer';
+            $zerSslCertFullChain = '/root/.acme.sh/' . $domainName . '_ecc/fullchain.cer';
+        }
+
+
+
         if (!file_exists($zerSslCert)
             || !file_exists($zerSslCertKey)
             || !file_exists($zerSslCertFullChain)) {
             // Cant get all certificates
             throw new \Exception('Cant get certificates with ZeroSSL');
         }
+
+
+
+
+
+
+
 
 
         file_put_contents($sslCertificateFilePath, file_get_contents($zerSslCert));
