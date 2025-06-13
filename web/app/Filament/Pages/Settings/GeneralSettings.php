@@ -6,21 +6,24 @@ use App\Helpers;
 use App\Jobs\ApacheBuild;
 use App\MasterDomain;
 use Closure;
+use Filament\Actions\ActionGroup;
+use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Get;
+use Filament\Notifications\Notification;
+use Filament\Pages\Concerns\InteractsWithFormActions;
 use Illuminate\Support\Facades\Storage;
 use Monarobase\CountryList\CountryList;
 use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
-use Symfony\Component\Console\Input\Input;
 
 class GeneralSettings extends BaseSettings
 {
-
     protected static bool $shouldRegisterNavigation = false;
 
     public function save(): void
@@ -54,6 +57,16 @@ class GeneralSettings extends BaseSettings
 
     }
 
+    public function rebuildApacheConfig(): void
+    {
+        ApacheBuild::dispatchSync();
+
+        Notification::make()
+            ->title('Apache configuration rebuilt successfully')
+            ->success()
+            ->send();
+    }
+
     public function schema(): array|Closure
     {
 
@@ -83,6 +96,7 @@ class GeneralSettings extends BaseSettings
                             Textarea::make('general.master_domain_page_html'),
                             Textarea::make('general.domain_suspend_page_html'),
                             Textarea::make('general.domain_created_page_html'),
+
                         ]),
 
                     Tabs\Tab::make('Apache ports')
@@ -98,7 +112,12 @@ class GeneralSettings extends BaseSettings
                             Checkbox::make('general.apache_ssl_disabled')
                                 ->label('Disable SSL')
                                 ->helperText('If checked, the Apache server will not listen on port 443 for HTTPS requests.'),
-
+                            Actions::make([
+                                Actions\Action::make('rebuildApache')
+                                    ->label('Rebuild Apache Configuration')
+                                    ->button()
+                                    ->action(fn() => $this->rebuildApacheConfig())
+                            ]),
                         ]),
 
                     Tabs\Tab::make('Backups')
