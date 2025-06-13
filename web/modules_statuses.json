@@ -9,5 +9,6 @@
     "Mail": true,
     "Email": true,
     "Minecraft": true,
-    "SSLManager": true
+    "SSLManager": true,
+    "Caddy": true
 }

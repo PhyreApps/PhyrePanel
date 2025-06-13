@@ -1,0 +1,31 @@
+{
+    "name": "nwidart/caddy",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Caddy\\": "",
+            "Modules\\Caddy\\App\\": "app/",
+            "Modules\\Caddy\\Database\\Factories\\": "database/factories/",
+            "Modules\\Caddy\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Caddy\\Tests\\": "tests/"
+        }
+    }
+}

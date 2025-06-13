@@ -10,6 +10,7 @@ abstract class ModulePostInstall
     {
         return $this->supportLog;
     }
+
     public function setLogFile($logFile)
     {
         $this->logFile = $logFile;

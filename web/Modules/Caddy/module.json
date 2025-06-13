@@ -1,0 +1,11 @@
+{
+    "name": "Caddy",
+    "alias": "caddy",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Caddy\\App\\Providers\\CaddyServiceProvider"
+    ],
+    "files": []
+}
