@@ -33,16 +33,15 @@ class ApacheBuild implements ShouldQueue
         $virtualHosts = [];
 
 
-        file_put_contents(storage_path('logs/apache2.log'),1111);
+
+        // Get Apache port settings
+        $httpPort = setting('general.apache_http_port') ?? '80';
+        $httpsPort = setting('general.apache_https_port') ?? '443';
+        $sslDisabled = setting('general.apache_ssl_disabled') ?? false;
 
         foreach ($getAllDomains as $domain) {
             $isBroken = false;
-//            $findHostingSubscription = \App\Models\HostingSubscription::where('id', $domain->hosting_subscription_id)
-//                ->first();
-//            // check is valid domain
-//            if (!$findHostingSubscription) {
-//                $isBroken = true;
-//            }
+
             if ($domain->status === 'broken') {
                 continue;
             }
@@ -58,7 +57,6 @@ class ApacheBuild implements ShouldQueue
                 continue;
             }
 
-
             /* @var  Domain $domain */
             $virtualHostSettings = $domain->configureVirtualHost($this->fixPermissions);
 
@@ -72,7 +70,7 @@ class ApacheBuild implements ShouldQueue
             if (isset($virtualHostSettings['virtualHostSettings'])) {
                 $virtualHosts[] = $virtualHostSettings['virtualHostSettings'];
             }
-            if (isset($virtualHostSettings['virtualHostSettingsWithSSL']) and $virtualHostSettings['virtualHostSettingsWithSSL']) {
+            if (!$sslDisabled and isset($virtualHostSettings['virtualHostSettingsWithSSL']) and $virtualHostSettings['virtualHostSettingsWithSSL']) {
                 $virtualHosts[] = $virtualHostSettings['virtualHostSettingsWithSSL'];
             }
         }
@@ -85,14 +83,18 @@ class ApacheBuild implements ShouldQueue
             if (isset($domainVirtualHost['virtualHostSettings'])) {
                 $virtualHosts[] = $domainVirtualHost['virtualHostSettings'];
             }
-            if (isset($domainVirtualHost['virtualHostSettingsWithSSL']) and $domainVirtualHost['virtualHostSettingsWithSSL']) {
+            if (!$sslDisabled and isset($domainVirtualHost['virtualHostSettingsWithSSL']) and $domainVirtualHost['virtualHostSettingsWithSSL']) {
                 $virtualHosts[] = $domainVirtualHost['virtualHostSettingsWithSSL'];
             }
         }
 
+
         $apache2 = view('actions.samples.ubuntu.apache2-conf-build', [
             'virtualHosts' => $virtualHosts,
             'serverName' => setting('general.master_domain') ?? 'localhost',
+            'httpPort' => $httpPort,
+            'httpsPort' => $httpsPort,
+            'sslDisabled' => $sslDisabled,
         ])->render();
 
         $apache2 = preg_replace('~(*ANY)\A\s*\R|\s*(?!\r\n)\s$~mu', '', $apache2);
@@ -102,6 +104,5 @@ class ApacheBuild implements ShouldQueue
         shell_exec('cp /etc/apache2/apache2-process.conf /etc/apache2/apache2.conf');
 
         shell_exec('systemctl reload apache2'); // IMPORTANT: MUST BE RELOAD! NOT RESTART!
-
     }
 }

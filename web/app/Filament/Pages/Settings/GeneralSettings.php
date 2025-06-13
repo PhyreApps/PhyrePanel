@@ -23,14 +23,14 @@ class GeneralSettings extends BaseSettings
 
     protected static bool $shouldRegisterNavigation = false;
 
-    public function save() : void
+    public function save(): void
     {
         $oldMasterDomain = setting('general.master_domain');
 
         parent::save();
 
         // Overwrite supervisor config file
-        $workersCount = (int) setting('general.supervisor_workers_count');
+        $workersCount = (int)setting('general.supervisor_workers_count');
         $supervisorConf = view('actions.samples.ubuntu.supervisor-conf', [
             'workersCount' => $workersCount
         ])->render();
@@ -83,6 +83,22 @@ class GeneralSettings extends BaseSettings
                             Textarea::make('general.master_domain_page_html'),
                             Textarea::make('general.domain_suspend_page_html'),
                             Textarea::make('general.domain_created_page_html'),
+                        ]),
+
+                    Tabs\Tab::make('Apache ports')
+                        ->schema([
+                            TextInput::make('general.apache_http_port')
+                                ->default('80')
+                                ->numeric()
+                                ->helperText('Default is 80.'),
+                            TextInput::make('general.apache_https_port')
+                                ->default('443')
+                                ->numeric()
+                                ->helperText('Default is 443.'),
+                            Checkbox::make('general.apache_ssl_disabled')
+                                ->label('Disable SSL')
+                                ->helperText('If checked, the Apache server will not listen on port 443 for HTTPS requests.'),
+
                         ]),
 
                     Tabs\Tab::make('Backups')

@@ -274,6 +274,10 @@ class Domain extends Model
         $apacheVirtualHostBuilder->setUserGroup($webUserGroup);
         $apacheVirtualHostBuilder->setEnableLogs(true);
 
+        // Set the correct HTTP port from settings
+        $httpPort = setting('general.apache_http_port') ?? '80';
+        $apacheVirtualHostBuilder->setPort($httpPort);
+
         if ($this->status == self::STATUS_SUSPENDED) {
             $suspendedPath = '/var/www/html/suspended';
             if (!is_dir($suspendedPath)) {
@@ -389,7 +393,11 @@ class Domain extends Model
         }
 
         $virtualHostSettingsWithSSL = null;
-        if ($findDomainSSLCertificate) {
+
+        // Check if SSL is disabled in settings
+        $sslDisabled = setting('general.apache_ssl_disabled') ?? false;
+
+        if (!$sslDisabled && $findDomainSSLCertificate) {
 
             $sslCertificateFile = $this->home_root . '/certs/' . $this->domain . '/public/cert.pem';
             $sslCertificateKeyFile = $this->home_root . '/certs/' . $this->domain . '/private/key.private.pem';
@@ -423,7 +431,8 @@ class Domain extends Model
             }
 
             if (is_file($sslCertificateFile)) {
-                $apacheVirtualHostBuilder->setPort(443);
+                $httpsPort = setting('general.apache_https_port') ?? '443';
+                $apacheVirtualHostBuilder->setPort($httpsPort);
                 $apacheVirtualHostBuilder->setSSLCertificateFile($sslCertificateFile);
                 $apacheVirtualHostBuilder->setSSLCertificateKeyFile($sslCertificateKeyFile);
                 $apacheVirtualHostBuilder->setSSLCertificateChainFile($sslCertificateChainFile);

@@ -24,15 +24,17 @@ LogLevel warn
 IncludeOptional mods-enabled/*.load
 IncludeOptional mods-enabled/*.conf
 
-Listen 80
+Listen {{ $httpPort }}
 
+@if(!isset($sslDisabled) || $sslDisabled == false)
 <IfModule ssl_module>
-    Listen 443
+    Listen {{ $httpsPort }}
 </IfModule>
 
 <IfModule mod_gnutls.c>
-    Listen 443
+    Listen {{ $httpsPort }}
 </IfModule>
+@endif
 
 <Directory />
 Options FollowSymLinks
@@ -67,15 +69,15 @@ IncludeOptional conf-enabled/*.conf
 
 # Add default virtual host configuration:
 
-<VirtualHost *:80>
+<VirtualHost *:{{ $httpPort }}>
     ServerAdmin webmaster@localhost
     DocumentRoot /var/www/html
     ErrorLog ${APACHE_LOG_DIR}/error.log
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 
-
-<VirtualHost *:443>
+@if(!isset($sslDisabled) || $sslDisabled == false)
+<VirtualHost *:{{ $httpsPort }}>
     ServerAdmin webmaster@localhost
     DocumentRoot /var/www/html
 
@@ -94,7 +96,7 @@ IncludeOptional conf-enabled/*.conf
     SSLOptions +StdEnvVars
     </Directory>
 </VirtualHost>
-
+@endif
 
 # Include the virtual host configurations:
 
@@ -241,4 +243,3 @@ IncludeOptional conf-enabled/*.conf
 
 
 @endforeach
-

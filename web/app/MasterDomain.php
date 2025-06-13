@@ -48,6 +48,10 @@ class MasterDomain
         $apacheVirtualHost->setServerAdmin($this->email);
         $apacheVirtualHost->setDomainAlias('*.' . $this->domain);
 
+        // Set the correct HTTP port from settings
+        $httpPort = setting('general.apache_http_port') ?? '80';
+        $apacheVirtualHost->setPort($httpPort);
+
         $virtualHostSettings = $apacheVirtualHost->getSettings();
 
         if ($fixPermissions) {
@@ -88,8 +92,10 @@ class MasterDomain
 
         $virtualHostSettingsWithSSL = null;
 
-        if ($findDomainSSLCertificate) {
+        // Check if SSL is disabled in settings
+        $sslDisabled = setting('general.apache_ssl_disabled') ?? false;
 
+        if (!$sslDisabled && $findDomainSSLCertificate) {
             $certsFolderName = $findDomainSSLCertificate->domain;
             $certsFolderName = str_replace('*.', 'wildcard.', $certsFolderName);
 
@@ -116,14 +122,14 @@ class MasterDomain
                 file_put_contents($sslCertificateChainFile, $findDomainSSLCertificate->certificate_chain);
             }
             if (is_file($sslCertificateFile)) {
-                $apacheVirtualHost->setPort(443);
+                $httpsPort = setting('general.apache_https_port') ?? '443';
+                $apacheVirtualHost->setPort($httpsPort);
                 $apacheVirtualHost->setSSLCertificateFile($sslCertificateFile);
                 $apacheVirtualHost->setSSLCertificateKeyFile($sslCertificateKeyFile);
                 $apacheVirtualHost->setSSLCertificateChainFile($sslCertificateChainFile);
 
                 $virtualHostSettingsWithSSL = $apacheVirtualHost->getSettings();
             }
-
         }
         // End install SSL
 
@@ -144,11 +150,9 @@ class MasterDomain
             return false;
         }
 
-
         return [
             'virtualHostSettings' => $virtualHostSettings,
             'virtualHostSettingsWithSSL' => $virtualHostSettingsWithSSL ?? null
         ];
-
     }
 }
