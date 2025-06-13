@@ -237,10 +237,10 @@ sudo chown -R caddy:caddy /etc/caddy
 sudo chown -R caddy:caddy /var/log/caddy
 sudo chown -R caddy:caddy /var/lib/caddy
 
-# Fix permissions
+# Fix permissions (777 for log directory to allow multi-user write access)
 sudo chmod 755 /etc/caddy
 sudo chmod 644 /etc/caddy/Caddyfile
-sudo chmod 755 /var/log/caddy
+sudo chmod 777 /var/log/caddy
 ```
 
 ### Health Checks

@@ -1,13 +1,10 @@
 {
     email {{ $caddyEmail }}
     admin off
-    auto_https on
-    
+
     # Global options
     servers {
-        protocol {
-            experimental_http3
-        }
+        protocols h1 h2 h3
     }
 }
 
@@ -32,9 +29,7 @@
 		Referrer-Policy "strict-origin-when-cross-origin"
 		-Server
 		-X-Powered-By
-	}
-
-	# Handle OPTIONS requests for CORS
+	}	# Handle OPTIONS requests for CORS
 	@options method OPTIONS
 	respond @options 204
 

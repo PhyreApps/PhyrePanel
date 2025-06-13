@@ -37,7 +37,7 @@ class CaddyBuild implements ShouldQueue
 
             // Attempt recovery
             $this->attemptRecovery();
-            
+
             // Re-throw exception for job retry mechanism
             throw $e;
         }
@@ -89,15 +89,24 @@ class CaddyBuild implements ShouldQueue
 
         if (!is_writable($configDir)) {
             throw new \Exception("Caddy config directory is not writable: {$configDir}");
-        }
-
-        // Check if log directory exists and is writable
+        }        // Check if log directory exists and is writable
         if (!is_dir($caddyLogPath)) {
-            if (!mkdir($caddyLogPath, 0755, true)) {
+            if (!mkdir($caddyLogPath, 0777, true)) {
                 throw new \Exception("Cannot create Caddy log directory: {$caddyLogPath}");
             }
-        }        if (!is_writable($caddyLogPath)) {
-            throw new \Exception("Caddy log directory is not writable: {$caddyLogPath}");
+            // Ensure caddy user can write to the log directory with broader permissions
+            shell_exec("chown -R caddy:caddy {$caddyLogPath}");
+            shell_exec("chmod -R 777 {$caddyLogPath}");
+        }
+
+        if (!is_writable($caddyLogPath)) {
+            // Try to fix permissions with broader access (777) for multi-user write access
+            shell_exec("chown -R caddy:caddy {$caddyLogPath}");
+            shell_exec("chmod -R 777 {$caddyLogPath}");
+
+            if (!is_writable($caddyLogPath)) {
+                throw new \Exception("Caddy log directory is not writable: {$caddyLogPath}");
+            }
         }
     }
 
@@ -200,12 +209,10 @@ class CaddyBuild implements ShouldQueue
 
         // Reload Caddy configuration
         shell_exec('systemctl reload caddy');
-    }
-
-    private function createCaddyBlock(Domain $domain, $apacheHttpPort): ?array
+    }    private function createCaddyBlock(Domain $domain, $apacheHttpPort): ?array
     {
-        if ($domain->status === Domain::STATUS_SUSPENDED || 
-            $domain->status === Domain::STATUS_DEACTIVATED || 
+        if ($domain->status === Domain::STATUS_SUSPENDED ||
+            $domain->status === Domain::STATUS_DEACTIVATED ||
             $domain->status === Domain::STATUS_BROKEN) {
             return null;
         }
@@ -216,9 +223,7 @@ class CaddyBuild implements ShouldQueue
             'enable_ssl' => true,
             'enable_www' => true,
         ];
-    }
-
-    private function createMasterDomainCaddyBlock(MasterDomain $masterDomain, $apacheHttpPort): ?array
+    }    private function createMasterDomainCaddyBlock(MasterDomain $masterDomain, $apacheHttpPort): ?array
     {
         if (empty($masterDomain->domain)) {
             return null;
@@ -229,46 +234,47 @@ class CaddyBuild implements ShouldQueue
             'proxy_to' => "127.0.0.1:{$apacheHttpPort}",
             'enable_ssl' => true,
             'enable_www' => true,
-            'is_master' => true,        ];
-    }    /**
+            'is_master' => true,
+        ];
+    }/**
      * Validate generated configuration before applying
      */
     protected function validateGeneratedConfig(): void
     {
         $caddyConfigPath = '/etc/caddy/Caddyfile';
         $caddyBinary = '/usr/bin/caddy';
-        
+
         if (!file_exists($caddyConfigPath)) {
             throw new \Exception("Generated Caddyfile not found at: {$caddyConfigPath}");
         }
-        
+
         // Format Caddyfile to fix inconsistencies if Caddy binary is available
         if (is_executable($caddyBinary)) {
             $formatCommand = "{$caddyBinary} fmt --overwrite {$caddyConfigPath} 2>&1";
             $formatOutput = shell_exec($formatCommand);
             $formatExitCode = shell_exec("echo $?");
-            
+
             if (trim($formatExitCode) === '0') {
                 \Log::info('Caddyfile formatted successfully');
             } else {
                 \Log::warning('Caddyfile formatting failed: ' . $formatOutput);
             }
-            
+
             // Validate syntax using Caddy binary
             $command = "{$caddyBinary} validate --config {$caddyConfigPath} 2>&1";
             $output = shell_exec($command);
             $exitCode = shell_exec("echo $?");
-            
+
             if (trim($exitCode) !== '0') {
                 throw new \Exception("Caddyfile validation failed: {$output}");
             }
-            
+
             \Log::info('Caddyfile validation passed');
         } else {
             \Log::warning('Caddy binary not found, skipping syntax validation and formatting');
         }
     }
-    
+
     /**
      * Apply Caddy configuration and reload service
      */
@@ -277,14 +283,14 @@ class CaddyBuild implements ShouldQueue
         try {
             // Create backup of current configuration
             $this->backupCurrentConfig();
-            
+
             // Reload Caddy service to apply new configuration
             $this->reloadCaddyService();
-            
+
             \Log::info('Caddy configuration applied successfully');
         } catch (\Exception $e) {
             \Log::error('Failed to apply Caddy configuration: ' . $e->getMessage());
-            
+
             // Restore backup on failure
             $this->restoreConfigBackup();
             throw $e;
@@ -297,12 +303,12 @@ class CaddyBuild implements ShouldQueue
     {
         $caddyConfigPath = '/etc/caddy/Caddyfile';
         $backupPath = $caddyConfigPath . '.backup.' . date('Y-m-d-H-i-s');
-        
+
         if (file_exists($caddyConfigPath)) {
             if (!copy($caddyConfigPath, $backupPath)) {
                 throw new \Exception("Failed to create configuration backup at: {$backupPath}");
             }
-            
+
             \Log::info("Configuration backup created: {$backupPath}");
         }
     }
@@ -313,13 +319,13 @@ class CaddyBuild implements ShouldQueue
     {
         $caddyConfigPath = '/etc/caddy/Caddyfile';
         $backupDir = dirname($caddyConfigPath);
-        
+
         // Find the most recent backup
         $backups = glob($backupDir . '/Caddyfile.backup.*');
         if (!empty($backups)) {
             rsort($backups); // Sort by name (newest first)
             $latestBackup = $backups[0];
-            
+
             if (copy($latestBackup, $caddyConfigPath)) {
                 \Log::info("Configuration restored from backup: {$latestBackup}");
                 $this->reloadCaddyService();
@@ -328,7 +334,7 @@ class CaddyBuild implements ShouldQueue
             }
         }
     }
-    
+
     /**
      * Reload Caddy service
      */
@@ -336,24 +342,25 @@ class CaddyBuild implements ShouldQueue
     {
         $commands = [
             'systemctl reload caddy',
-            'systemctl restart caddy', // Fallback if reload fails
+            'systemctl restart caddy',
+
         ];
-        
+
         foreach ($commands as $command) {
             $output = shell_exec("{$command} 2>&1");
             $exitCode = shell_exec("echo $?");
-            
+
             if (trim($exitCode) === '0') {
                 \Log::info("Caddy service reloaded successfully using: {$command}");
                 return;
             }
-            
+
             \Log::warning("Command failed: {$command}, output: {$output}");
         }
-        
+
         throw new \Exception("Failed to reload Caddy service");
     }
-    
+
     /**
      * Attempt recovery on job failure
      */
@@ -361,17 +368,17 @@ class CaddyBuild implements ShouldQueue
     {
         try {
             \Log::info('Attempting Caddy configuration recovery');
-            
+
             // Try to restore from backup
             $this->restoreConfigBackup();
-            
+
             // Check if service is still running
             $status = shell_exec('systemctl is-active caddy 2>/dev/null');
             if (trim($status) !== 'active') {
                 \Log::warning('Caddy service is not active, attempting to start');
                 shell_exec('systemctl start caddy 2>&1');
             }
-            
+
             \Log::info('Recovery attempt completed');
         } catch (\Exception $e) {
             \Log::error('Recovery attempt failed: ' . $e->getMessage());
@@ -385,12 +392,12 @@ class CaddyBuild implements ShouldQueue
         $caddyConfigPath = '/etc/caddy/Caddyfile';
         $backupDir = dirname($caddyConfigPath);
         $maxBackups = 10;
-        
+
         $backups = glob($backupDir . '/Caddyfile.backup.*');
         if (count($backups) > $maxBackups) {
             rsort($backups); // Sort by name (newest first)
             $oldBackups = array_slice($backups, $maxBackups);
-            
+
             foreach ($oldBackups as $backup) {
                 if (unlink($backup)) {
                     \Log::info("Removed old backup: {$backup}");
