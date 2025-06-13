@@ -20,6 +20,7 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Illuminate\Support\Facades\Storage;
 use Monarobase\CountryList\CountryList;
+use Modules\Caddy\App\Jobs\CaddyBuild;
 use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
 
 class GeneralSettings extends BaseSettings
@@ -53,6 +54,12 @@ class GeneralSettings extends BaseSettings
         if ($rebuildApache) {
             $apacheBuild = new ApacheBuild(true);
             $apacheBuild->handle();
+        }
+
+        // Rebuild Caddy configuration if enabled
+        if (setting('caddy.enabled')) {
+            $caddyBuild = new CaddyBuild(true);
+            $caddyBuild->handle();
         }
 
     }
@@ -104,19 +111,72 @@ class GeneralSettings extends BaseSettings
                             TextInput::make('general.apache_http_port')
                                 ->default('80')
                                 ->numeric()
-                                ->helperText('Default is 80.'),
+                                ->helperText('Default is 80. When Caddy is enabled, consider using 8080.'),
                             TextInput::make('general.apache_https_port')
                                 ->default('443')
                                 ->numeric()
-                                ->helperText('Default is 443.'),
+                                ->helperText('Default is 443. When Caddy is enabled, SSL is handled by Caddy.'),
                             Checkbox::make('general.apache_ssl_disabled')
                                 ->label('Disable SSL')
-                                ->helperText('If checked, the Apache server will not listen on port 443 for HTTPS requests.'),
+                                ->helperText('If checked, the Apache server will not listen on port 443 for HTTPS requests. Recommended when using Caddy.'),
                             Actions::make([
                                 Actions\Action::make('rebuildApache')
                                     ->label('Rebuild Apache Configuration')
                                     ->button()
                                     ->action(fn() => $this->rebuildApacheConfig())
+                            ]),
+                        ]),
+
+                    Tabs\Tab::make('Caddy Integration')
+                        ->schema([
+                            Checkbox::make('caddy.enabled')
+                                ->label('Enable Caddy as Reverse Proxy')
+                                ->helperText('Enable Caddy to handle SSL termination and proxy requests to Apache')
+                                ->live(),
+                            
+                            TextInput::make('caddy.apache_proxy_port')
+                                ->label('Apache Proxy Port')
+                                ->default('8080')
+                                ->numeric()
+                                ->visible(fn (Get $get) => $get('caddy.enabled'))
+                                ->helperText('Port where Apache will listen for HTTP requests from Caddy'),
+                            
+                            TextInput::make('caddy.email')
+                                ->label('ACME Email for SSL')
+                                ->visible(fn (Get $get) => $get('caddy.enabled'))
+                                ->default(fn() => setting('general.master_email'))
+                                ->helperText('Email for Let\'s Encrypt SSL certificate registration'),
+                            
+                            Checkbox::make('caddy.auto_configure_apache')
+                                ->label('Auto-configure Apache ports')
+                                ->visible(fn (Get $get) => $get('caddy.enabled'))
+                                ->default(true)
+                                ->helperText('Automatically set Apache to use non-standard ports and disable SSL when Caddy is enabled'),
+                            
+                            Actions::make([
+                                Actions\Action::make('setupCaddyIntegration')
+                                    ->label('Setup Caddy Integration')
+                                    ->button()
+                                    ->visible(fn (Get $get) => $get('caddy.enabled'))
+                                    ->action(function () {
+                                        // Auto-configure Apache for Caddy integration
+                                        if (setting('caddy.auto_configure_apache')) {
+                                            setting(['general.apache_http_port' => setting('caddy.apache_proxy_port', '8080')]);
+                                            setting(['general.apache_ssl_disabled' => true]);
+                                            
+                                            // Rebuild both Apache and Caddy
+                                            $apacheBuild = new ApacheBuild(true);
+                                            $apacheBuild->handle();
+                                        }
+                                        
+                                        $caddyBuild = new CaddyBuild(true);
+                                        $caddyBuild->handle();
+                                        
+                                        Notification::make()
+                                            ->title('Caddy integration configured successfully')
+                                            ->success()
+                                            ->send();
+                                    })
                             ]),
                         ]),
 

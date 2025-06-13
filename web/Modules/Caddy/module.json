@@ -1,9 +1,13 @@
 {
     "name": "Caddy",
     "alias": "caddy",
-    "description": "",
-    "keywords": [],
-    "priority": 0,
+    "description": "Caddy reverse proxy module for SSL termination and Apache integration",
+    "keywords": ["caddy", "reverse-proxy", "ssl", "https", "web-server"],
+    "version": "1.0.0",
+    "logoIcon": "Modules/Caddy/resources/assets/caddy-svg/logo.svg",
+    "category": "Web Servers",
+    "adminUrl": "/admin/caddy",
+    "priority": 10,
     "providers": [
         "Modules\\Caddy\\App\\Providers\\CaddyServiceProvider"
     ],

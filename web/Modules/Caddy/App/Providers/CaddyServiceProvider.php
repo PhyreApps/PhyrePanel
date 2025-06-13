@@ -5,6 +5,9 @@ namespace Modules\Caddy\App\Providers;
 use BladeUI\Icons\Factory;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Event;
+use Modules\Caddy\App\Providers\RouteServiceProvider;
+use Modules\Caddy\App\Listeners\DomainEventListener;
 
 class CaddyServiceProvider extends ServiceProvider
 {
@@ -23,6 +26,7 @@ class CaddyServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/migrations'));
+        $this->registerEventListeners();
     }
 
     /**
@@ -30,7 +34,11 @@ class CaddyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-
+        $this->app->register(RouteServiceProvider::class);
+        // Register CaddyService
+        $this->app->singleton('App\Services\CaddyService', function ($app) {
+            return new \App\Services\CaddyService();
+        });
     }
 
     /**
@@ -38,7 +46,10 @@ class CaddyServiceProvider extends ServiceProvider
      */
     protected function registerCommands(): void
     {
-        // $this->commands([]);
+        $this->commands([
+            \Modules\Caddy\App\Console\CaddyRebuild::class,
+            \Modules\Caddy\App\Console\CaddyStatus::class,
+        ]);
     }
 
     /**
@@ -82,12 +93,14 @@ class CaddyServiceProvider extends ServiceProvider
      */
     public function registerViews(): void
     {
+
         $viewPath = resource_path('views/modules/'.$this->moduleNameLower);
         $sourcePath = module_path($this->moduleName, 'resources/views');
 
         $this->publishes([$sourcePath => $viewPath], ['views', $this->moduleNameLower.'-module-views']);
 
         $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), $this->moduleNameLower);
+        $this->loadViewsFrom( $sourcePath, $this->moduleNameLower);
 
         $componentNamespace = str_replace('/', '\\', config('modules.namespace').'\\'.$this->moduleName.'\\'.config('modules.paths.generator.component-class.path'));
         Blade::componentNamespace($componentNamespace, $this->moduleNameLower);
@@ -109,6 +122,16 @@ class CaddyServiceProvider extends ServiceProvider
     public function provides(): array
     {
         return [];
+    }
+
+    /**
+     * Register event listeners.
+     */
+    protected function registerEventListeners(): void
+    {
+        Event::listen('App\Events\DomainCreated', [DomainEventListener::class, 'handleDomainCreated']);
+        Event::listen('App\Events\DomainUpdated', [DomainEventListener::class, 'handleDomainUpdated']);
+        Event::listen('App\Events\DomainDeleted', [DomainEventListener::class, 'handleDomainDeleted']);
     }
 
     private function getPublishableViewPaths(): array
