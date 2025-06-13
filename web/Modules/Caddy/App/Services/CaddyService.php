@@ -2,6 +2,7 @@
 
 namespace Modules\Caddy\App\Services;
 
+use App\Models\Domain;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Process\Process;
@@ -29,7 +30,7 @@ class CaddyService
         try {
             $process = new Process(['systemctl', 'is-active', 'caddy']);
             $process->run();
-            
+
             return $process->getOutput() === "active\n";
         } catch (Exception $e) {
             Log::error('Failed to check Caddy service status: ' . $e->getMessage());
@@ -244,7 +245,7 @@ class CaddyService
 
         try {
             // Count domains from database
-            $stats['domains'] = \Modules\Hosting\App\Models\Domain::count();
+            $stats['domains'] = Domain::count();
 
             // Get config file modification time
             if (file_exists($this->configPath)) {
@@ -331,12 +332,12 @@ class CaddyService
                 $lines = explode("\n", trim($process->getOutput()));
                 foreach ($lines as $line) {
                     if (empty($line)) continue;
-                    
+
                     $entry = json_decode($line, true);
                     if ($entry) {
                         $type = 'info';
                         $message = $entry['MESSAGE'] ?? '';
-                        
+
                         // Determine type based on message content
                         if (strpos($message, 'error') !== false || strpos($message, 'failed') !== false) {
                             $type = 'error';

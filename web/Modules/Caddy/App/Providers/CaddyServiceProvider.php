@@ -2,6 +2,7 @@
 
 namespace Modules\Caddy\App\Providers;
 
+use App\Events\ApacheRebuildCompleted;
 use App\Events\DomainIsChanged;
 use App\Events\DomainIsCreated;
 use App\Events\DomainIsDeleted;
@@ -9,6 +10,7 @@ use BladeUI\Icons\Factory;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Event;
+use Modules\Caddy\App\Listeners\ApacheRebuildEventListener;
 use Modules\Caddy\App\Listeners\DomainIsChangedListener;
 use Modules\Caddy\App\Listeners\DomainIsCreatedListener;
 use Modules\Caddy\App\Listeners\DomainIsDeletedListener;
@@ -35,9 +37,10 @@ class CaddyServiceProvider extends ServiceProvider
         $this->registerEventListeners();
 
 
-        Event::listen(DomainIsCreated::class,DomainIsCreatedListener::class);
-        Event::listen(DomainIsChanged::class,DomainIsChangedListener::class);
-        Event::listen(DomainIsDeleted::class,DomainIsDeletedListener::class);
+        Event::listen(ApacheRebuildCompleted::class,ApacheRebuildEventListener::class);
+ //       Event::listen(DomainIsCreated::class,DomainIsCreatedListener::class);
+//        Event::listen(DomainIsChanged::class,DomainIsChangedListener::class);
+//        Event::listen(DomainIsDeleted::class,DomainIsDeletedListener::class);
 
     }
 
@@ -61,6 +64,7 @@ class CaddyServiceProvider extends ServiceProvider
         $this->commands([
             \Modules\Caddy\App\Console\CaddyRebuild::class,
             \Modules\Caddy\App\Console\CaddyStatus::class,
+            \Modules\Caddy\App\Console\CaddyFormat::class,
         ]);
     }
 

@@ -42,9 +42,7 @@ class CaddyManagement extends Page implements HasForms
         } else {
             $this->caddyfileContent = 'Caddyfile not found';
         }
-    }
-
-    protected function getHeaderActions(): array
+    }    protected function getHeaderActions(): array
     {
         return [
             Action::make('reloadConfig')
@@ -69,6 +67,14 @@ class CaddyManagement extends Page implements HasForms
                         ->title('Caddy service restarted')
                         ->success()
                         ->send();
+                }),
+
+            Action::make('formatConfig')
+                ->label('Format Configuration')
+                ->icon('heroicon-o-document-text')
+                ->color('info')
+                ->action(function () {
+                    $this->formatCaddyfile();
                 }),
 
             Action::make('validateConfig')
@@ -110,8 +116,7 @@ class CaddyManagement extends Page implements HasForms
         $output = shell_exec('caddy validate --config /etc/caddy/Caddyfile 2>&1');
         $isValid = strpos($output, 'valid') !== false;
         
-        if ($isValid) {
-            shell_exec('systemctl reload caddy');
+        if ($isValid) {        shell_exec('systemctl reload caddy');
             Notification::make()
                 ->title('Caddyfile saved and reloaded')
                 ->success()
@@ -120,6 +125,65 @@ class CaddyManagement extends Page implements HasForms
             Notification::make()
                 ->title('Configuration Error')
                 ->body('Caddyfile has syntax errors: ' . $output)
+                ->danger()
+                ->send();
+        }
+    }
+
+    public function formatCaddyfile(): void
+    {
+        $caddyConfigPath = '/etc/caddy/Caddyfile';
+        $caddyBinary = '/usr/bin/caddy';
+
+        if (!file_exists($caddyConfigPath)) {
+            Notification::make()
+                ->title('Error')
+                ->body('Caddyfile not found')
+                ->danger()
+                ->send();
+            return;
+        }
+
+        if (!is_executable($caddyBinary)) {
+            Notification::make()
+                ->title('Error')
+                ->body('Caddy binary not found')
+                ->danger()
+                ->send();
+            return;
+        }
+
+        // Create backup before formatting
+        $backupPath = $caddyConfigPath . '.backup.format.' . date('Y-m-d-H-i-s');
+        if (!copy($caddyConfigPath, $backupPath)) {
+            Notification::make()
+                ->title('Error')
+                ->body('Failed to create backup')
+                ->danger()
+                ->send();
+            return;
+        }
+
+        // Format the Caddyfile
+        $command = "{$caddyBinary} fmt --overwrite {$caddyConfigPath} 2>&1";
+        $output = shell_exec($command);
+        $exitCode = shell_exec("echo $?");
+
+        if (trim($exitCode) === '0') {
+            $this->loadCaddyfile(); // Reload the formatted content
+            
+            Notification::make()
+                ->title('Caddyfile Formatted')
+                ->body('Configuration formatted successfully')
+                ->success()
+                ->send();
+        } else {
+            // Restore backup on failure
+            copy($backupPath, $caddyConfigPath);
+            
+            Notification::make()
+                ->title('Format Failed')
+                ->body('Failed to format Caddyfile: ' . $output)
                 ->danger()
                 ->send();
         }

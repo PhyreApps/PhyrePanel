@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\ApacheRebuildCompleted;
 use App\MasterDomain;
 use App\Models\Domain;
 use Illuminate\Bus\Queueable;
@@ -31,7 +32,6 @@ class ApacheBuild implements ShouldQueue
     {
         $getAllDomains = Domain::whereNot('status', '<=>', 'broken')->get();
         $virtualHosts = [];
-
 
 
         // Get Apache port settings
@@ -104,5 +104,10 @@ class ApacheBuild implements ShouldQueue
         shell_exec('cp /etc/apache2/apache2-process.conf /etc/apache2/apache2.conf');
 
         shell_exec('systemctl reload apache2'); // IMPORTANT: MUST BE RELOAD! NOT RESTART!
+
+
+        event(new ApacheRebuildCompleted());
+
+
     }
 }

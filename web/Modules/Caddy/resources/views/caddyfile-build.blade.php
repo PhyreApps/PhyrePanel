@@ -1,7 +1,16 @@
 {
-	email {{ $caddyEmail }}
-	admin off
+    email {{ $caddyEmail }}
+    admin off
+    auto_https on
+    
+    # Global options
+    servers {
+        protocol {
+            experimental_http3
+        }
+    }
 }
+
 
 @foreach($caddyBlocks as $block)
 # {{ $block['domain'] }} configuration

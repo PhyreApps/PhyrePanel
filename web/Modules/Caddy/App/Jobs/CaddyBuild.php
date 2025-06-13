@@ -71,15 +71,13 @@ class CaddyBuild implements ShouldQueue
 
         // Apply configuration
         $this->applyCaddyConfiguration();
-    }
-
-    /**
+    }    /**
      * Validate prerequisites before building configuration
      */
     protected function validatePrerequisites(): void
     {
-        $caddyConfigPath = config('caddy.config_path', '/etc/caddy/Caddyfile');
-        $caddyLogPath = config('caddy.log_path', '/var/log/caddy');
+        $caddyConfigPath = '/etc/caddy/Caddyfile';
+        $caddyLogPath = '/var/log/caddy';
 
         // Check if Caddy config directory exists and is writable
         $configDir = dirname($caddyConfigPath);
@@ -232,22 +230,31 @@ class CaddyBuild implements ShouldQueue
             'enable_ssl' => true,
             'enable_www' => true,
             'is_master' => true,        ];
-    }
-
-    /**
+    }    /**
      * Validate generated configuration before applying
      */
     protected function validateGeneratedConfig(): void
     {
-        $caddyConfigPath = config('caddy.config_path', '/etc/caddy/Caddyfile');
-        $caddyBinary = config('caddy.binary_path', '/usr/bin/caddy');
+        $caddyConfigPath = '/etc/caddy/Caddyfile';
+        $caddyBinary = '/usr/bin/caddy';
         
         if (!file_exists($caddyConfigPath)) {
             throw new \Exception("Generated Caddyfile not found at: {$caddyConfigPath}");
         }
         
-        // Validate syntax using Caddy binary if available
+        // Format Caddyfile to fix inconsistencies if Caddy binary is available
         if (is_executable($caddyBinary)) {
+            $formatCommand = "{$caddyBinary} fmt --overwrite {$caddyConfigPath} 2>&1";
+            $formatOutput = shell_exec($formatCommand);
+            $formatExitCode = shell_exec("echo $?");
+            
+            if (trim($formatExitCode) === '0') {
+                \Log::info('Caddyfile formatted successfully');
+            } else {
+                \Log::warning('Caddyfile formatting failed: ' . $formatOutput);
+            }
+            
+            // Validate syntax using Caddy binary
             $command = "{$caddyBinary} validate --config {$caddyConfigPath} 2>&1";
             $output = shell_exec($command);
             $exitCode = shell_exec("echo $?");
@@ -258,7 +265,7 @@ class CaddyBuild implements ShouldQueue
             
             \Log::info('Caddyfile validation passed');
         } else {
-            \Log::warning('Caddy binary not found, skipping syntax validation');
+            \Log::warning('Caddy binary not found, skipping syntax validation and formatting');
         }
     }
     
@@ -283,13 +290,12 @@ class CaddyBuild implements ShouldQueue
             throw $e;
         }
     }
-    
-    /**
+      /**
      * Create backup of current configuration
      */
     protected function backupCurrentConfig(): void
     {
-        $caddyConfigPath = config('caddy.config_path', '/etc/caddy/Caddyfile');
+        $caddyConfigPath = '/etc/caddy/Caddyfile';
         $backupPath = $caddyConfigPath . '.backup.' . date('Y-m-d-H-i-s');
         
         if (file_exists($caddyConfigPath)) {
@@ -300,13 +306,12 @@ class CaddyBuild implements ShouldQueue
             \Log::info("Configuration backup created: {$backupPath}");
         }
     }
-    
-    /**
+      /**
      * Restore configuration from backup
      */
     protected function restoreConfigBackup(): void
     {
-        $caddyConfigPath = config('caddy.config_path', '/etc/caddy/Caddyfile');
+        $caddyConfigPath = '/etc/caddy/Caddyfile';
         $backupDir = dirname($caddyConfigPath);
         
         // Find the most recent backup
@@ -372,15 +377,14 @@ class CaddyBuild implements ShouldQueue
             \Log::error('Recovery attempt failed: ' . $e->getMessage());
         }
     }
-    
-    /**
+      /**
      * Clean up old backup files
      */
     protected function cleanupOldBackups(): void
     {
-        $caddyConfigPath = config('caddy.config_path', '/etc/caddy/Caddyfile');
+        $caddyConfigPath = '/etc/caddy/Caddyfile';
         $backupDir = dirname($caddyConfigPath);
-        $maxBackups = config('caddy.max_backups', 10);
+        $maxBackups = 10;
         
         $backups = glob($backupDir . '/Caddyfile.backup.*');
         if (count($backups) > $maxBackups) {
