@@ -341,7 +341,7 @@ class CaddyBuild implements ShouldQueue
     protected function reloadCaddyService(): void
     {
         $commands = [
-            'systemctl reload caddy',
+          //  'systemctl reload caddy',
             'systemctl restart caddy',
 
         ];
