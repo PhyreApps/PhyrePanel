@@ -27,17 +27,128 @@ class CaddyBuild implements ShouldQueue
      */
     public function handle(): void
     {
+        try {
+            $this->buildCaddyConfiguration();
+        } catch (\Exception $e) {
+            \Log::error('Caddy build job failed: ' . $e->getMessage(), [
+                'exception' => $e,
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            // Attempt recovery
+            $this->attemptRecovery();
+            
+            // Re-throw exception for job retry mechanism
+            throw $e;
+        }
+    }
+
+    /**
+     * Build Caddy configuration
+     */
+    protected function buildCaddyConfiguration(): void
+    {
         // Check if Caddy is enabled
         $caddyEnabled = setting('caddy.enabled') ?? false;
         if (!$caddyEnabled) {
+            \Log::info('Caddy is disabled, skipping configuration build');
             return;
         }
+
+        // Validate prerequisites
+        $this->validatePrerequisites();
 
         // Auto-configure Apache if enabled
         if (setting('caddy.auto_configure_apache', true)) {
             $this->configureApacheForCaddy();
         }
 
+        // Build configuration
+        $this->generateCaddyfile();
+
+        // Validate generated configuration
+        $this->validateGeneratedConfig();
+
+        // Apply configuration
+        $this->applyCaddyConfiguration();
+    }
+
+    /**
+     * Validate prerequisites before building configuration
+     */
+    protected function validatePrerequisites(): void
+    {
+        $caddyConfigPath = config('caddy.config_path', '/etc/caddy/Caddyfile');
+        $caddyLogPath = config('caddy.log_path', '/var/log/caddy');
+
+        // Check if Caddy config directory exists and is writable
+        $configDir = dirname($caddyConfigPath);
+        if (!is_dir($configDir)) {
+            if (!mkdir($configDir, 0755, true)) {
+                throw new \Exception("Cannot create Caddy config directory: {$configDir}");
+            }
+        }
+
+        if (!is_writable($configDir)) {
+            throw new \Exception("Caddy config directory is not writable: {$configDir}");
+        }
+
+        // Check if log directory exists and is writable
+        if (!is_dir($caddyLogPath)) {
+            if (!mkdir($caddyLogPath, 0755, true)) {
+                throw new \Exception("Cannot create Caddy log directory: {$caddyLogPath}");
+            }
+        }        if (!is_writable($caddyLogPath)) {
+            throw new \Exception("Caddy log directory is not writable: {$caddyLogPath}");
+        }
+    }
+
+    /**
+     * Configure Apache to work with Caddy
+     */
+    protected function configureApacheForCaddy(): void
+    {
+        try {
+            // Get current Apache configuration
+            $currentHttpPort = setting('general.apache_http_port', '80');
+            $currentHttpsPort = setting('general.apache_https_port', '443');
+            $targetHttpPort = setting('caddy.apache_proxy_port', '8080');
+            $targetHttpsPort = setting('caddy.apache_proxy_https_port', '8443');
+
+            // Update Apache ports if they conflict with Caddy
+            if ($currentHttpPort == '80') {
+                setting(['general.apache_http_port' => $targetHttpPort]);
+                \Log::info("Updated Apache HTTP port from {$currentHttpPort} to {$targetHttpPort}");
+            }
+
+            if ($currentHttpsPort == '443') {
+                setting(['general.apache_https_port' => $targetHttpsPort]);
+                \Log::info("Updated Apache HTTPS port from {$currentHttpsPort} to {$targetHttpsPort}");
+            }
+
+            // Disable SSL in Apache since Caddy will handle it
+            if (setting('general.apache_ssl_enabled', true)) {
+                setting(['general.apache_ssl_enabled' => false]);
+                \Log::info("Disabled SSL in Apache - Caddy will handle SSL termination");
+            }
+
+            // Update Caddy proxy port setting
+            setting(['caddy.apache_proxy_port' => $targetHttpPort]);
+            setting(['caddy.apache_proxy_https_port' => $targetHttpsPort]);
+
+            \Log::info("Apache configured for Caddy integration");
+
+        } catch (\Exception $e) {
+            \Log::error("Failed to configure Apache for Caddy: " . $e->getMessage());
+            throw new \Exception("Apache configuration failed: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Generate Caddyfile content
+     */
+    protected function generateCaddyfile(): void
+    {
         $getAllDomains = Domain::whereNot('status', '<=>', 'broken')->get();
         $caddyBlocks = [];
 
@@ -124,23 +235,163 @@ class CaddyBuild implements ShouldQueue
     }
 
     /**
-     * Configure Apache to work optimally with Caddy
+     * Validate generated configuration before applying
      */
-    private function configureApacheForCaddy(): void
+    protected function validateGeneratedConfig(): void
     {
-        $apacheProxyPort = setting('caddy.apache_proxy_port', '8080');
+        $caddyConfigPath = config('caddy.config_path', '/etc/caddy/Caddyfile');
+        $caddyBinary = config('caddy.binary_path', '/usr/bin/caddy');
         
-        // Set Apache to use non-standard HTTP port
-        if (setting('general.apache_http_port') != $apacheProxyPort) {
-            setting(['general.apache_http_port' => $apacheProxyPort]);
+        if (!file_exists($caddyConfigPath)) {
+            throw new \Exception("Generated Caddyfile not found at: {$caddyConfigPath}");
         }
         
-        // Disable Apache SSL if enabled
-        if (setting('caddy.disable_apache_ssl', true)) {
-            setting(['general.apache_ssl_disabled' => true]);
+        // Validate syntax using Caddy binary if available
+        if (is_executable($caddyBinary)) {
+            $command = "{$caddyBinary} validate --config {$caddyConfigPath} 2>&1";
+            $output = shell_exec($command);
+            $exitCode = shell_exec("echo $?");
+            
+            if (trim($exitCode) !== '0') {
+                throw new \Exception("Caddyfile validation failed: {$output}");
+            }
+            
+            \Log::info('Caddyfile validation passed');
+        } else {
+            \Log::warning('Caddy binary not found, skipping syntax validation');
+        }
+    }
+    
+    /**
+     * Apply Caddy configuration and reload service
+     */
+    protected function applyCaddyConfiguration(): void
+    {
+        try {
+            // Create backup of current configuration
+            $this->backupCurrentConfig();
+            
+            // Reload Caddy service to apply new configuration
+            $this->reloadCaddyService();
+            
+            \Log::info('Caddy configuration applied successfully');
+        } catch (\Exception $e) {
+            \Log::error('Failed to apply Caddy configuration: ' . $e->getMessage());
+            
+            // Restore backup on failure
+            $this->restoreConfigBackup();
+            throw $e;
+        }
+    }
+    
+    /**
+     * Create backup of current configuration
+     */
+    protected function backupCurrentConfig(): void
+    {
+        $caddyConfigPath = config('caddy.config_path', '/etc/caddy/Caddyfile');
+        $backupPath = $caddyConfigPath . '.backup.' . date('Y-m-d-H-i-s');
+        
+        if (file_exists($caddyConfigPath)) {
+            if (!copy($caddyConfigPath, $backupPath)) {
+                throw new \Exception("Failed to create configuration backup at: {$backupPath}");
+            }
+            
+            \Log::info("Configuration backup created: {$backupPath}");
+        }
+    }
+    
+    /**
+     * Restore configuration from backup
+     */
+    protected function restoreConfigBackup(): void
+    {
+        $caddyConfigPath = config('caddy.config_path', '/etc/caddy/Caddyfile');
+        $backupDir = dirname($caddyConfigPath);
+        
+        // Find the most recent backup
+        $backups = glob($backupDir . '/Caddyfile.backup.*');
+        if (!empty($backups)) {
+            rsort($backups); // Sort by name (newest first)
+            $latestBackup = $backups[0];
+            
+            if (copy($latestBackup, $caddyConfigPath)) {
+                \Log::info("Configuration restored from backup: {$latestBackup}");
+                $this->reloadCaddyService();
+            } else {
+                \Log::error("Failed to restore configuration from backup: {$latestBackup}");
+            }
+        }
+    }
+    
+    /**
+     * Reload Caddy service
+     */
+    protected function reloadCaddyService(): void
+    {
+        $commands = [
+            'systemctl reload caddy',
+            'systemctl restart caddy', // Fallback if reload fails
+        ];
+        
+        foreach ($commands as $command) {
+            $output = shell_exec("{$command} 2>&1");
+            $exitCode = shell_exec("echo $?");
+            
+            if (trim($exitCode) === '0') {
+                \Log::info("Caddy service reloaded successfully using: {$command}");
+                return;
+            }
+            
+            \Log::warning("Command failed: {$command}, output: {$output}");
         }
         
-        // Rebuild Apache configuration with new settings
-        \App\Jobs\ApacheBuild::dispatch();
+        throw new \Exception("Failed to reload Caddy service");
+    }
+    
+    /**
+     * Attempt recovery on job failure
+     */
+    protected function attemptRecovery(): void
+    {
+        try {
+            \Log::info('Attempting Caddy configuration recovery');
+            
+            // Try to restore from backup
+            $this->restoreConfigBackup();
+            
+            // Check if service is still running
+            $status = shell_exec('systemctl is-active caddy 2>/dev/null');
+            if (trim($status) !== 'active') {
+                \Log::warning('Caddy service is not active, attempting to start');
+                shell_exec('systemctl start caddy 2>&1');
+            }
+            
+            \Log::info('Recovery attempt completed');
+        } catch (\Exception $e) {
+            \Log::error('Recovery attempt failed: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Clean up old backup files
+     */
+    protected function cleanupOldBackups(): void
+    {
+        $caddyConfigPath = config('caddy.config_path', '/etc/caddy/Caddyfile');
+        $backupDir = dirname($caddyConfigPath);
+        $maxBackups = config('caddy.max_backups', 10);
+        
+        $backups = glob($backupDir . '/Caddyfile.backup.*');
+        if (count($backups) > $maxBackups) {
+            rsort($backups); // Sort by name (newest first)
+            $oldBackups = array_slice($backups, $maxBackups);
+            
+            foreach ($oldBackups as $backup) {
+                if (unlink($backup)) {
+                    \Log::info("Removed old backup: {$backup}");
+                }
+            }
+        }
     }
 }

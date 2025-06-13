@@ -2,10 +2,16 @@
 
 namespace Modules\Caddy\App\Providers;
 
+use App\Events\DomainIsChanged;
+use App\Events\DomainIsCreated;
+use App\Events\DomainIsDeleted;
 use BladeUI\Icons\Factory;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Event;
+use Modules\Caddy\App\Listeners\DomainIsChangedListener;
+use Modules\Caddy\App\Listeners\DomainIsCreatedListener;
+use Modules\Caddy\App\Listeners\DomainIsDeletedListener;
 use Modules\Caddy\App\Providers\RouteServiceProvider;
 use Modules\Caddy\App\Listeners\DomainEventListener;
 
@@ -27,6 +33,12 @@ class CaddyServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/migrations'));
         $this->registerEventListeners();
+
+
+        Event::listen(DomainIsCreated::class,DomainIsCreatedListener::class);
+        Event::listen(DomainIsChanged::class,DomainIsChangedListener::class);
+        Event::listen(DomainIsDeleted::class,DomainIsDeletedListener::class);
+
     }
 
     /**

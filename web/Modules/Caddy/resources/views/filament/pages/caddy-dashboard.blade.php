@@ -4,7 +4,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <div class="flex items-center">
                 <div class="flex-shrink-0">
-                    @if($isRunning)
+                    @if($this->serviceStatus['running'])
                         <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
                             <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
@@ -18,10 +18,9 @@
                         </div>
                     @endif
                 </div>
-                <div class="ml-4">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Service Status</h3>
+                <div class="ml-4">                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Service Status</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
-                        {{ $isRunning ? 'Running' : 'Stopped' }}
+                        {{ $this->serviceStatus['running'] ? 'Running' : 'Stopped' }}
                     </p>
                 </div>
             </div>
@@ -31,7 +30,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <div class="flex items-center">
                 <div class="flex-shrink-0">
-                    @if($configValid)
+                    @if($this->configStatus['valid'])
                         <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
                             <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
@@ -48,7 +47,7 @@
                 <div class="ml-4">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Configuration</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
-                        {{ $configValid ? 'Valid' : 'Invalid' }}
+                        {{ $this->configStatus['valid'] ? 'Valid' : 'Invalid' }}
                     </p>
                 </div>
             </div>
@@ -67,7 +66,7 @@
                 <div class="ml-4">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Active Domains</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
-                        {{ $domainsCount }} domains
+                        {{ $this->configStats['domains'] }} domains
                     </p>
                 </div>
             </div>
@@ -86,7 +85,7 @@
                 <div class="ml-4">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">SSL Certificates</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
-                        {{ $sslCertificatesCount }} certificates
+                        {{ $this->configStats['ssl_certs'] }} certificates
                     </p>
                 </div>
             </div>
@@ -103,13 +102,12 @@
                 </h3>
                 <dl class="space-y-3">
                     <div class="flex justify-between">
-                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Version</dt>
-                        <dd class="text-sm text-gray-900 dark:text-gray-100">{{ $version }}</dd>
+                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Version</dt>                        <dd class="text-sm text-gray-900 dark:text-gray-100">{{ $this->caddyVersion ?: 'Unknown' }}</dd>
                     </div>
-                    @if($isRunning && $uptime)
+                    @if($this->serviceStatus['running'] && $this->serviceStatus['uptime'])
                     <div class="flex justify-between">
                         <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Uptime</dt>
-                        <dd class="text-sm text-gray-900 dark:text-gray-100">{{ $uptime }}</dd>
+                        <dd class="text-sm text-gray-900 dark:text-gray-100">{{ $this->serviceStatus['uptime'] }}</dd>
                     </div>
                     @endif
                     <div class="flex justify-between">

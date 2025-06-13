@@ -4,7 +4,9 @@ namespace Modules\Caddy\App\Filament\Pages;
 
 use Filament\Pages\Page;
 use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 use Modules\Caddy\App\Filament\Clusters\Caddy;
+use Modules\Caddy\App\Services\CaddyService;
 
 class CaddyDashboard extends Page
 {
@@ -20,44 +22,135 @@ class CaddyDashboard extends Page
 
     protected static ?int $navigationSort = 0;
 
-    public $isRunning = false;
-    public $version = '';
-    public $configValid = false;
-    public $domainsCount = 0;
-    public $sslCertificatesCount = 0;
-    public $uptime = '';
+    protected CaddyService $caddyService;
 
-    public function mount(): void
+    public function boot(): void
     {
-        $this->loadStatus();
+        $this->caddyService = app(CaddyService::class);
     }
 
-    public function loadStatus(): void
+    public function getServiceStatusProperty(): array
     {
-        // Check if Caddy is running
-        $status = shell_exec('systemctl is-active caddy');
-        $this->isRunning = trim($status) === 'active';
+        return $this->caddyService->getStatus();
+    }
 
-        // Get Caddy version
-        $versionOutput = shell_exec('caddy version 2>/dev/null');
-        $this->version = trim($versionOutput) ?: 'Unknown';
+    public function getCaddyVersionProperty(): ?string
+    {
+        return $this->caddyService->getVersion();
+    }
 
-        // Check config validity
-        $configCheck = shell_exec('caddy validate --config /etc/caddy/Caddyfile 2>&1');
-        $this->configValid = strpos($configCheck, 'valid') !== false;
+    public function getConfigStatusProperty(): array
+    {
+        return $this->caddyService->validateConfig();
+    }
 
-        // Count domains and SSL certificates
-        $this->domainsCount = \App\Models\Domain::where('status', '!=', 'broken')->count();
-        $this->sslCertificatesCount = \App\Models\DomainSslCertificate::count();
+    public function getConfigStatsProperty(): array
+    {
+        return $this->caddyService->getConfigStats();
+    }
 
-        // Get uptime
-        if ($this->isRunning) {
-            $uptimeOutput = shell_exec('systemctl show caddy --property=ActiveEnterTimestamp --value');
-            if ($uptimeOutput) {
-                $startTime = strtotime(trim($uptimeOutput));
-                $uptime = time() - $startTime;
-                $this->uptime = $this->formatUptime($uptime);
-            }
+    public function getHealthChecksProperty(): array
+    {
+        return $this->caddyService->getHealthChecks();
+    }
+
+    public function getRecentActivityProperty(): array
+    {
+        return $this->caddyService->getRecentActivity();
+    }
+
+    public function startService(): void
+    {
+        $result = $this->caddyService->start();
+        
+        if ($result['success']) {
+            Notification::make()
+                ->title('Service Started')
+                ->body($result['message'])
+                ->success()
+                ->send();
+        } else {
+            Notification::make()
+                ->title('Failed to Start Service')
+                ->body($result['message'])
+                ->danger()
+                ->send();
+        }
+    }
+
+    public function stopService(): void
+    {
+        $result = $this->caddyService->stop();
+        
+        if ($result['success']) {
+            Notification::make()
+                ->title('Service Stopped')
+                ->body($result['message'])
+                ->success()
+                ->send();
+        } else {
+            Notification::make()
+                ->title('Failed to Stop Service')
+                ->body($result['message'])
+                ->danger()
+                ->send();
+        }
+    }
+
+    public function restartService(): void
+    {
+        $result = $this->caddyService->restart();
+        
+        if ($result['success']) {
+            Notification::make()
+                ->title('Service Restarted')
+                ->body($result['message'])
+                ->success()
+                ->send();
+        } else {
+            Notification::make()
+                ->title('Failed to Restart Service')
+                ->body($result['message'])
+                ->danger()
+                ->send();
+        }
+    }
+
+    public function reloadConfig(): void
+    {
+        $result = $this->caddyService->reload();
+        
+        if ($result['success']) {
+            Notification::make()
+                ->title('Configuration Reloaded')
+                ->body($result['message'])
+                ->success()
+                ->send();
+        } else {
+            Notification::make()
+                ->title('Failed to Reload Configuration')
+                ->body($result['message'])
+                ->danger()
+                ->send();
+        }
+    }
+
+    public function validateConfig(): void
+    {
+        $result = $this->caddyService->validateConfig();
+        
+        if ($result['valid']) {
+            Notification::make()
+                ->title('Configuration Valid')
+                ->body($result['message'])
+                ->success()
+                ->send();
+        } else {
+            Notification::make()
+                ->title('Configuration Invalid')
+                ->body($result['message'])
+                ->danger()
+                ->send();
         }
     }
 
@@ -67,22 +160,8 @@ class CaddyDashboard extends Page
             Action::make('refresh')
                 ->label('Refresh Status')
                 ->icon('heroicon-o-arrow-path')
-                ->action(fn() => $this->loadStatus()),
+                ->action(fn() => $this->dispatch('$refresh')),
         ];
-    }
-
-    private function formatUptime(int $seconds): string
-    {
-        $days = floor($seconds / 86400);
-        $hours = floor(($seconds % 86400) / 3600);
-        $minutes = floor(($seconds % 3600) / 60);
-
-        $parts = [];
-        if ($days > 0) $parts[] = "{$days}d";
-        if ($hours > 0) $parts[] = "{$hours}h";
-        if ($minutes > 0) $parts[] = "{$minutes}m";
-
-        return implode(' ', $parts) ?: '< 1m';
     }
 
     public function getTitle(): string

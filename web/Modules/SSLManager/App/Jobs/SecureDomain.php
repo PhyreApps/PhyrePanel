@@ -18,6 +18,12 @@ class SecureDomain
     public function handle(): void
     {
 
+        if(setting('caddy.enabled')){
+            // Caddy is enabled, skip Let's Encrypt
+            return;
+        }
+
+
         $findDomain = \App\Models\Domain::where('id', $this->domainId)->first();
         if (!$findDomain) {
             throw new \Exception('Domain not found');

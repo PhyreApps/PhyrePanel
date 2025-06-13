@@ -89,10 +89,6 @@ class CaddySettings extends BaseSettings
                                         ->label('Disable Apache SSL')
                                         ->helperText('Disable SSL on Apache when Caddy is enabled (recommended for proper SSL termination)'),
 
-                                    Checkbox::make('caddy.auto_rebuild_on_domain_changes')
-                                        ->label('Auto-rebuild on Domain Changes')
-                                        ->default(true)
-                                        ->helperText('Automatically rebuild Caddy configuration when domains are added/modified'),
                                 ]),
                         ]),
 
@@ -146,7 +142,7 @@ class CaddySettings extends BaseSettings
                                     ->action(function () {
                                         $status = shell_exec('systemctl is-active caddy');
                                         $isActive = trim($status) === 'active';
-                                        
+
                                         Notification::make()
                                             ->title('Caddy Status: ' . ($isActive ? 'Running' : 'Not Running'))
                                             ->color($isActive ? 'success' : 'danger')
