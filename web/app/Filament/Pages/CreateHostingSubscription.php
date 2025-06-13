@@ -53,33 +53,40 @@ EOT;
 
         $errors = [];
 
+
+        // Get Apache port settings
+        $httpPort = setting('general.apache_http_port') ?? '80';
+        $httpsPort = setting('general.apache_https_port') ?? '443';
+        $sslDisabled = setting('general.apache_ssl_disabled') ?? false;
+
         // Check if domain is pointing to the server
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, "http://$domain/verify.php?verified=1");
+        curl_setopt($curl, CURLOPT_URL, "http://$domain:$httpPort/verify.php?verified=1");
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         $result = curl_exec($curl);
+
         curl_close($curl);
 
         if ($result !== 'Domain verified') {
             $errors[] = 'Domain not pointing to the server';
         }
 
-        // Check if www. domain is pointing to the server
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, "http://www.$domain/verify.php?verified=1");
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-        $result = curl_exec($curl);
-        curl_close($curl);
-
-        if ($result !== 'Domain verified') {
-            $errors[] = 'www. domain not pointing to the server';
-        }
+//        // Check if www. domain is pointing to the server
+//        $curl = curl_init();
+//        curl_setopt($curl, CURLOPT_URL, "http://www.$domain/verify.php?verified=1");
+//        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+//        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
+//        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+//        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+//        $result = curl_exec($curl);
+//        curl_close($curl);
+//
+//        if ($result !== 'Domain verified') {
+//            $errors[] = 'www. domain not pointing to the server';
+//        }
 
         return [
             'errors' => $errors,
@@ -239,6 +246,7 @@ EOT;
         // Get current server IP
         $serverIp = shell_exec("hostname -I | cut -d' ' -f1");
         $serverIp = trim($serverIp);
+
 
         return Action::make('Verifying Domain')
             ->modalContent(view('filament.pages.create-hosting-subscription.verify-domain-modal', [
