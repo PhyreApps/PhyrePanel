@@ -77,7 +77,7 @@ class Version extends Page
             }
         }
 
-        $debug = 0;
+        $debug = 1;
         if ($debug) {
             $dm = new DownloadMicroweber();
             $dm->handle();

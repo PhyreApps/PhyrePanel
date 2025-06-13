@@ -59,9 +59,19 @@ class DomainIsCreatedListener
             return;
         }
 
+
+        $installPath = $findDomain->domain_root . '/microweber';
+        $installPathPublicHtml = $findDomain->domain_public;
+        $installPathPublicFOrSymlink = $findDomain->domain_public . '/microweber/public';
+
+        if (!is_dir($installPath)) {
+            mkdir($installPath, 0755, true);
+        }
+
+
         if (isset($findHostingPlan->default_server_application_settings['php_version'])) {
             $phpVersion = $findHostingPlan->default_server_application_settings['php_version'];
-            $phpSbin = 'php' .$phpVersion;
+            $phpSbin = 'php' . $phpVersion;
         } else {
             $supportedPhpVersions = SupportedApplicationTypes::getPHPVersions();
             $phpVersion = end($supportedPhpVersions);
@@ -87,7 +97,7 @@ class DomainIsCreatedListener
             $shouldCreateMysqlDatabase = true;
         }
 
-        if($shouldCreateMysqlDatabase) {
+        if ($shouldCreateMysqlDatabase) {
             try {
 
                 $databaseUserPassword = Str::password(24);
@@ -126,19 +136,19 @@ class DomainIsCreatedListener
             $website_manager_url = $microweberSettingsFromPanel['website_manager_url'];
         }
 
-    //    dd(setting('microweber'));
 
         $install = new \MicroweberPackages\SharedServerScripts\MicroweberInstaller();
         $install->setChownUser($findDomain->domain_username);
         $install->enableChownAfterInstall();
 
-        $install->setPath($findDomain->domain_public);
+        // $install->setPath($findDomain->domain_public);
+        $install->setPath($installPath);
         $install->setSourcePath(config('microweber.sharedPaths.app'));
 
         $install->setLanguage($installationLanguage);
 
         //$install->setStandaloneInstallation();
-        if($installationType == 'symlink') {
+        if ($installationType == 'symlink') {
             $install->setSymlinkInstallation();
         } else {
             $install->setStandaloneInstallation();
@@ -171,12 +181,13 @@ class DomainIsCreatedListener
             $install->setAdminUsername(null);
             $install->setAdminPassword(null);
         } else {
-            $install->setAdminEmail($username . '@'.$emailDomain);
+            $install->setAdminEmail($username . '@' . $emailDomain);
             $install->setAdminUsername($username);
             $install->setAdminPassword(Str::random(8));
         }
 
         $status = $install->run();
+
 
         if (isset($status['success']) && $status['success']) {
 
@@ -190,21 +201,22 @@ class DomainIsCreatedListener
 
             try {
                 $whitelabelApply = new MicroweberWhitelabelWebsiteApply();
-                $whitelabelApply->setWebPath($findDomain->domain_public);
+                //  $whitelabelApply->setWebPath($findDomain->domain_public);
+                $whitelabelApply->setWebPath($installPath);
                 $whitelabelApply->setSharedPath($sharedAppPath);
                 $whitelabelApply->apply();
             } catch (\Exception $e) {
                 //   \Log::error('Error applying whitelabel to website: ' . $mwInstallation->installation_path);
             }
 
-            $findInstallation = MicroweberInstallation::where('installation_path', $findDomain->domain_public)
+            $findInstallation = MicroweberInstallation::where('installation_path', $installPath)
                 ->where('domain_id', $findDomain->id)
                 ->first();
 
             if (!$findInstallation) {
                 $findInstallation = new MicroweberInstallation();
                 $findInstallation->domain_id = $findDomain->id;
-                $findInstallation->installation_path = $findDomain->domain_public;
+                $findInstallation->installation_path = $installPath;
             }
 
             $findInstallation->app_version = 'latest';
@@ -215,6 +227,18 @@ class DomainIsCreatedListener
             } else {
                 $findInstallation->installation_type = 'standalone';
             }
+
+
+            //symlink public folder
+            if (is_dir($installPathPublicHtml)) {
+                //rename the public folder to public_old
+                rename($installPathPublicHtml, $installPathPublicHtml . '_old');
+            }
+
+            if (!is_link($installPathPublicHtml)) {
+                symlink($installPath . '/public', $installPathPublicHtml);
+            }
+
 
             $findInstallation->save();
 

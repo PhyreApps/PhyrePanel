@@ -27,6 +27,7 @@ class DomainResource extends Resource
 {
     protected static ?string $model = Domain::class;
 
+
     protected static ?string $navigationIcon = 'heroicon-o-globe-europe-africa';
 
     protected static ?string $navigationGroup = 'Hosting Services';
@@ -162,14 +163,14 @@ class DomainResource extends Resource
                                     Actions\Action::make('clone_repository')
                                         //  ->icon('heroicon-m-refresh')
                                         //->requiresConfirmation()
-                                        ->action(function(Get $get, $record) {
+                                        ->action(function (Get $get, $record) {
 
                                             // Run command
                                             $domainPublic = $record->domain_public;
                                             $gitRepositoryUrl = $get('git_repository_url');
 
                                             shell_exec('rm -rf ' . $domainPublic);
-                                            $command = 'git clone '.$gitRepositoryUrl . ' ' . $domainPublic;
+                                            $command = 'git clone ' . $gitRepositoryUrl . ' ' . $domainPublic;
                                             $output = shell_exec($command);
 
                                             $record->configureVirtualHost();
@@ -187,63 +188,63 @@ class DomainResource extends Resource
                                 Tabs::make('Tabs Node.js')
                                     ->tabs([
 
-                                Tabs\Tab::make('Dashboard')
-                                    ->schema([
+                                        Tabs\Tab::make('Dashboard')
+                                            ->schema([
 
-                                Actions::make([
+                                                Actions::make([
 
-                                    Actions\Action::make('restart_nodejs')
-                                      //  ->icon('heroicon-m-refresh')
-                                        ->requiresConfirmation()
-                                        ->action(function() {
-                                            // Restart Node.js
-                                        }),
+                                                    Actions\Action::make('restart_nodejs')
+                                                        //  ->icon('heroicon-m-refresh')
+                                                        ->requiresConfirmation()
+                                                        ->action(function () {
+                                                            // Restart Node.js
+                                                        }),
 
-                               ]),
+                                                ]),
 
-                               Select::make('nodejs_version')
-                                    ->label('Node.js version')
-                                    ->options([
-                                        '14.x' => '14.x',
-                                        '16.x' => '16.x',
-                                    ])
-                                    ->columnSpanFull()
-                                    ->default('14.x'),
+                                                Select::make('nodejs_version')
+                                                    ->label('Node.js version')
+                                                    ->options([
+                                                        '14.x' => '14.x',
+                                                        '16.x' => '16.x',
+                                                    ])
+                                                    ->columnSpanFull()
+                                                    ->default('14.x'),
 
-                                Select::make('package_manager')
-                                    ->label('Package manager')
-                                    ->options([
-                                        'npm' => 'npm',
-                                        'yarn' => 'yarn',
-                                    ])
-                                    ->columnSpanFull()
-                                    ->default('npm'),
+                                                Select::make('package_manager')
+                                                    ->label('Package manager')
+                                                    ->options([
+                                                        'npm' => 'npm',
+                                                        'yarn' => 'yarn',
+                                                    ])
+                                                    ->columnSpanFull()
+                                                    ->default('npm'),
 
-                                TextInput::make('document_root')
-                                    ->label('Document root')
-                                    ->columnSpanFull()
-                                    ->default('/public_html'),
+                                                TextInput::make('document_root')
+                                                    ->label('Document root')
+                                                    ->columnSpanFull()
+                                                    ->default('/public_html'),
 
-                                Select::make('application_mode')
-                                    ->label('Application mode')
-                                    ->options([
-                                        'development' => 'Development',
-                                        'production' => 'Production',
-                                    ])
-                                    ->columnSpanFull()
-                                    ->default('production'),
+                                                Select::make('application_mode')
+                                                    ->label('Application mode')
+                                                    ->options([
+                                                        'development' => 'Development',
+                                                        'production' => 'Production',
+                                                    ])
+                                                    ->columnSpanFull()
+                                                    ->default('production'),
 
-                                TextInput::make('application_startup_file')
-                                    ->label('Application startup file')
-                                    ->columnSpanFull()
-                                    ->default('app.js'),
+                                                TextInput::make('application_startup_file')
+                                                    ->label('Application startup file')
+                                                    ->columnSpanFull()
+                                                    ->default('app.js'),
 
-                                KeyValue::make('custom_environment_variables')
-                                    ->label('Custom Environment variables')
-                                    ->columnSpanFull()
-                                    ->helperText('Add custom environment variables for your Node.js application. Separate key and value with an equal sign. Example: KEY=VALUE')
+                                                KeyValue::make('custom_environment_variables')
+                                                    ->label('Custom Environment variables')
+                                                    ->columnSpanFull()
+                                                    ->helperText('Add custom environment variables for your Node.js application. Separate key and value with an equal sign. Example: KEY=VALUE')
 
-                                 ]),
+                                            ]),
 
                                         Tabs\Tab::make('Run Node.js commands')
                                             ->schema([
@@ -273,16 +274,16 @@ class DomainResource extends Resource
                                                     Actions\Action::make('run_command')
                                                         //  ->icon('heroicon-m-refresh')
                                                         ->requiresConfirmation()
-                                                        ->action(function() {
+                                                        ->action(function () {
                                                             // Run command
                                                         }),
 
                                                 ]),
 
 
-                                        ]),
+                                            ]),
 
-                                ])
+                                    ])
 
                             ]),
                     ])
@@ -329,7 +330,7 @@ class DomainResource extends Resource
                     ->label('Open website')
                     ->icon('heroicon-m-arrow-top-right-on-square')
                     ->color('gray')
-                    ->url(fn ($record): string => 'http://'.$record->domain, true),
+                    ->url(fn($record): string => 'http://' . $record->domain, true),
 
 //                Tables\Actions\EditAction::make(),
 
@@ -346,7 +347,7 @@ class DomainResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    //  Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

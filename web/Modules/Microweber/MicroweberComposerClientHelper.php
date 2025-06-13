@@ -10,8 +10,8 @@ class MicroweberComposerClientHelper
     public function getComposerClientInstance()
     {
         $packageServers = [
-            'https://market.microweberapi.com/packages/microweberserverpackages/packages.json',
-            'https://packages.microweberapi.com/packages/microweber/packages.json',
+            'https://modules.microweberapi.com/packages/microweberserverpackages/packages.json',
+            'https://modules.microweberapi.com/packages/microweber/packages.json',
         ];
 
         $marketplaceRepositoriesUrls = setting('microweber.whitelabel.marketplace_repositories_urls');
