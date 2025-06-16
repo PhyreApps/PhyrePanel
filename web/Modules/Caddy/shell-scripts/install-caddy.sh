@@ -50,7 +50,6 @@ sudo chown -R caddy:caddy /var/lib/caddy
 sudo chown -R caddy:caddy /var/log/caddy
 sudo chmod 755 /etc/caddy
 sudo chmod 644 /etc/caddy/Caddyfile
-sudo chmod 777 /var/log/caddy  # Allow write access from any user
 
 
 

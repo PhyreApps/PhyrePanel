@@ -18,7 +18,7 @@
 	}
 
 	# Enable compression
-	encode gzip
+	encode zstd gzip
 
 	# Security headers
 	header {

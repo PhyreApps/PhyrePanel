@@ -22,7 +22,9 @@ class CaddyBuild implements ShouldQueue
     public function __construct($fixPermissions = false)
     {
         $this->fixPermissions = $fixPermissions;
-    }    /**
+    }
+
+    /**
      * Execute the job.
      */
     public function handle(): void
@@ -71,7 +73,9 @@ class CaddyBuild implements ShouldQueue
 
         // Apply configuration
         $this->applyCaddyConfiguration();
-    }    /**
+    }
+
+    /**
      * Validate prerequisites before building configuration
      */
     protected function validatePrerequisites(): void
@@ -178,6 +182,17 @@ class CaddyBuild implements ShouldQueue
             if ($isBroken) {
                 continue;
             }
+            $domainLog = '/var/log/caddy/' . $domain->domain . '.log';
+            shell_exec("chown caddy:caddy '/var/log/caddy/");
+            shell_exec("chmod -R 777 /var/log/caddy/");
+            if(!file_exists($domainLog)) {
+                // Create log file for the domain if it doesn't exist
+                touch($domainLog);
+                shell_exec("chown caddy:caddy {$domainLog}");
+                shell_exec("chmod 777 {$domainLog}");
+            }
+
+
 
             // Create Caddy block for SSL termination and proxy to Apache
             $caddyBlock = $this->createCaddyBlock($domain, $apacheHttpPort);
@@ -209,7 +224,9 @@ class CaddyBuild implements ShouldQueue
 
         // Reload Caddy configuration
         shell_exec('systemctl reload caddy');
-    }    private function createCaddyBlock(Domain $domain, $apacheHttpPort): ?array
+    }
+
+    private function createCaddyBlock(Domain $domain, $apacheHttpPort): ?array
     {
         if ($domain->status === Domain::STATUS_SUSPENDED ||
             $domain->status === Domain::STATUS_DEACTIVATED ||
@@ -223,7 +240,9 @@ class CaddyBuild implements ShouldQueue
             'enable_ssl' => true,
             'enable_www' => true,
         ];
-    }    private function createMasterDomainCaddyBlock(MasterDomain $masterDomain, $apacheHttpPort): ?array
+    }
+
+    private function createMasterDomainCaddyBlock(MasterDomain $masterDomain, $apacheHttpPort): ?array
     {
         if (empty($masterDomain->domain)) {
             return null;
@@ -236,7 +255,9 @@ class CaddyBuild implements ShouldQueue
             'enable_www' => true,
             'is_master' => true,
         ];
-    }/**
+    }
+
+    /**
      * Validate generated configuration before applying
      */
     protected function validateGeneratedConfig(): void
@@ -296,7 +317,8 @@ class CaddyBuild implements ShouldQueue
             throw $e;
         }
     }
-      /**
+
+    /**
      * Create backup of current configuration
      */
     protected function backupCurrentConfig(): void
@@ -312,7 +334,8 @@ class CaddyBuild implements ShouldQueue
             \Log::info("Configuration backup created: {$backupPath}");
         }
     }
-      /**
+
+    /**
      * Restore configuration from backup
      */
     protected function restoreConfigBackup(): void
@@ -341,7 +364,7 @@ class CaddyBuild implements ShouldQueue
     protected function reloadCaddyService(): void
     {
         $commands = [
-          //  'systemctl reload caddy',
+            //  'systemctl reload caddy',
             'systemctl restart caddy',
 
         ];
@@ -384,7 +407,8 @@ class CaddyBuild implements ShouldQueue
             \Log::error('Recovery attempt failed: ' . $e->getMessage());
         }
     }
-      /**
+
+    /**
      * Clean up old backup files
      */
     protected function cleanupOldBackups(): void
