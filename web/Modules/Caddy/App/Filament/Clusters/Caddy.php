@@ -10,6 +10,9 @@ class Caddy extends Cluster
 
     protected static ?string $navigationIcon = 'heroicon-o-command-line';
 
+    protected static ?string $navigationGroup = 'Server Management';
+
+
     public static function getModuleName(): string
     {
         return 'Caddy';

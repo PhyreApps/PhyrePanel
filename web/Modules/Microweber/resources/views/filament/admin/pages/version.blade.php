@@ -11,30 +11,7 @@
         </p>
     </x-filament::card>
 
-    <x-filament::card>
-        <h3 class="mb-2 text-xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-2xl">
-           Microweber App Templates
-          </h3>
 
-        <p>
-            Available App Templates ({{ $totalAppTemplates }})
-        </p>
-
-        <div class="mt-4">
-            @foreach ($appTemplates as $appTemplate)
-
-                <span>{{ $appTemplate['name'] }} ({{ $appTemplate['version'] }})</span>
-                @if (!$loop->last)
-                    ,
-                @endif
-            @endforeach
-        </div>
-    </x-filament::card>
-
-
-   {{-- <div class="p-4 text-white rounded bg-green-500/90 dark:bg-green-500/30">
-        Your app and templates is up-to-date!
-    </div>--}}
 
     @if($downloadingNow)
         <div class="flex gap-2 items-center p-4 text-white rounded bg-green-500/90 dark:bg-green-500/30">
@@ -50,5 +27,90 @@
     <x-filament::button wire:click="checkForUpdates" class="w-[16rem]">
         Check for updates
     </x-filament::button>
+
+
+
+    <x-filament::card>
+        <h3 class="mb-2 text-xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-2xl">
+           Microweber App Templates
+          </h3>
+
+        <p>
+            Available App Templates ({{ $totalAppTemplates }})
+        </p>
+
+        <ul class="mt-4">
+            @foreach ($appTemplates as $appTemplate)
+
+                <li>
+
+                    {{ $appTemplate['name'] }}
+                    @if (isset($appTemplate['version']) and $appTemplate['version'])
+                    ({{ $appTemplate['version'] }})
+                    @endif
+
+                    @if (isset($appTemplate['targetDir']) and $appTemplate['targetDir'])
+                    ({{ $appTemplate['targetDir'] }})
+                    @endif
+
+
+                </li>
+                @if (!$loop->last)
+
+                @endif
+            @endforeach
+        </ul>
+
+
+
+
+
+    </x-filament::card>
+
+
+    <x-filament::card>
+        <h3 class="mb-2 text-xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-2xl">
+            Microweber App Modules
+        </h3>
+
+        <p>
+            Available App Modules ({{ $totalAppModules }})
+        </p>
+
+        <ul class="mt-4">
+
+
+            @foreach ($appModules as $appModule)
+
+                <li>
+                    {{ $appModule['name'] }}
+                    @if (isset($appModule['version']) and $appModule['version'])
+                    ({{ $appModule['version'] }})
+                    @endif
+
+                    @if (isset($appModule['targetDir']) and $appModule['targetDir'])
+                    ({{ $appModule['targetDir'] }})
+                    @endif
+                </li>
+                @if (!$loop->last)
+
+                @endif
+            @endforeach
+
+        </ul>
+
+
+
+
+
+    </x-filament::card>
+
+
+
+
+   {{-- <div class="p-4 text-white rounded bg-green-500/90 dark:bg-green-500/30">
+        Your app and templates is up-to-date!
+    </div>--}}
+
 
 </x-filament-panels::page>

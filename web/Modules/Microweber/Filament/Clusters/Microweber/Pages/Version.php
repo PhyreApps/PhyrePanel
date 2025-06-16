@@ -33,6 +33,7 @@ class Version extends Page
     public $latestDownloadDateOfApp = 0;
 
     public $supportedTemplates = [];
+    public $supportedModules = [];
 
     public $supportedLanguages = [];
 
@@ -47,6 +48,7 @@ class Version extends Page
 
         $this->supportedLanguages = $sharedPath->getSupportedLanguages();
         $this->supportedTemplates = $sharedPath->getSupportedTemplates();
+        $this->supportedModules = $sharedPath->getSupportedModules();
         $this->latestVersionOfApp = $mwComposerClientHelper->getMicroweberDownloaderInstance()->getVersion();
         $this->currentVersionOfApp = $sharedPath->getCurrentVersion();
         $this->latestDownloadDateOfApp = $sharedPath->getCreatedAt();
@@ -62,6 +64,8 @@ class Version extends Page
             'latestAppDownloadDate' => $this->latestDownloadDateOfApp,
             'totalAppTemplates' => count($this->supportedTemplates),
             'appTemplates' => $this->supportedTemplates,
+            'totalAppModules' => count($this->supportedModules),
+            'appModules' => $this->supportedModules,
             'supportedLanguages' => $this->supportedLanguages,
             'supportedTemplates' => $this->supportedTemplates,
         ];
