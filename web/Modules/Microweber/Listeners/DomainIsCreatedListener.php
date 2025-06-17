@@ -148,6 +148,10 @@ class DomainIsCreatedListener
 
         $install->setLanguage($installationLanguage);
 
+        $domainForInstall = $findDomain->domain;
+        $install->setAppUrl($domainForInstall);
+
+
         //$install->setStandaloneInstallation();
         if ($installationType == 'symlink') {
             $install->setSymlinkInstallation();

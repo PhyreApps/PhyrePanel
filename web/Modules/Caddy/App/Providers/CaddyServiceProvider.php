@@ -38,7 +38,7 @@ class CaddyServiceProvider extends ServiceProvider
 
 
         Event::listen(ApacheRebuildCompleted::class,ApacheRebuildEventListener::class);
- //       Event::listen(DomainIsCreated::class,DomainIsCreatedListener::class);
+       Event::listen(DomainIsCreated::class,DomainIsCreatedListener::class);
 //        Event::listen(DomainIsChanged::class,DomainIsChangedListener::class);
 //        Event::listen(DomainIsDeleted::class,DomainIsDeletedListener::class);
 

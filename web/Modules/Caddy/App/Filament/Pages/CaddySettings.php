@@ -7,6 +7,7 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Modules\Caddy\App\Jobs\CaddyBuild;
 use Modules\Caddy\App\Filament\Clusters\Caddy;
@@ -55,6 +56,10 @@ class CaddySettings extends BaseSettings
                             Checkbox::make('caddy.enabled')
                                 ->label('Enable Caddy')
                                 ->helperText('Enable Caddy as reverse proxy for SSL termination. When enabled, Caddy will handle HTTPS and proxy to Apache on HTTP port.'),
+
+                            Checkbox::make('caddy.enable_static_files')
+                                ->label('Enable Static File Serving')
+                                ->helperText('When enabled, Caddy will directly serve static files from each domain\'s document root for better performance.'),
 
                             TextInput::make('caddy.email')
                                 ->label('ACME Email')
@@ -111,6 +116,30 @@ class CaddySettings extends BaseSettings
                                         ->label('Enable Gzip Compression')
                                         ->default(true)
                                         ->helperText('Enable gzip compression for responses'),
+                                ]),
+                        ]),
+
+                    Tabs\Tab::make('Static Files')
+                        ->schema([
+                            Section::make('Static File Serving')
+                                ->description('Configure paths for serving static files directly through Caddy')
+                                ->schema([
+                                    Checkbox::make('caddy.enable_static_files')
+                                        ->label('Enable Static File Serving')
+                                        ->helperText('When enabled, Caddy will directly serve static files from each domain\'s document root for better performance.'),
+
+                                    Textarea::make('caddy.static_paths')
+                                        ->label('Static File Paths')
+                                        ->placeholder('/public/*
+/storage/*
+/vendor/*
+/modules/*
+/templates/*
+/js/*
+/css/*')
+                                        ->helperText('Enter paths one per line. These paths will be served directly by Caddy\'s file server from each domain\'s document root.')
+                                        ->rows(7)
+                                        ->default("/public/*\n/storage/*\n/vendor/*\n/modules/*\n/templates/*\n/js/*\n/css/*"),
                                 ]),
                         ]),
 

@@ -30,6 +30,17 @@ class DomainIsCreatedListener extends DomainEventListener
      */
     public function handle(DomainIsCreated $event): void
     {
+    /*    if (setting('caddy.enabled')) {
+            $domain = $event->model;
+            $findHostingSubscription = HostingSubscription::where('id', $domain->hosting_subscription_id)->first();
+            if ($findHostingSubscription) {
+                $sytemUsername = $findHostingSubscription->system_username;
+                //add caddy to the user group
+
+                shell_exec('usermod -aG caddy ' . $sytemUsername);
+                shell_exec('usermod -aG ' . $sytemUsername . ' caddy');
+            }
+        }*/
 
         $this->rebuildCaddyIfEnabled();
 

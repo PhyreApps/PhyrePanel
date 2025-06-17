@@ -19,7 +19,7 @@ class DomainEventListener
     public function rebuildCaddyIfEnabled(): void
     {
         if (setting('caddy.enabled')) {
-            CaddyBuild::dispatch();
+            CaddyBuild::dispatchSync();
         }
     }
 }

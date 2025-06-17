@@ -167,6 +167,9 @@ class CaddyBuild implements ShouldQueue
         $apacheHttpPort = setting('caddy.apache_proxy_port') ?? setting('general.apache_http_port') ?? '8080';
         $caddyEmail = setting('caddy.email') ?? setting('general.master_email') ?? 'admin@localhost';
 
+        // Get static file paths from settings
+        $staticPaths = setting('caddy.static_paths') ?? '';
+
         foreach ($getAllDomains as $domain) {
             $isBroken = false;
 
@@ -214,6 +217,7 @@ class CaddyBuild implements ShouldQueue
         $caddyfile = view('caddy::caddyfile-build', [
             'caddyBlocks' => $caddyBlocks,
             'caddyEmail' => $caddyEmail,
+            'staticPaths' => $staticPaths,
         ])->render();
 
         $caddyfile = preg_replace('~(*ANY)\A\s*\R|\s*(?!\r\n)\s$~mu', '', $caddyfile);
@@ -239,6 +243,7 @@ class CaddyBuild implements ShouldQueue
             'proxy_to' => "127.0.0.1:{$apacheHttpPort}",
             'enable_ssl' => true,
             'enable_www' => true,
+            'document_root' => $domain->document_root ?? "/var/www/{$domain->domain}/public_html",
         ];
     }
 
@@ -254,6 +259,7 @@ class CaddyBuild implements ShouldQueue
             'enable_ssl' => true,
             'enable_www' => true,
             'is_master' => true,
+            'document_root' => $masterDomain->document_root ?? "/var/www/{$masterDomain->domain}/public_html",
         ];
     }
 
