@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use MicroweberPackages\SharedServerScripts\MicroweberWhitelabelSettingsUpdater;
 use MicroweberPackages\SharedServerScripts\MicroweberWhitelabelWebsiteApply;
 use Modules\Microweber\App\Models\MicroweberInstallation;
+use Modules\Microweber\Jobs\UpdateEnvVarsToWebsites;
 
 class DomainIsCreatedListener
 {
@@ -241,6 +242,12 @@ class DomainIsCreatedListener
 
 
             $findInstallation->save();
+
+
+            $envJob = new UpdateEnvVarsToWebsites();
+            $envJob->setInstallationId($findInstallation->id);
+            $envJob->handle();
+
 
         }
 

@@ -29,6 +29,9 @@ class Settings extends BaseSettings
 
     public function schema(): array
     {
+
+
+
         return [
 
             Section::make('Settings')
@@ -37,7 +40,7 @@ class Settings extends BaseSettings
                     Select::make('microweber.default_installation_template')
                         ->options([
                             'default' => 'Default',
-                            'big' => 'BIG',
+                            'Big2' => 'Big2',
                         ])
                         ->label('Default Installation template'),
 
