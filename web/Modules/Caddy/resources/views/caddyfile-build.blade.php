@@ -26,6 +26,12 @@
     handle @static_files {
         file_server
     }
+    header @static_files {
+        Cache-Control max-age=5184000
+        ETag
+    }
+
+
     @endif
 
     # Proxy remaining requests to Apache
