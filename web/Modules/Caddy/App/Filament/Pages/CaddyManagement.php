@@ -84,7 +84,7 @@ class CaddyManagement extends Page implements HasForms
                 ->action(function () {
                     $output = shell_exec('caddy validate --config /etc/caddy/Caddyfile 2>&1');
                     $isValid = strpos($output, 'valid') !== false;
-                    
+
                     Notification::make()
                         ->title('Configuration ' . ($isValid ? 'Valid' : 'Invalid'))
                         ->body($isValid ? 'Caddyfile syntax is correct' : $output)
@@ -99,7 +99,7 @@ class CaddyManagement extends Page implements HasForms
                 ->action(function () {
                     CaddyBuild::dispatchSync();
                     $this->loadCaddyfile();
-                    
+
                     Notification::make()
                         ->title('Caddyfile rebuilt from domains')
                         ->success()
@@ -111,12 +111,15 @@ class CaddyManagement extends Page implements HasForms
     public function saveCaddyfile(): void
     {
         file_put_contents('/etc/caddy/Caddyfile', $this->caddyfileContent);
-        
+
         // Validate the configuration
         $output = shell_exec('caddy validate --config /etc/caddy/Caddyfile 2>&1');
         $isValid = strpos($output, 'valid') !== false;
-        
-        if ($isValid) {        shell_exec('systemctl reload caddy');
+
+        if ($isValid) {
+
+            shell_exec('systemctl reload caddy');
+
             Notification::make()
                 ->title('Caddyfile saved and reloaded')
                 ->success()
@@ -171,7 +174,7 @@ class CaddyManagement extends Page implements HasForms
 
         if (trim($exitCode) === '0') {
             $this->loadCaddyfile(); // Reload the formatted content
-            
+
             Notification::make()
                 ->title('Caddyfile Formatted')
                 ->body('Configuration formatted successfully')
@@ -180,7 +183,7 @@ class CaddyManagement extends Page implements HasForms
         } else {
             // Restore backup on failure
             copy($backupPath, $caddyConfigPath);
-            
+
             Notification::make()
                 ->title('Format Failed')
                 ->body('Failed to format Caddyfile: ' . $output)
@@ -191,6 +194,7 @@ class CaddyManagement extends Page implements HasForms
 
     public function getTitle(): string
     {
+
         return 'Caddy Management';
     }
 }

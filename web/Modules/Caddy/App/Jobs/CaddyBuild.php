@@ -327,6 +327,8 @@ class CaddyBuild implements ShouldQueue
             $this->reloadCaddyService();
 
             \Log::info('Caddy configuration applied successfully');
+
+            $this->cleanupOldBackups();
         } catch (\Exception $e) {
             \Log::error('Failed to apply Caddy configuration: ' . $e->getMessage());
 
@@ -408,7 +410,7 @@ class CaddyBuild implements ShouldQueue
     protected function attemptRecovery(): void
     {
         try {
-            \Log::info('Attempting Caddy configuration recovery');
+         //   \Log::info('Attempting Caddy configuration recovery');
 
             // Try to restore from backup
             $this->restoreConfigBackup();
@@ -416,13 +418,13 @@ class CaddyBuild implements ShouldQueue
             // Check if service is still running
             $status = shell_exec('systemctl is-active caddy 2>/dev/null');
             if (trim($status) !== 'active') {
-                \Log::warning('Caddy service is not active, attempting to start');
+            //    \Log::warning('Caddy service is not active, attempting to start');
                 shell_exec('systemctl start caddy 2>&1');
             }
 
-            \Log::info('Recovery attempt completed');
+        //    \Log::info('Recovery attempt completed');
         } catch (\Exception $e) {
-            \Log::error('Recovery attempt failed: ' . $e->getMessage());
+         //   \Log::error('Recovery attempt failed: ' . $e->getMessage());
         }
     }
 
@@ -442,7 +444,7 @@ class CaddyBuild implements ShouldQueue
 
             foreach ($oldBackups as $backup) {
                 if (unlink($backup)) {
-                    \Log::info("Removed old backup: {$backup}");
+                  //  \Log::info("Removed old backup: {$backup}");
                 }
             }
         }
