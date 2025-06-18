@@ -53,6 +53,9 @@ sudo chmod 644 /etc/caddy/Caddyfile
 
 
 
+usermod -aG www-data caddy
+
+
 
 
 sudo systemctl enable caddy

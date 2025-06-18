@@ -188,13 +188,25 @@ class CaddyBuild implements ShouldQueue
             $domainLog = '/var/log/caddy/' . $domain->domain . '.log';
             shell_exec("chown caddy:caddy '/var/log/caddy/");
             shell_exec("chmod -R 777 /var/log/caddy/");
-            if(!file_exists($domainLog)) {
+
+
+            shell_exec("sudo setfacl -R -m u:caddy:rx " . $domain->document_root);
+            shell_exec("sudo setfacl -R -m u:caddy:rx " . $domain->domain_public);
+            shell_exec("sudo setfacl -R -m u:caddy:rx " . $domain->home_root);
+
+
+
+            // Set permissions for Caddy to access user directories
+            shell_exec("chmod o+x {$domain->home_root}");
+            shell_exec("chmod -R o+rX {$domain->document_root}");
+
+
+            if (!file_exists($domainLog)) {
                 // Create log file for the domain if it doesn't exist
                 touch($domainLog);
                 shell_exec("chown caddy:caddy {$domainLog}");
                 shell_exec("chmod 777 {$domainLog}");
             }
-
 
 
             // Create Caddy block for SSL termination and proxy to Apache
@@ -243,7 +255,7 @@ class CaddyBuild implements ShouldQueue
             'proxy_to' => "127.0.0.1:{$apacheHttpPort}",
             'enable_ssl' => true,
             'enable_www' => true,
-            'document_root' => $domain->document_root ?? "/var/www/{$domain->domain}/public_html",
+            'document_root' => $domain->domain_public ?? "{$domain->home_root}/public_html",
         ];
     }
 

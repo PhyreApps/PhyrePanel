@@ -12,7 +12,7 @@
 # {{ $block['domain'] }} configuration
 {{ $block['domain'] }} {
 
-    @if(setting('caddy.enable_static_files', false) && !empty($staticPaths))
+    @if(setting('caddy.enable_static_files', false) && !empty($staticPaths) and isset($block['document_root']))
     # Static file paths for domain
     root * {{ $block['document_root'] ?? '/var/www/html' }}
 
