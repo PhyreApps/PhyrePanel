@@ -162,6 +162,7 @@ class CaddyBuild implements ShouldQueue
     {
         $getAllDomains = Domain::whereNot('status', '<=>', 'broken')->get();
         $caddyBlocks = [];
+        $wildcardGroups = [];
 
         // Get Apache port settings (non-SSL ports for proxying)
         $apacheHttpPort = setting('caddy.apache_proxy_port') ?? setting('general.apache_http_port') ?? '8080';
@@ -174,35 +175,32 @@ class CaddyBuild implements ShouldQueue
         $cloudflareApiToken = setting('caddy.cloudflare_api_token');
         $zeroSSlApiToken = setting('caddy.zerossl_api_token');
 
-        foreach ($getAllDomains as $domain) {
-            $isBroken = false;
+        // Check if wildcard is enabled
+        $useWildcard = setting('caddy.enable_wildcard_ssl', false);
+        $wildcardDomainSetting = setting('caddy.wildcard_domain');
 
+        // First pass - create regular blocks and identify wildcard subdomains
+        foreach ($getAllDomains as $domain) {
             if ($domain->status === 'broken') {
                 continue;
             }
 
             // Check if domain is valid
             if (!filter_var($domain->domain, FILTER_VALIDATE_DOMAIN)) {
-                $isBroken = true;
-            }
-
-            if ($isBroken) {
                 continue;
             }
+
             $domainLog = '/var/log/caddy/' . $domain->domain . '.log';
             shell_exec("chown caddy:caddy '/var/log/caddy/");
             shell_exec("chmod -R 777 /var/log/caddy/");
-
 
             shell_exec("sudo setfacl -R -m u:caddy:rx " . $domain->document_root);
             shell_exec("sudo setfacl -R -m u:caddy:rx " . $domain->domain_public);
             shell_exec("sudo setfacl -R -m u:caddy:rx " . $domain->home_root);
 
-
             // Set permissions for Caddy to access user directories
             shell_exec("chmod o+x {$domain->home_root}");
             shell_exec("chmod -R o+rX {$domain->document_root}");
-
 
             if (!file_exists($domainLog)) {
                 // Create log file for the domain if it doesn't exist
@@ -211,8 +209,26 @@ class CaddyBuild implements ShouldQueue
                 shell_exec("chmod 777 {$domainLog}");
             }
 
+            // Check if this domain belongs under a wildcard
+            $isWildcardSubdomain = false;
+            $parentDomain = null;
 
-            // Create Caddy block for SSL termination and proxy to Apache
+            if ($useWildcard && $cloudflareApiToken && !empty($wildcardDomainSetting)) {
+                if (strpos($domain->domain, '.' . $wildcardDomainSetting) !== false &&
+                    substr_count($domain->domain, '.') > substr_count($wildcardDomainSetting, '.')) {
+                    $isWildcardSubdomain = true;
+                    $parentDomain = $wildcardDomainSetting;
+
+                    // Add to wildcard group
+                    if (!isset($wildcardGroups[$parentDomain])) {
+                        $wildcardGroups[$parentDomain] = [];
+                    }
+                    $wildcardGroups[$parentDomain][] = $this->createCaddyBlock($domain, $apacheHttpPort);
+                    continue;
+                }
+            }
+
+            // Non-wildcard domain, create regular block
             $caddyBlock = $this->createCaddyBlock($domain, $apacheHttpPort);
             if ($caddyBlock) {
                 $caddyBlocks[] = $caddyBlock;
@@ -226,6 +242,16 @@ class CaddyBuild implements ShouldQueue
             if ($masterDomainBlock) {
                 $caddyBlocks[] = $masterDomainBlock;
             }
+        }
+
+        // Add wildcard groups to the blocks list
+        foreach ($wildcardGroups as $parentDomain => $subdomains) {
+            $caddyBlocks[] = [
+                'is_wildcard_group' => true,
+                'parent_domain' => $parentDomain,
+                'subdomains' => $subdomains,
+                'cloudflareApiToken' => $cloudflareApiToken
+            ];
         }
 
         // Generate Caddyfile
@@ -255,24 +281,18 @@ class CaddyBuild implements ShouldQueue
             return null;
         }
 
-        //gi matcth the wilcard use tls_cloudflare
-
         $useWildcard = setting('caddy.enable_wildcard_ssl', false);
         $cloudflareApiToken = setting('caddy.cloudflare_api_token');
         $wildcardDomainSettings = setting('caddy.wildcard_domain');
         $tls_cloudflare = false;
         $use_wildcard = false;
-        $wildcardDomain = null;
-        if ($useWildcard && $cloudflareApiToken && !empty($domain->domain)) {
 
+        if ($useWildcard && $cloudflareApiToken && !empty($domain->domain)) {
             if (!empty($wildcardDomainSettings) && strpos($domain->domain, $wildcardDomainSettings) !== false) {
                 $tls_cloudflare = true;
                 $use_wildcard = true;
             }
-
-
         }
-
 
         return array(
             'domain' => $domain->domain,
