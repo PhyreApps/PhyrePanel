@@ -172,6 +172,7 @@ class CaddyBuild implements ShouldQueue
 
         // Get Cloudflare API token for DNS challenges
         $cloudflareApiToken = setting('caddy.cloudflare_api_token');
+        $zeroSSlApiToken = setting('caddy.zerossl_api_token');
 
         foreach ($getAllDomains as $domain) {
             $isBroken = false;
@@ -196,7 +197,6 @@ class CaddyBuild implements ShouldQueue
             shell_exec("sudo setfacl -R -m u:caddy:rx " . $domain->document_root);
             shell_exec("sudo setfacl -R -m u:caddy:rx " . $domain->domain_public);
             shell_exec("sudo setfacl -R -m u:caddy:rx " . $domain->home_root);
-
 
 
             // Set permissions for Caddy to access user directories
@@ -234,6 +234,7 @@ class CaddyBuild implements ShouldQueue
             'caddyEmail' => $caddyEmail,
             'staticPaths' => $staticPaths,
             'cloudflareApiToken' => $cloudflareApiToken,
+            'zeroSSlApiToken' => $zeroSSlApiToken,
         ])->render();
 
         $caddyfile = preg_replace('~(*ANY)\A\s*\R|\s*(?!\r\n)\s$~mu', '', $caddyfile);
@@ -254,29 +255,35 @@ class CaddyBuild implements ShouldQueue
             return null;
         }
 
-//        //gi matcth the wilcard use tls_cloudflare
-//
-//        $useWildcard = setting('caddy.enable_wildcard_ssl', false);
-//        $cloudflareApiToken = setting('caddy.cloudflare_api_token');
-//        $tls_cloudflare = false;
-//        $wildcardDomain = null;
-//        if ($useWildcard && $cloudflareApiToken && !empty($domain->domain)) {
-//            if(strpos($domain->domain, '*') === false && strpos($domain->domain, '.') !== false) {
-//                $tls_cloudflare = true;
-//                $wildcardDomain = "*." . $domain->domain;
-//            }
-//        }
-//
-//
+        //gi matcth the wilcard use tls_cloudflare
+
+        $useWildcard = setting('caddy.enable_wildcard_ssl', false);
+        $cloudflareApiToken = setting('caddy.cloudflare_api_token');
+        $wildcardDomainSettings = setting('caddy.wildcard_domain');
+        $tls_cloudflare = false;
+        $use_wildcard = false;
+        $wildcardDomain = null;
+        if ($useWildcard && $cloudflareApiToken && !empty($domain->domain)) {
+
+            if (!empty($wildcardDomainSettings) && strpos($domain->domain, $wildcardDomainSettings) !== false) {
+                $tls_cloudflare = true;
+                $use_wildcard = true;
+            }
 
 
-        return [
+        }
+
+
+        return array(
             'domain' => $domain->domain,
             'proxy_to' => "127.0.0.1:{$apacheHttpPort}",
             'enable_ssl' => true,
+            'tls_cloudflare' => $tls_cloudflare,
+            'use_wildcard' => $use_wildcard,
+            'cloudflareApiToken' => $cloudflareApiToken,
             'enable_www' => true,
             'document_root' => $domain->domain_public ?? "{$domain->home_root}/public_html",
-        ];
+        );
     }
 
     private function createMasterDomainCaddyBlock(MasterDomain $masterDomain, $apacheHttpPort): ?array
@@ -288,6 +295,7 @@ class CaddyBuild implements ShouldQueue
         // Wildcard SSL logic only for master domain
         $useWildcard = setting('caddy.enable_wildcard_ssl', false);
         $cloudflareApiToken = setting('caddy.cloudflare_api_token');
+        $zeroSSlApiToken = setting('caddy.zerossl_api_token');
         $tls_cloudflare = false;
         $wildcardDomain = null;
 
@@ -301,13 +309,15 @@ class CaddyBuild implements ShouldQueue
 
         return [
             'domain' => $masterDomain->domain,
-           // 'wildcardDomain' => $wildcardDomain,
-          //  'cloudflareApiToken' => $cloudflareApiToken,
+            // 'wildcardDomain' => $wildcardDomain,
+            //  'cloudflareApiToken' => $cloudflareApiToken,
+            // 'zeroSSlApiToken' => $zeroSSlApiToken,
+
             'proxy_to' => "127.0.0.1:{$apacheHttpPort}",
             'enable_ssl' => true,
             'enable_www' => true,
             'is_master' => true,
-        //    'tls_cloudflare' => $tls_cloudflare,
+            //  'tls_cloudflare' => $tls_cloudflare,
             'document_root' => $masterDomain->document_root ?? "/var/www/{$masterDomain->domain}/public_html",
         ];
     }
@@ -447,7 +457,7 @@ class CaddyBuild implements ShouldQueue
     protected function attemptRecovery(): void
     {
         try {
-         //   \Log::info('Attempting Caddy configuration recovery');
+            //   \Log::info('Attempting Caddy configuration recovery');
 
             // Try to restore from backup
             $this->restoreConfigBackup();
@@ -455,13 +465,13 @@ class CaddyBuild implements ShouldQueue
             // Check if service is still running
             $status = shell_exec('systemctl is-active caddy 2>/dev/null');
             if (trim($status) !== 'active') {
-            //    \Log::warning('Caddy service is not active, attempting to start');
+                //    \Log::warning('Caddy service is not active, attempting to start');
                 shell_exec('systemctl start caddy 2>&1');
             }
 
-        //    \Log::info('Recovery attempt completed');
+            //    \Log::info('Recovery attempt completed');
         } catch (\Exception $e) {
-         //   \Log::error('Recovery attempt failed: ' . $e->getMessage());
+            //   \Log::error('Recovery attempt failed: ' . $e->getMessage());
         }
     }
 
@@ -481,7 +491,7 @@ class CaddyBuild implements ShouldQueue
 
             foreach ($oldBackups as $backup) {
                 if (unlink($backup)) {
-                  //  \Log::info("Removed old backup: {$backup}");
+                    //  \Log::info("Removed old backup: {$backup}");
                 }
             }
         }

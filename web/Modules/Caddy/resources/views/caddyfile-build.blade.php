@@ -2,11 +2,29 @@
     email {{ $caddyEmail }}
     admin off
 
+    @if(isset($cloudflareApiToken) && $cloudflareApiToken)
+
+    # Set the ACME DNS challenge provider to use Cloudflare for all sites
+    acme_dns cloudflare {{ $cloudflareApiToken }}
+
+
+    @endif
+    @if(isset($zeroSSlApiToken) && $zeroSSlApiToken)
+
+    cert_issuer zerossl {{ $zeroSSlApiToken }}
+
+
+    @endif
+
+    cert_issuer acme
+
+
+    auto_https prefer_wildcard
+
     # Global options
     servers {
         protocols h1 h2 h3
     }
-
 }
 
 @foreach($caddyBlocks as $block)
@@ -32,6 +50,19 @@
         ETag
     }
 
+
+    @endif
+
+
+
+    @if(isset($block['use_wildcard']) && $block['use_wildcard'] && isset($block['tls_cloudflare']) && $block['tls_cloudflare'] && isset($block['cloudflareApiToken']) && $block['cloudflareApiToken'])
+
+    tls {
+        dns cloudflare {
+            api_token {{ $cloudflareApiToken }}
+        }
+    }
+
     @endif
 
     # Proxy remaining requests to Apache
@@ -42,8 +73,6 @@
             header_up X-Forwarded-Proto {scheme}
         }
     }
-
-
 
     # Enable compression
     encode zstd gzip

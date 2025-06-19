@@ -77,6 +77,10 @@ class CaddySettings extends BaseSettings
                                 ->default('443')
                                 ->numeric()
                                 ->helperText('Port for Caddy to listen on for HTTPS requests'),
+                            TextInput::make('caddy.zerossl_api_token')
+                                ->label('ZeroSSL API Token')
+                                ->password()
+                                ->helperText('API token for ZeroSSL. Required for obtaining SSL certificates. Get one from https://app.zerossl.com/developer'),
 
                             TextInput::make('caddy.cloudflare_api_token')
                                 ->label('Cloudflare API Token')
