@@ -35,13 +35,20 @@
 @endphp
     @matchername_{!! $matcherName !!} host {{ $hostname }}
     handle @matchername_{!! $matcherName !!} {
-@if(setting('caddy.enable_static_files', false) && !empty($staticPaths) && isset($subdomain['document_root']))
+@if(setting('caddy.enable_static_files', false) && isset($subdomain['document_root']))
         root * {{ $subdomain['document_root'] }}
 
-
+@php
+    $trimmedStaticPaths = isset($staticPaths) ? trim($staticPaths) : '';
+    $staticPathsArray = !empty($trimmedStaticPaths) ? explode("\n", $trimmedStaticPaths) : [];
+@endphp
+@if(count($staticPathsArray) > 0)
         @staticfiles_{!! $matcherName !!} {
-@foreach(explode("\n", trim($staticPaths)) as $path)
-            path {{ trim($path) }}
+@foreach($staticPathsArray as $path)
+@php $trimmedPath = trim($path); @endphp
+@if(!empty($trimmedPath))
+            path {{ $trimmedPath }}
+@endif
 @endforeach
         }
 
@@ -53,6 +60,7 @@
             Cache-Control max-age=5184000
             ETag
         }
+@endif
 @endif
 
         # Proxy to Apache
@@ -71,7 +79,6 @@
             -X-Powered-By
         }
 
-
     }
 @endforeach
 
@@ -83,13 +90,21 @@
 @else
 # {{ $block['domain'] }} configuration
 {{ $block['domain'] }} {
-@if(setting('caddy.enable_static_files', false) && !empty($staticPaths) && isset($block['document_root']))
+@if(setting('caddy.enable_static_files', false) && isset($block['document_root']))
     # Static file paths for domain
     root * {{ $block['document_root'] ?? '/var/www/html' }}
 
+@php
+    $trimmedStaticPaths = isset($staticPaths) ? trim($staticPaths) : '';
+    $staticPathsArray = !empty($trimmedStaticPaths) ? explode("\n", $trimmedStaticPaths) : [];
+@endphp
+@if(count($staticPathsArray) > 0)
     @staticfiles {
-@foreach(explode("\n", trim($staticPaths)) as $path)
-        path {{ trim($path) }}
+@foreach($staticPathsArray as $path)
+@php $trimmedPath = trim($path); @endphp
+@if(!empty($trimmedPath))
+        path {{ $trimmedPath }}
+@endif
 @endforeach
     }
 
@@ -102,10 +117,11 @@
         ETag
     }
 @endif
+@endif
 
 @if(isset($block['use_wildcard']) && $block['use_wildcard'] && isset($block['tls_cloudflare']) && $block['tls_cloudflare'])
     tls {
-        dns cloudflare
+        dns cloudflare {{ $cloudflareApiToken }}
     }
 @endif
 
