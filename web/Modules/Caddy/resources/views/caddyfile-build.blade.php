@@ -6,6 +6,7 @@
     servers {
         protocols h1 h2 h3
     }
+
 }
 
 @foreach($caddyBlocks as $block)
@@ -31,7 +32,6 @@
         ETag
     }
 
-
     @endif
 
     # Proxy remaining requests to Apache
@@ -42,6 +42,8 @@
             header_up X-Forwarded-Proto {scheme}
         }
     }
+
+
 
     # Enable compression
     encode zstd gzip

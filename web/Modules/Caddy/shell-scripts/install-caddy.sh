@@ -55,6 +55,18 @@ sudo chmod 644 /etc/caddy/Caddyfile
 
 usermod -aG www-data caddy
 
+sudo add-apt-repository ppa:longsleep/golang-backports -y
+sudo apt update -y
+sudo apt install golang-go -y
+
+
+sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https -y
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/xcaddy/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-xcaddy-archive-keyring.gpg
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/xcaddy/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-xcaddy.list
+sudo apt update -y
+sudo apt install xcaddy -y
+cd /usr/bin
+xcaddy build --with github.com/caddy-dns/cloudflare
 
 
 

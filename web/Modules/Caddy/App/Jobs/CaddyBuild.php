@@ -170,6 +170,9 @@ class CaddyBuild implements ShouldQueue
         // Get static file paths from settings
         $staticPaths = setting('caddy.static_paths') ?? '';
 
+        // Get Cloudflare API token for DNS challenges
+        $cloudflareApiToken = setting('caddy.cloudflare_api_token');
+
         foreach ($getAllDomains as $domain) {
             $isBroken = false;
 
@@ -230,6 +233,7 @@ class CaddyBuild implements ShouldQueue
             'caddyBlocks' => $caddyBlocks,
             'caddyEmail' => $caddyEmail,
             'staticPaths' => $staticPaths,
+            'cloudflareApiToken' => $cloudflareApiToken,
         ])->render();
 
         $caddyfile = preg_replace('~(*ANY)\A\s*\R|\s*(?!\r\n)\s$~mu', '', $caddyfile);
@@ -250,6 +254,22 @@ class CaddyBuild implements ShouldQueue
             return null;
         }
 
+//        //gi matcth the wilcard use tls_cloudflare
+//
+//        $useWildcard = setting('caddy.enable_wildcard_ssl', false);
+//        $cloudflareApiToken = setting('caddy.cloudflare_api_token');
+//        $tls_cloudflare = false;
+//        $wildcardDomain = null;
+//        if ($useWildcard && $cloudflareApiToken && !empty($domain->domain)) {
+//            if(strpos($domain->domain, '*') === false && strpos($domain->domain, '.') !== false) {
+//                $tls_cloudflare = true;
+//                $wildcardDomain = "*." . $domain->domain;
+//            }
+//        }
+//
+//
+
+
         return [
             'domain' => $domain->domain,
             'proxy_to' => "127.0.0.1:{$apacheHttpPort}",
@@ -265,12 +285,29 @@ class CaddyBuild implements ShouldQueue
             return null;
         }
 
+        // Wildcard SSL logic only for master domain
+        $useWildcard = setting('caddy.enable_wildcard_ssl', false);
+        $cloudflareApiToken = setting('caddy.cloudflare_api_token');
+        $tls_cloudflare = false;
+        $wildcardDomain = null;
+
+        // Only use wildcard if enabled and token is set for master domain
+        if ($useWildcard && $cloudflareApiToken && !empty($masterDomain->domain)) {
+
+
+            $tls_cloudflare = true;
+            $wildcardDomain = "*." . $masterDomain->domain;
+        }
+
         return [
             'domain' => $masterDomain->domain,
+           // 'wildcardDomain' => $wildcardDomain,
+          //  'cloudflareApiToken' => $cloudflareApiToken,
             'proxy_to' => "127.0.0.1:{$apacheHttpPort}",
             'enable_ssl' => true,
             'enable_www' => true,
             'is_master' => true,
+        //    'tls_cloudflare' => $tls_cloudflare,
             'document_root' => $masterDomain->document_root ?? "/var/www/{$masterDomain->domain}/public_html",
         ];
     }

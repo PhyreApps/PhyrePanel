@@ -77,6 +77,20 @@ class CaddySettings extends BaseSettings
                                 ->default('443')
                                 ->numeric()
                                 ->helperText('Port for Caddy to listen on for HTTPS requests'),
+
+                            TextInput::make('caddy.cloudflare_api_token')
+                                ->label('Cloudflare API Token')
+                                ->password()
+                                ->helperText('API token for Cloudflare DNS challenge. Required for wildcard SSL certificates. Get one from https://dash.cloudflare.com/profile/api-tokens/'),
+
+                            Checkbox::make('caddy.enable_wildcard_ssl')
+                                ->label('Enable Wildcard SSL (Cloudflare)')
+                                ->helperText('Prefer wildcard SSL certificates for all domains if possible using Cloudflare DNS plugin.'),
+
+                            TextInput::make('caddy.wildcard_domain')
+                                ->label('Wildcard Base Domain')
+                                ->placeholder('example.com')
+                                ->helperText('Wildcard SSL will only be used for this domain and its subdomains.'),
                         ]),
 
                     Tabs\Tab::make('Apache Integration')
