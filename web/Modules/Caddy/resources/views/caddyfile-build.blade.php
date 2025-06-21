@@ -18,6 +18,10 @@
     servers {
         protocols h1 h2 h3
     }
+
+    servers :443 {
+        protocols h1
+    }
 }
 
 @foreach($caddyBlocks as $block)
