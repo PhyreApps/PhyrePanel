@@ -20,6 +20,7 @@ class MicroweberInstallation extends Model
         if (empty($this->template)) {
             return 'Default';
         }
+        return $this->template;
     }
 
 }
