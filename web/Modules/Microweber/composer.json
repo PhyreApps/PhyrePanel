@@ -8,8 +8,8 @@
         }
     ],
     "require": {
-        "microweber-packages/composer-client": "^2.1",
-        "microweber-packages/shared-server-scripts": "^1.1"
+        "microweber-packages/composer-client": "^3.0",
+        "microweber-packages/shared-server-scripts": "^3.1"
     },
     "extra": {
         "laravel": {

@@ -62,8 +62,22 @@ class DomainIsCreatedListener
 
 
         $installPath = $findDomain->domain_root . '/microweber';
+
+        //check if microweber legacy version is installed
+        $install = new \MicroweberPackages\SharedServerScripts\MicroweberInstaller();
+
+        $isLegacy = !$install->isMicroweberV3();
+
+        if($isLegacy){
+            $installPath =$findDomain->domain_public;
+
+        }
+
+
+
+
         $installPathPublicHtml = $findDomain->domain_public;
-        $installPathPublicFOrSymlink = $findDomain->domain_public . '/microweber/public';
+       // $installPathPublicFOrSymlink = $findDomain->domain_public . '/microweber/public';
 
         if (!is_dir($installPath)) {
             mkdir($installPath, 0755, true);
@@ -138,7 +152,6 @@ class DomainIsCreatedListener
         }
 
 
-        $install = new \MicroweberPackages\SharedServerScripts\MicroweberInstaller();
         $install->setChownUser($findDomain->domain_username);
         $install->enableChownAfterInstall();
 
