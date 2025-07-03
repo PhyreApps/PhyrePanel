@@ -3,7 +3,7 @@
     "alias": "microweber",
     "description": "",
     "keywords": [],
-    "priority": 0,
+    "priority": 1000,
     "logoIcon": "Modules/Microweber/resources/assets/mw-svg/mw_logo_small_white.svg",
     "category": "Content Management",
     "adminUrl": "/admin/microweber/installations",

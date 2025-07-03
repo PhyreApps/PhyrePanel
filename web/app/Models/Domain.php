@@ -52,12 +52,12 @@ class Domain extends Model
         static::created(function ($model) {
 
             $findHostingSubscription = HostingSubscription::where('id', $model->hosting_subscription_id)->first();
-            if (! $findHostingSubscription) {
+            if (!$findHostingSubscription) {
                 return;
             }
 
             $findHostingPlan = HostingPlan::where('id', $findHostingSubscription->hosting_plan_id)->first();
-            if (! $findHostingPlan) {
+            if (!$findHostingPlan) {
                 return;
             }
 
@@ -65,15 +65,15 @@ class Domain extends Model
             $model->server_application_settings = $findHostingPlan->default_server_application_settings;
 
             if ($model->is_main == 1) {
-              //  $allDomainsRoot = '/home/'.$this->user.'/public_html';
-                $model->domain_root = '/home/'.$findHostingSubscription->system_username;
-                $model->domain_public = '/home/'.$findHostingSubscription->system_username.'/public_html';
-                $model->home_root = '/home/'.$findHostingSubscription->system_username;
+                //  $allDomainsRoot = '/home/'.$this->user.'/public_html';
+                $model->domain_root = '/home/' . $findHostingSubscription->system_username;
+                $model->domain_public = '/home/' . $findHostingSubscription->system_username . '/public_html';
+                $model->home_root = '/home/' . $findHostingSubscription->system_username;
             } else {
-             //   $allDomainsRoot = '/home/'.$model->user.'/domains';
-                $model->domain_root = '/home/'.$findHostingSubscription->system_username.'/domains/'.$model->domain;
-                $model->domain_public = $model->domain_root.'/public_html';
-                $model->home_root = '/home/'.$findHostingSubscription->user;
+                //   $allDomainsRoot = '/home/'.$model->user.'/domains';
+                $model->domain_root = '/home/' . $findHostingSubscription->system_username . '/domains/' . $model->domain;
+                $model->domain_public = $model->domain_root . '/public_html';
+                $model->home_root = '/home/' . $findHostingSubscription->user;
             }
             $model->saveQuietly();
 
@@ -164,7 +164,7 @@ class Domain extends Model
             }
         }
 
-         $this->server_application_type = 'apache_php';
+        $this->server_application_type = 'apache_php';
 
         if ($this->is_installed_default_app_template == null) {
             $this->is_installed_default_app_template = 1;
@@ -257,12 +257,20 @@ class Domain extends Model
             if (isset($this->server_application_settings['php_version'])) {
                 $appVersion = $this->server_application_settings['php_version'];
             }
-            if (!is_dir($this->domain_public . '/cgi-bin')) {
-                mkdir($this->domain_public . '/cgi-bin', 0755, true);
+
+            if(!is_link($this->domain_public)) {
+
+
+                if (!is_dir($this->domain_public . '/cgi-bin')) {
+                    mkdir($this->domain_public . '/cgi-bin', 0755, true);
+                }
+                if (!is_file($this->domain_public . '/cgi-bin/php')) {
+
+                    file_put_contents($this->domain_public . '/cgi-bin/php', '#!/usr/bin/php-cgi' . $appVersion . ' -cphp' . $appVersion . '-cgi.ini');
+                    shell_exec('chown ' . $findHostingSubscription->system_username . ':' . $webUserGroup . ' ' . $this->domain_public . '/cgi-bin/php');
+                    shell_exec('chmod -f 751 ' . $this->domain_public . '/cgi-bin/php');
+                }
             }
-            file_put_contents($this->domain_public . '/cgi-bin/php', '#!/usr/bin/php-cgi' . $appVersion . ' -cphp' . $appVersion . '-cgi.ini');
-            shell_exec('chown '.$findHostingSubscription->system_username.':'.$webUserGroup.' '.$this->domain_public . '/cgi-bin/php');
-            shell_exec('chmod -f 751 '.$this->domain_public . '/cgi-bin/php');
         }
 
         $apacheVirtualHostBuilder = new ApacheVirtualHostSettings();
@@ -313,7 +321,7 @@ class Domain extends Model
             $apacheVirtualHostBuilder->setDomainPublic($brokenPath);
         } else {
 
-          //  $apacheVirtualHostBuilder->setEnableLogs(true);
+            //  $apacheVirtualHostBuilder->setEnableLogs(true);
             $apacheVirtualHostBuilder->setAdditionalServices($findHostingPlan->additional_services);
             $apacheVirtualHostBuilder->setAppType($appType);
             $apacheVirtualHostBuilder->setAppVersion($appVersion);
@@ -384,7 +392,7 @@ class Domain extends Model
             if ($findDomainSSLCertificateWildcard) {
                 $findDomainSSLCertificate = $findDomainSSLCertificateWildcard;
             } else {
-                $findMainDomainWildcardSSLCertificate = \App\Models\DomainSslCertificate::where('domain', '*.'.$catchMainDomain)
+                $findMainDomainWildcardSSLCertificate = \App\Models\DomainSslCertificate::where('domain', '*.' . $catchMainDomain)
                     ->first();
                 if ($findMainDomainWildcardSSLCertificate) {
                     $findDomainSSLCertificate = $findMainDomainWildcardSSLCertificate;
@@ -404,30 +412,30 @@ class Domain extends Model
             $sslCertificateChainFile = $this->home_root . '/certs/' . $this->domain . '/public/fullchain.pem';
 
             if (!empty($findDomainSSLCertificate->certificate)) {
-               // if (!file_exists($sslCertificateFile)) {
-                    if (!is_dir($this->home_root . '/certs/' . $this->domain . '/public')) {
-                        mkdir($this->home_root . '/certs/' . $this->domain . '/public', 0755, true);
-                    }
-                    file_put_contents($sslCertificateFile, $findDomainSSLCertificate->certificate);
-               // }
+                // if (!file_exists($sslCertificateFile)) {
+                if (!is_dir($this->home_root . '/certs/' . $this->domain . '/public')) {
+                    mkdir($this->home_root . '/certs/' . $this->domain . '/public', 0755, true);
+                }
+                file_put_contents($sslCertificateFile, $findDomainSSLCertificate->certificate);
+                // }
             }
 
             if (!empty($findDomainSSLCertificate->private_key)) {
-              //  if (!file_exists($sslCertificateKeyFile)) {
-                    if (!is_dir($this->home_root . '/certs/' . $this->domain . '/private')) {
-                        mkdir($this->home_root . '/certs/' . $this->domain . '/private', 0755, true);
-                    }
-                    file_put_contents($sslCertificateKeyFile, $findDomainSSLCertificate->private_key);
-              //  }
+                //  if (!file_exists($sslCertificateKeyFile)) {
+                if (!is_dir($this->home_root . '/certs/' . $this->domain . '/private')) {
+                    mkdir($this->home_root . '/certs/' . $this->domain . '/private', 0755, true);
+                }
+                file_put_contents($sslCertificateKeyFile, $findDomainSSLCertificate->private_key);
+                //  }
             }
 
             if (!empty($findDomainSSLCertificate->certificate_chain)) {
-              //  if (!file_exists($sslCertificateChainFile)) {
-                    if (!is_dir($this->home_root . '/certs/' . $this->domain . '/public')) {
-                        mkdir($this->home_root . '/certs/' . $this->domain . '/public', 0755, true);
-                    }
-                    file_put_contents($sslCertificateChainFile, $findDomainSSLCertificate->certificate_chain);
-               // }
+                //  if (!file_exists($sslCertificateChainFile)) {
+                if (!is_dir($this->home_root . '/certs/' . $this->domain . '/public')) {
+                    mkdir($this->home_root . '/certs/' . $this->domain . '/public', 0755, true);
+                }
+                file_put_contents($sslCertificateChainFile, $findDomainSSLCertificate->certificate_chain);
+                // }
             }
 
             if (is_file($sslCertificateFile)) {

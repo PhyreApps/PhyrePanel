@@ -1,6 +1,6 @@
 {
     "LetsEncrypt": true,
-    "Microweber": true,
+
     "Docker": true,
     "Customer": true,
     "Model": true,
@@ -10,5 +10,6 @@
     "Email": true,
     "Minecraft": true,
     "SSLManager": true,
-    "Caddy": true
+    "Caddy": true,
+    "Microweber": true
 }

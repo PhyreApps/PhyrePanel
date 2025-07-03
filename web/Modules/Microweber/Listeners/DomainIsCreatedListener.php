@@ -62,22 +62,8 @@ class DomainIsCreatedListener
 
 
         $installPath = $findDomain->domain_root . '/microweber';
-
-        //check if microweber legacy version is installed
-        $install = new \MicroweberPackages\SharedServerScripts\MicroweberInstaller();
-
-        $isLegacy = !$install->isMicroweberV3();
-
-        if($isLegacy){
-            $installPath =$findDomain->domain_public;
-
-        }
-
-
-
-
         $installPathPublicHtml = $findDomain->domain_public;
-       // $installPathPublicFOrSymlink = $findDomain->domain_public . '/microweber/public';
+        $installPathPublicFOrSymlink = $findDomain->domain_public . '/microweber/public';
 
         if (!is_dir($installPath)) {
             mkdir($installPath, 0755, true);
@@ -152,6 +138,7 @@ class DomainIsCreatedListener
         }
 
 
+        $install = new \MicroweberPackages\SharedServerScripts\MicroweberInstaller();
         $install->setChownUser($findDomain->domain_username);
         $install->enableChownAfterInstall();
 
@@ -250,11 +237,30 @@ class DomainIsCreatedListener
             //symlink public folder
             if (is_dir($installPathPublicHtml)) {
                 //rename the public folder to public_old
-                rename($installPathPublicHtml, $installPathPublicHtml . '_old');
+            rename($installPathPublicHtml, $installPathPublicHtml . '_old');
             }
 
             if (!is_link($installPathPublicHtml)) {
-                symlink($installPath . '/public', $installPathPublicHtml);
+
+                //copy cgi-bin
+
+              symlink($installPath . '/public', $installPathPublicHtml);
+
+
+                //copy cgi-bin folder
+                if (!is_dir($installPath . '/public/cgi-bin')) {
+                    // copy($installPathPublicHtml . '_old' . '/cgi-bin', $installPath . '/cgi-bin');
+                   // rename($installPathPublicHtml . '_old' . '/cgi-bin', $installPath . '/cgi-bin');
+
+                    if (is_dir($installPathPublicHtml . '_old' . '/cgi-bin')) {
+                        rename($installPathPublicHtml . '_old' . '/cgi-bin', $installPath . '/public/cgi-bin');
+                    }
+
+                }
+
+
+
+
             }
 
 
@@ -270,3 +276,4 @@ class DomainIsCreatedListener
 
     }
 }
+

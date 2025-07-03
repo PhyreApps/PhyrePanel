@@ -193,10 +193,26 @@ class CaddyBuild implements ShouldQueue
             $domainLog = '/var/log/caddy/' . $domain->domain . '.log';
             shell_exec("chown caddy:caddy '/var/log/caddy/");
             shell_exec("chmod -R 777 /var/log/caddy/");
-
+//
             shell_exec("sudo setfacl -R -m u:caddy:rx " . $domain->document_root);
             shell_exec("sudo setfacl -R -m u:caddy:rx " . $domain->domain_public);
             shell_exec("sudo setfacl -R -m u:caddy:rx " . $domain->home_root);
+//
+
+            // Check current permissions using getfacl
+//            $homeRootPerms = shell_exec("getfacl " . escapeshellarg($domain->home_root));
+//            $docRootPerms = shell_exec("getfacl " . escapeshellarg($domain->document_root));
+//
+//            // Only apply setfacl if necessary permissions are missing
+//            if (!preg_match('/user:caddy:r-x/', $homeRootPerms)) {
+//                shell_exec("setfacl -R -m u:caddy:rx " . escapeshellarg($domain->home_root));
+//            }
+//
+//            if (!preg_match('/user:caddy:r-x/', $docRootPerms)) {
+//                shell_exec("setfacl -R -m u:caddy:rx " . escapeshellarg($domain->document_root));
+//            }
+
+
 
             // Set permissions for Caddy to access user directories
             shell_exec("chmod o+x {$domain->home_root}");
@@ -361,9 +377,9 @@ class CaddyBuild implements ShouldQueue
             $formatExitCode = shell_exec("echo $?");
 
             if (trim($formatExitCode) === '0') {
-                \Log::info('Caddyfile formatted successfully');
+            //    \Log::info('Caddyfile formatted successfully');
             } else {
-                \Log::warning('Caddyfile formatting failed: ' . $formatOutput);
+            //    \Log::warning('Caddyfile formatting failed: ' . $formatOutput);
             }
 
             // Validate syntax using Caddy binary
@@ -375,9 +391,9 @@ class CaddyBuild implements ShouldQueue
                 throw new \Exception("Caddyfile validation failed: {$output}");
             }
 
-            \Log::info('Caddyfile validation passed');
+          //  \Log::info('Caddyfile validation passed');
         } else {
-            \Log::warning('Caddy binary not found, skipping syntax validation and formatting');
+           // \Log::warning('Caddy binary not found, skipping syntax validation and formatting');
         }
     }
 

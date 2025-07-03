@@ -42,7 +42,6 @@ class HostingSubscriptionResource extends Resource
             ->schema([
 
 
-
             ]);
     }
 
@@ -68,22 +67,32 @@ class HostingSubscriptionResource extends Resource
 //                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('domain')
+                    ->toggleable()
                     ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('system_username')
                     ->searchable()
+                    ->toggleable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('customer.name')
+                    ->toggleable()
                     ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('customer.id')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Customer ID')
                     ->sortable(),
 
 //                Tables\Columns\TextColumn::make('hostingPlan.name')
 //                    ->searchable()
 //                    ->sortable(),
 
-            Tables\Columns\TextColumn::make('created_at')
+                Tables\Columns\TextColumn::make('created_at')
+                    ->toggleable()
+                    ->sortable()
 
 
             ])
@@ -93,15 +102,19 @@ class HostingSubscriptionResource extends Resource
                     ->attribute('id')
                     ->label('Domain')
                     ->searchable()
-                    ->options(fn (): array => HostingSubscription::query()->pluck('domain', 'id')->all()),
+                    ->options(fn(): array => HostingSubscription::query()->pluck('domain', 'id')->all()),
                 Tables\Filters\SelectFilter::make('customer_id')
                     ->searchable()
-                    ->options(fn (): array => Customer::query()->pluck('name', 'id')->all()),
+                    ->options(function (): array {
+                        return Customer::query()->get(['id', 'name'])->mapWithKeys(function ($customer) {
+                            return [$customer->id => "{$customer->name} (ID: {$customer->id})"];
+                        })->all();
+                    }),
                 Tables\Filters\SelectFilter::make('system_username')
                     ->attribute('id')
                     ->label('System Username')
                     ->searchable()
-                    ->options(fn (): array => HostingSubscription::query()->pluck('system_username', 'id')->all())
+                    ->options(fn(): array => HostingSubscription::query()->pluck('system_username', 'id')->all())
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -123,7 +136,7 @@ class HostingSubscriptionResource extends Resource
     public static function getRecordSubNavigation(Page $page): array
     {
         return $page->generateNavigationItems([
-         //   Pages\ViewHos::class,
+            //   Pages\ViewHos::class,
             Pages\EditHostingSubscription::class
         ]);
     }
@@ -145,7 +158,7 @@ class HostingSubscriptionResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['domain', 'system_username', 'customer.name'];
+        return ['domain', 'system_username', 'customer.name', 'customer.id'];
     }
 
     public static function getGlobalSearchResultDetails(Model $record): array
@@ -156,6 +169,7 @@ class HostingSubscriptionResource extends Resource
             'HostingSubscription' => $record->domain,
             'System Username' => $record->system_username,
             'Customer' => optional($record->customer)->name,
+            'Customer ID' => optional($record->customer)->id,
         ];
     }
 
