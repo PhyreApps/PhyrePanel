@@ -127,6 +127,11 @@
     tls {
         dns cloudflare {{ $cloudflareApiToken }}
     }
+@else
+    # Force ACME issuer for non-wildcard domains (uses HTTP challenge by default)
+    tls {
+        issuer acme
+    }
 @endif
 
     # Proxy remaining requests to Apache
