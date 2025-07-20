@@ -2,17 +2,12 @@
     email {{ $caddyEmail }}
     admin off
 
-    @if(isset($cloudflareApiToken) && $cloudflareApiToken)
-    # Set the ACME DNS challenge provider to use Cloudflare for all sites
-    acme_dns cloudflare {{ $cloudflareApiToken }}
-    @endif
-
     @if(isset($zeroSSlApiToken) && $zeroSSlApiToken)
     cert_issuer zerossl {{ $zeroSSlApiToken }}
     @endif
 
     cert_issuer acme
-    auto_https prefer_wildcard
+    auto_https disable_redirects
 
     # Global options
     servers {
@@ -71,7 +66,6 @@
         reverse_proxy {{ $subdomain['proxy_to'] }} {
             header_up Host {host}
             header_up X-Real-IP {remote_host}
-            header_up X-Forwarded-Proto {scheme}
         }
 
         # Enable compression
@@ -139,7 +133,6 @@
         reverse_proxy {{ $block['proxy_to'] }} {
             header_up Host {host}
             header_up X-Real-IP {remote_host}
-            header_up X-Forwarded-Proto {scheme}
         }
     }
 
@@ -155,20 +148,31 @@
     # Handle OPTIONS requests for CORS
     @options method OPTIONS
     respond @options 204
-
-    # Logging
-    log {
-        output file /var/log/caddy/{{ $block['domain'] }}.log {
-            roll_size 10mb
-            roll_keep 5
-        }
-    }
 }
 
 @if(isset($block['enable_www']) && $block['enable_www'])
-# www.{{ $block['domain'] }} redirect
+# www.{{ $block['domain'] }} - serve same content as main domain
 www.{{ $block['domain'] }} {
-    redir https://{{ $block['domain'] }}{uri} permanent
+    tls {
+        issuer acme
+    }
+    
+    # Proxy to Apache (same as main domain)
+    handle {
+        reverse_proxy {{ $block['proxy_to'] }} {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+        }
+    }
+
+    # Enable compression
+    encode zstd gzip
+
+    # Security headers
+    header {
+        -Server
+        -X-Powered-By
+    }
 }
 @endif
 @endif
