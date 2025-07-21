@@ -65,12 +65,17 @@ class CaddyHealthCheck extends Page
     private function checkConfigValidity(): array
     {
         $output = shell_exec('caddy validate --config /etc/caddy/Caddyfile 2>&1');
-        $isValid = strpos($output, 'valid') !== false;
+        
+        // Check if output contains success indicators (case insensitive)
+        $outputLower = strtolower($output);
+        $isValid = (strpos($outputLower, 'valid configuration') !== false) || 
+                   (strpos($outputLower, 'configuration is valid') !== false) ||
+                   (strpos($outputLower, 'valid') !== false && strpos($outputLower, 'error') === false);
         
         return [
             'status' => $isValid ? 'healthy' : 'unhealthy',
             'message' => $isValid ? 'Configuration is valid' : 'Configuration has errors',
-            'details' => $output,
+            'details' => $output ?: 'No output from validation command',
         ];
     }
 
@@ -148,6 +153,115 @@ class CaddyHealthCheck extends Page
             'status' => $errorCount === 0 ? 'healthy' : 'warning',
             'message' => "Recent errors in logs: $errorCount",
             'details' => $errorCount,
+        ];
+    }
+
+    public function refreshHealth(): void
+    {
+        $this->runHealthCheck();
+    }
+
+    public function getHealthResults(): array
+    {
+        // Calculate overall health status and score
+        $healthyCount = 0;
+        $warningCount = 0;
+        $unhealthyCount = 0;
+        $totalChecks = count($this->healthData);
+
+        foreach ($this->healthData as $check) {
+            switch ($check['status']) {
+                case 'healthy':
+                    $healthyCount++;
+                    break;
+                case 'warning':
+                    $warningCount++;
+                    break;
+                case 'unhealthy':
+                    $unhealthyCount++;
+                    break;
+            }
+        }
+
+        // Calculate overall score (healthy = 100%, warning = 50%, unhealthy = 0%)
+        $score = $totalChecks > 0 ? round(($healthyCount * 100 + $warningCount * 50) / $totalChecks) : 0;
+
+        // Determine overall status
+        $overallStatus = 'healthy';
+        if ($unhealthyCount > 0) {
+            $overallStatus = 'unhealthy';
+        } elseif ($warningCount > 0) {
+            $overallStatus = 'warning';
+        }
+
+        return [
+            'timestamp' => now()->format('Y-m-d H:i:s'),
+            'overall' => [
+                'status' => $overallStatus,
+                'score' => $score,
+                'healthy_count' => $healthyCount,
+                'warning_count' => $warningCount,
+                'unhealthy_count' => $unhealthyCount,
+                'total_checks' => $totalChecks,
+            ],
+            'summary' => [
+                'healthy' => $healthyCount,
+                'warning' => $warningCount,
+                'critical' => $unhealthyCount,
+                'total' => $totalChecks,
+            ],
+            'checks' => [
+                'service' => [
+                    [
+                        'name' => 'Caddy Service Status',
+                        'status' => $this->healthData['service_status']['status'],
+                        'message' => $this->healthData['service_status']['message'],
+                        'details' => $this->healthData['service_status']['details'],
+                    ],
+                ],
+                'configuration' => [
+                    [
+                        'name' => 'Configuration Validity',
+                        'status' => $this->healthData['config_validity']['status'],
+                        'message' => $this->healthData['config_validity']['message'],
+                        'details' => $this->healthData['config_validity']['details'],
+                    ],
+                ],
+                'network' => [
+                    [
+                        'name' => 'Port Availability',
+                        'status' => $this->healthData['port_availability']['status'],
+                        'message' => $this->healthData['port_availability']['message'],
+                        'details' => $this->healthData['port_availability']['details'],
+                    ],
+                    [
+                        'name' => 'Apache Connectivity',
+                        'status' => $this->healthData['apache_connectivity']['status'],
+                        'message' => $this->healthData['apache_connectivity']['message'],
+                        'details' => $this->healthData['apache_connectivity']['details'],
+                    ],
+                ],
+                'system' => [
+                    [
+                        'name' => 'SSL Certificates',
+                        'status' => $this->healthData['ssl_certificates']['status'],
+                        'message' => $this->healthData['ssl_certificates']['message'],
+                        'details' => $this->healthData['ssl_certificates']['details'],
+                    ],
+                    [
+                        'name' => 'Disk Space',
+                        'status' => $this->healthData['disk_space']['status'],
+                        'message' => $this->healthData['disk_space']['message'],
+                        'details' => $this->healthData['disk_space']['details'],
+                    ],
+                    [
+                        'name' => 'Log Errors',
+                        'status' => $this->healthData['log_errors']['status'],
+                        'message' => $this->healthData['log_errors']['message'],
+                        'details' => $this->healthData['log_errors']['details'],
+                    ],
+                ],
+            ],
         ];
     }
 

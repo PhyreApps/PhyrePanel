@@ -205,7 +205,13 @@
                                     <div class="font-medium text-gray-900 dark:text-white">{{ $check['name'] }}</div>
                                     <div class="text-sm text-gray-600 dark:text-gray-400">{{ $check['message'] }}</div>
                                     @if(isset($check['details']))
-                                        <div class="text-xs text-gray-500 dark:text-gray-500 mt-1">{{ $check['details'] }}</div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                                            @if(is_array($check['details']))
+                                                {{ json_encode($check['details'], JSON_PRETTY_PRINT) }}
+                                            @else
+                                                {{ $check['details'] }}
+                                            @endif
+                                        </div>
                                     @endif
                                 </div>
                             </div>
