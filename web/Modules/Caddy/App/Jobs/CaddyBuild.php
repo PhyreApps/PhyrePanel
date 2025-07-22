@@ -4,11 +4,13 @@ namespace Modules\Caddy\App\Jobs;
 
 use App\MasterDomain;
 use App\Models\Domain;
+use App\Models\HostingSubscription;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Modules\Microweber\App\Models\MicroweberInstallation;
 
 class CaddyBuild implements ShouldQueue
 {
@@ -197,7 +199,26 @@ class CaddyBuild implements ShouldQueue
             shell_exec("sudo setfacl -R -m u:caddy:rx " . $domain->document_root);
             shell_exec("sudo setfacl -R -m u:caddy:rx " . $domain->domain_public);
             shell_exec("sudo setfacl -R -m u:caddy:rx " . $domain->home_root);
-//
+
+
+            /*       //fix permissions
+            shell_exec('chown -R ' . $chown_user . ':' . $chown_user . ' ' . $chown_path);
+
+            // chmod
+            shell_exec('chmod -R 755 ' . $chown_path);*/
+
+            $findHostingSubscription = HostingSubscription::where('id', $domain->id)->first();
+
+            $chown_user = $findHostingSubscription->system_username;
+
+            $chown_path = $domain->home_root;
+            //fix permissions
+           // shell_exec('chown -R ' . $chown_user . ':' . $chown_user . ' ' . $chown_path);
+
+            // chmod
+          //  shell_exec('chmod -R 755 ' . $chown_path);
+
+
 
             // Check current permissions using getfacl
 //            $homeRootPerms = shell_exec("getfacl " . escapeshellarg($domain->home_root));
@@ -217,6 +238,9 @@ class CaddyBuild implements ShouldQueue
             // Set permissions for Caddy to access user directories
             shell_exec("chmod o+x {$domain->home_root}");
             shell_exec("chmod -R o+rX {$domain->document_root}");
+
+
+
 
             if (!file_exists($domainLog)) {
                 // Create log file for the domain if it doesn't exist
