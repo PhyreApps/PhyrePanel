@@ -81,6 +81,13 @@ class RunInstallationCommands implements ShouldQueue
                 $this->runArtisanCommand($installationPath, 'cache:clear', $username);
                 break;
 
+            case 'microweber:vendor-assets-symlink':
+                $this->runArtisanCommand($installationPath, 'microweber:vendor-assets-symlink', $username);
+                break;
+            case 'microweber:reload-database':
+                $this->runArtisanCommand($installationPath, 'microweber:reload-database', $username);
+                break;
+
             case 'composer:dump':
                 $this->runComposerCommand($installationPath, 'dump-autoload', $username);
                 break;
@@ -111,7 +118,7 @@ class RunInstallationCommands implements ShouldQueue
 
         $result = ShellApi::exec($fullCommand);
 
-        if ($result['exit_code'] !== 0) {
+        if (is_array($result) and $result['exit_code'] !== 0) {
             throw new \Exception('Artisan command failed: ' . $result['output']);
         }
     }

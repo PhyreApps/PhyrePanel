@@ -10,6 +10,7 @@ use Modules\Microweber\App\Models\MicroweberInstallation;
 use Modules\Microweber\Filament\Clusters\MicroweberCluster;
 use Modules\Microweber\Jobs\RunInstallationCommands;
 
+
 class Utilities extends Page
 {
     protected static ?string $navigationGroup = 'Microweber';
@@ -95,6 +96,39 @@ class Utilities extends Page
                     Notification::make()
                         ->title('Composer Dump Job Dispatched')
                         ->body('The composer dump command has been queued for all installations.')
+                        ->success()
+                        ->send();
+                }),
+
+            Action::make('microweberVendorAssetsSymlink')
+                ->label('Microweber Vendor Assets Symlink (All Installations)')
+                ->icon('heroicon-o-code-bracket')
+                ->color('info')
+                ->requiresConfirmation()
+                ->modalHeading('Microweber Vendor Assets Symlink for All Installations')
+                ->modalDescription('This will run "microweber:vendor-assets-symlink" on all Microweber installations. This may take some time.')
+                ->action(function () {
+                    RunInstallationCommands::dispatchSync('microweber:vendor-assets-symlink');
+
+                    Notification::make()
+                        ->title('Microweber Vendor Assets Symlink Job Dispatched')
+                        ->body('The microweber:vendor-assets-symlink command has been queued for all installations.')
+                        ->success()
+                        ->send();
+                }),
+            Action::make('microweberPostUpdate')
+                ->label('Microweber reload modules')
+                ->icon('heroicon-o-code-bracket')
+                ->color('info')
+                ->requiresConfirmation()
+                ->modalHeading('Microweber Reload Modules for All Installations')
+                ->modalDescription('This will run "microweber:reload-database" on all Microweber installations. This may take some time.')
+                ->action(function () {
+                    RunInstallationCommands::dispatchSync('microweber:reload-database');
+
+                    Notification::make()
+                        ->title('Microweber Reload Database Job Dispatched')
+                        ->body('The microweber:reload-database command has been queued for all installations.')
                         ->success()
                         ->send();
                 }),
