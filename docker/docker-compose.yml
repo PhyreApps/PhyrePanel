@@ -17,7 +17,7 @@ services:
       - phyre_net
 
   phyre-app:
-    build: .
+    image: bobicloudvision/phyre-panel:latest
     container_name: phyre-app
     depends_on:
       - db

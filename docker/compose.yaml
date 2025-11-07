@@ -10,9 +10,7 @@
 name: phyre
 services:
   panel:
+    image: bobicloudvision/phyre-panel:latest
     platform: linux/amd64
     ports:
       - 8443:8443
-    build:
-      context: .
-      target: production
