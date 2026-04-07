@@ -1,21 +1,11 @@
-<h1 align="center">
- <a href="https://www.phyrepanel.com">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://phyrepanel.com/phyre-logo.svg"/>
-    <img height="69" src="https://phyrepanel.com/phyre-logo.svg"/>
-  </picture>
- </a>
- <br />
-</h1>
+
 <p align="center">
  Powerful Linux multi-platform hosting control panel designed to simplify the process of managing web hosting servers. 
 </p>
 <p align="center">
-  <a href="https://www.phyrepanel.com/"><img src="https://img.shields.io/badge/Website-blue?logo=googlechrome&logoColor=black"/></a>
   <a href="https://discord.gg/vsxBuMFK"><img src="https://img.shields.io/discord/1227542192189603872?logo=discord&label=discord"/></a>
   <a href="https://github.com/PhyreApps/PhyrePanel"><img src="https://img.shields.io/github/stars/PhyreApps/PhyrePanel" /></a>
   <a href="https://github.com/PhyreApps/PhyrePanel/blob/main/LICENSE"><img src="https://img.shields.io/github/license/PhyreApps/PhyrePanel"/></a>
-  <a href="https://drone.phyrecloud.com/PhyreApps/PhyrePanel"><img src="https://drone.phyrecloud.com/api/badges/PhyreApps/PhyrePanel/status.svg"/></a>
   <a href="https://codecov.io/gh/PhyreApps/PhyrePanel"><img src="https://codecov.io/gh/PhyreApps/PhyrePanel/graph/badge.svg?token=BO0RTPLS4W"/></a>
 </p>
 
@@ -43,15 +33,6 @@ To update PhyrePanel, you need to run this commands:
 rm -rf update.sh && wget https://raw.githubusercontent.com/PhyreApps/PhyrePanel/main/web/update.sh && chmod +x update.sh && ./update.sh
 ```
 
-## Documentation
-For more information, please refer to the [documentation](https://docs.phyrepanel.com/introduction/getting-started.html).
-
-## Build Status
-
-### Master branch
-[![Build Status](https://drone.phyrecloud.com/api/badges/PhyreApps/PhyrePanel/status.svg)](https://drone.phyrecloud.com/PhyreApps/PhyrePanel)
-[![codecov](https://codecov.io/gh/PhyreApps/PhyrePanel/graph/badge.svg?token=BO0RTPLS4W)](https://codecov.io/gh/PhyreApps/PhyrePanel)
-
 All development is done on the `dev` branch. The `master` branch is used for stable releases.
 
 Please note that the `dev` branch is not guaranteed to be stable at all times, and may contain bugs or other issues. Use it at your own risk.
@@ -63,25 +44,11 @@ Please submit all pull requests to the `dev` branch.
 PHYRE PANEL supports a variety of server application types, including:
 
 - **Apache + PHP:** Versions 7.4, 8.0, 8.1, 8.3, and 8.4
-- **Apache + NodeJS**
-- **Apache + Python**
-- **Apache + Ruby**
-- **Apache + Docker (Via Proxy Reverse)**
-
-## Getting Started
-
-To get started with PHYRE PANEL, follow these simple steps:
-
-1. **Installation:** Visit [our website](https://phyrepanel.com) to download the installation package for your server environment.
-2. **Configuration:** Follow the installation instructions to set up PHYRE PANEL on your server.
-3. **Access:** Once installed, access PHYRE PANEL via your web browser and log in using your credentials.
-4. **Explore:** Take some time to explore the features and functionalities of PHYRE PANEL and start managing your hosting environment with ease.
 
 ## Connect with Us
 
 Stay up to date with the latest news and updates from PHYRE PANEL:
 
-- Website: [https://phyrepanel.com](https://phyrepanel.com)
 - Discord: [https://discord.gg/yfFWfrfwTZ](https://discord.gg/yfFWfrfwTZ)
 
 We hope you enjoy using PHYRE PANEL to simplify your hosting management tasks!
@@ -90,10 +57,6 @@ We hope you enjoy using PHYRE PANEL to simplify your hosting management tasks!
 ## Contributing
 
 We welcome contributions from the community to help improve PHYRE PANEL. If you have ideas for new features, bug fixes, or other enhancements, please feel free to [open an issue](https://github.com/PhyreApps/PhyrePanel/issues) or submit a pull request.
-
-## Support
-
-For support and assistance with PHYRE PANEL, please visit our [documentation](https://phyrepanel.com/docs) or reach out to our [support team](mailto:support@phyrepanel.com).
 
 ## Integrations
 
